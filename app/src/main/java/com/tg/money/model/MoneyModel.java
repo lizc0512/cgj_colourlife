@@ -32,6 +32,9 @@ public class MoneyModel extends BaseModel {
     private String jsfpFreezeAmountUrl = "/app/split/bill/detail";
     private String jsfpExchangeMoneyUrl = "/app/split/withdrawals";
     private String jsfpTypeUrl = "/app/split/appdetail";
+    private String jsfpCashInfoUrl = "/app/split/cashing/info";
+    private String jsfpCashAccountUrl = "/app/split/cashing/account";
+    private String jsfpCashMoneyUrl = "/app/split/cashing";
 
 
     public MoneyModel() {
@@ -102,6 +105,8 @@ public class MoneyModel extends BaseModel {
                         int code = showSuccesResultMessage(result);
                         if (code == 0) {
                             httpResponse.OnHttpResponse(what, result);
+                        } else {
+                            httpResponse.OnHttpResponse(what, "");
                         }
                     }
                 } else {
@@ -255,6 +260,119 @@ public class MoneyModel extends BaseModel {
         params.put("general_name", general_name);
         final Request<String> request_oauthRegister = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 0, jsfpTypeUrl), RequestMethod.GET);
         request(what, request_oauthRegister, params, new HttpListener<String>() {
+            @Override
+            public void onSucceed(int what, Response<String> response) {
+                int responseCode = response.getHeaders().getResponseCode();
+                String result = response.get();
+                if (responseCode == RequestEncryptionUtils.responseSuccess) {
+                    if (!TextUtils.isEmpty(result)) {
+                        int code = showSuccesResultMessageTheme(result);
+                        if (code == 0) {
+                            httpResponse.OnHttpResponse(what, result);
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onFailed(int what, Response<String> response) {
+            }
+        }, true, false);
+    }
+
+    /**
+     * 提现税费比例及说明获取
+     *
+     * @param what
+     * @param httpResponse
+     */
+    public void getCashInfo(int what, final HttpResponse httpResponse) {
+        Map<String, Object> params = new HashMap<String, Object>();
+        final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 0, jsfpCashInfoUrl), RequestMethod.GET);
+        request(what, request, params, new HttpListener<String>() {
+            @Override
+            public void onSucceed(int what, Response<String> response) {
+                int responseCode = response.getHeaders().getResponseCode();
+                String result = response.get();
+                if (responseCode == RequestEncryptionUtils.responseSuccess) {
+                    if (!TextUtils.isEmpty(result)) {
+                        int code = showSuccesResultMessageTheme(result);
+                        if (code == 0) {
+                            httpResponse.OnHttpResponse(what, result);
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onFailed(int what, Response<String> response) {
+            }
+        }, true, false);
+    }
+
+    /**
+     * 获取可提现余额（加参数）
+     *
+     * @param what
+     * @param split_type
+     * @param split_target
+     * @param general_uuid
+     * @param httpResponse
+     */
+    public void getCashAccount(int what, String split_type, String split_target, String general_uuid, final HttpResponse httpResponse) {
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("split_type", split_type);
+        params.put("split_target", split_target);
+        params.put("general_uuid", general_uuid);
+        final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 0, jsfpCashAccountUrl), RequestMethod.GET);
+        request(what, request, params, new HttpListener<String>() {
+            @Override
+            public void onSucceed(int what, Response<String> response) {
+                int responseCode = response.getHeaders().getResponseCode();
+                String result = response.get();
+                if (responseCode == RequestEncryptionUtils.responseSuccess) {
+                    if (!TextUtils.isEmpty(result)) {
+                        int code = showSuccesResultMessageTheme(result);
+                        if (code == 0) {
+                            httpResponse.OnHttpResponse(what, result);
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onFailed(int what, Response<String> response) {
+            }
+        }, true, false);
+    }
+
+    /**
+     * 提现（加参数）
+     *
+     * @param what
+     * @param general_uuid
+     * @param split_type
+     * @param split_target
+     * @param amount
+     * @param bank_name
+     * @param bank_num
+     * @param bank_user
+     * @param bank_code
+     * @param httpResponse
+     */
+    public void postCashMoney(int what, String general_uuid, String split_type, String split_target, String amount, String bank_name, String bank_num,
+                             String bank_user, String bank_code, final HttpResponse httpResponse) {
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("general_uuid", general_uuid);
+        params.put("split_type", split_type);
+        params.put("split_target", split_target);
+        params.put("amount", amount);
+        params.put("bank_name", bank_name);
+        params.put("bank_num", bank_num);
+        params.put("bank_user", bank_user);
+        params.put("bank_code", bank_code);
+        final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 0, jsfpCashMoneyUrl), RequestMethod.POST);
+        request(what, request, params, new HttpListener<String>() {
             @Override
             public void onSucceed(int what, Response<String> response) {
                 int responseCode = response.getHeaders().getResponseCode();

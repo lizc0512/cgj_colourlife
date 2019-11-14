@@ -13,6 +13,7 @@ import com.tg.coloursteward.baseModel.HttpResponse
 import com.tg.coloursteward.net.HttpTools
 import com.tg.coloursteward.util.GsonUtils
 import com.tg.coloursteward.util.StringUtils
+import com.tg.coloursteward.util.ToastUtil
 import com.tg.coloursteward.view.AppDetailPopWindowView
 import com.tg.money.adapter.InstantDistributionAdapter
 import com.tg.money.callback.SelectTypeCallBack
@@ -61,14 +62,18 @@ class InstantDistributionActivity : BaseActivity(), View.OnClickListener, HttpRe
 
     private fun setAdapter(result: String) {
         var jsfpAccountEntity: JsfpAccountEntity = GsonUtils.ktGsonToBean(result, JsfpAccountEntity::class.java)
+        mList.clear()
         jsfpAccountEntity.content?.detail?.let {
             mList = (it)
+        }
+        if (mList.size == 0) {
+            ToastUtil.showShortToast(this, "暂无数据")
         }
         if (null == adapter) {
             adapter = InstantDistributionAdapter(this, R.layout.item_instant_distribution, mList)
             rv_instant.adapter = adapter
         } else {
-            adapter?.notifyDataSetChanged()
+            adapter?.setNewData(mList)
         }
         adapter?.onItemChildClickListener = BaseQuickAdapter.OnItemChildClickListener { adapter, view, position ->
             when (view.id) {
@@ -109,15 +114,17 @@ class InstantDistributionActivity : BaseActivity(), View.OnClickListener, HttpRe
             R.id.iv_base_back -> finish()
             R.id.tv_base_confirm -> startActivity(Intent(this, TransactionRecordsActivity::class.java))
             R.id.tv_instant_select -> {
-                if (selectTypePopView == null) {
-                    selectTypePopView = SelectTypePopView(this@InstantDistributionActivity, listGridView as ArrayList<SelectTypeEntity.ContentBean.ResultBean>?,
-                            SelectTypeCallBack { view, position ->
-                                run {
-                                    listGridView.get(position).isCheck = 1
+                selectTypePopView = SelectTypePopView(this@InstantDistributionActivity, listGridView as ArrayList<SelectTypeEntity.ContentBean.ResultBean>?,
+                        SelectTypeCallBack { view, position ->
+                            run {
+                                for (i in listGridView) {
+                                    i.isCheck = 0
                                 }
-                            })
-                    selectTypePopView?.setOnDismissListener(poponDismissListener())
-                }
+                                listGridView.get(position).isCheck = 1
+                                moneyModel.getjsfpAccount(0, listGridView.get(position).general_uuid, this)
+                            }
+                        })
+                selectTypePopView?.setOnDismissListener(poponDismissListener())
                 selectTypePopView?.showPopupWindow(tv_instant_select)
             }
         }

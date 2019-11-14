@@ -74,6 +74,7 @@
         android:layout_marginRight="@dimen/size_30dp"
         android:background="@null"
         android:hint="请输入金额"
+        android:inputType="numberDecimal"
         android:textColor="@color/color_333b46"
         android:textColorHint="@color/color_C7C6D8"
         android:textSize="@dimen/font_22sp"
@@ -109,24 +110,47 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/size_15dp"
         android:layout_marginTop="@dimen/size_4dp"
-        android:text="手续费:0.4元/笔"
+        android:text="手续费:"
         android:textColor="@color/color_333b46"
         android:textSize="@dimen/font_14sp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tv_withdraw_tqnum" />
 
     <TextView
-        android:id="@+id/tv_withdraw_incomefee"
+        android:id="@+id/tv_withdraw_feenum"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/size_4dp"
+        android:textColor="@color/red"
+        android:textSize="@dimen/font_14sp"
+        app:layout_constraintLeft_toRightOf="@id/tv_withdraw_fee"
+        app:layout_constraintTop_toBottomOf="@id/tv_withdraw_tqnum"
+        tools:text="0.4元/笔" />
+
+    <TextView
+        android:id="@+id/tv_withdraw_income"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/size_15dp"
         android:layout_marginTop="@dimen/size_4dp"
         android:drawablePadding="@dimen/size_5dp"
-        android:drawableRight="@drawable/next"
-        android:text="代扣个税:0.00元"
+        android:text="代扣个税:"
         android:textColor="@color/color_333b46"
         android:textSize="@dimen/font_14sp"
         app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_withdraw_fee" />
+
+    <TextView
+        android:id="@+id/tv_withdraw_incomefee"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/size_4dp"
+        android:drawableRight="@drawable/next"
+        android:drawablePadding="@dimen/size_5dp"
+        tools:text="0.00元"
+        android:textColor="@color/red"
+        android:textSize="@dimen/font_14sp"
+        app:layout_constraintLeft_toRightOf="@id/tv_withdraw_income"
         app:layout_constraintTop_toBottomOf="@id/tv_withdraw_fee" />
 
     <TextView

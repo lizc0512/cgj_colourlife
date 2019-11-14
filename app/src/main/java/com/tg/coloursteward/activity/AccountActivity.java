@@ -7,7 +7,6 @@ import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.dashuview.library.keep.Cqb_PayUtil;
 import com.dashuview.library.keep.ListenerUtils;
 import com.dashuview.library.keep.MyListener;
 import com.tg.coloursteward.R;
@@ -36,9 +35,6 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
-import static com.tg.coloursteward.module.MainActivity.getEnvironment;
-import static com.tg.coloursteward.module.MainActivity.getPublicParams;
 
 /**
  * 即时分配
@@ -78,12 +74,11 @@ public class AccountActivity extends BaseActivity implements MyListener, HttpRes
         tv_dgzh = findViewById(R.id.tv_dgzh);
         rl_submit = findViewById(R.id.rl_submit);
         rl_public = findViewById(R.id.rl_public);
-        rl_submit.setOnClickListener(v -> Cqb_PayUtil.getInstance(AccountActivity.this).ToJSFP(getPublicParams(), getEnvironment(), "jsfp"));
-        /**
-         * 及时分配详情
-         */
+        // 及时分配详情
+        rl_submit.setOnClickListener(v -> startActivity(new Intent(this, InstantDistributionActivity.class)));
         rlNextBalance.setOnClickListener(v ->
                 startActivity(new Intent(this, InstantDistributionActivity.class)));
+        //跳转对公账户页面
         rl_public.setOnClickListener(v -> startActivity(new Intent(AccountActivity.this, PublicAccountActivity.class)));
         rlNextdgzh.setOnClickListener(v -> startActivity(new Intent(AccountActivity.this, PublicAccountActivity.class)));
     }

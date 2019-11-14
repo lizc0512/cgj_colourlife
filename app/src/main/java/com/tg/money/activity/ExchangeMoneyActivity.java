@@ -103,7 +103,7 @@ public class ExchangeMoneyActivity extends BaseActivity implements View.OnClickL
                         ToastUtil.showShortToast(this, "请输入正确的金额");
                     } else {
                         try {
-                            if (Double.valueOf(money) == 0.0) {
+                            if (Double.valueOf(money) == 0) {
                                 ToastUtil.showShortToast(this, "金额不能为0");
                             } else {
                                 if (Double.valueOf(money) >= Double.valueOf(content)) {

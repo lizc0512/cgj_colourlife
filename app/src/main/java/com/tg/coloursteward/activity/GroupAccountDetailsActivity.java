@@ -22,7 +22,6 @@ import com.tg.coloursteward.base.BaseActivity;
 import com.tg.coloursteward.baseModel.HttpResponse;
 import com.tg.coloursteward.constant.Contants;
 import com.tg.coloursteward.entity.GroupAccountEntity;
-import com.tg.coloursteward.entity.RedPacketEntity;
 import com.tg.coloursteward.inter.OnLoadingListener;
 import com.tg.coloursteward.model.BonusModel;
 import com.tg.coloursteward.net.GetTwoRecordListener;
@@ -38,6 +37,8 @@ import com.tg.coloursteward.util.Tools;
 import com.tg.coloursteward.util.Utils;
 import com.tg.coloursteward.view.ColumnHorizontalScrollView;
 import com.tg.coloursteward.view.PullRefreshListView;
+import com.tg.money.entity.GroupBounsEntity;
+import com.tg.money.model.BonusPackageModel;
 import com.youmai.hxsdk.router.APath;
 import com.youmai.hxsdk.utils.ToastUtil;
 
@@ -65,7 +66,7 @@ public class GroupAccountDetailsActivity extends BaseActivity implements HttpRes
     private GroupAccountEntity groupAccountEntity;
     private List<GroupAccountEntity.ContentBean.ListBean> listinfo = new ArrayList<>();
     private GroupAccountDetailsAdapter groupAccountDetailsAdapter;
-    public static List<RedPacketEntity.ContentBean.DbzhdataBean> list_item = new ArrayList<>();
+    public static List<GroupBounsEntity.ContentBean.DbzhdataBean> list_item = new ArrayList<>();
     private int ispotision = 0;//当前选项卡位置；
 
     private ColumnHorizontalScrollView mColumnHorizontalScrollView; // 自定义HorizontalScrollView
@@ -85,28 +86,27 @@ public class GroupAccountDetailsActivity extends BaseActivity implements HttpRes
     private String access_token;
     private String jsondata;
     private BonusModel bonusModel;
+    private BonusPackageModel bonusPackageModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         bonusModel = new BonusModel(this);
+        bonusPackageModel = new BonusPackageModel(this);
         Intent intent = getIntent();
         if (intent != null) {
             jsondata = intent.getStringExtra("jsondata");
         }
-        try {
-            JSONObject jsonObject = new JSONObject(jsondata);
-            String data = jsonObject.getString("dbzhdata");
-            list_item = GsonUtils.jsonToList(data, RedPacketEntity.ContentBean.DbzhdataBean.class);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
         mScreenWidth = Utils.getWindowsWidth(this);
         mItemWidth = mScreenWidth / 5 * 2; // 一个Item宽度为屏幕的1/7
         initView();
+        initRequest();
         initGetToken();
         headView.hideRightView();
+    }
+
+    private void initRequest() {
+//        bonusPackageModel.getBonusRecordList();
     }
 
     private void initGetToken() {
@@ -199,7 +199,7 @@ public class GroupAccountDetailsActivity extends BaseActivity implements HttpRes
                 if (list_item != null && list_item.size() > 0) {
                     params.put("atid", list_item.get(ispotision).getAtid());
                     params.put("ano", list_item.get(ispotision).getAno());
-                    params.put("pano", list_item.get(ispotision).getPano());
+//                    params.put("pano", list_item.get(ispotision).getPano());
                 }
                 params.put("ispay", ispay);
                 params.put("skip", (pagerIndex - 1) * 8);
@@ -218,7 +218,7 @@ public class GroupAccountDetailsActivity extends BaseActivity implements HttpRes
                 if (list_item != null && list_item.size() > 0) {
                     params.put("atid", list_item.get(ispotision).getAtid());
                     params.put("ano", list_item.get(ispotision).getAno());
-                    params.put("pano", list_item.get(ispotision).getPano());
+//                    params.put("pano", list_item.get(ispotision).getPano());
                 }
                 params.put("ispay", ispay);
                 params.put("skip", 0);
@@ -414,6 +414,11 @@ public class GroupAccountDetailsActivity extends BaseActivity implements HttpRes
                     } else {
                         headView.hideRightView();
                     }
+                }
+                break;
+            case 1:
+                if (!TextUtils.isEmpty(result)) {
+
                 }
                 break;
         }

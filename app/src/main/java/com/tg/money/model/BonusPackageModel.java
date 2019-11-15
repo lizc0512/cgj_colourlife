@@ -160,7 +160,7 @@ public class BonusPackageModel extends BaseModel {
      * @param isLoading
      * @param httpResponse
      */
-    public void getBonusRecordDetail(int what, String pano, String uuid, String utype, String uno, String atid, String ano, String transtype, String ispay, String starttime,
+    public void getBonusRecordList(int what, String pano, String uuid, String utype, String uno, String atid, String ano, String transtype, String ispay, String starttime,
                                      String stoptime, String skip, String limit, boolean isLoading, HttpResponse httpResponse) {
         Map<String, Object> params = new HashMap<>();
         params.put("pano", pano);

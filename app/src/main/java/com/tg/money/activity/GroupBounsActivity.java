@@ -104,11 +104,11 @@ public class GroupBounsActivity extends BaseActivity implements View.OnClickList
                             switch (view.getId()) {
                                 case R.id.tv_group_detail:
                                     Intent it = new Intent(GroupBounsActivity.this, GroupAccountDetailsActivity.class);
+                                    GroupAccountDetailsActivity.list_item = mList.get(position).getDbzhdata();
                                     startActivity(it);
                                     break;
                                 case R.id.tv_group_myself:
                                     Intent intent = new Intent(GroupBounsActivity.this, BonusRecordPersonalActivity.class);
-                                    intent.putExtra("", "");
                                     startActivity(intent);
                                     break;
                             }

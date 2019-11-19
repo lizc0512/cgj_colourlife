@@ -1174,6 +1174,13 @@ public class MainActivity extends BaseActivity implements MessageHandler.Respons
         }
     }
 
+    /**
+     * 首页广告弹窗（单图片）
+     *
+     * @param urlList
+     * @param imageList
+     * @param descList
+     */
     public void intoPopup(ArrayList<String> urlList, ArrayList<String> imageList, ArrayList<String> descList) {
         if (!otherPopShow) {
             try {

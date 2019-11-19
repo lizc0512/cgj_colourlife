@@ -147,6 +147,9 @@ public class GroupBounsEntity {
             private String ano;
             private String money;
             private String atid;
+            private String pano;
+            private String bno;
+            private String uno;
 
             public String getKmname() {
                 return kmname;
@@ -186,6 +189,29 @@ public class GroupBounsEntity {
 
             public void setAtid(String atid) {
                 this.atid = atid;
+            }
+
+            public String getPano() {
+                return pano;
+            }
+
+            public void setPano(String pano) {
+                this.pano = pano;
+            }
+
+            public String getBno() {
+                return bno;
+            }
+
+            public void setBno(String bno) {
+                this.bno = bno;
+            }
+            public String getUno() {
+                return uno;
+            }
+
+            public void setUno(String uno) {
+                this.uno = uno;
             }
         }
     }

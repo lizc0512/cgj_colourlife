@@ -193,7 +193,6 @@ public class BonusModel extends BaseModel {
         Map<String, Object> params = new HashMap<>();
         final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(
                 mContext, 0, utilityRuleUrl), RequestMethod.GET);
-
         request(what, request, RequestEncryptionUtils.getNewSaftyMap(mContext, params), new HttpListener<String>() {
             @Override
             public void onSucceed(int what, Response<String> response) {

@@ -60,7 +60,7 @@
         <RelativeLayout
             android:id="@+id/rl_column"
             android:layout_width="match_parent"
-            android:layout_height="40.0dip"
+            android:layout_height="40dp"
             android:layout_weight="1.0">
 
             <com.tg.coloursteward.view.ColumnHorizontalScrollView

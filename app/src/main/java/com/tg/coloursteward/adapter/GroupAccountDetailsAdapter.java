@@ -30,8 +30,9 @@ public class GroupAccountDetailsAdapter extends MyBaseAdapter<GroupAccountEntity
         inflater = LayoutInflater.from(con);
     }
 
-    public void setData(List<GroupAccountEntity.ContentBean.ListBean> list) {
+    public void setData(List<GroupAccountEntity.ContentBean.ListBean> list,String ano) {
         this.list = list;
+        this.ano = ano;
         notifyDataSetChanged();
     }
 

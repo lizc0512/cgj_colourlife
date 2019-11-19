@@ -91,22 +91,31 @@ public class GroupAccountDetailsActivity extends BaseActivity implements HttpRes
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mScreenWidth = Utils.getWindowsWidth(this);
+        mItemWidth = mScreenWidth / 5 * 2; // 一个Item宽度为屏幕的1/7
         bonusModel = new BonusModel(this);
         bonusPackageModel = new BonusPackageModel(this);
+        initView();
         Intent intent = getIntent();
         if (intent != null) {
             jsondata = intent.getStringExtra("jsondata");
         }
-        mScreenWidth = Utils.getWindowsWidth(this);
-        mItemWidth = mScreenWidth / 5 * 2; // 一个Item宽度为屏幕的1/7
-        initView();
-        initRequest();
+        try {
+            JSONObject jsonObject = new JSONObject(jsondata);
+            String data = jsonObject.getString("dbzhdata");
+            list_item = GsonUtils.jsonToList(data, GroupBounsEntity.ContentBean.DbzhdataBean.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        initData();
+//        initRequest();
         initGetToken();
         headView.hideRightView();
     }
 
     private void initRequest() {
-//        bonusPackageModel.getBonusRecordList();
+        bonusPackageModel.getBonusRecordList(1, list_item.get(ispotision).getPano(), "", "", list_item.get(ispotision).getUno(), "",
+                list_item.get(ispotision).getAno(), "", "", "0", "", "", "20", true, this);
     }
 
     private void initGetToken() {
@@ -116,7 +125,6 @@ public class GroupAccountDetailsActivity extends BaseActivity implements HttpRes
             public void onFinish(String data1, String data2, String data3) {
                 access_token = data2;
                 url_rule = url_rule + "access_token=" + access_token;
-                initData();
             }
 
             @Override
@@ -141,8 +149,8 @@ public class GroupAccountDetailsActivity extends BaseActivity implements HttpRes
         String expireTime = Tools.getStringValue(GroupAccountDetailsActivity.this, Contants.storage.APPAUTHTIME_1);
         Date dt = new Date();
         Long time = dt.getTime();
-        pullListView = (PullRefreshListView) findViewById(R.id.pull_listview);
-        rl_kong = (RelativeLayout) findViewById(R.id.rl_kong);
+        pullListView = findViewById(R.id.pull_listview);
+        rl_kong = findViewById(R.id.rl_kong);
         if (StringUtils.isNotEmpty(expireTime)) {
             if (Long.parseLong(expireTime) <= time) {//token过期
                 getAppAuthInfo();
@@ -152,22 +160,22 @@ public class GroupAccountDetailsActivity extends BaseActivity implements HttpRes
         } else {
             getAppAuthInfo();
         }
+        groupAccountDetailsAdapter = new GroupAccountDetailsAdapter(GroupAccountDetailsActivity.this, listinfo, ano);
         addHead();
         listinfo.clear();
+        pullListView.setAdapter(groupAccountDetailsAdapter);
         pullListView.setDividerHeight(0);
         pullListView.setOnLoadingListener(new OnLoadingListener<PullRefreshListView>() {
-
-
             @Override
             public void refreshData(PullRefreshListView t,
                                     boolean isLoadMore, Message msg, String response) {
                 int code = HttpTools.getCode(response);
                 String message = HttpTools.getMessageString(response);
+                setData();
                 if (code == 0) {
                     String content = HttpTools.getContentString(response);
                     if (StringUtils.isNotEmpty(content)) {
                         rl_kong.setVisibility(View.GONE);
-                        setData();
                         groupAccountEntity = GsonUtils.gsonToBean(response, GroupAccountEntity.class);
                         listinfo.addAll(groupAccountEntity.getContent().getList());
                         if (list_item != null && list_item.size() > 0) {
@@ -175,8 +183,7 @@ public class GroupAccountDetailsActivity extends BaseActivity implements HttpRes
                         }
                         if (listinfo.size() > 0) {
                             rl_kong.setVisibility(View.GONE);
-                            groupAccountDetailsAdapter = new GroupAccountDetailsAdapter(GroupAccountDetailsActivity.this, listinfo, ano);
-                            pullListView.setAdapter(groupAccountDetailsAdapter);
+                            groupAccountDetailsAdapter.setData(listinfo, ano);
                         } else {
                             rl_kong.setVisibility(View.VISIBLE);
                         }
@@ -199,7 +206,7 @@ public class GroupAccountDetailsActivity extends BaseActivity implements HttpRes
                 if (list_item != null && list_item.size() > 0) {
                     params.put("atid", list_item.get(ispotision).getAtid());
                     params.put("ano", list_item.get(ispotision).getAno());
-//                    params.put("pano", list_item.get(ispotision).getPano());
+                    params.put("pano", list_item.get(ispotision).getPano());
                 }
                 params.put("ispay", ispay);
                 params.put("skip", (pagerIndex - 1) * 8);
@@ -218,7 +225,7 @@ public class GroupAccountDetailsActivity extends BaseActivity implements HttpRes
                 if (list_item != null && list_item.size() > 0) {
                     params.put("atid", list_item.get(ispotision).getAtid());
                     params.put("ano", list_item.get(ispotision).getAno());
-//                    params.put("pano", list_item.get(ispotision).getPano());
+                    params.put("pano", list_item.get(ispotision).getPano());
                 }
                 params.put("ispay", ispay);
                 params.put("skip", 0);
@@ -249,7 +256,6 @@ public class GroupAccountDetailsActivity extends BaseActivity implements HttpRes
             } else if (count > 1) {
                 ll_showtab.setVisibility(View.VISIBLE);
             }
-            mColumnHorizontalScrollView.setParam(this, mScreenWidth, mRadioGroup_content, shade_left, shade_right, ll_more_columns, rl_column);
             for (int i = 0; i < count; i++) {
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(mItemWidth, ViewGroup.LayoutParams.WRAP_CONTENT);
                 params.leftMargin = 5;
@@ -264,28 +270,21 @@ public class GroupAccountDetailsActivity extends BaseActivity implements HttpRes
                 if (columnSelectIndex == i) {
                     columnTextView.setSelected(true);
                 }
-
-                // 单击监听
-                columnTextView.setOnClickListener(new View.OnClickListener() {
-
-                    @Override
-                    public void onClick(View v) {
-                        for (int i = 0; i < mRadioGroup_content.getChildCount(); i++) {
-                            View localView = mRadioGroup_content.getChildAt(i);
-                            if (localView != v) {
-                                localView.setSelected(false);
-                            } else {
-                                localView.setSelected(true);
-                                ispotision = i;
-                                pullListView.performLoading();
-                            }
-
+                columnTextView.setOnClickListener(v -> {
+                    for (int i1 = 0; i1 < mRadioGroup_content.getChildCount(); i1++) {
+                        View localView = mRadioGroup_content.getChildAt(i1);
+                        if (localView != v) {
+                            localView.setSelected(false);
+                        } else {
+                            localView.setSelected(true);
+                            ispotision = i1;
+                            pullListView.performLoading();
                         }
-
                     }
                 });
                 mRadioGroup_content.addView(columnTextView, i, params);
             }
+            mColumnHorizontalScrollView.setParam(this, mScreenWidth, mRadioGroup_content, shade_left, shade_right, ll_more_columns, rl_column);
         }
     }
 
@@ -293,18 +292,19 @@ public class GroupAccountDetailsActivity extends BaseActivity implements HttpRes
         LayoutInflater inflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View headView = inflater.inflate(R.layout.public_account_details_head_two, null);
         pullListView.addHeaderView(headView);
-        tvTitle = (TextView) headView.findViewById(R.id.tv_title);
-        tvAccount = (TextView) headView.findViewById(R.id.tv_account);
-        tvSource = (TextView) headView.findViewById(R.id.tv_source);
-        iv_showimg = (ImageView) headView.findViewById(R.id.iv_showimg);
-        ll_showtab = (LinearLayout) headView.findViewById(R.id.ll_showtab);
+        tvTitle = headView.findViewById(R.id.tv_title);
+        tvAccount = headView.findViewById(R.id.tv_account);
+        tvSource = headView.findViewById(R.id.tv_source);
+        iv_showimg = headView.findViewById(R.id.iv_showimg);
+        ll_showtab = headView.findViewById(R.id.ll_showtab);
 
-        mColumnHorizontalScrollView = (ColumnHorizontalScrollView) headView.findViewById(R.id.mColumnHorizontalScrollView);
-        mRadioGroup_content = (LinearLayout) headView.findViewById(R.id.mRadioGroup_content);
-        ll_more_columns = (LinearLayout) headView.findViewById(R.id.ll_more_columns);
-        rl_column = (RelativeLayout) headView.findViewById(R.id.rl_column);
-        shade_left = (ImageView) headView.findViewById(R.id.shade_left);
-        shade_right = (ImageView) headView.findViewById(R.id.shade_right);
+        mColumnHorizontalScrollView = headView.findViewById(R.id.mColumnHorizontalScrollView);
+        mRadioGroup_content = headView.findViewById(R.id.mRadioGroup_content);
+        ll_more_columns = headView.findViewById(R.id.ll_more_columns);
+        rl_column = headView.findViewById(R.id.rl_column);
+        shade_left = headView.findViewById(R.id.shade_left);
+        shade_right = headView.findViewById(R.id.shade_right);
+        setData();
 
     }
 

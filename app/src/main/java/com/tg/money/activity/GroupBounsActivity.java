@@ -12,7 +12,6 @@ import android.widget.TextView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.activity.BonusRecordPersonalActivity;
-import com.tg.coloursteward.activity.GroupAccountDetailsActivity;
 import com.tg.coloursteward.base.BaseActivity;
 import com.tg.coloursteward.baseModel.HttpResponse;
 import com.tg.coloursteward.info.UserInfo;

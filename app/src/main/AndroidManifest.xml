@@ -281,7 +281,7 @@
         <activity android:name=".activity.AccountExchangeRecordActivity" />
         <activity android:name=".activity.AccountExchangeDetailActivity" />
         <activity android:name=".activity.PublicAccountDetailsActivity" />
-        <activity android:name=".activity.GroupAccountDetailsActivity" />
+        <activity android:name="com.tg.money.activity.GroupAccountDetailsActivity" />
         <activity android:name=".activity.PublicAccountSearchActivity" />
         <activity android:name=".activity.PublicAccountListActivity" />
         <activity android:name=".activity.PublicAccountTransferActivity" />

@@ -1,10 +1,13 @@
-package com.tg.coloursteward.activity;
+package com.tg.money.activity;
 
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.NonNull;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -16,6 +19,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener;
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.adapter.GroupAccountDetailsAdapter;
 import com.tg.coloursteward.base.BaseActivity;
@@ -37,6 +42,7 @@ import com.tg.coloursteward.util.Tools;
 import com.tg.coloursteward.util.Utils;
 import com.tg.coloursteward.view.ColumnHorizontalScrollView;
 import com.tg.coloursteward.view.PullRefreshListView;
+import com.tg.money.adapter.GroupAccountDetialAdapter;
 import com.tg.money.entity.GroupBounsEntity;
 import com.tg.money.model.BonusPackageModel;
 import com.youmai.hxsdk.router.APath;
@@ -87,6 +93,11 @@ public class GroupAccountDetailsActivity extends BaseActivity implements HttpRes
     private String jsondata;
     private BonusModel bonusModel;
     private BonusPackageModel bonusPackageModel;
+    private RefreshLayout smart_layout;
+    private int mPage = 1;
+    private int numTotal;
+    private GroupAccountDetialAdapter adapter;
+    private RecyclerView rv_group_account;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,14 +119,14 @@ public class GroupAccountDetailsActivity extends BaseActivity implements HttpRes
             e.printStackTrace();
         }
         initData();
-//        initRequest();
+        initRequest(mPage, list_item.get(ispotision).getPano(), list_item.get(ispotision).getUno(), list_item.get(ispotision).getAno(), true);
         initGetToken();
         headView.hideRightView();
     }
 
-    private void initRequest() {
-        bonusPackageModel.getBonusRecordList(1, list_item.get(ispotision).getPano(), "", "", list_item.get(ispotision).getUno(), "",
-                list_item.get(ispotision).getAno(), "", "", "0", "", "", "20", true, this);
+    private void initRequest(int page, String pano, String uno, String ano, boolean isLoading) {
+        bonusPackageModel.getBonusRecordList(1, pano, "", "", uno, "",
+                ano, "", "", "0", "", String.valueOf((page - 1) * 20), "20", isLoading, this);
     }
 
     private void initGetToken() {
@@ -145,6 +156,9 @@ public class GroupAccountDetailsActivity extends BaseActivity implements HttpRes
     }
 
     private void initView() {
+        smart_layout = findViewById(R.id.smart_layout_group);
+        rv_group_account = findViewById(R.id.rv_group_account);
+        rv_group_account.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         accessToken_1 = Tools.getStringValue(GroupAccountDetailsActivity.this, Contants.storage.APPAUTH_1);
         String expireTime = Tools.getStringValue(GroupAccountDetailsActivity.this, Contants.storage.APPAUTHTIME_1);
         Date dt = new Date();
@@ -160,8 +174,21 @@ public class GroupAccountDetailsActivity extends BaseActivity implements HttpRes
         } else {
             getAppAuthInfo();
         }
+        adapter = new GroupAccountDetialAdapter(R.layout.public_account_details_item_jtjjb, listinfo);
+        rv_group_account.setAdapter(adapter);
         groupAccountDetailsAdapter = new GroupAccountDetailsAdapter(GroupAccountDetailsActivity.this, listinfo, ano);
         addHead();
+        smart_layout.setOnRefreshLoadMoreListener(new OnRefreshLoadMoreListener() {
+            @Override
+            public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
+
+            }
+
+            @Override
+            public void onRefresh(@NonNull RefreshLayout refreshLayout) {
+
+            }
+        });
         listinfo.clear();
         pullListView.setAdapter(groupAccountDetailsAdapter);
         pullListView.setDividerHeight(0);
@@ -209,7 +236,7 @@ public class GroupAccountDetailsActivity extends BaseActivity implements HttpRes
                     params.put("pano", list_item.get(ispotision).getPano());
                 }
                 params.put("ispay", ispay);
-                params.put("skip", (pagerIndex - 1) * 8);
+                params.put("skip", (pagerIndex - 1) * PullRefreshListView.PAGER_SIZE);
                 params.put("limit", PullRefreshListView.PAGER_SIZE);
                 HttpTools.httpPost(Contants.URl.URL_ICETEST, "/jrpt/transaction/list", config, params);
             }
@@ -278,7 +305,10 @@ public class GroupAccountDetailsActivity extends BaseActivity implements HttpRes
                         } else {
                             localView.setSelected(true);
                             ispotision = i1;
-                            pullListView.performLoading();
+                            mPage = 1;
+                            setData();
+                            initRequest(mPage, list_item.get(ispotision).getPano(), list_item.get(ispotision).getUno(), list_item.get(ispotision).getAno(), true);
+//                            pullListView.performLoading();
                         }
                     }
                 });
@@ -291,7 +321,7 @@ public class GroupAccountDetailsActivity extends BaseActivity implements HttpRes
     private void addHead() {
         LayoutInflater inflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View headView = inflater.inflate(R.layout.public_account_details_head_two, null);
-        pullListView.addHeaderView(headView);
+        adapter.addHeaderView(headView);
         tvTitle = headView.findViewById(R.id.tv_title);
         tvAccount = headView.findViewById(R.id.tv_account);
         tvSource = headView.findViewById(R.id.tv_source);
@@ -305,7 +335,6 @@ public class GroupAccountDetailsActivity extends BaseActivity implements HttpRes
         shade_left = headView.findViewById(R.id.shade_left);
         shade_right = headView.findViewById(R.id.shade_right);
         setData();
-
     }
 
     private void setData() {
@@ -418,15 +447,33 @@ public class GroupAccountDetailsActivity extends BaseActivity implements HttpRes
                 break;
             case 1:
                 if (!TextUtils.isEmpty(result)) {
-
+                    String content = HttpTools.getContentString(result);
+                    if (StringUtils.isNotEmpty(content)) {
+                        rl_kong.setVisibility(View.GONE);
+                        groupAccountEntity = GsonUtils.gsonToBean(result, GroupAccountEntity.class);
+                        listinfo.addAll(groupAccountEntity.getContent().getList());
+                        if (list_item != null && list_item.size() > 0) {
+                            ano = list_item.get(ispotision).getAno();
+                        }
+                        if (listinfo.size() > 0) {
+                            rl_kong.setVisibility(View.GONE);
+//                            groupAccountDetailsAdapter.setData(listinfo, ano);
+                            adapter.setNewData(listinfo);
+                        }
+                    } else {
+                        rl_kong.setVisibility(View.VISIBLE);
+                    }
+                } else {
+                    rl_kong.setVisibility(View.VISIBLE);
                 }
                 break;
         }
+
     }
 
     @Override
     public View getContentView() {
-        return getLayoutInflater().inflate(R.layout.activity_public_account_details, null);
+        return getLayoutInflater().inflate(R.layout.activity_group_account_details, null);
     }
 
     @Override

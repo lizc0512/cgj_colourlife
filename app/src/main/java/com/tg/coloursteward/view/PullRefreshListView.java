@@ -23,8 +23,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.tg.coloursteward.activity.AccountExchangeRecordActivity;
 import com.tg.coloursteward.R;
+import com.tg.coloursteward.activity.AccountExchangeRecordActivity;
 import com.tg.coloursteward.base.MyBaseAdapter;
 import com.tg.coloursteward.inter.OnLoadingListener;
 import com.tg.coloursteward.net.HttpTools;
@@ -126,6 +126,7 @@ public class PullRefreshListView extends LinearLayout implements OnClickListener
     private boolean failClearData = false;
     private boolean enableMoreButton = true;
     private int minPageSize;
+
 
     public interface NetPullRefreshOnScroll {
         void refreshOnScroll(AbsListView view, int firstVisibleItem,

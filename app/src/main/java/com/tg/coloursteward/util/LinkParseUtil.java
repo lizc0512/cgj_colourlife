@@ -12,7 +12,7 @@ import com.tg.coloursteward.activity.AccountExchangeRecordActivity;
 import com.tg.coloursteward.activity.BonusRecordPersonalActivity;
 import com.tg.coloursteward.activity.DataShowActivity;
 import com.tg.coloursteward.activity.DownloadManagerActivity;
-import com.tg.coloursteward.activity.GroupAccountDetailsActivity;
+import com.tg.money.activity.GroupAccountDetailsActivity;
 import com.tg.coloursteward.activity.MyBrowserActivity;
 import com.tg.coloursteward.activity.PublicAccountActivity;
 import com.tg.money.activity.GroupBounsActivity;

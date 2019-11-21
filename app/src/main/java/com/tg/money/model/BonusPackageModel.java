@@ -146,33 +146,25 @@ public class BonusPackageModel extends BaseModel {
      *
      * @param what
      * @param pano         平台编号
-     * @param uuid         唯一编码
      * @param utype        用户类型，1接入方应用，2商家，3用户
-     * @param uno          用户编号
      * @param atid         金融账号类型
      * @param ano          金融账号
-     * @param transtype    交易类型，0全部，1消费，2充值，3转账，4提现
      * @param ispay        是否区分付款 支付方，0全部，1支付，2收款
      * @param starttime    交易开始时间, unix时间戳
-     * @param stoptime     交易借宿时间，unix时间戳
      * @param skip         忽略返回记录数，默认0
      * @param limit        返回记录数，默认20
      * @param isLoading
      * @param httpResponse
      */
-    public void getBonusRecordList(int what, String pano, String uuid, String utype, String uno, String atid, String ano, String transtype, String ispay, String starttime,
-                                     String stoptime, String skip, String limit, boolean isLoading, HttpResponse httpResponse) {
+    public void getBonusRecordList(int what, String pano, String utype, String atid, String ano, String ispay, String starttime,
+                                   String skip, String limit, boolean isLoading, HttpResponse httpResponse) {
         Map<String, Object> params = new HashMap<>();
         params.put("pano", pano);
-        params.put("uuid", uuid);
         params.put("utype", utype);
-        params.put("uno", uno);
         params.put("atid", atid);
         params.put("ano", ano);
-        params.put("transtype", transtype);
         params.put("ispay", ispay);
         params.put("starttime", starttime);
-        params.put("stoptime", stoptime);
         params.put("skip", skip);
         params.put("limit", limit);
         final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 0, groupBonusListUrl), RequestMethod.GET);

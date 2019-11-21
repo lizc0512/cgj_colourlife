@@ -40,6 +40,7 @@ public class GroupBounsActivity extends BaseActivity implements View.OnClickList
     private BonusPackageModel bonusPackageModel;
     private List<GroupBounsEntity.ContentBean> mList = new ArrayList<>();
     private GroupBonusAdapter adapter;
+    private GroupBounsEntity entity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,8 +89,9 @@ public class GroupBounsActivity extends BaseActivity implements View.OnClickList
         switch (what) {
             case 0:
                 if (!TextUtils.isEmpty(result)) {
-                    GroupBounsEntity entity = new GroupBounsEntity();
+                    entity = new GroupBounsEntity();
                     entity = GsonUtils.gsonToBean(result, GroupBounsEntity.class);
+
                     mList.addAll(entity.getContent());
                     if (null == adapter) {
                         adapter = new GroupBonusAdapter(R.layout.item_group_bonus, mList);
@@ -103,6 +105,7 @@ public class GroupBounsActivity extends BaseActivity implements View.OnClickList
                             switch (view.getId()) {
                                 case R.id.tv_group_detail:
                                     Intent it = new Intent(GroupBounsActivity.this, GroupAccountDetailsActivity.class);
+                                    it.putExtra("dbzhdata", entity.getContent().get(position).getDbzhdata().toString());
                                     GroupAccountDetailsActivity.list_item = mList.get(position).getDbzhdata();
                                     startActivity(it);
                                     break;

@@ -71,6 +71,7 @@ public class GroupAccountDetailsActivity extends BaseActivity implements HttpRes
     private int ispay = 2;//0全部，1支付，2收款
     private GroupAccountEntity groupAccountEntity;
     private List<GroupAccountEntity.ContentBean.ListBean> listinfo = new ArrayList<>();
+    private List<GroupAccountEntity.ContentBean.ListBean> itemList = new ArrayList<>();
     private GroupAccountDetailsAdapter groupAccountDetailsAdapter;
     public static List<GroupBounsEntity.ContentBean.DbzhdataBean> list_item = new ArrayList<>();
     private int ispotision = 0;//当前选项卡位置；
@@ -98,6 +99,7 @@ public class GroupAccountDetailsActivity extends BaseActivity implements HttpRes
     private int numTotal;
     private GroupAccountDetialAdapter adapter;
     private RecyclerView rv_group_account;
+    private int page_size = 20;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,7 +108,7 @@ public class GroupAccountDetailsActivity extends BaseActivity implements HttpRes
         mItemWidth = mScreenWidth / 5 * 2; // 一个Item宽度为屏幕的1/7
         bonusModel = new BonusModel(this);
         bonusPackageModel = new BonusPackageModel(this);
-        initView();
+
         Intent intent = getIntent();
         if (intent != null) {
             jsondata = intent.getStringExtra("jsondata");
@@ -118,15 +120,16 @@ public class GroupAccountDetailsActivity extends BaseActivity implements HttpRes
         } catch (Exception e) {
             e.printStackTrace();
         }
+        initView();
         initData();
-        initRequest(mPage, list_item.get(ispotision).getPano(), list_item.get(ispotision).getUno(), list_item.get(ispotision).getAno(), true);
+        initRequest(mPage, list_item.get(ispotision).getPano(), list_item.get(ispotision).getAtid(), list_item.get(ispotision).getAno(), true);
         initGetToken();
         headView.hideRightView();
     }
 
-    private void initRequest(int page, String pano, String uno, String ano, boolean isLoading) {
-        bonusPackageModel.getBonusRecordList(1, pano, "", "", uno, "",
-                ano, "", "", "0", "", String.valueOf((page - 1) * 20), "20", isLoading, this);
+    private void initRequest(int page, String pano, String atid, String ano, boolean isLoading) {
+        bonusPackageModel.getBonusRecordList(1, pano, "2", atid,
+                ano, String.valueOf(ispay), "0", String.valueOf((page - 1) * 20), String.valueOf(page_size), isLoading, this);
     }
 
     private void initGetToken() {
@@ -169,24 +172,33 @@ public class GroupAccountDetailsActivity extends BaseActivity implements HttpRes
             if (Long.parseLong(expireTime) <= time) {//token过期
                 getAppAuthInfo();
             } else {
-                pullListView.performLoading();
+//                pullListView.performLoading();
             }
         } else {
             getAppAuthInfo();
         }
-        adapter = new GroupAccountDetialAdapter(R.layout.public_account_details_item_jtjjb, listinfo);
+        adapter = new GroupAccountDetialAdapter(R.layout.public_account_details_item_jtjjb, listinfo, "");
         rv_group_account.setAdapter(adapter);
         groupAccountDetailsAdapter = new GroupAccountDetailsAdapter(GroupAccountDetailsActivity.this, listinfo, ano);
         addHead();
         smart_layout.setOnRefreshLoadMoreListener(new OnRefreshLoadMoreListener() {
             @Override
             public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
-
+                if (itemList.size() < page_size) {
+                    smart_layout.finishLoadMoreWithNoMoreData();
+                    com.tg.coloursteward.util.ToastUtil.showShortToast(GroupAccountDetailsActivity.this, "没有数据了...");
+                } else {
+                    mPage++;
+                    initRequest(mPage, list_item.get(ispotision).getPano(), list_item.get(ispotision).getUno(), list_item.get(ispotision).getAno(), true);
+                }
+                smart_layout.finishLoadMore();
             }
 
             @Override
             public void onRefresh(@NonNull RefreshLayout refreshLayout) {
-
+                mPage = 1;
+                initRequest(mPage, list_item.get(ispotision).getPano(), list_item.get(ispotision).getUno(), list_item.get(ispotision).getAno(), false);
+                smart_layout.finishRefresh();
             }
         });
         listinfo.clear();
@@ -210,7 +222,7 @@ public class GroupAccountDetailsActivity extends BaseActivity implements HttpRes
                         }
                         if (listinfo.size() > 0) {
                             rl_kong.setVisibility(View.GONE);
-                            groupAccountDetailsAdapter.setData(listinfo, ano);
+//                            groupAccountDetailsAdapter.setData(listinfo, ano);
                         } else {
                             rl_kong.setVisibility(View.VISIBLE);
                         }
@@ -377,7 +389,7 @@ public class GroupAccountDetailsActivity extends BaseActivity implements HttpRes
             if (Long.parseLong(expireTime) <= time) {//token过期
                 getAppAuthInfo();
             } else {
-                pullListView.performLoading();
+//                pullListView.performLoading();
             }
         } else {
             getAppAuthInfo();
@@ -404,7 +416,7 @@ public class GroupAccountDetailsActivity extends BaseActivity implements HttpRes
                             String expireTime = content.getString("expire");
                             Tools.saveStringValue(GroupAccountDetailsActivity.this, Contants.storage.APPAUTH_1, accessToken);
                             Tools.saveStringValue(GroupAccountDetailsActivity.this, Contants.storage.APPAUTHTIME_1, expireTime);
-                            pullListView.performLoading();
+//                            pullListView.performLoading();
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -451,6 +463,11 @@ public class GroupAccountDetailsActivity extends BaseActivity implements HttpRes
                     if (StringUtils.isNotEmpty(content)) {
                         rl_kong.setVisibility(View.GONE);
                         groupAccountEntity = GsonUtils.gsonToBean(result, GroupAccountEntity.class);
+                        if (mPage == 1) {
+                            listinfo.clear();
+                        }
+                        itemList.clear();
+                        itemList = groupAccountEntity.getContent().getList();
                         listinfo.addAll(groupAccountEntity.getContent().getList());
                         if (list_item != null && list_item.size() > 0) {
                             ano = list_item.get(ispotision).getAno();
@@ -458,8 +475,11 @@ public class GroupAccountDetailsActivity extends BaseActivity implements HttpRes
                         if (listinfo.size() > 0) {
                             rl_kong.setVisibility(View.GONE);
 //                            groupAccountDetailsAdapter.setData(listinfo, ano);
-                            adapter.setNewData(listinfo);
+                            adapter.setData(ano);
+                        } else {
+                            rl_kong.setVisibility(View.VISIBLE);
                         }
+                        adapter.setNewData(listinfo);
                     } else {
                         rl_kong.setVisibility(View.VISIBLE);
                     }

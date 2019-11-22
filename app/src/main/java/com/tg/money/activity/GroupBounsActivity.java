@@ -20,6 +20,9 @@ import com.tg.money.adapter.GroupBonusAdapter;
 import com.tg.money.entity.GroupBounsEntity;
 import com.tg.money.model.BonusPackageModel;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -91,7 +94,6 @@ public class GroupBounsActivity extends BaseActivity implements View.OnClickList
                 if (!TextUtils.isEmpty(result)) {
                     entity = new GroupBounsEntity();
                     entity = GsonUtils.gsonToBean(result, GroupBounsEntity.class);
-
                     mList.addAll(entity.getContent());
                     if (null == adapter) {
                         adapter = new GroupBonusAdapter(R.layout.item_group_bonus, mList);
@@ -105,9 +107,18 @@ public class GroupBounsActivity extends BaseActivity implements View.OnClickList
                             switch (view.getId()) {
                                 case R.id.tv_group_detail:
                                     Intent it = new Intent(GroupBounsActivity.this, GroupAccountDetailsActivity.class);
-                                    it.putExtra("dbzhdata", entity.getContent().get(position).getDbzhdata().toString());
-                                    GroupAccountDetailsActivity.list_item = mList.get(position).getDbzhdata();
-                                    startActivity(it);
+                                    try {
+                                        JSONObject jsonObject = new JSONObject(result);
+                                        String conent = jsonObject.getString("content");
+                                        JSONArray jsonArray = new JSONArray(conent);
+                                        String data = jsonArray.get(position).toString();
+                                        JSONObject dbzhdata = new JSONObject(data);
+                                        String dbzh = dbzhdata.getString("dbzhdata");
+                                        it.putExtra("dbzhdata", dbzh);
+                                        startActivity(it);
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
                                     break;
                                 case R.id.tv_group_myself:
                                     Intent intent = new Intent(GroupBounsActivity.this, BonusRecordPersonalActivity.class);

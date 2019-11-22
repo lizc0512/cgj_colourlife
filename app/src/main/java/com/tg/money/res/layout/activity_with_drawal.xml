@@ -110,7 +110,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/size_15dp"
         android:layout_marginTop="@dimen/size_4dp"
-        android:text="手续费:"
+        android:text="手 续 费:  "
         android:textColor="@color/color_333b46"
         android:textSize="@dimen/font_14sp"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -145,13 +145,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/size_4dp"
-        android:drawableRight="@drawable/next"
+        android:drawableRight="@drawable/withcardh_ask"
         android:drawablePadding="@dimen/size_5dp"
-        tools:text="0.00元"
         android:textColor="@color/red"
         android:textSize="@dimen/font_14sp"
         app:layout_constraintLeft_toRightOf="@id/tv_withdraw_income"
-        app:layout_constraintTop_toBottomOf="@id/tv_withdraw_fee" />
+        app:layout_constraintTop_toBottomOf="@id/tv_withdraw_fee"
+        tools:text=" 0.00元" />
 
     <TextView
         android:id="@+id/tv_withdraw_relmoney"
@@ -159,7 +159,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/size_15dp"
         android:layout_marginTop="@dimen/size_4dp"
-        android:text="到账金额 :0.00元"
+        android:text="到账金额: 0.00元"
         android:textColor="@color/color_333b46"
         android:textSize="@dimen/font_14sp"
         app:layout_constraintLeft_toLeftOf="parent"

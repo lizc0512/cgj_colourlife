@@ -2,8 +2,12 @@ package com.tg.money.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.text.InputFilter;
+import android.text.SpannableString;
+import android.text.Spanned;
 import android.text.TextUtils;
+import android.text.style.ForegroundColorSpan;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -42,6 +46,7 @@ public class WithDrawalActivity extends BaseActivity implements View.OnClickList
     private TextView tv_withdraw_tqnum;
     private TextView tv_withdraw_btn;
     private TextView tv_withdraw_all;
+    private TextView tv_withdraw_relmoney;
     private EditText et_withdrawal_money;
     private MoneyModel moneyModel;
     private String detail_content;
@@ -69,6 +74,7 @@ public class WithDrawalActivity extends BaseActivity implements View.OnClickList
         tv_withdraw_btn = findViewById(R.id.tv_withdraw_btn);
         et_withdrawal_money = findViewById(R.id.et_withdrawal_money);
         tv_withdraw_all = findViewById(R.id.tv_withdraw_all);
+        tv_withdraw_relmoney = findViewById(R.id.tv_withdraw_relmoney);
         et_withdrawal_money.setFilters(new InputFilter[]{new DecimalDigitsInputFilter(2), new InputFilter.LengthFilter(11)});
         tv_base_title.setText("提现");
         iv_base_back.setOnClickListener(this);
@@ -106,7 +112,7 @@ public class WithDrawalActivity extends BaseActivity implements View.OnClickList
                 finish();
                 break;
             case R.id.rl_withdrawal_card:
-                Intent intent = new Intent(this, SupportCardActivity.class);
+                Intent intent = new Intent(this, BindCardActivity.class);
                 startActivityForResult(intent, 100);
                 break;
             case R.id.tv_withdraw_incomefee:
@@ -158,8 +164,8 @@ public class WithDrawalActivity extends BaseActivity implements View.OnClickList
                     CashInfoEntity cashInfoEntity = new CashInfoEntity();
                     cashInfoEntity = GsonUtils.gsonToBean(result, CashInfoEntity.class);
                     detail_content = cashInfoEntity.getContent().getDetail_content();
-                    tv_withdraw_feenum.setText(cashInfoEntity.getContent().getService_charge() + "元/笔");
-                    tv_withdraw_incomefee.setText(cashInfoEntity.getContent().getService_charge() + "元");
+                    tv_withdraw_feenum.setText(" " + cashInfoEntity.getContent().getService_charge() + "元/笔");
+                    tv_withdraw_incomefee.setText(" " + cashInfoEntity.getContent().getService_charge() + "元");
                 }
                 break;
             case 1:

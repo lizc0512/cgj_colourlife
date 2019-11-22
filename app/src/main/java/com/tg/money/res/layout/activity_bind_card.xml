@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
     tools:context="com.tg.money.activity.BindCardActivity">
 
     <include
@@ -214,14 +215,6 @@
             android:background="@color/line_color" />
     </RelativeLayout>
 
-    <android.support.v7.widget.AppCompatCheckBox
-        android:id="@+id/cb_bindcard_check"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/size_100dp"
-        android:layout_marginTop="@dimen/size_30dp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/rl_bindcard_code" />
 
     <TextView
         android:id="@+id/tv_bindcard_agree"
@@ -231,7 +224,17 @@
         android:textColor="@color/color_333b46"
         android:textSize="@dimen/font_14sp"
         app:layout_constraintBaseline_toBaselineOf="@id/cb_bindcard_check"
-        app:layout_constraintLeft_toRightOf="@id/cb_bindcard_check"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/rl_bindcard_code" />
+
+    <android.support.v7.widget.AppCompatCheckBox
+        android:id="@+id/cb_bindcard_check"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/size_30dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/tv_bindcard_agree"
         app:layout_constraintTop_toBottomOf="@id/rl_bindcard_code" />
 
     <TextView

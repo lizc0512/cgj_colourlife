@@ -35,6 +35,7 @@ public class MoneyModel extends BaseModel {
     private String jsfpCashInfoUrl = "/app/split/cashing/info";
     private String jsfpCashAccountUrl = "/app/split/cashing/account";
     private String jsfpCashMoneyUrl = "/app/split/cashing";
+    private String bankListUrl = "/app/bankcard/bank";
 
 
     public MoneyModel() {
@@ -361,7 +362,7 @@ public class MoneyModel extends BaseModel {
      * @param httpResponse
      */
     public void postCashMoney(int what, String general_uuid, String split_type, String split_target, String amount, String bank_name, String bank_num,
-                             String bank_user, String bank_code, final HttpResponse httpResponse) {
+                              String bank_user, String bank_code, final HttpResponse httpResponse) {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("general_uuid", general_uuid);
         params.put("split_type", split_type);
@@ -389,6 +390,45 @@ public class MoneyModel extends BaseModel {
 
             @Override
             public void onFailed(int what, Response<String> response) {
+            }
+        }, true, false);
+    }
+
+    /**
+     * 银行列表
+     *
+     * @param what
+     * @param name
+     * @param page
+     * @param page_size
+     * @param httpResponse
+     */
+    public void getBankList(int what, String name, int page, int page_size, final HttpResponse httpResponse) {
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("name", name);
+        params.put("page", page);
+        params.put("page_size", page_size);
+        final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 0, bankListUrl), RequestMethod.GET);
+        request(what, request, params, new HttpListener<String>() {
+            @Override
+            public void onSucceed(int what, Response<String> response) {
+                int responseCode = response.getHeaders().getResponseCode();
+                String result = response.get();
+                if (responseCode == RequestEncryptionUtils.responseSuccess) {
+                    if (!TextUtils.isEmpty(result)) {
+                        int code = showSuccesResultMessage(result);
+                        if (code == 0) {
+                            httpResponse.OnHttpResponse(what, result);
+                        }
+                    }
+                } else {
+                    showErrorCodeMessage(response);
+                }
+            }
+
+            @Override
+            public void onFailed(int what, Response<String> response) {
+                showExceptionMessage(what, response);
             }
         }, true, false);
     }

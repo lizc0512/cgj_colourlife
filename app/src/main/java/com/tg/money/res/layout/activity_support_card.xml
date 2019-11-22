@@ -11,38 +11,16 @@
         android:id="@+id/supportcard_top"
         layout="@layout/base_actionbar" />
 
-    <LinearLayout
-        android:id="@+id/ll_support_type"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/size_50dp"
-        android:background="@color/white"
-        android:orientation="horizontal"
-        app:layout_constraintTop_toBottomOf="@id/supportcard_top">
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:text="储蓄卡" />
-
-        <View
-            android:layout_width="@dimen/size_1px"
-            android:layout_height="match_parent"
-            android:background="@color/line_color" />
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:text="信用卡" />
-    </LinearLayout>
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/rv_supportcard"
+    <com.scwang.smartrefresh.layout.SmartRefreshLayout
+        android:id="@+id/sr_support_card"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/ll_support_type"
-        tools:listitem="@layout/item_support_card" />
+        app:layout_constraintTop_toBottomOf="@id/supportcard_top">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv_supportcard"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:listitem="@layout/item_support_card" />
+    </com.scwang.smartrefresh.layout.SmartRefreshLayout>
 </android.support.constraint.ConstraintLayout>

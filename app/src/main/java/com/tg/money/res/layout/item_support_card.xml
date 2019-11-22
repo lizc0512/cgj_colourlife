@@ -16,8 +16,8 @@
         android:id="@+id/tv_support_bank"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
         android:layout_marginLeft="@dimen/size_15dp"
-        android:layout_marginTop="@dimen/size_10dp"
         android:layout_toRightOf="@id/iv_support_icon"
         android:textColor="@color/color_333b46"
         android:textSize="@dimen/font_16sp"
@@ -32,5 +32,12 @@
         android:layout_toRightOf="@id/iv_support_icon"
         android:textColor="@color/color_bbbbbb"
         android:textSize="@dimen/font_14sp"
+        android:visibility="gone"
         tools:text="xxx" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/size_1px"
+        android:layout_alignParentBottom="true"
+        android:background="@color/line_color" />
 </RelativeLayout>

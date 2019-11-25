@@ -43,6 +43,7 @@ public interface SpConstants {
         String ORG_UUID = "org_uuid";//租户Id
         String USER_MOBILE = "user_mobile";//租户Id
         String DEVICE_TOKEN = "device_token";//设备唯一token
+        String BANK_LIST = "bank_list";//
 
         String LATITUDE = "str_latitude";//纬度
         String LONGITUDE = "str_longitude";//经度

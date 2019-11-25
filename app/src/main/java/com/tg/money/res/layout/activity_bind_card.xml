@@ -11,25 +11,57 @@
         android:id="@+id/bindcard_top"
         layout="@layout/base_actionbar" />
 
-    <TextView
-        android:id="@+id/tv_bindcard_look"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/size_15dp"
+    <RelativeLayout
+        android:id="@+id/rl_bindcard_bank"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/size_50dp"
         android:layout_marginTop="@dimen/size_10dp"
-        android:text="查看可支持的银行卡"
-        android:textColor="@color/color_1ca1f4"
-        android:textSize="@dimen/font_14sp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/bindcard_top" />
+        android:background="@color/white"
+        app:layout_constraintTop_toBottomOf="@id/bindcard_top">
+
+        <TextView
+            android:id="@+id/tv_bank"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/size_15dp"
+            android:text="银行"
+            android:textColor="@color/color_333b46"
+            android:textSize="@dimen/font_16sp" />
+
+        <TextView
+            android:id="@+id/tv_bindcard_bank"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/size_30dp"
+            android:layout_marginRight="@dimen/size_15dp"
+            android:layout_toRightOf="@id/tv_bank"
+            android:text="请选择银行"
+            android:textColor="@color/color_999faa"
+            android:textSize="@dimen/font_14sp" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/size_15dp"
+            android:src="@drawable/next" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/size_1px"
+            android:layout_alignParentBottom="true"
+            android:background="@color/line_color" />
+    </RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/rl_bindcard_sn"
         android:layout_width="match_parent"
         android:layout_height="@dimen/size_50dp"
-        android:layout_marginTop="@dimen/size_10dp"
         android:background="@color/white"
-        app:layout_constraintTop_toBottomOf="@id/tv_bindcard_look">
+        app:layout_constraintTop_toBottomOf="@id/rl_bindcard_bank">
 
         <TextView
             android:id="@+id/tv_sn"
@@ -51,6 +83,7 @@
             android:layout_toRightOf="@id/tv_sn"
             android:background="@null"
             android:hint="请输入银行卡号"
+            android:inputType="number"
             android:textColor="@color/color_333b46"
             android:textSize="@dimen/font_14sp" />
 
@@ -89,6 +122,18 @@
             android:textSize="@dimen/font_14sp"
             tools:text="***" />
 
+        <com.tg.coloursteward.view.ClearEditText
+            android:id="@+id/et_bindcard_name"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="@dimen/size_30dp"
+            android:layout_toRightOf="@id/tv_name"
+            android:background="@null"
+            android:hint="请输入姓名"
+            android:textColor="@color/color_333b46"
+            android:textSize="@dimen/font_14sp"
+            android:visibility="gone" />
+
         <View
             android:layout_width="match_parent"
             android:layout_height="@dimen/size_1px"
@@ -123,6 +168,18 @@
             android:textColor="@color/color_333b46"
             android:textSize="@dimen/font_14sp"
             tools:text="***" />
+
+        <com.tg.coloursteward.view.ClearEditText
+            android:id="@+id/et_bindcard_id"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="@dimen/size_13dp"
+            android:layout_toRightOf="@id/tv_id"
+            android:background="@null"
+            android:hint="请输入身份证号8"
+            android:textColor="@color/color_333b46"
+            android:textSize="@dimen/font_14sp"
+            android:visibility="gone" />
 
         <View
             android:layout_width="match_parent"
@@ -159,6 +216,7 @@
             android:layout_toRightOf="@id/tv_phone"
             android:background="@null"
             android:hint="请输入银行预留手机号"
+            android:inputType="phone"
             android:textColor="@color/color_333b46"
             android:textSize="@dimen/font_14sp" />
 
@@ -184,17 +242,19 @@
             android:layout_marginLeft="@dimen/size_13dp"
             android:layout_marginRight="@dimen/size_15dp"
             android:background="@null"
-            android:hint="请输入短息验证码"
+            android:hint="请输入短信验证码"
+            android:inputType="number"
             android:textColor="@color/color_333b46"
             android:textSize="@dimen/font_14sp" />
 
-        <TextView
-            android:id="@+id/tv_bindcard_send"
+        <Button
+            android:id="@+id/btn_bindcard_send"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="@dimen/size_15dp"
+            android:background="@null"
             android:text="发送验证码"
             android:textColor="@color/color_1ca1f4"
             android:textSize="@dimen/font_16sp" />
@@ -205,7 +265,7 @@
             android:layout_alignParentBottom="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="@dimen/size_10dp"
-            android:layout_toLeftOf="@id/tv_bindcard_send"
+            android:layout_toLeftOf="@id/btn_bindcard_send"
             android:background="@color/line_color" />
 
         <View
@@ -220,10 +280,10 @@
         android:id="@+id/tv_bindcard_agree"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/size_30dp"
         android:text="我已经阅读并同意《用户协议》"
         android:textColor="@color/color_333b46"
         android:textSize="@dimen/font_14sp"
-        app:layout_constraintBaseline_toBaselineOf="@id/cb_bindcard_check"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/rl_bindcard_code" />
@@ -232,8 +292,7 @@
         android:id="@+id/cb_bindcard_check"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/size_30dp"
-        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintBaseline_toBaselineOf="@id/tv_bindcard_agree"
         app:layout_constraintRight_toLeftOf="@id/tv_bindcard_agree"
         app:layout_constraintTop_toBottomOf="@id/rl_bindcard_code" />
 

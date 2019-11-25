@@ -11,11 +11,63 @@
         android:id="@+id/supportcard_top"
         layout="@layout/base_actionbar" />
 
+    <RelativeLayout
+        android:id="@+id/rl_support_search"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:background="@color/white"
+        app:layout_constraintTop_toBottomOf="@id/supportcard_top">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/size_15dp"
+            android:layout_marginRight="@dimen/size_15dp"
+            android:background="@drawable/border_hui_radius"
+            android:focusable="true"
+            android:focusableInTouchMode="true">
+
+            <ImageView
+                android:id="@+id/iv_life_serach"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10dp"
+                android:src="@drawable/icon_home_search" />
+
+            <com.tg.coloursteward.view.ClearEditText
+                android:id="@+id/et_support_serach"
+                android:layout_width="match_parent"
+                android:layout_height="22dp"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="6dp"
+                android:layout_marginRight="5dp"
+                android:layout_toRightOf="@id/iv_life_serach"
+                android:background="@color/color_f2f3f4"
+                android:hint="搜索"
+                android:imeOptions="actionSearch"
+                android:inputType="text"
+                android:paddingRight="5dp"
+                android:singleLine="true"
+                android:textColor="@color/color_333b46"
+                android:textColorHint="@color/color_a3aaae"
+                android:textSize="13dp" />
+        </RelativeLayout>
+    </RelativeLayout>
+
+    <View
+        android:id="@+id/view"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/size_1px"
+        android:background="@color/line_color"
+        app:layout_constraintTop_toBottomOf="@id/rl_support_search" />
+
     <com.scwang.smartrefresh.layout.SmartRefreshLayout
         android:id="@+id/sr_support_card"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/supportcard_top">
+        app:layout_constraintTop_toBottomOf="@id/view">
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/rv_supportcard"

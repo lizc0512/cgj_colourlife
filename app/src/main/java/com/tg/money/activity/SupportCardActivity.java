@@ -1,14 +1,22 @@
 package com.tg.money.activity;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.tg.coloursteward.R;
@@ -16,6 +24,7 @@ import com.tg.coloursteward.base.BaseActivity;
 import com.tg.coloursteward.baseModel.HttpResponse;
 import com.tg.coloursteward.util.GsonUtils;
 import com.tg.coloursteward.util.ToastUtil;
+import com.tg.coloursteward.view.ClearEditText;
 import com.tg.money.adapter.BankListAdapter;
 import com.tg.money.entity.BankListEntity;
 import com.tg.money.model.MoneyModel;
@@ -42,8 +51,12 @@ public class SupportCardActivity extends BaseActivity implements View.OnClickLis
     private int numTotal;
     private int mPage = 1;
     private List<BankListEntity.ContentBean.DataBean> mList = new ArrayList<>();
+    private List<BankListEntity.ContentBean.DataBean> mListItem = new ArrayList<>();
     private BankListAdapter adapter;
     private RecyclerView rv_supportcard;
+    private ClearEditText et_support_serach;
+    private String searchContent;
+    private boolean isShowData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +64,7 @@ public class SupportCardActivity extends BaseActivity implements View.OnClickLis
         setContentView(R.layout.activity_support_card);
         moneyModel = new MoneyModel(this);
         initView();
-        initData("", mPage);
+        initData("", mPage, true);
     }
 
     private void initView() {
@@ -59,9 +72,55 @@ public class SupportCardActivity extends BaseActivity implements View.OnClickLis
         iv_base_back = findViewById(R.id.iv_base_back);
         sr_support_card = findViewById(R.id.sr_support_card);
         rv_supportcard = findViewById(R.id.rv_supportcard);
+        et_support_serach = findViewById(R.id.et_support_serach);
         rv_supportcard.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
-        tv_base_title.setText("限额说明");
+        tv_base_title.setText("银行卡");
         iv_base_back.setOnClickListener(this);
+        et_support_serach.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    // 当按了搜索之后关闭软键盘
+                    ((InputMethodManager) et_support_serach.getContext().getSystemService(
+                            Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(
+
+                            SupportCardActivity.this.getCurrentFocus().getWindowToken(),
+                            InputMethodManager.HIDE_NOT_ALWAYS);
+                    searchContent = et_support_serach.getText().toString().trim();
+                    if (!TextUtils.isEmpty(searchContent)) {
+                        for (int i = 0; i < mList.size(); i++) {
+                            if (mList.get(i).getBank_name().contains(searchContent)) {
+                                mListItem.add(mList.get(i));
+                            }
+                        }
+                        if (null != adapter) {
+                            adapter.setNewData(mListItem);
+                            isShowData = true;
+                        }
+                    }
+                }
+                return false;
+            }
+        });
+        et_support_serach.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (TextUtils.isEmpty(s) && isShowData) {
+                    if (null != adapter) {
+                        adapter.setNewData(mList);
+                        isShowData = false;
+                    }
+                }
+            }
+        });
         sr_support_card.setEnableRefresh(false);
         sr_support_card.setOnLoadMoreListener(new OnLoadMoreListener() {
             @Override
@@ -71,15 +130,15 @@ public class SupportCardActivity extends BaseActivity implements View.OnClickLis
                     ToastUtil.showShortToast(SupportCardActivity.this, "没有数据了...");
                 } else {
                     mPage++;
-                    initData("", mPage);
+                    initData("", mPage, false);
                 }
                 sr_support_card.finishLoadMore();
             }
         });
     }
 
-    private void initData(String name, int page) {
-        moneyModel.getBankList(0, name, page, pageSize, this);
+    private void initData(String name, int page, boolean loading) {
+        moneyModel.getBankList(0, name, page, pageSize, loading, this);
     }
 
     @Override
@@ -116,6 +175,21 @@ public class SupportCardActivity extends BaseActivity implements View.OnClickLis
                     } else {
                         adapter.notifyDataSetChanged();
                     }
+                    adapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                            Intent it = new Intent();
+                            if (isShowData) {
+                                it.putExtra("bankCode", mListItem.get(position).getBank_code());
+                                it.putExtra("bankName", mListItem.get(position).getBank_name());
+                            } else {
+                                it.putExtra("bankCode", mList.get(position).getBank_code());
+                                it.putExtra("bankName", mList.get(position).getBank_name());
+                            }
+                            setResult(1001, it);
+                            finish();
+                        }
+                    });
                 }
                 break;
         }

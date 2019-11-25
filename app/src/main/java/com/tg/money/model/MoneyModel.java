@@ -36,6 +36,11 @@ public class MoneyModel extends BaseModel {
     private String jsfpCashAccountUrl = "/app/split/cashing/account";
     private String jsfpCashMoneyUrl = "/app/split/cashing";
     private String bankListUrl = "/app/bankcard/bank";
+    private String addBankUrl = "/app/bankcard/bankcard/create";
+    private String sendCodeUrl = "/app/bankcard/send/code";
+    private String userInfoUrl = "/app/bankcard/userinfo";
+    private String myBankUrl = "/app/bankcard/bankcard";
+    private String delBankUrl = "/app/bankcard/bankcard/del";
 
 
     public MoneyModel() {
@@ -403,12 +408,197 @@ public class MoneyModel extends BaseModel {
      * @param page_size
      * @param httpResponse
      */
-    public void getBankList(int what, String name, int page, int page_size, final HttpResponse httpResponse) {
+    public void getBankList(int what, String name, int page, int page_size, boolean isLoading, final HttpResponse httpResponse) {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("name", name);
         params.put("page", page);
         params.put("page_size", page_size);
         final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 0, bankListUrl), RequestMethod.GET);
+        request(what, request, params, new HttpListener<String>() {
+            @Override
+            public void onSucceed(int what, Response<String> response) {
+                int responseCode = response.getHeaders().getResponseCode();
+                String result = response.get();
+                if (responseCode == RequestEncryptionUtils.responseSuccess) {
+                    if (!TextUtils.isEmpty(result)) {
+                        int code = showSuccesResultMessage(result);
+                        if (code == 0) {
+                            httpResponse.OnHttpResponse(what, result);
+                        }
+                    }
+                } else {
+                    showErrorCodeMessage(response);
+                }
+            }
+
+            @Override
+            public void onFailed(int what, Response<String> response) {
+                showExceptionMessage(what, response);
+            }
+        }, true, isLoading);
+    }
+
+    /**
+     * 新增银行卡
+     *
+     * @param what
+     * @param bank_code
+     * @param card_no
+     * @param name
+     * @param mobile
+     * @param code
+     * @param httpResponse
+     */
+    public void postAddBank(int what, String bank_code, String card_no, String name, String mobile, String code, final HttpResponse httpResponse) {
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("bank_code", bank_code);
+        params.put("card_no", card_no);
+        params.put("name", name);
+        params.put("mobile", mobile);
+        params.put("code", code);
+        final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 0, addBankUrl), RequestMethod.POST);
+        request(what, request, params, new HttpListener<String>() {
+            @Override
+            public void onSucceed(int what, Response<String> response) {
+                int responseCode = response.getHeaders().getResponseCode();
+                String result = response.get();
+                if (responseCode == RequestEncryptionUtils.responseSuccess) {
+                    if (!TextUtils.isEmpty(result)) {
+                        int code = showSuccesResultMessage(result);
+                        if (code == 0) {
+                            httpResponse.OnHttpResponse(what, result);
+                        }
+                    }
+                } else {
+                    showErrorCodeMessage(response);
+                }
+            }
+
+            @Override
+            public void onFailed(int what, Response<String> response) {
+                showExceptionMessage(what, response);
+            }
+        }, true, true);
+    }
+
+    /**
+     * 发送验证码
+     *
+     * @param what
+     * @param mobile
+     * @param httpResponse
+     */
+    public void postSendCode(int what, String mobile, final HttpResponse httpResponse) {
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("mobile", mobile);
+        final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 0, sendCodeUrl), RequestMethod.POST);
+        request(what, request, params, new HttpListener<String>() {
+            @Override
+            public void onSucceed(int what, Response<String> response) {
+                int responseCode = response.getHeaders().getResponseCode();
+                String result = response.get();
+                if (responseCode == RequestEncryptionUtils.responseSuccess) {
+                    if (!TextUtils.isEmpty(result)) {
+                        int code = showSuccesResultMessage(result);
+                        if (code == 0) {
+                            httpResponse.OnHttpResponse(what, result);
+                        }
+                    }
+                } else {
+                    showErrorCodeMessage(response);
+                }
+            }
+
+            @Override
+            public void onFailed(int what, Response<String> response) {
+                showExceptionMessage(what, response);
+            }
+        }, true, true);
+    }
+
+    /**
+     * 获取用户实名信息
+     *
+     * @param what
+     * @param httpResponse
+     */
+    public void getUserInfo(int what, final HttpResponse httpResponse) {
+        Map<String, Object> params = new HashMap<String, Object>();
+        final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 0, userInfoUrl), RequestMethod.GET);
+        request(what, request, params, new HttpListener<String>() {
+            @Override
+            public void onSucceed(int what, Response<String> response) {
+                int responseCode = response.getHeaders().getResponseCode();
+                String result = response.get();
+                if (responseCode == RequestEncryptionUtils.responseSuccess) {
+                    if (!TextUtils.isEmpty(result)) {
+                        int code = showSuccesResultMessageTheme(result);
+                        if (code == 0) {
+                            httpResponse.OnHttpResponse(what, result);
+                        } else {
+                            httpResponse.OnHttpResponse(what, "");
+                        }
+                    }
+                } else {
+                    httpResponse.OnHttpResponse(what, "");
+                }
+            }
+
+            @Override
+            public void onFailed(int what, Response<String> response) {
+                httpResponse.OnHttpResponse(what, "");
+            }
+        }, true, false);
+    }
+
+    /**
+     * 银行卡列表
+     *
+     * @param what
+     * @param page
+     * @param page_size
+     * @param httpResponse
+     */
+    public void getMyBank(int what, int page, String page_size, final HttpResponse httpResponse) {
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("page", page);
+        params.put("page_size", page_size);
+        final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 0, myBankUrl), RequestMethod.GET);
+        request(what, request, params, new HttpListener<String>() {
+            @Override
+            public void onSucceed(int what, Response<String> response) {
+                int responseCode = response.getHeaders().getResponseCode();
+                String result = response.get();
+                if (responseCode == RequestEncryptionUtils.responseSuccess) {
+                    if (!TextUtils.isEmpty(result)) {
+                        int code = showSuccesResultMessage(result);
+                        if (code == 0) {
+                            httpResponse.OnHttpResponse(what, result);
+                        }
+                    }
+                } else {
+                    showErrorCodeMessage(response);
+                }
+            }
+
+            @Override
+            public void onFailed(int what, Response<String> response) {
+                showExceptionMessage(what, response);
+            }
+        }, true, false);
+    }
+
+    /**
+     * 删除银行卡
+     *
+     * @param what
+     * @param uuid
+     * @param httpResponse
+     */
+    public void postDelBank(int what, String uuid, final HttpResponse httpResponse) {
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("uuid", uuid);
+        final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 0, delBankUrl), RequestMethod.POST);
         request(what, request, params, new HttpListener<String>() {
             @Override
             public void onSucceed(int what, Response<String> response) {

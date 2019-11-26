@@ -2,12 +2,8 @@ package com.tg.money.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
 import android.text.InputFilter;
-import android.text.SpannableString;
-import android.text.Spanned;
 import android.text.TextUtils;
-import android.text.style.ForegroundColorSpan;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -17,15 +13,21 @@ import android.widget.TextView;
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.base.BaseActivity;
 import com.tg.coloursteward.baseModel.HttpResponse;
+import com.tg.coloursteward.baseModel.RequestEncryptionUtils;
+import com.tg.coloursteward.util.GlideUtils;
 import com.tg.coloursteward.util.GsonUtils;
 import com.tg.coloursteward.util.ToastUtil;
 import com.tg.coloursteward.view.dialog.DialogFactory;
 import com.tg.money.entity.CashInfoEntity;
+import com.tg.money.entity.MyBankEntity;
 import com.tg.money.model.MoneyModel;
 import com.tg.money.utils.DecimalDigitsInputFilter;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @name ${lizc}
@@ -54,6 +56,10 @@ public class WithDrawalActivity extends BaseActivity implements View.OnClickList
     private String split_type;
     private String split_target;
     private String tqMoney;
+    private List<MyBankEntity.ContentBean.DataBean> bankList = new ArrayList<>();
+    private RelativeLayout rl_withdrawal_mycard;
+    private ImageView iv_withdrawal_mycard;
+    private TextView tv_withdrawal_mycard;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,6 +81,9 @@ public class WithDrawalActivity extends BaseActivity implements View.OnClickList
         et_withdrawal_money = findViewById(R.id.et_withdrawal_money);
         tv_withdraw_all = findViewById(R.id.tv_withdraw_all);
         tv_withdraw_relmoney = findViewById(R.id.tv_withdraw_relmoney);
+        rl_withdrawal_mycard = findViewById(R.id.rl_withdrawal_mycard);
+        iv_withdrawal_mycard = findViewById(R.id.iv_withdrawal_mycard);
+        tv_withdrawal_mycard = findViewById(R.id.tv_withdrawal_mycard);
         et_withdrawal_money.setFilters(new InputFilter[]{new DecimalDigitsInputFilter(2), new InputFilter.LengthFilter(11)});
         tv_base_title.setText("提现");
         iv_base_back.setOnClickListener(this);
@@ -82,6 +91,7 @@ public class WithDrawalActivity extends BaseActivity implements View.OnClickList
         tv_withdraw_incomefee.setOnClickListener(this);
         tv_withdraw_btn.setOnClickListener(this);
         tv_withdraw_all.setOnClickListener(this);
+        rl_withdrawal_mycard.setOnClickListener(this);
         Intent intent = getIntent();
         if (null != intent) {
             general_uuid = intent.getStringExtra("general_uuid");
@@ -93,6 +103,7 @@ public class WithDrawalActivity extends BaseActivity implements View.OnClickList
     private void initData() {
         moneyModel.getCashInfo(0, this);
         moneyModel.getCashAccount(1, split_type, split_target, general_uuid, this);
+        moneyModel.getMyBank(2, 1, "10", this);
     }
 
     @Override
@@ -117,6 +128,10 @@ public class WithDrawalActivity extends BaseActivity implements View.OnClickList
                 break;
             case R.id.tv_withdraw_incomefee:
                 DialogFactory.getInstance().showSingleDialog(this, detail_content);
+                break;
+            case R.id.rl_withdrawal_mycard:
+                Intent it = new Intent(this, MyBankActivity.class);
+                startActivityForResult(it, 200);
                 break;
             case R.id.tv_withdraw_btn:
                 String money = et_withdrawal_money.getText().toString().trim();
@@ -182,6 +197,28 @@ public class WithDrawalActivity extends BaseActivity implements View.OnClickList
                 break;
             case 2:
                 if (!TextUtils.isEmpty(result)) {
+                    MyBankEntity entity = new MyBankEntity();
+                    entity = GsonUtils.gsonToBean(result, MyBankEntity.class);
+                    String content = RequestEncryptionUtils.getContentString(result);
+                    if (!TextUtils.isEmpty(content)) {
+                        bankList.addAll(entity.getContent().getData());
+                        if (bankList.size() > 0) {
+                            rl_withdrawal_mycard.setVisibility(View.VISIBLE);
+                            rl_withdrawal_card.setVisibility(View.GONE);
+                            String sn = bankList.get(0).getCard_no();
+                            if (sn.length() > 4) {
+                                sn = sn.substring(sn.length() - 4, sn.length());
+                            }
+                            GlideUtils.loadImageView(this, bankList.get(0).getBank_logo(), iv_withdrawal_mycard);
+                            tv_withdrawal_mycard.setText(bankList.get(0).getBank_name() + "(" + sn + ")");
+                        } else {
+                            rl_withdrawal_mycard.setVisibility(View.GONE);
+                            rl_withdrawal_card.setVisibility(View.VISIBLE);
+                        }
+                    } else {
+                        rl_withdrawal_mycard.setVisibility(View.GONE);
+                        rl_withdrawal_card.setVisibility(View.VISIBLE);
+                    }
 
                 }
                 break;

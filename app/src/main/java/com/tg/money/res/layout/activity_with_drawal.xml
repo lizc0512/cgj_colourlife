@@ -16,6 +16,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/size_50dp"
         android:background="@color/white"
+        android:visibility="visible"
         app:layout_constraintTop_toBottomOf="@id/withdrawal_top">
 
         <TextView
@@ -36,12 +37,54 @@
             android:src="@drawable/next" />
     </RelativeLayout>
 
+    <RelativeLayout
+        android:id="@+id/rl_withdrawal_mycard"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/size_50dp"
+        android:background="@color/white"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/withdrawal_top">
+
+        <ImageView
+            android:id="@+id/iv_withdrawal_mycard"
+            android:layout_width="@dimen/size_30dp"
+            android:layout_height="@dimen/size_30dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/size_15dp" />
+
+        <TextView
+            android:id="@+id/tv_withdrawal_mycard"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/size_10dp"
+            android:layout_toRightOf="@id/iv_withdrawal_mycard"
+            android:textColor="@color/color_333b46"
+            android:textSize="@dimen/font_14sp"
+            tools:text="银行名称" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/size_15dp"
+            android:src="@drawable/next" />
+    </RelativeLayout>
+
+    <android.support.constraint.Barrier
+        android:id="@+id/barry"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:barrierDirection="bottom"
+        app:constraint_referenced_ids="rl_withdrawal_card,rl_withdrawal_mycard" />
+
     <View
         android:layout_width="match_parent"
         android:layout_height="@dimen/size_260dp"
         android:layout_marginTop="@dimen/size_10dp"
         android:background="@color/white"
-        app:layout_constraintTop_toBottomOf="@id/rl_withdrawal_card" />
+        app:layout_constraintTop_toBottomOf="@id/barry" />
 
     <TextView
         android:id="@+id/tv_withdraw_title"
@@ -53,7 +96,7 @@
         android:textColor="@color/color_333b46"
         android:textSize="@dimen/font_14sp"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/rl_withdrawal_card" />
+        app:layout_constraintTop_toBottomOf="@id/barry" />
 
     <ImageView
         android:id="@+id/iv_webview_fp"

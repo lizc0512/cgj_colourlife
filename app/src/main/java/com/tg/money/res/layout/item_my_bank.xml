@@ -6,34 +6,43 @@
     android:background="@drawable/item_bank_white_selector">
 
     <ImageView
-        android:id="@+id/iv_support_icon"
+        android:id="@+id/iv_mybank_icon"
         android:layout_width="@dimen/size_40dp"
         android:layout_height="@dimen/size_40dp"
         android:layout_centerVertical="true"
         android:layout_marginLeft="@dimen/size_15dp" />
 
     <TextView
-        android:id="@+id/tv_support_bank"
+        android:id="@+id/tv_mybank_bank"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
         android:layout_marginLeft="@dimen/size_15dp"
-        android:layout_toRightOf="@id/iv_support_icon"
+        android:layout_marginTop="@dimen/size_10dp"
+        android:layout_toRightOf="@id/iv_mybank_icon"
         android:textColor="@color/color_333b46"
         android:textSize="@dimen/font_16sp"
         tools:text="xxx银行" />
 
     <TextView
-        android:id="@+id/tv_support_msg"
+        android:id="@+id/tv_mybank_msg"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/tv_support_bank"
+        android:layout_below="@id/tv_mybank_bank"
         android:layout_marginLeft="@dimen/size_15dp"
-        android:layout_toRightOf="@id/iv_support_icon"
+        android:layout_toRightOf="@id/iv_mybank_icon"
         android:textColor="@color/color_bbbbbb"
         android:textSize="@dimen/font_14sp"
-        android:visibility="gone"
         tools:text="xxx" />
+
+    <ImageView
+        android:id="@+id/iv_mybank_check"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="@dimen/size_15dp"
+        android:src="@drawable/bank_check"
+        android:visibility="gone" />
 
     <View
         android:layout_width="match_parent"

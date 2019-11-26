@@ -585,7 +585,7 @@ public class MoneyModel extends BaseModel {
             public void onFailed(int what, Response<String> response) {
                 showExceptionMessage(what, response);
             }
-        }, true, false);
+        }, true, true);
     }
 
     /**

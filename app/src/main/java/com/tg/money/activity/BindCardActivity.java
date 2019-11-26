@@ -1,13 +1,18 @@
 package com.tg.money.activity;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.AppCompatCheckBox;
 import android.text.SpannableString;
 import android.text.Spanned;
+import android.text.TextPaint;
 import android.text.TextUtils;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
 import android.view.View;
 import android.widget.ImageView;
@@ -17,11 +22,12 @@ import android.widget.TextView;
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.base.BaseActivity;
 import com.tg.coloursteward.baseModel.HttpResponse;
+import com.tg.coloursteward.util.GsonUtils;
+import com.tg.coloursteward.util.MicroAuthTimeUtils;
 import com.tg.coloursteward.util.ToastUtil;
 import com.tg.coloursteward.view.ClearEditText;
+import com.tg.money.entity.BankUserInfoEntity;
 import com.tg.money.model.MoneyModel;
-
-import org.json.JSONObject;
 
 /**
  * @name ${lizc}
@@ -53,6 +59,12 @@ public class BindCardActivity extends BaseActivity implements View.OnClickListen
     private AppCompatCheckBox cb_bindcard_check;
     private MoneyModel moneyModel;
     private MyTimeCount myTimeCount;
+    private boolean isRealName;
+    private boolean isIdCard;
+    private String name;
+    private String idCard;
+    private String url = "";
+    private String auth_type = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,6 +99,24 @@ public class BindCardActivity extends BaseActivity implements View.OnClickListen
         SpannableString spannableString = new SpannableString(tv_bindcard_agree.getText());
         ForegroundColorSpan colorSpan = new ForegroundColorSpan(ContextCompat.getColor(this, R.color.color_1ca1f4));
         spannableString.setSpan(colorSpan, 8, spannableString.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+        ClickableSpan clickableSpan = new ClickableSpan() {
+            @Override
+            public void onClick(@NonNull View widget) {
+                MicroAuthTimeUtils microAuthTimeUtils = new MicroAuthTimeUtils();
+                microAuthTimeUtils.IsAuthTime(BindCardActivity.this, url, "", auth_type, "", "");
+            }
+
+            @Override
+            public void updateDrawState(@NonNull TextPaint ds) {
+                super.updateDrawState(ds);
+                ds.setUnderlineText(false);
+                ds.setColor(Color.parseColor("#1ca1f4"));
+                ds.clearShadowLayer();
+            }
+        };
+        spannableString.setSpan(clickableSpan, 8, spannableString.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+        tv_bindcard_agree.setMovementMethod(LinkMovementMethod.getInstance());
+        tv_bindcard_agree.setHighlightColor(ContextCompat.getColor(this, android.R.color.transparent));
         tv_bindcard_agree.setText(spannableString);
     }
 
@@ -134,6 +164,20 @@ public class BindCardActivity extends BaseActivity implements View.OnClickListen
                     ToastUtil.showShortToast(this, "请输入银行卡号");
                     return;
                 }
+                if (!isRealName) {
+                    name = et_bindcard_name.getText().toString().trim();
+                    if (TextUtils.isEmpty(name)) {
+                        ToastUtil.showShortToast(this, "请输入姓名");
+                        return;
+                    }
+                }
+                if (!isIdCard) {
+                    idCard = et_bindcard_id.getText().toString().trim();
+                    if (TextUtils.isEmpty(idCard)) {
+                        ToastUtil.showShortToast(this, "请输入身份证号");
+                        return;
+                    }
+                }
                 if (TextUtils.isEmpty(phone)) {
                     ToastUtil.showShortToast(this, "请输入银行预留手机号");
                     return;
@@ -146,7 +190,7 @@ public class BindCardActivity extends BaseActivity implements View.OnClickListen
                     ToastUtil.showShortToast(this, "请勾选用户协议");
                     return;
                 }
-                moneyModel.postAddBank(0, bankCode, sn, "", phone, code, this);
+                moneyModel.postAddBank(0, bankCode, sn, name, phone, code, this);
                 break;
         }
     }
@@ -170,7 +214,7 @@ public class BindCardActivity extends BaseActivity implements View.OnClickListen
         switch (what) {
             case 0:
                 if (!TextUtils.isEmpty(result)) {
-
+                    ToastUtil.showShortToast(this, "绑定成功");
                 }
                 break;
             case 1:
@@ -182,12 +226,11 @@ public class BindCardActivity extends BaseActivity implements View.OnClickListen
             case 2:
                 if (!TextUtils.isEmpty(result)) {
                     try {
-                        JSONObject jsonObject = new JSONObject(result);
-                        String content = jsonObject.getString("content");
-                        JSONObject data = new JSONObject(content);
-                        String realName = data.getString("real_name");
-                        String idCard = data.getString("identity_card");
-                        setUserInfo(realName, idCard);
+                        BankUserInfoEntity entity = new BankUserInfoEntity();
+                        entity = GsonUtils.gsonToBean(result, BankUserInfoEntity.class);
+                        url = entity.getContent().getAgreement().getUrl();
+                        auth_type = entity.getContent().getAgreement().getAuth_type();
+                        setUserInfo(entity.getContent().getInfo().getReal_name(), entity.getContent().getInfo().getIdentity_card());
                     } catch (Exception e) {
                         setUserInfo("", "");
                         e.printStackTrace();
@@ -200,18 +243,24 @@ public class BindCardActivity extends BaseActivity implements View.OnClickListen
         }
     }
 
-    private void setUserInfo(String realName, String idCard) {
+    private void setUserInfo(String realName, String id) {
         if (!TextUtils.isEmpty(realName)) {
             tv_bindcard_name.setText(realName);
             et_bindcard_name.setVisibility(View.GONE);
+            isRealName = true;
+            name = realName;
         } else {
             et_bindcard_name.setVisibility(View.VISIBLE);
+            isRealName = false;
         }
-        if (!TextUtils.isEmpty(idCard)) {
+        if (!TextUtils.isEmpty(id)) {
             et_bindcard_id.setVisibility(View.GONE);
-            tv_bindcard_id.setText(idCard);
+            tv_bindcard_id.setText(id);
+            isIdCard = true;
+            idCard = id;
         } else {
             et_bindcard_id.setVisibility(View.VISIBLE);
+            isIdCard = false;
         }
     }
 

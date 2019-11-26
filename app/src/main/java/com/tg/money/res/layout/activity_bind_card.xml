@@ -176,7 +176,7 @@
             android:layout_marginLeft="@dimen/size_13dp"
             android:layout_toRightOf="@id/tv_id"
             android:background="@null"
-            android:hint="请输入身份证号8"
+            android:hint="请输入身份证号"
             android:textColor="@color/color_333b46"
             android:textSize="@dimen/font_14sp"
             android:visibility="gone" />
@@ -303,7 +303,7 @@
         android:layout_marginLeft="@dimen/size_15dp"
         android:layout_marginTop="@dimen/size_20dp"
         android:layout_marginRight="@dimen/size_15dp"
-        android:background="@drawable/bg_login_button_blue"
+        android:background="@drawable/item_btn_blue_selector"
         android:gravity="center"
         android:text="绑定"
         android:textColor="@color/white"

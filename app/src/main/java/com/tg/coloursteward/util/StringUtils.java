@@ -296,5 +296,78 @@ public class StringUtils {
         }
     }
 
+    /**
+     * 整形转换
+     *
+     * @param data 输入
+     * @return Integer
+     */
+    public static Integer toInt(String data) {
+        Integer result = 0;
+
+        try {
+            result = Integer.valueOf(data);
+        } catch (Exception e) {
+            // TODO
+        }
+
+        return result;
+    }
+
+    /**
+     * Long转换
+     *
+     * @param data 输入
+     * @return Long
+     */
+    public static Long toLong(String data) {
+        Long result = 0L;
+
+        try {
+            result = Long.valueOf(data);
+        } catch (Exception e) {
+            // TODO
+        }
+
+        return result;
+    }
+
+    /**
+     * 浮点转换
+     *
+     * @param data 输入
+     * @return Float
+     */
+    public static Float toFloat(String data) {
+        Float result = 0.0f;
+
+        if (data != null && data.length() > 0) {
+            try {
+                result = Float.valueOf(data);
+            } catch (Exception e) {
+                // TODO
+            }
+        }
+
+        return result;
+    }
+
+    /**
+     * 浮点转换
+     *
+     * @param data 输入
+     * @return Double
+     */
+    public static Double toDouble(String data) {
+        Double result = 0.0;
+
+        try {
+            result = Double.valueOf(data);
+        } catch (Exception e) {
+            // TODO
+        }
+
+        return result;
+    }
 
 }

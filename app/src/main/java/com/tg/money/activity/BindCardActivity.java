@@ -190,7 +190,7 @@ public class BindCardActivity extends BaseActivity implements View.OnClickListen
                     ToastUtil.showShortToast(this, "请勾选用户协议");
                     return;
                 }
-                moneyModel.postAddBank(0, bankCode, sn, name, phone, code, this);
+                moneyModel.postAddBank(0, bankCode, sn, name, phone, code, idCard, this);
                 break;
         }
     }
@@ -215,6 +215,8 @@ public class BindCardActivity extends BaseActivity implements View.OnClickListen
             case 0:
                 if (!TextUtils.isEmpty(result)) {
                     ToastUtil.showShortToast(this, "绑定成功");
+                    setResult(1001);
+                    finish();
                 }
                 break;
             case 1:

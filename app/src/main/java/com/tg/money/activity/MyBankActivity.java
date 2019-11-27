@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
@@ -129,6 +130,9 @@ public class MyBankActivity extends BaseActivity implements View.OnClickListener
                     entity = GsonUtils.gsonToBean(result, MyBankEntity.class);
                     String content = RequestEncryptionUtils.getContentString(result);
                     if (!TextUtils.isEmpty(content)) {
+                        if (mPage == 1) {
+                            bankList.clear();
+                        }
                         bankList.addAll(entity.getContent().getData());
                         for (int i = 0; i < bankList.size(); i++) {
                             if (bankList.get(i).getUuid().equals(checkItemId)) {
@@ -143,6 +147,18 @@ public class MyBankActivity extends BaseActivity implements View.OnClickListener
                         } else {
                             adapter.notifyDataSetChanged();
                         }
+                        adapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+                            @Override
+                            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                                Intent it = new Intent();
+                                MyBankEntity.ContentBean.DataBean dataBean = new MyBankEntity.ContentBean.DataBean();
+                                dataBean = bankList.get(position);
+                                String json = GsonUtils.gsonString(dataBean);
+                                it.putExtra("bankjson", json);
+                                setResult(201, it);
+                                finish();
+                            }
+                        });
                     }
                 }
                 break;

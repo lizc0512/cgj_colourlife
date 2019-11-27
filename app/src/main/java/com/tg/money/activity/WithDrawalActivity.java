@@ -2,8 +2,10 @@ package com.tg.money.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -16,6 +18,7 @@ import com.tg.coloursteward.baseModel.HttpResponse;
 import com.tg.coloursteward.baseModel.RequestEncryptionUtils;
 import com.tg.coloursteward.util.GlideUtils;
 import com.tg.coloursteward.util.GsonUtils;
+import com.tg.coloursteward.util.NumberUtils;
 import com.tg.coloursteward.util.ToastUtil;
 import com.tg.coloursteward.view.dialog.DialogFactory;
 import com.tg.money.entity.CashInfoEntity;
@@ -60,6 +63,16 @@ public class WithDrawalActivity extends BaseActivity implements View.OnClickList
     private RelativeLayout rl_withdrawal_mycard;
     private ImageView iv_withdrawal_mycard;
     private TextView tv_withdrawal_mycard;
+    private String bankId;
+    private String bankNo;
+    private String bankName;
+    private String bankCode;
+    private String userName;
+    private double divide_money;
+    private double low_rate;
+    private double high_rate;
+    private double user_rate;
+    private double service_charge;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,6 +111,35 @@ public class WithDrawalActivity extends BaseActivity implements View.OnClickList
             split_type = intent.getStringExtra("split_type");
             split_target = intent.getStringExtra("split_target");
         }
+        et_withdrawal_money.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (!TextUtils.isEmpty(s)) {
+                    double money = Double.parseDouble(et_withdrawal_money.getText().toString().trim());
+                    if (money >= 0) {
+                        if (money >= divide_money) {
+                            user_rate = NumberUtils.mul(money, high_rate);
+                        } else {
+                            user_rate = NumberUtils.mul(money, low_rate);
+                        }
+                        String a = NumberUtils.format(String.valueOf(user_rate));
+                        user_rate = Double.parseDouble(NumberUtils.format(String.valueOf(user_rate)));
+                        tv_withdraw_incomefee.setText(" " + user_rate + "元");
+                        double firstMoney = NumberUtils.sub(money, user_rate);
+                        double realMoney = NumberUtils.sub(firstMoney, service_charge);
+                        tv_withdraw_relmoney.setText("到账金额: " + String.valueOf(realMoney) + "元");
+                    }
+                }
+            }
+        });
     }
 
     private void initData() {
@@ -131,6 +173,7 @@ public class WithDrawalActivity extends BaseActivity implements View.OnClickList
                 break;
             case R.id.rl_withdrawal_mycard:
                 Intent it = new Intent(this, MyBankActivity.class);
+                it.putExtra("bankid", bankId);
                 startActivityForResult(it, 200);
                 break;
             case R.id.tv_withdraw_btn:
@@ -138,13 +181,13 @@ public class WithDrawalActivity extends BaseActivity implements View.OnClickList
                 if (!TextUtils.isEmpty(money) && !money.endsWith(".")) {
                     try {
                         if (Double.valueOf(money) == 0) {
-                            ToastUtil.showShortToast(this, "金额不能为0");
+                            ToastUtil.showShortToast(this, "提现金额不能为0");
                         } else {
-                            if (Double.valueOf(money) >= Double.valueOf(tqMoney)) {
-                                moneyModel.postCashMoney(2, general_uuid, split_type, split_target, money, "",
-                                        "", "", "", this);
+                            if (Double.valueOf(money) < Double.valueOf(tqMoney)) { //输入金额 < 可提现金额
+                                moneyModel.postCashMoney(2, general_uuid, split_type, split_target, money, bankName,
+                                        bankNo, userName, bankCode, this);
                             } else {
-                                ToastUtil.showShortToast(this, "输入金额不能超过可提现金额");
+                                ToastUtil.showShortToast(this, "输入金额不能超过可提取金额");
                             }
                         }
                     } catch (Exception e) {
@@ -168,6 +211,13 @@ public class WithDrawalActivity extends BaseActivity implements View.OnClickList
             if (resultCode == 101) {
 
             }
+        } else if (requestCode == 200) {
+            if (resultCode == 201) {
+                String bankjson = data.getStringExtra("bankjson");
+                MyBankEntity.ContentBean.DataBean dataBean = new MyBankEntity.ContentBean.DataBean();
+                dataBean = GsonUtils.gsonToBean(bankjson, MyBankEntity.ContentBean.DataBean.class);
+                setBankData(dataBean);
+            }
         }
     }
 
@@ -179,8 +229,11 @@ public class WithDrawalActivity extends BaseActivity implements View.OnClickList
                     CashInfoEntity cashInfoEntity = new CashInfoEntity();
                     cashInfoEntity = GsonUtils.gsonToBean(result, CashInfoEntity.class);
                     detail_content = cashInfoEntity.getContent().getDetail_content();
-                    tv_withdraw_feenum.setText(" " + cashInfoEntity.getContent().getService_charge() + "元/笔");
-                    tv_withdraw_incomefee.setText(" " + cashInfoEntity.getContent().getService_charge() + "元");
+                    service_charge = Double.parseDouble(cashInfoEntity.getContent().getService_charge());
+                    tv_withdraw_feenum.setText(" " + service_charge + "元/笔");
+                    divide_money = Double.parseDouble(cashInfoEntity.getContent().getDivide_money());
+                    low_rate = Double.parseDouble(cashInfoEntity.getContent().getLow_rate());
+                    high_rate = Double.parseDouble(cashInfoEntity.getContent().getHigh_rate());
                 }
                 break;
             case 1:
@@ -205,12 +258,7 @@ public class WithDrawalActivity extends BaseActivity implements View.OnClickList
                         if (bankList.size() > 0) {
                             rl_withdrawal_mycard.setVisibility(View.VISIBLE);
                             rl_withdrawal_card.setVisibility(View.GONE);
-                            String sn = bankList.get(0).getCard_no();
-                            if (sn.length() > 4) {
-                                sn = sn.substring(sn.length() - 4, sn.length());
-                            }
-                            GlideUtils.loadImageView(this, bankList.get(0).getBank_logo(), iv_withdrawal_mycard);
-                            tv_withdrawal_mycard.setText(bankList.get(0).getBank_name() + "(" + sn + ")");
+                            setBankData(entity.getContent().getData().get(0));
                         } else {
                             rl_withdrawal_mycard.setVisibility(View.GONE);
                             rl_withdrawal_card.setVisibility(View.VISIBLE);
@@ -223,5 +271,19 @@ public class WithDrawalActivity extends BaseActivity implements View.OnClickList
                 }
                 break;
         }
+    }
+
+    private void setBankData(MyBankEntity.ContentBean.DataBean dataBean) {
+        String sn = dataBean.getCard_no();
+        if (sn.length() > 4) {
+            sn = sn.substring(sn.length() - 4, sn.length());
+        }
+        bankId = dataBean.getUuid();
+        bankNo = dataBean.getCard_no();
+        bankName = dataBean.getBank_name();
+        bankCode = dataBean.getBank_code();
+        userName = dataBean.getName();
+        GlideUtils.loadImageView(this, dataBean.getBank_logo(), iv_withdrawal_mycard);
+        tv_withdrawal_mycard.setText(dataBean.getBank_name() + "(" + sn + ")");
     }
 }

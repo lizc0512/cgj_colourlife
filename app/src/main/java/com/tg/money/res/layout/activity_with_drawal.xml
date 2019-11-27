@@ -168,7 +168,7 @@
         android:textSize="@dimen/font_14sp"
         app:layout_constraintLeft_toRightOf="@id/tv_withdraw_fee"
         app:layout_constraintTop_toBottomOf="@id/tv_withdraw_tqnum"
-        tools:text="0.4元/笔" />
+        tools:text="0.0元/笔" />
 
     <TextView
         android:id="@+id/tv_withdraw_income"
@@ -194,7 +194,7 @@
         android:textSize="@dimen/font_14sp"
         app:layout_constraintLeft_toRightOf="@id/tv_withdraw_income"
         app:layout_constraintTop_toBottomOf="@id/tv_withdraw_fee"
-        tools:text=" 0.00元" />
+        android:text=" 0.00元" />
 
     <TextView
         android:id="@+id/tv_withdraw_relmoney"
@@ -227,7 +227,7 @@
         android:layout_marginLeft="@dimen/size_15dp"
         android:layout_marginTop="@dimen/size_55dp"
         android:layout_marginRight="@dimen/size_15dp"
-        android:background="@drawable/bg_login_button_blue"
+        android:background="@drawable/item_btn_blue_selector"
         android:gravity="center"
         android:text="确认提现"
         android:textColor="@color/white"

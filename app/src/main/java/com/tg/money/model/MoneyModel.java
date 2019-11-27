@@ -38,7 +38,7 @@ public class MoneyModel extends BaseModel {
     private String bankListUrl = "/app/bankcard/bank";
     private String addBankUrl = "/app/bankcard/bankcard/create";
     private String sendCodeUrl = "/app/bankcard/send/code";
-    private String userInfoUrl = "/app/bankcard/userinfo";
+    private String userInfoUrl = "/app/bankcard/userInfo";
     private String myBankUrl = "/app/bankcard/bankcard";
     private String delBankUrl = "/app/bankcard/bankcard/del";
 
@@ -396,7 +396,7 @@ public class MoneyModel extends BaseModel {
             @Override
             public void onFailed(int what, Response<String> response) {
             }
-        }, true, false);
+        }, true, true);
     }
 
     /**
@@ -449,13 +449,14 @@ public class MoneyModel extends BaseModel {
      * @param code
      * @param httpResponse
      */
-    public void postAddBank(int what, String bank_code, String card_no, String name, String mobile, String code, final HttpResponse httpResponse) {
+    public void postAddBank(int what, String bank_code, String card_no, String name, String mobile, String code, String identity_card, final HttpResponse httpResponse) {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("bank_code", bank_code);
         params.put("card_no", card_no);
         params.put("name", name);
         params.put("mobile", mobile);
         params.put("code", code);
+        params.put("identity_card", identity_card);
         final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 0, addBankUrl), RequestMethod.POST);
         request(what, request, params, new HttpListener<String>() {
             @Override

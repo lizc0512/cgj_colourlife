@@ -125,17 +125,9 @@ public class WithDrawalActivity extends BaseActivity implements View.OnClickList
                 if (!TextUtils.isEmpty(s)) {
                     double money = Double.parseDouble(et_withdrawal_money.getText().toString().trim());
                     if (money >= 0) {
-                        if (money >= divide_money) {
-                            user_rate = NumberUtils.mul(money, high_rate);
-                        } else {
-                            user_rate = NumberUtils.mul(money, low_rate);
-                        }
-                        String a = NumberUtils.format(String.valueOf(user_rate));
-                        user_rate = Double.parseDouble(NumberUtils.format(String.valueOf(user_rate)));
-                        tv_withdraw_incomefee.setText(" " + user_rate + "元");
-                        double firstMoney = NumberUtils.sub(money, user_rate);
-                        double realMoney = NumberUtils.sub(firstMoney, service_charge);
-                        tv_withdraw_relmoney.setText("到账金额: " + String.valueOf(realMoney) + "元");
+                        double realMoney = NumberUtils.sub(money, service_charge);
+                        String number = NumberUtils.format(String.valueOf(realMoney));
+                        tv_withdraw_relmoney.setText("到账金额: " + number + "元");
                     }
                 }
             }

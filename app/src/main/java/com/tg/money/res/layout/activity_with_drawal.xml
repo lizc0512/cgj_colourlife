@@ -81,7 +81,7 @@
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="@dimen/size_260dp"
+        android:layout_height="@dimen/size_240dp"
         android:layout_marginTop="@dimen/size_10dp"
         android:background="@color/white"
         app:layout_constraintTop_toBottomOf="@id/barry" />
@@ -180,6 +180,7 @@
         android:text="代扣个税:"
         android:textColor="@color/color_333b46"
         android:textSize="@dimen/font_14sp"
+        android:visibility="gone"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tv_withdraw_fee" />
 
@@ -192,6 +193,7 @@
         android:drawablePadding="@dimen/size_5dp"
         android:textColor="@color/red"
         android:textSize="@dimen/font_14sp"
+        android:visibility="gone"
         app:layout_constraintLeft_toRightOf="@id/tv_withdraw_income"
         app:layout_constraintTop_toBottomOf="@id/tv_withdraw_fee"
         android:text=" 0.00元" />
@@ -201,7 +203,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/size_15dp"
-        android:layout_marginTop="@dimen/size_4dp"
+        android:layout_marginTop="@dimen/size_0dp"
         android:text="到账金额: 0.00元"
         android:textColor="@color/color_333b46"
         android:textSize="@dimen/font_14sp"

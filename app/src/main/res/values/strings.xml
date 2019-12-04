@@ -57,6 +57,10 @@
     <string name="tv_webview_wechat">分享给微信好友</string>
     <string name="tv_webview_cancel">取消</string>
     <string name="tv_home_net">当前网络不可用，请检查网络设置</string>
+    <string name="user_input_code">请输入验证码</string>
+    <string name="user_code_send">验证码已发送～</string>
+    <string name="user_again_getcode">重新获取</string>
+    <string name="user_already_send">已发送</string>
 
 
 </resources>

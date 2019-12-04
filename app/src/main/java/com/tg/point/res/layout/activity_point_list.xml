@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/color_f9f9f9"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
+
+    <include layout="@layout/base_actionbar" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:background="@drawable/point_total_balance_bg"
+        android:layout_margin="16dp"
+        android:layout_height="110dp">
+
+        <ImageView
+            android:id="@+id/iv_point_desc"
+            android:src="@drawable/point_desc_bg"
+            android:layout_width="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_alignParentRight="true"
+            android:layout_height="wrap_content"/>
+
+
+        <TextView
+            android:id="@+id/tv_point_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_centerHorizontal="true"
+            android:text="我的积分"
+            android:textColor="@color/white"
+            android:textSize="10sp"  />
+
+        <TextView
+            android:id="@+id/tv_point_total"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawablePadding="5dp"
+            android:layout_below="@id/tv_point_title"
+            android:drawableLeft="@drawable/point_white_sign"
+            android:layout_centerHorizontal="true"
+            android:textStyle="bold"
+            tools:text="688.83"
+            android:textColor="@color/white"
+            android:textSize="28sp"  />
+
+    </RelativeLayout>
+
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rv_point"
+        android:layout_width="match_parent"
+        android:layout_marginTop="10dp"
+        android:layout_height="match_parent"/>
+
+
+</LinearLayout>

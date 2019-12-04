@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:context="com.tg.point.activity.GivenUserTypeActivity">
+
+    <include
+        android:id="@+id/top_view"
+        layout="@layout/base_actionbar" />
+
+    <RelativeLayout
+        android:id="@+id/rl_usertype_college"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/size_44dp"
+        android:layout_marginTop="@dimen/size_10dp"
+        android:background="@color/white"
+        app:layout_constraintTop_toBottomOf="@id/top_view">
+
+        <ImageView
+            android:id="@+id/iv_usertype_college"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/size_15dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/size_15dp"
+            android:layout_toRightOf="@id/iv_usertype_college"
+            android:text="给同事发红包"
+            android:textColor="@color/color_333b46"
+            android:textSize="@dimen/font_14sp" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/size_15dp"
+            android:src="@drawable/next" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/size_1px"
+            android:layout_alignParentBottom="true"
+            android:layout_marginLeft="@dimen/size_15dp"
+            android:layout_marginRight="@dimen/size_15dp"
+            android:background="@color/line_color" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/rl_usertype_czyuser"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/size_44dp"
+        android:background="@color/white"
+        app:layout_constraintTop_toBottomOf="@id/rl_usertype_college">
+
+        <ImageView
+            android:id="@+id/iv_usertype_czyuser"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/size_15dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/size_15dp"
+            android:layout_toRightOf="@id/iv_usertype_czyuser"
+            android:text="转到彩之云账户"
+            android:textColor="@color/color_333b46"
+            android:textSize="@dimen/font_14sp" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/size_15dp"
+            android:src="@drawable/next" />
+
+    </RelativeLayout>
+</android.support.constraint.ConstraintLayout>

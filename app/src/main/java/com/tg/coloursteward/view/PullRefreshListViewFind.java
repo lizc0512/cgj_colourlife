@@ -588,8 +588,8 @@ public class PullRefreshListViewFind extends LinearLayout implements OnClickList
 					setDividerHeight(dividerHeight);
 				}
 			}
-			if(typeArray.hasValue(R.styleable.PullRefreshListView_background_color)){
-				listViewBackgroundRes = typeArray.getResourceId(R.styleable.PullRefreshListView_background_color,R.color.white);
+			if(typeArray.hasValue(R.styleable.PullRefreshListView_background_color_pull)){
+				listViewBackgroundRes = typeArray.getResourceId(R.styleable.PullRefreshListView_background_color_pull,R.color.white);
 			}
 			typeArray.recycle();
 		}

@@ -24,8 +24,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.tg.coloursteward.R;
-import com.tg.coloursteward.activity.AccountExchangeRecordActivity;
 import com.tg.coloursteward.base.MyBaseAdapter;
+import com.tg.coloursteward.baseModel.RequestEncryptionUtils;
 import com.tg.coloursteward.inter.OnLoadingListener;
 import com.tg.coloursteward.net.HttpTools;
 import com.tg.coloursteward.net.MessageHandler;
@@ -576,8 +576,8 @@ public class PullRefreshListView extends LinearLayout implements OnClickListener
                     setDividerHeight(dividerHeight);
                 }
             }
-            if (typeArray.hasValue(R.styleable.PullRefreshListView_background_color)) {
-                listViewBackgroundRes = typeArray.getResourceId(R.styleable.PullRefreshListView_background_color, R.color.white);
+            if (typeArray.hasValue(R.styleable.PullRefreshListView_background_color_pull)) {
+                listViewBackgroundRes = typeArray.getResourceId(R.styleable.PullRefreshListView_background_color_pull, R.color.white);
             }
             typeArray.recycle();
         }
@@ -888,7 +888,7 @@ public class PullRefreshListView extends LinearLayout implements OnClickListener
             /**
              * 即时分配记录
              */
-            String result = AccountExchangeRecordActivity.getResultString(contentString);
+            String result = RequestEncryptionUtils.getContentString(contentString);
             ResponseData dataResult = HttpTools.getResponseData(result);
             if (data1.length > 0) {
                 size = data1.length;

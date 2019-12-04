@@ -67,7 +67,7 @@ public class RotateProgress extends View{
 	private void initView(Context context,AttributeSet attrs){
 		this.context = context;
 		TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.RotateProgress);
-		contentColor = ta.getColor(R.styleable.RotateProgress_progress_color, Color.WHITE);
+		contentColor = ta.getColor(R.styleable.RotateProgress_progress_color_rotate, Color.WHITE);
 		int width = ta.getDimensionPixelSize(R.styleable.RotateProgress_size, (int)(widthDp * Tools.getDisplayMetrics(context).density));
 		widthDp = (int)(width / Tools.getDisplayMetrics(context).density);
 		ta.recycle();

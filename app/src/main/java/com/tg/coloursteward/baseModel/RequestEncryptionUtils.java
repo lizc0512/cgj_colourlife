@@ -71,6 +71,8 @@ public class RequestEncryptionUtils {
             finalUrl = Contants.URl.TOKEN_ADDRESS + urlString;//彩之云授权接口
         } else if (type == 13) {
             finalUrl = Contants.URl.USERINFO_ADDRESS + urlString;//彩之云用户接口
+        } else if (type == 16) {
+            finalUrl = Contants.URl.ACCOUNT_ADDRESS + urlString;//新版彩钱包
         }
         return finalUrl;
     }

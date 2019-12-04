@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/color_f9f9f9"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
+
+    <include layout="@layout/base_actionbar" />
+
+
+
+     <LinearLayout
+         android:layout_width="match_parent"
+         android:layout_height="220dp"
+         android:orientation="vertical"
+         android:layout_marginTop="12dp"
+         android:background="@color/white">
+
+
+         <ImageView
+             android:layout_width="wrap_content"
+             android:layout_gravity="center_horizontal"
+             android:src="@drawable/point_given_success"
+             android:layout_marginTop="30dp"
+             android:layout_height="wrap_content"/>
+
+         <TextView
+             android:id="@+id/tv_remain_notice"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:layout_gravity="center_horizontal"
+             android:layout_marginTop="5dp"
+             android:textStyle="bold"
+             android:text="赠送成功!"
+             android:textColor="@color/color_25282e"
+             android:textSize="15sp"  />
+
+         <LinearLayout
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             android:layout_marginLeft="50dp"
+             android:layout_marginTop="40dp"
+             android:layout_marginRight="50dp"
+             android:orientation="horizontal">
+
+             <TextView
+                 android:layout_width="0dp"
+                 android:layout_weight="1"
+                 android:layout_height="wrap_content"
+                 android:text="赠送金额"
+                 android:textColor="@color/color_25282e"
+                 android:textSize="15sp"  />
+
+             <TextView
+                 android:id="@+id/tv_given_amount"
+                 android:layout_width="wrap_content"
+                 android:layout_height="wrap_content"
+                 tools:text="1.00"
+                 android:textColor="@color/color_25282e"
+                 android:textSize="15sp"  />
+
+         </LinearLayout>
+
+         <LinearLayout
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             android:layout_marginLeft="50dp"
+             android:layout_marginTop="15dp"
+             android:layout_marginRight="50dp"
+             android:orientation="horizontal">
+
+             <TextView
+                 android:layout_width="0dp"
+                 android:layout_weight="1"
+                 android:layout_height="wrap_content"
+                 android:text="赠送帐户"
+                 android:textColor="@color/color_25282e"
+                 android:textSize="15sp"  />
+
+             <TextView
+                 android:id="@+id/tv_given_username"
+                 android:layout_width="wrap_content"
+                 android:layout_height="wrap_content"
+                 tools:text="15870482234"
+                 android:textColor="@color/color_25282e"
+                 android:textSize="15sp"  />
+
+         </LinearLayout>
+
+     </LinearLayout>
+
+
+     <LinearLayout
+         android:layout_width="wrap_content"
+         android:orientation="horizontal"
+         android:layout_gravity="center_horizontal"
+         android:layout_marginTop="40dp"
+         android:layout_height="wrap_content">
+
+         <TextView
+             android:id="@+id/tv_continue_given"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:background="@drawable/order_return_bg"
+             android:gravity="center"
+             android:text="继续赠送"
+             android:textColor="@color/color_329dfa"
+             android:textSize="14sp" />
+
+         <TextView
+             android:id="@+id/tv_return"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:layout_marginLeft="65dp"
+             android:background="@drawable/order_return_bg"
+             android:gravity="center"
+             android:text="返回"
+             android:textColor="@color/color_329dfa"
+             android:textSize="14sp" />
+     </LinearLayout>
+
+
+
+
+
+</LinearLayout>

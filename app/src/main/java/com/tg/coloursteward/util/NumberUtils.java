@@ -164,4 +164,13 @@ public class NumberUtils {
         return str.matches(regex);
     }
 
+    public static String getHandlePhone(String mobile) {
+        int mobileLength = mobile.length();
+        if (mobileLength == 11) {
+            return mobile.substring(0, 3) + "****" + mobile.substring(mobileLength - 4, mobileLength);
+        } else {
+            return mobile;
+        }
+    }
+
 }

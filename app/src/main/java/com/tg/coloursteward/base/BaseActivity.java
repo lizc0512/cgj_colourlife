@@ -612,4 +612,13 @@ public abstract class BaseActivity extends AppCompatActivity implements Response
         resources.updateConfiguration(configuration, resources.getDisplayMetrics());
         return resources;
     }
+
+    protected boolean fastClick() {
+        long lastClick = 0;
+        if (System.currentTimeMillis() - lastClick <= 1000) {
+            return false;
+        }
+        lastClick = System.currentTimeMillis();
+        return true;
+    }
 }

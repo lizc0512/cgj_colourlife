@@ -21,6 +21,7 @@ public interface Contants {
 //        String VERSION_ADDRESS = "https://version.colourlife.com";
 //        String URL_H5OAUTH = "https://oauth-czy.colourlife.com";
 //        String URL_LEKAI = "https://lekaiadminapi-door.colourlife.com";
+//        String ACCOUNT_ADDRESS = "https://account-finance.colourlife.com/";//新版彩钱包
 //        String environment = "release";
 //        String cqj_appid = "327494513335603200";
 //        String TOKEN_ADDRESS = "https://oauth2czy.colourlife.com";
@@ -41,6 +42,7 @@ public interface Contants {
         String VERSION_ADDRESS = "https://version-czytest.colourlife.com";
         String URL_H5OAUTH = "https://oauth-czytest.colourlife.com";
         String URL_LEKAI = "https://lekaiadminapi-doortest.colourlife.com";
+        String ACCOUNT_ADDRESS = "https://account-finance-test.colourlife.com";//新版彩钱包
         String environment = "debug";
         String cqj_appid = "323521861252157440";
         String TOKEN_ADDRESS = "http://oauth2-czytest.colourlife.com";

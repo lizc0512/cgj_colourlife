@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:layout_width="280dp"
+        android:layout_height="280dp"
+        android:background="@drawable/about_corners4"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/tv_honor_point"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="30dp"
+            android:drawableLeft="@drawable/point_vip_icon"
+            android:drawablePadding="5dp"
+            android:text="@string/point_honor_title"
+            android:textColor="@color/color_25282e"
+            android:textSize="16sp" />
+
+
+        <TextView
+            android:id="@+id/tv_honor_point_desc"
+            android:layout_below="@id/tv_honor_point"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginLeft="15dp"
+            android:text="@string/point_honor_desc"
+            android:textColor="@color/color_25282e"
+            android:textSize="12sp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:background="@color/color_ededed"
+            android:layout_marginRight="15dp"
+            android:layout_below="@id/tv_honor_point_desc"
+            android:layout_marginTop="15dp"
+            android:layout_marginLeft="15dp"
+            android:layout_height="1px"/>
+
+        <TextView
+            android:id="@+id/tv_normal_point"
+            android:layout_below="@id/tv_honor_point_desc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:drawableLeft="@drawable/point_normal_icon"
+            android:drawablePadding="5dp"
+            android:layout_marginTop="30dp"
+            android:text="@string/point_normal_title"
+            android:textColor="@color/color_25282e"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/tv_normal_point_desc"
+            android:layout_below="@id/tv_normal_point"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginLeft="15dp"
+            android:text="@string/point_normal_desc"
+            android:textColor="@color/color_25282e"
+            android:textSize="12sp" />
+
+        <ImageView
+            android:id="@+id/iv_close_dialog"
+            android:layout_width="wrap_content"
+            android:src="@drawable/point_close_dialog"
+            android:layout_alignParentRight="true"
+           android:padding="10dp"
+            android:layout_height="wrap_content"/>
+
+    </RelativeLayout>
+</LinearLayout>

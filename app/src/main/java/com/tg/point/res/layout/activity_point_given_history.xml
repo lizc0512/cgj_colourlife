@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/color_f9f9f9"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
+
+    <include layout="@layout/base_actionbar" />
+
+    <com.jcodecraeer.xrecyclerview.XRecyclerView
+        android:id="@+id/rv_given_history"
+        android:layout_width="match_parent"
+        android:layout_marginTop="12dp"
+        android:layout_weight="1"
+        android:background="@color/white"
+        android:layout_height="0dp"/>
+
+    <TextView
+        android:id="@+id/tv_no_record"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="暂无记录"
+        android:visibility="gone"
+        android:drawableTop="@drawable/point_no_data"
+        android:gravity="center"
+        android:textSize="14sp"
+        android:textColor="@color/color_a9afb8"
+        android:drawablePadding="15dp"
+        android:layout_marginTop="120dp"/>
+</LinearLayout>

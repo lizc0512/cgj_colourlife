@@ -259,7 +259,7 @@ public class KeySendKeyPhoneActivity extends BaseActivity implements HttpRespons
                 areaPop.setOnDismissListener(new PopupDismissListener());
                 break;
             case R.id.tv_one_year:
-                if (!fastClick()) {
+                if (!mFastClick()) {
                     break;
                 }
                 clearText();
@@ -275,7 +275,7 @@ public class KeySendKeyPhoneActivity extends BaseActivity implements HttpRespons
                 setSubmitBg();
                 break;
             case R.id.tv_two_year:
-                if (!fastClick()) {
+                if (!mFastClick()) {
                     break;
                 }
                 clearText();
@@ -290,7 +290,7 @@ public class KeySendKeyPhoneActivity extends BaseActivity implements HttpRespons
                 setSubmitBg();
                 break;
             case R.id.tv_three_year:
-                if (!fastClick()) {
+                if (!mFastClick()) {
                     break;
                 }
                 clearText();
@@ -307,7 +307,7 @@ public class KeySendKeyPhoneActivity extends BaseActivity implements HttpRespons
                 setSubmitBg();
                 break;
             case R.id.tv_forever:
-                if (!fastClick()) {
+                if (!mFastClick()) {
                     break;
                 }
                 clearText();
@@ -319,7 +319,7 @@ public class KeySendKeyPhoneActivity extends BaseActivity implements HttpRespons
                 setSubmitBg();
                 break;
             case R.id.tv_one_month:
-                if (!fastClick()) {
+                if (!mFastClick()) {
                     break;
                 }
                 clearText();
@@ -334,7 +334,7 @@ public class KeySendKeyPhoneActivity extends BaseActivity implements HttpRespons
                 setSubmitBg();
                 break;
             case R.id.tv_one_week:
-                if (!fastClick()) {
+                if (!mFastClick()) {
                     break;
                 }
                 clearText();
@@ -350,7 +350,7 @@ public class KeySendKeyPhoneActivity extends BaseActivity implements HttpRespons
                 setSubmitBg();
                 break;
             case R.id.tv_one_day:
-                if (!fastClick()) {
+                if (!mFastClick()) {
                     break;
                 }
                 clearText();
@@ -366,7 +366,7 @@ public class KeySendKeyPhoneActivity extends BaseActivity implements HttpRespons
                 setSubmitBg();
                 break;
             case R.id.tv_custom:
-                if (!fastClick()) {
+                if (!mFastClick()) {
                     break;
                 }
                 clearText();
@@ -492,7 +492,7 @@ public class KeySendKeyPhoneActivity extends BaseActivity implements HttpRespons
     private static final int MIN_CLICK_DELAY_TIME = 300;// 两次点击按钮之间的点击间隔不能少于500毫秒
     private static long lastClickTime = 0;
 
-    public static boolean fastClick() {
+    public static boolean mFastClick() {
         boolean flag = false;
         long curClickTime = System.currentTimeMillis();
         if ((curClickTime - lastClickTime) >= MIN_CLICK_DELAY_TIME) {

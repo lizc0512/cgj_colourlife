@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<resources>
+
+    <string name="point_honor_title">尊享%1$s</string>
+    <string name="point_honor_desc">您购买彩住宅系列产品获赠的%1$s，含项目使用地备注（如滨河国际尊享%2$s）可用于该产品所在地的线上消费及缴纳物业费和停车费</string>
+    <string name="point_normal_title">彩集%1$s</string>
+    <string name="point_normal_desc">尊享%1$s中的一种，级别次于尊享%2$s，由APP内线上活动或者其他商家发放，您可以用于线上消费和转增好友，不可绑定彩住宅项目且不能用于缴纳物业费和停车费</string>
+
+</resources>

@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_f9f9f9"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
+
+    <include layout="@layout/base_actionbar" />
+
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <com.tg.coloursteward.view.CircleImageView
+                    android:id="@+id/iv_given_photo"
+                    android:layout_width="44dp"
+                    android:layout_height="44dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="24dp" />
+
+                <TextView
+                    android:id="@+id/tv_given_username"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="24dp"
+                    android:gravity="center"
+                    android:lineSpacingExtra="3dp"
+                    android:textColor="@color/color_25282e"
+                    android:textSize="15sp"
+                    tools:text="正在向一拳找人\n赠送饭票" />
+
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="120dp"
+                android:background="@color/white"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginTop="10dp"
+                    android:text="赠送金额"
+                    android:textColor="@color/color_25282e"
+                    android:textSize="15sp" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1">
+
+                    <com.tg.coloursteward.view.ClearEditText
+                        android:id="@+id/ed_given_amount"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@null"
+                        android:drawableLeft="@drawable/point_black_sign"
+                        android:drawablePadding="10dp"
+                        android:inputType="numberDecimal"
+                        android:maxLength="10"
+                        android:paddingLeft="16dp"
+                        android:paddingRight="16dp"
+                        android:textColor="@color/color_25282e"
+                        android:textSize="24sp" />
+
+                    <TextView
+                        android:id="@+id/tv_hint_notice"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="45dp"
+                        android:text="请输入赠送金额"
+                        android:textColor="@color/color_626466"
+                        android:textSize="15sp" />
+
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:layout_marginLeft="16dp"
+                    android:background="@color/line_color" />
+            </LinearLayout>
+
+            <com.tg.coloursteward.view.ClearEditText
+                android:id="@+id/ed_given_remark"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:hint="添加备注(50字以内)"
+                android:maxLength="50"
+                android:minHeight="44dp"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:textColor="@color/color_25282e"
+                android:textColorHint="@color/color_8d9299"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/tv_remain_amount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="20dp"
+                android:gravity="center"
+                android:textColor="@color/color_8d9299"
+                android:textSize="12sp"
+                tools:text="可用余额：57.6" />
+
+            <TextView
+                android:id="@+id/tv_remain_notice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="5dp"
+                android:gravity="center"
+                android:textColor="@color/color_8d9299"
+                android:textSize="12sp"
+                tools:text="今天可赠送10次，剩余额度5000饭票" />
+
+
+            <Button
+                android:id="@+id/btn_given"
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="40dp"
+                android:layout_marginRight="16dp"
+                android:background="@drawable/point_password_default_bg"
+                android:text="赠送"
+                android:textColor="@color/white"
+                android:textSize="18sp" />
+
+        </LinearLayout>
+
+
+    </android.support.v4.widget.NestedScrollView>
+
+
+</LinearLayout>

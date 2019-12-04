@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layout_point_bg"
+    android:layout_width="match_parent"
+    android:layout_height="175dp"
+    android:layout_marginRight="16dp"
+    android:layout_marginLeft="16dp"
+    android:background="@drawable/point_one_balance_bg">
+
+
+
+        <TextView
+            android:id="@+id/tv_point_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="35dp"
+            android:text="彩管家全国积分"
+            android:textColor="@color/white"
+            android:textSize="14sp"  />
+
+        <TextView
+            android:id="@+id/tv_point_total"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawablePadding="5dp"
+            android:layout_marginLeft="35dp"
+            android:layout_marginTop="10dp"
+            android:layout_below="@id/tv_point_title"
+            android:drawableLeft="@drawable/point_white_sign"
+            android:text="18.83"
+            android:textColor="@color/white"
+            android:textSize="28sp"  />
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="25dp"
+        android:layout_height="50dp">
+
+        <TextView
+            android:id="@+id/tv_point_details"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="明细"
+            android:textColor="@color/white"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/tv_point_return"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="返回计划"
+            android:visibility="gone"
+            android:textColor="@color/white"
+            android:textSize="12sp" />
+        <TextView
+            android:id="@+id/tv_point_whthdrawal"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="提现"
+            android:textColor="@color/white"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/tv_point_given"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="赠送"
+            android:textColor="@color/white"
+            android:textSize="12sp" />
+
+
+    </LinearLayout>
+
+</RelativeLayout>

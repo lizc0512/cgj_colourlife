@@ -50,6 +50,7 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:replace="android:allowBackup,android:theme,android:label">
+        <activity android:name="com.tg.point.activity.GivenUserTypeActivity"></activity>
         <activity
             android:name="com.tg.money.activity.MyBankActivity"
             android:screenOrientation="portrait" />
@@ -90,6 +91,45 @@
             android:screenOrientation="portrait" />
         <activity
             android:name="com.tg.user.activity.RegisterActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.tg.point.activity.MyPointActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.tg.point.activity.ChangePawdOneStepActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.tg.point.activity.ChangePawdStyleActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.tg.point.activity.ChangePawdThreeStepActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.tg.point.activity.ChangePawdTwoStepActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.tg.point.activity.ForgetPayPawdActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.tg.point.activity.GivenPointAmountActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.tg.point.activity.GivenPointHistoryActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.tg.point.activity.GivenPointMobileActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.tg.point.activity.GivenPointResultActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.tg.point.activity.PointTransactionDetailsActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.tg.point.activity.PointTransactionListActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.tg.point.activity.ReturnPointPlanActivity"
             android:screenOrientation="portrait" />
 
         <uses-library
@@ -132,7 +172,6 @@
             android:name="com.youmai.hxsdk.forward.ForwardSelectActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" /> <!-- 弹出提现新消息页面 -->
-        <activity android:name=".activity.AlertActivity" /> <!-- 消息推送消息列表 -->
         <activity android:name="com.tg.im.activity.DeskTopActivity" /> <!-- 扫描二维码页面 -->
         <activity android:name=".activity.MipcaActivityCapture" /> <!-- 个人中心 -->
         <activity android:name="com.tg.user.activity.UserInfoActivity" /> <!-- 更多设置 -->
@@ -242,9 +281,6 @@
             android:label="@string/app_name" /> <!-- 即时分配 -->
         <activity android:name=".activity.AccountActivity" /> <!-- 即时分配明细 -->
         <activity android:name=".activity.AccountDetailActivity" />
-
-        <service android:name=".serice.MessageService" />
-
         <activity
             android:name=".wxapi.WXEntryActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
@@ -280,16 +316,12 @@
         <activity android:name="com.tg.user.activity.ForgetPasswordResetActivity" />
         <activity android:name="com.tg.user.activity.ForgetPasswordPhoneActivity" />
         <activity android:name="com.tg.user.activity.OauthLoginActivity" />
-        <activity android:name=".activity.AccountDetailNewActivity" />
-        <activity android:name=".activity.AccountExchangeRecordActivity" />
-        <activity android:name=".activity.AccountExchangeDetailActivity" />
         <activity android:name=".activity.PublicAccountDetailsActivity" />
         <activity android:name="com.tg.money.activity.GroupAccountDetailsActivity" />
         <activity android:name=".activity.PublicAccountSearchActivity" />
         <activity android:name=".activity.PublicAccountListActivity" />
         <activity android:name=".activity.PublicAccountTransferActivity" />
         <activity android:name=".activity.PublicAccountExchangeActivity" />
-        <activity android:name=".activity.AccountExchangeDetail_FreezingActivity" /> <!-- 对公账户（兑换方式） -->
         <activity
             android:name=".activity.ExchangeMethodActivity"
             android:label="@string/app_name" /> <!-- 兑换给同事（对公账户） -->

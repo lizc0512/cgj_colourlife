@@ -75,7 +75,7 @@ public class GivenPointAmountActivity extends BaseActivity implements View.OnCli
     private String state;//支付密码的状态
     private String order_no;//支付订单号
     private String dest_account;//目标用户的id
-    private String last_time; //剩余次数
+    private int last_time; //剩余次数
     private float last_amount;//剩余金额
     private float balanceAmount = 0.01f;//账户余额
     private String realName;//用户实名的
@@ -104,7 +104,7 @@ public class GivenPointAmountActivity extends BaseActivity implements View.OnCli
         ed_given_amount.addTextChangedListener(this);
         Intent intent = getIntent();
         givenMobile = intent.getStringExtra(GIVENMOBILE);
-        last_time = intent.getStringExtra(LASTTIME);
+        last_time = intent.getIntExtra(LASTTIME, 0);
         last_amount = intent.getIntExtra(LASTAMOUNT, 0);
         dest_account = intent.getStringExtra(USERID);
         last_amount = last_amount * 1.0f / 100;

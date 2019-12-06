@@ -229,8 +229,8 @@ public class GivenPointMobileActivity extends BaseActivity implements View.OnCli
                     List<UserIdInforEntity.ContentBean> mList = new ArrayList<>(userIdInforEntity.getContent());
                     if (mList.size() == 1) {
                         String real_name = mList.get(0).getName();
-                        String icon=mList.get(0).getPortrait();
-                        String uuid=mList.get(0).getAccount_uuid();
+                        String icon = mList.get(0).getPortrait();
+                        String uuid = mList.get(0).getAccount_uuid();
                         Intent amount_Intent = new Intent(GivenPointMobileActivity.this, GivenPointAmountActivity.class);
                         amount_Intent.putExtra(POINTTPANO, pano);
                         amount_Intent.putExtra(GIVENMOBILE, givePhone);

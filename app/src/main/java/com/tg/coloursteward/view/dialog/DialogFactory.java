@@ -82,6 +82,7 @@ public class DialogFactory implements ResultCallBack {
     private TextView tvMsg;
     private RotateProgress progressBar;
     private TextView tvContent;
+    private TextView dialog_title;
     private OnClickListener okListener;
     private CreateDialgCallBack dialgCallBack;
     private OnClickListener cancelListener;
@@ -607,7 +608,7 @@ public class DialogFactory implements ResultCallBack {
      * @param activity
      * @param content
      */
-    public void showSingleDialog(Activity activity, String content) {
+    public void showSingleDialog(Activity activity,String title, String content) {
         if (dialog == null || dialogActivity != activity) {
             dialogActivity = activity;
             DisplayMetrics metrics = Tools.getDisplayMetrics(activity);
@@ -619,6 +620,7 @@ public class DialogFactory implements ResultCallBack {
             LinearLayout layout = (LinearLayout) LayoutInflater.from(activity)
                     .inflate(R.layout.dialog_income_fee, null);
             tvContent = (TextView) layout.findViewById(R.id.tv_income_msg);
+            dialog_title = (TextView) layout.findViewById(R.id.dialog_title);
             TextView tv_dialog_close = (TextView) layout.findViewById(R.id.tv_dialog_close);
             tv_dialog_close.setOnClickListener(new OnClickListener() {
                 @Override
@@ -632,6 +634,7 @@ public class DialogFactory implements ResultCallBack {
             window.setAttributes(p);
         }
         tvContent.setText(content);
+        dialog_title.setText(title);
         dialog.show();
     }
 }

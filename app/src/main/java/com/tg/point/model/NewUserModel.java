@@ -30,7 +30,7 @@ import java.util.Map;
 public class NewUserModel extends BaseModel {
     private String sendCodeUrl = "/sms/sendCode";
     private String submitRealUrl = "/user/identity";
-    private String getRealTokenUrl = "/user/bizToken";
+    private String getRealTokenUrl = "app/employee/getBizToken";
     private String finishTask = "/user/finishTask";
 
     public NewUserModel(Context context) {
@@ -101,11 +101,16 @@ public class NewUserModel extends BaseModel {
         }, true, true);
     }
 
+
     /**
-     * 获取实名认证BizToken
+     * 获取bizToken
+     *
+     * @param what
+     * @param newHttpResponse
+     * @param loading
      */
     public void getRealNameToken(int what, final HttpResponse newHttpResponse, boolean loading) {
-        final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 0, getRealTokenUrl), RequestMethod.GET);
+        final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 16, getRealTokenUrl), RequestMethod.GET);
         request(what, request, null, new HttpListener<String>() {
             @Override
             public void onSucceed(int what, Response<String> response) {

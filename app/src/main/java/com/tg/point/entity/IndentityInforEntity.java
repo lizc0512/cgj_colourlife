@@ -44,6 +44,8 @@ public class IndentityInforEntity extends BaseContentEntity {
 
         private int user_id;
         private String identity_name;
+        private String real_name;
+        private String is_identity;
         private String mobile;
 
         public int getUser_id() {
@@ -68,6 +70,22 @@ public class IndentityInforEntity extends BaseContentEntity {
 
         public void setMobile(String mobile) {
             this.mobile = mobile;
+        }
+
+        public String getReal_name() {
+            return real_name;
+        }
+
+        public void setReal_name(String real_name) {
+            this.real_name = real_name;
+        }
+
+        public String getIs_identity() {
+            return is_identity;
+        }
+
+        public void setIs_identity(String is_identity) {
+            this.is_identity = is_identity;
         }
     }
 }

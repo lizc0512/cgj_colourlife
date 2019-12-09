@@ -161,7 +161,7 @@ public class WithDrawalActivity extends BaseActivity implements View.OnClickList
                 startActivityForResult(intent, 100);
                 break;
             case R.id.tv_withdraw_incomefee:
-                DialogFactory.getInstance().showSingleDialog(this, detail_content);
+                DialogFactory.getInstance().showSingleDialog(this, "个税说明", detail_content);
                 break;
             case R.id.rl_withdrawal_mycard:
                 Intent it = new Intent(this, MyBankActivity.class);

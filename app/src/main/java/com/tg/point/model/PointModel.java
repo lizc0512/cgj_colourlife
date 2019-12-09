@@ -8,6 +8,7 @@ import com.tg.coloursteward.baseModel.HttpListener;
 import com.tg.coloursteward.baseModel.HttpResponse;
 import com.tg.coloursteward.baseModel.RequestEncryptionUtils;
 import com.tg.coloursteward.constant.Contants;
+import com.tg.coloursteward.info.UserInfo;
 import com.tg.coloursteward.util.RSAUtil;
 import com.tg.coloursteward.util.SharedPreferencesUtils;
 import com.yanzhenjie.nohttp.NoHttp;
@@ -39,8 +40,9 @@ public class PointModel extends BaseModel {
     private String userInfoByMobileUrl = "/app/employee/search";//根据号码获取转账用户的信息
     private String accountBalanceUrl = "/app/employee/fp/balance";//获取用户某个账户的余额
     private String transactionReturnPlanUrl = "/app/wallet/returnPlan";//彩粮票返还计划
-    private String transactionTokenUrl = "/app/transaction/checkpwd";//获取彩之云交易令牌
-    private String transactionTransferUrl = "/app/transaction/transfer";//彩之云饭票转账交易
+    private String transactionTokenUrl = "/app/employee/transaction/checkpwd";//交易密码校验接口
+    private String transactionTransferUrl = "/app/employee/fp/transfer";//彩管家饭票转账交易
+    private String checkPwdUrl = "/app/employee/password/checkPayPwd";//校验用户支付密码是否正确
 
 
     public PointModel(Context context) {
@@ -258,12 +260,15 @@ public class PointModel extends BaseModel {
         }, true, true);
     }
 
+    /**
+     * 交易密码校验接口
+     *
+     * @param what
+     * @param newHttpResponse
+     */
     public void getTransactionToken(int what, final HttpResponse newHttpResponse) {
-        Map<String, Object> params = new HashMap<String, Object>();
-        params.put("transfer_type", 1);
-        params.put("timestamp", System.currentTimeMillis() / 1000);
         final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 16, transactionTokenUrl), RequestMethod.GET);
-        request(what, request, params, new HttpListener<String>() {
+        request(what, request, null, new HttpListener<String>() {
             @Override
             public void onSucceed(int what, Response<String> response) {
                 int responseCode = response.getHeaders().getResponseCode();
@@ -285,19 +290,22 @@ public class PointModel extends BaseModel {
         }, true, true);
     }
 
-    public void transferTransaction(int what, int transfer_fee, String password, String token, String order_no, String dest_account, String pano, String detail, final HttpResponse newHttpResponse) {
+    public void transferTransaction(int what, int transfer_fee, String token, String order_no, String dest_account, String pano, String detail, String type, final HttpResponse newHttpResponse) {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("transfer_type", 1);
         params.put("transfer_fee", transfer_fee);
+        params.put("dest_account", dest_account);//收款方的
         params.put("token", token);
         params.put("order_no", order_no);
-        params.put("dest_account", dest_account);
-        params.put("pano", pano);
-        if (!TextUtils.isEmpty(detail)) {
-            params.put("detail", detail);
+        params.put("org_account", UserInfo.employeeAccount);
+        params.put("dest_pano", pano);
+        params.put("org_pano", pano);
+        params.put("type", type);
+        if (TextUtils.isEmpty(detail)) {
+            detail = "转账";
         }
-        PublicKey publicKey = RSAUtil.keyStrToPublicKey(Contants.URl.publicKeyString);
-        params.put("password", RSAUtil.encryptDataByPublicKey(password.getBytes(), publicKey));
+        params.put("detail", detail);
+        params.put("content", detail);
         final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 16, transactionTransferUrl), RequestMethod.POST);
         request(what, request, params, new HttpListener<String>() {
             @Override
@@ -349,6 +357,42 @@ public class PointModel extends BaseModel {
             public void onFailed(int what, Response<String> response) {
                 showExceptionMessage(what, response);
                 newHttpResponse.OnHttpResponse(what, "");
+            }
+        }, true, true);
+    }
+
+    /**
+     * 校验用户支付密码是否正确
+     *
+     * @param what
+     * @param password
+     * @param transfer_type
+     * @param newHttpResponse
+     */
+    public void postCheckPwd(int what, String password, int transfer_type, final HttpResponse newHttpResponse) {
+        Map<String, Object> params = new HashMap<String, Object>();
+        PublicKey publicKey = RSAUtil.keyStrToPublicKey(Contants.URl.publicKeyString);
+        params.put("password", RSAUtil.encryptDataByPublicKey(password.getBytes(), publicKey));
+        params.put("transfer_type", transfer_type);//获取令牌使用的场景，1：修改支付密码，2：饭票赠送，3：饭票提现
+        final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 16, checkPwdUrl), RequestMethod.POST);
+        request(what, request, params, new HttpListener<String>() {
+            @Override
+            public void onSucceed(int what, Response<String> response) {
+                int responseCode = response.getHeaders().getResponseCode();
+                String result = response.get();
+                if (responseCode == RequestEncryptionUtils.responseSuccess) {
+                    int resultCode = showSuccesResultMessage(result);
+                    if (resultCode == 0) {
+                        newHttpResponse.OnHttpResponse(what, result);
+                    }
+                } else {
+                    showErrorCodeMessage(responseCode, response);
+                }
+            }
+
+            @Override
+            public void onFailed(int what, Response<String> response) {
+                showExceptionMessage(what, response);
             }
         }, true, true);
     }

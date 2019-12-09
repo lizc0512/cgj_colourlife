@@ -35,6 +35,35 @@
         android:background="@color/app_bg" />
 
     <RelativeLayout
+        android:id="@+id/rl_setting_paypwd"
+        android:layout_width="match_parent"
+        android:layout_height="44dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="16dp"
+            android:text="支付密码"
+            android:textColor="@color/black_mine"
+            android:textSize="16dp" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="16dp"
+            android:src="@drawable/common_level2_icon_bg_color" />
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_marginLeft="16dp"
+        android:background="@color/app_bg" />
+
+    <RelativeLayout
         android:id="@+id/rl_setting_changepwd"
         android:layout_width="match_parent"
         android:layout_height="44dp">
@@ -44,7 +73,7 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginLeft="16dp"
-            android:text="修改密码"
+            android:text="修改登录密码"
             android:textColor="@color/black_mine"
             android:textSize="16dp" />
 

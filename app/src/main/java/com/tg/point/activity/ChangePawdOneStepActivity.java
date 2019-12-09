@@ -14,10 +14,12 @@ import com.tg.coloursteward.baseModel.HttpResponse;
 import com.tg.coloursteward.constant.UserMessageConstant;
 import com.tg.coloursteward.util.GsonUtils;
 import com.tg.coloursteward.util.ToastUtil;
+import com.tg.point.entity.CheckPwdEntiy;
 import com.tg.point.entity.PayPwdCheckEntity;
 import com.tg.point.gridpasswordview.GridPasswordView;
 import com.tg.point.gridpasswordview.PasswordType;
 import com.tg.point.model.PayPasswordModel;
+import com.tg.point.model.PointModel;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -34,6 +36,7 @@ public class ChangePawdOneStepActivity extends BaseActivity implements View.OnCl
     private TextView mTitle;
     private GridPasswordView gridPasswordView_cqb;
     private PayPasswordModel payPasswordModel;
+    private PointModel pointModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +55,7 @@ public class ChangePawdOneStepActivity extends BaseActivity implements View.OnCl
 
             @Override
             public void onInputFinish(String psw) {
-                payPasswordModel.checkPayPassword(0, psw, ChangePawdOneStepActivity.this);
+                pointModel.postCheckPwd(1, psw, 1, ChangePawdOneStepActivity.this);
             }
         });
         mBack.setOnClickListener(this);
@@ -61,6 +64,7 @@ public class ChangePawdOneStepActivity extends BaseActivity implements View.OnCl
             EventBus.getDefault().register(ChangePawdOneStepActivity.this);
         }
         payPasswordModel = new PayPasswordModel(this);
+        pointModel = new PointModel(this);
     }
 
     @Override
@@ -128,6 +132,22 @@ public class ChangePawdOneStepActivity extends BaseActivity implements View.OnCl
                 }
             } catch (Exception e) {
 
+            }
+        } else if (what == 1) {
+            CheckPwdEntiy entiy = new CheckPwdEntiy();
+            entiy = GsonUtils.gsonToBean(result, CheckPwdEntiy.class);
+            if (entiy.getContent().getRight_pwd().equals("1")) {
+                Intent intent = new Intent(ChangePawdOneStepActivity.this, ChangePawdTwoStepActivity.class);
+                intent.putExtra(PAWDTYPE, 1);
+                intent.putExtra(PAWDTOEKN, entiy.getContent().getToken());
+                startActivity(intent);
+            } else {
+                String remain = entiy.getContent().getRemain();
+                if (remain.equals("0")) {
+                    ToastUtil.showShortToast(ChangePawdOneStepActivity.this, "您已输入5次错误密码，账户被锁定，请明日再进行操作");
+                } else {
+                    ToastUtil.showShortToast(ChangePawdOneStepActivity.this, "支付密码不正确，您还可以输入" + remain + "次");
+                }
             }
         }
     }

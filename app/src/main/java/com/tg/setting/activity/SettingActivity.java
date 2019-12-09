@@ -32,6 +32,7 @@ import com.tg.coloursteward.serice.UpdateService;
 import com.tg.coloursteward.util.GsonUtils;
 import com.tg.coloursteward.util.ToastUtil;
 import com.tg.coloursteward.view.dialog.DialogFactory;
+import com.tg.point.activity.ChangePawdStyleActivity;
 import com.tg.setting.adapter.UpdateAdapter;
 import com.tg.setting.entity.VersionEntity;
 import com.tg.setting.model.SettingModel;
@@ -58,6 +59,7 @@ import static com.tg.coloursteward.application.CityPropertyApplication.lbsTraceC
 public class SettingActivity extends BaseActivity implements OnClickListener, HttpResponse {
     private TextView tv_setting_nowver;
     private TextView tv_setting_newver;
+    private RelativeLayout rl_setting_paypwd;
     private RelativeLayout rl_setting_changepwd;
     private RelativeLayout rl_setting_clearinfo;
     private RelativeLayout rl_setting_aboutus;
@@ -90,6 +92,7 @@ public class SettingActivity extends BaseActivity implements OnClickListener, Ht
      */
     private void initView() {
         tv_setting_imstatus = findViewById(R.id.tv_setting_imstatus);
+        rl_setting_paypwd = findViewById(R.id.rl_setting_paypwd);
         rl_setting_changepwd = findViewById(R.id.rl_setting_changepwd);
         rl_setting_clearinfo = findViewById(R.id.rl_setting_clearinfo);
         rl_setting_aboutus = findViewById(R.id.rl_setting_aboutus);
@@ -99,6 +102,7 @@ public class SettingActivity extends BaseActivity implements OnClickListener, Ht
         tv_setting_nowver = findViewById(R.id.tv_setting_nowver);
         tv_setting_newver = findViewById(R.id.tv_setting_newver);
         tv_setting_point = findViewById(R.id.tv_setting_point);
+        rl_setting_paypwd.setOnClickListener(this);
         rl_setting_changepwd.setOnClickListener(this);
         rl_setting_clearinfo.setOnClickListener(this);
         rl_setting_aboutus.setOnClickListener(this);
@@ -179,6 +183,9 @@ public class SettingActivity extends BaseActivity implements OnClickListener, Ht
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.rl_setting_paypwd:
+                startActivity(new Intent(this, ChangePawdStyleActivity.class));
+                break;
             case R.id.rl_setting_changepwd:
                 startActivity(new Intent(this, ModifiedPasswordActivity.class));
                 break;

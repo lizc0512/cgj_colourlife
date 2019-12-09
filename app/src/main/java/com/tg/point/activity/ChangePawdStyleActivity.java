@@ -28,8 +28,8 @@ public class ChangePawdStyleActivity extends BaseActivity implements View.OnClic
         mTitle = findViewById(R.id.tv_base_title);
         mBack.setOnClickListener(this);
         mTitle.setText("支付密码");
-        change_paypawd_layout.setOnClickListener(this::onClick);
-        forget_paypawd_layout.setOnClickListener(this::onClick);
+        change_paypawd_layout.setOnClickListener(this);
+        forget_paypawd_layout.setOnClickListener(this);
     }
 
     @Override

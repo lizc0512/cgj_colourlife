@@ -27,6 +27,8 @@ import com.tg.coloursteward.util.GlideUtils;
 import com.tg.coloursteward.util.GsonUtils;
 import com.tg.coloursteward.util.ToastUtil;
 import com.tg.coloursteward.view.ClearEditText;
+import com.tg.coloursteward.view.dialog.DialogFactory;
+import com.tg.point.entity.CheckPwdEntiy;
 import com.tg.point.entity.PointBalanceEntity;
 import com.tg.point.entity.PointTransactionTokenEntity;
 import com.tg.point.entity.RealNameTokenEntity;
@@ -176,8 +178,7 @@ public class GivenPointAmountActivity extends BaseActivity implements View.OnCli
             case POINT_INPUT_PAYPAWD://密码框输入密码
             case POINT_SET_PAYPAWD: //设置支付密码成功 直接拿密码进行支付
                 String password = message.obj.toString();
-                pointModel.transferTransaction(4, giveBalance, password, token, order_no, dest_account, pano,
-                        ed_given_remark.getText().toString().trim(), GivenPointAmountActivity.this);
+                pointModel.postCheckPwd(7, password, 2, this);
                 break;
         }
     }
@@ -245,15 +246,14 @@ public class GivenPointAmountActivity extends BaseActivity implements View.OnCli
                     token = contentBean.getToken();
                     state = contentBean.getState();
                     order_no = contentBean.getOrder_no();
-                    switch (state) {
+                    switch (state) {//1 已实名已设置支付密码2 已实名未设置支付密码3 未实名未设置支付密码4 未实名已设置支付密码
                         case "2"://已实名未设置支付密码
                             Intent intent = new Intent(GivenPointAmountActivity.this, ChangePawdTwoStepActivity.class);
                             startActivity(intent);
                             break;
                         case "3"://未实名未设置支付密码
                         case "4"://未实名已设置支付密码
-                            newUserModel = new NewUserModel(GivenPointAmountActivity.this);
-                            newUserModel.getRealNameToken(5, this, true);
+                            DialogFactory.getInstance().showSingleDialog(this, "提示", "你还未实名认证，请前往彩之云APP实名认证后再次操作");
                             break;
                         default://1已实名已设置支付密码
                             showPayDialog();
@@ -309,6 +309,23 @@ public class GivenPointAmountActivity extends BaseActivity implements View.OnCli
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
+                    }
+                }
+                break;
+            case 7:
+                if (!TextUtils.isEmpty(result)) {
+                    CheckPwdEntiy entiy = new CheckPwdEntiy();
+                    entiy = GsonUtils.gsonToBean(result, CheckPwdEntiy.class);
+                    if (entiy.getContent().getRight_pwd().equals("1")) {
+                        pointModel.transferTransaction(4, giveBalance, entiy.getContent().getToken(), entiy.getContent().getOpen_id(), dest_account, pano,
+                                ed_given_remark.getText().toString().trim(), "cgj-czy", GivenPointAmountActivity.this);
+                    } else {
+                        String remain = entiy.getContent().getRemain();
+                        if (remain.equals("0")) {
+                            ToastUtil.showShortToast(GivenPointAmountActivity.this, "您已输入5次错误密码，账户被锁定，请明日再进行操作");
+                        } else {
+                            ToastUtil.showShortToast(GivenPointAmountActivity.this, "支付密码不正确，您还可以输入" + remain + "次");
+                        }
                     }
                 }
                 break;

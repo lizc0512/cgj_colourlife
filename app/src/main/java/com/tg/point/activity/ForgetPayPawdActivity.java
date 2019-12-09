@@ -18,12 +18,10 @@ import com.tg.coloursteward.base.BaseActivity;
 import com.tg.coloursteward.baseModel.HttpResponse;
 import com.tg.coloursteward.constant.UserMessageConstant;
 import com.tg.coloursteward.util.GsonUtils;
-import com.tg.coloursteward.util.NumberUtils;
 import com.tg.coloursteward.util.ToastUtil;
 import com.tg.coloursteward.view.ClearEditText;
+import com.tg.point.entity.CheckPwdEntiy;
 import com.tg.point.entity.IndentityInforEntity;
-import com.tg.point.entity.PayPwdCheckEntity;
-import com.tg.point.model.NewUserModel;
 import com.tg.point.model.PayPasswordModel;
 import com.tg.user.entity.SendCodeEntity;
 
@@ -39,18 +37,17 @@ import static com.tg.point.activity.ChangePawdThreeStepActivity.PAWDTOEKN;
 public class ForgetPayPawdActivity extends BaseActivity implements View.OnClickListener, TextWatcher, HttpResponse {
     private ImageView mBack;
     private TextView mTitle;
-    private TextView tv_user_phone;
     private ClearEditText input_pawd_code;
     private TextView tv_get_code;
     private TextView tv_user_realname;
     private ClearEditText input_pawd_idcard;
+    private ClearEditText et_user_phone;
     private Button btn_define;
     private TextView tv_contact_service;
     private MyTimeCount myTimeCount = null;
     private String idCardNumber;
     private String mobile;
     private String smsCode;
-    private NewUserModel newUserModel;
     private PayPasswordModel payPasswordModel;
 
     @Override
@@ -59,7 +56,7 @@ public class ForgetPayPawdActivity extends BaseActivity implements View.OnClickL
         setContentView(R.layout.activity_password_forget_layout);
         mBack = findViewById(R.id.iv_base_back);
         mTitle = findViewById(R.id.tv_base_title);
-        tv_user_phone = findViewById(R.id.tv_user_phone);
+        et_user_phone = findViewById(R.id.et_user_phone);
         input_pawd_code = findViewById(R.id.input_pawd_code);
         tv_get_code = findViewById(R.id.tv_get_code);
         tv_user_realname = findViewById(R.id.tv_user_realname);
@@ -74,7 +71,6 @@ public class ForgetPayPawdActivity extends BaseActivity implements View.OnClickL
         mTitle.setText("支付密码");
         input_pawd_code.addTextChangedListener(this);
         input_pawd_idcard.addTextChangedListener(this);
-        newUserModel = new NewUserModel(ForgetPayPawdActivity.this);
         payPasswordModel = new PayPasswordModel(ForgetPayPawdActivity.this);
         if (!EventBus.getDefault().isRegistered(ForgetPayPawdActivity.this)) {
             EventBus.getDefault().register(ForgetPayPawdActivity.this);
@@ -117,11 +113,29 @@ public class ForgetPayPawdActivity extends BaseActivity implements View.OnClickL
                 finish();
                 break;
             case R.id.tv_get_code:
+                mobile = et_user_phone.getText().toString().trim();
+                if (TextUtils.isEmpty(mobile)) {
+                    ToastUtil.showShortToast(this, "手机号不能为空");
+                    return;
+                }
                 if (fastClick()) {
-                    newUserModel.getSmsCode(1, mobile, 7, 1, ForgetPayPawdActivity.this);
+                    payPasswordModel.postSendCode(1, mobile, this);
                 }
                 break;
             case R.id.btn_define:
+                mobile = et_user_phone.getText().toString().trim();
+                if (TextUtils.isEmpty(mobile)) {
+                    ToastUtil.showShortToast(this, "手机号不能为空");
+                    return;
+                }
+                if (TextUtils.isEmpty(smsCode)) {
+                    ToastUtil.showShortToast(this, "验证码不能为空");
+                    return;
+                }
+                if (TextUtils.isEmpty(idCardNumber)) {
+                    ToastUtil.showShortToast(this, "身份证号码不能为空");
+                    return;
+                }
                 if (fastClick()) {
                     payPasswordModel.validIdentityInfor(2, mobile, smsCode, idCardNumber, ForgetPayPawdActivity.this);
                 }
@@ -185,18 +199,9 @@ public class ForgetPayPawdActivity extends BaseActivity implements View.OnClickL
                 try {
                     IndentityInforEntity indentityInforEntity = GsonUtils.gsonToBean(result, IndentityInforEntity.class);
                     IndentityInforEntity.ContentBean contentBean = indentityInforEntity.getContent();
-                    mobile = contentBean.getMobile();
-                    tv_user_phone.setText(NumberUtils.getHandlePhone(mobile));
-                    String identity_name = contentBean.getIdentity_name();
-                    int length = identity_name.length();
-                    StringBuffer stringBuffer = new StringBuffer();
-                    for (int j = 0; j < length - 1; j++) {
-                        stringBuffer.append("*");
-                    }
-                    stringBuffer.append(identity_name.substring(length - 1, length));
-                    tv_user_realname.setText(stringBuffer.toString());
+                    String identity_name = contentBean.getReal_name();
+                    tv_user_realname.setText(identity_name);
                 } catch (Exception e) {
-
                 }
                 break;
             case 1:
@@ -204,7 +209,7 @@ public class ForgetPayPawdActivity extends BaseActivity implements View.OnClickL
                     try {
                         initTimeCount();
                         SendCodeEntity sendCodeEntity = GsonUtils.gsonToBean(result, SendCodeEntity.class);
-                        ToastUtil.showShortToast(ForgetPayPawdActivity.this, sendCodeEntity.getContent().getNotice());
+                        ToastUtil.showShortToast(ForgetPayPawdActivity.this, sendCodeEntity.getMessage());
                     } catch (Exception e) {
                         ToastUtil.showShortToast(ForgetPayPawdActivity.this, getResources().getString(R.string.user_code_send));
                     }
@@ -212,11 +217,10 @@ public class ForgetPayPawdActivity extends BaseActivity implements View.OnClickL
                 break;
             case 2:
                 try {
-                    PayPwdCheckEntity payPwdCheckEntity = GsonUtils.gsonToBean(result, PayPwdCheckEntity.class);
-                    PayPwdCheckEntity.ContentBean contentBean = payPwdCheckEntity.getContent();
+                    CheckPwdEntiy entiy = GsonUtils.gsonToBean(result, CheckPwdEntiy.class);
                     Intent intent = new Intent(ForgetPayPawdActivity.this, ChangePawdTwoStepActivity.class);
                     intent.putExtra(ChangePawdThreeStepActivity.PAWDTYPE, 2);
-                    intent.putExtra(PAWDTOEKN, contentBean.getToken());
+                    intent.putExtra(PAWDTOEKN, entiy.getContent().getToken());
                     startActivity(intent);
                 } catch (Exception e) {
 

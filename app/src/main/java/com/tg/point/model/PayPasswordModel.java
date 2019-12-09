@@ -26,10 +26,11 @@ import java.util.Map;
  **/
 public class PayPasswordModel extends BaseModel {
     private String addPawdUrl = "/app/password/addPayPwd";//设置用户新支付密码
-    private String setPawdUrl = "/app/password/setPayPwd";//修改用户支付密码
-    private String checkPawdUrl = "/app/password/checkPayPwd";//修改用户支付密码
-    private String getIdentityUrl = "/app/password/getIdentity";//修改用户支付密码
-    private String validIdentityUrl = "/app/password/validIdentity";//验证用户实名信息
+    private String setPawdUrl = "/app/employee/password/setPayPwd";//修改用户支付密码
+    private String checkPawdUrl = "/app/employee/password/setPayPwd";//修改用户支付密码
+    private String getIdentityUrl = "/app/employee/checkIdentity";//获取用户是否实名
+    private String validIdentityUrl = "/app/employee/validIdentity";//验证用户实名信息
+    private String sendCodeUrl = "/app/employee/send/code";//发送验证码
 
     public PayPasswordModel(Context context) {
         super(context);
@@ -64,6 +65,14 @@ public class PayPasswordModel extends BaseModel {
         }, true, true);
     }
 
+    /**
+     * 修改用户支付密码
+     *
+     * @param what
+     * @param password
+     * @param token
+     * @param newHttpResponse
+     */
     public void setPayPassword(int what, String password, String token, final HttpResponse newHttpResponse) {
         Map<String, Object> params = new HashMap<String, Object>();
         PublicKey publicKey = RSAUtil.keyStrToPublicKey(Contants.URl.publicKeyString);
@@ -96,6 +105,13 @@ public class PayPasswordModel extends BaseModel {
         }, true, true);
     }
 
+    /**
+     * 修改用户支付密码
+     *
+     * @param what
+     * @param password
+     * @param newHttpResponse
+     */
     public void checkPayPassword(int what, String password, final HttpResponse newHttpResponse) {
         Map<String, Object> params = new HashMap<String, Object>();
         PublicKey publicKey = RSAUtil.keyStrToPublicKey(Contants.URl.publicKeyString);
@@ -123,8 +139,14 @@ public class PayPasswordModel extends BaseModel {
         }, true, true);
     }
 
+    /**
+     * 获取用户是否实名
+     *
+     * @param what
+     * @param newHttpResponse
+     */
     public void getIdentityInfor(int what, final HttpResponse newHttpResponse) {
-        final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 15, getIdentityUrl), RequestMethod.GET);
+        final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 16, getIdentityUrl), RequestMethod.GET);
         request(what, request, null, new HttpListener<String>() {
             @Override
             public void onSucceed(int what, Response<String> response) {
@@ -147,13 +169,55 @@ public class PayPasswordModel extends BaseModel {
         }, true, true);
     }
 
+    /**
+     * 验证用户身份信息
+     *
+     * @param what
+     * @param mobile
+     * @param code
+     * @param identity_val
+     * @param newHttpResponse
+     */
     public void validIdentityInfor(int what, String mobile, String code, String identity_val, final HttpResponse newHttpResponse) {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("mobile", mobile);
         params.put("code", code);
         params.put("identity_val", identity_val);
-        final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 16, validIdentityUrl), RequestMethod.POST);
+        final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 16, validIdentityUrl), RequestMethod.GET);
         request(what, request, params, new HttpListener<String>() {
+            @Override
+            public void onSucceed(int what, Response<String> response) {
+                int responseCode = response.getHeaders().getResponseCode();
+                String result = response.get();
+                if (responseCode == RequestEncryptionUtils.responseSuccess) {
+                    int resultCode = showSuccesResultMessage(result);
+                    if (resultCode == 0) {
+                        newHttpResponse.OnHttpResponse(what, result);
+                    }
+                } else {
+                    showErrorCodeMessage(responseCode, response);
+                }
+            }
+
+            @Override
+            public void onFailed(int what, Response<String> response) {
+                showExceptionMessage(what, response);
+            }
+        }, true, true);
+    }
+
+    /**
+     * 发送验证码
+     *
+     * @param what
+     * @param mobile
+     * @param newHttpResponse
+     */
+    public void postSendCode(int what, String mobile, final HttpResponse newHttpResponse) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("mobile", mobile);
+        final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 16, sendCodeUrl), RequestMethod.POST);
+        request(what, request, map, new HttpListener<String>() {
             @Override
             public void onSucceed(int what, Response<String> response) {
                 int responseCode = response.getHeaders().getResponseCode();

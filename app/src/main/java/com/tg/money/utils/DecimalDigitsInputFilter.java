@@ -35,13 +35,13 @@ public class DecimalDigitsInputFilter implements InputFilter {
                 break;
             }
         }
-
         if (source.equals(".") && dstart == 0 && dend == 0) {
-            return "0"+".";
+            return "0" + ".";
         }
-
+        if (source.equals("") && start == 0 && end == 0) {
+            return "";
+        }
         if (dotPos >= 0) {
-
             // protects against many dots
             if (source.equals(".") || source.equals(",")) {
                 return "";
@@ -54,8 +54,6 @@ public class DecimalDigitsInputFilter implements InputFilter {
                 return "";
             }
         }
-
-        return null;
-
+        return source;
     }
 }

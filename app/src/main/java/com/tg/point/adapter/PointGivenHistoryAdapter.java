@@ -9,24 +9,25 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-
 import com.tg.coloursteward.R;
-import com.tg.point.entity.PointTransferListEntity;
+import com.tg.point.entity.PointHistoryEntity;
 import com.tg.setting.util.OnItemClickListener;
 
 import java.util.List;
 
 public class PointGivenHistoryAdapter extends RecyclerView.Adapter<PointGivenHistoryAdapter.PointGivenHistoryViewHolder> {
 
-    private List<PointTransferListEntity.ContentBean.ListBean> totalContentBeanList;
+    private List<PointHistoryEntity.ContentBean> totalContentBeanList;
     public OnItemClickListener onClickListener;
 
-    public PointGivenHistoryAdapter(List<PointTransferListEntity.ContentBean.ListBean> totalContentBeanList) {
+    public PointGivenHistoryAdapter(List<PointHistoryEntity.ContentBean> totalContentBeanList) {
         this.totalContentBeanList = totalContentBeanList;
     }
+
     public void setOnItemClickListener(OnItemClickListener onClickListener) {
         this.onClickListener = onClickListener;
     }
+
     @NonNull
     @Override
     public PointGivenHistoryViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
@@ -38,15 +39,15 @@ public class PointGivenHistoryAdapter extends RecyclerView.Adapter<PointGivenHis
 
     @Override
     public void onBindViewHolder(@NonNull PointGivenHistoryViewHolder viewHolder, int i) {
-        PointTransferListEntity.ContentBean.ListBean  listBean=totalContentBeanList.get(i);
+        PointHistoryEntity.ContentBean listBean = totalContentBeanList.get(i);
         viewHolder.tv_given_date.setText(listBean.getCreate_time());
-        String mobile=listBean.getMobile();
-        if (TextUtils.isEmpty(mobile)||"null".equalsIgnoreCase(mobile)){
-            mobile="";
+        String mobile = listBean.getMobile();
+        if (TextUtils.isEmpty(mobile) || "null".equalsIgnoreCase(mobile)) {
+            mobile = "";
         }
-        viewHolder.tv_given_username.setText(listBean.getDest_client()+" "+mobile);
+        viewHolder.tv_given_username.setText(listBean.getDest_client() + " " + mobile);
         viewHolder.tv_given_amount.setTextColor(Color.parseColor("#F24724"));
-        viewHolder.tv_given_amount.setText(String.valueOf(Double.valueOf(listBean.getDest_money())*1.0f/100));
+        viewHolder.tv_given_amount.setText(String.valueOf(Double.valueOf(listBean.getDest_money()) * 1.0f / 100));
     }
 
     @Override
@@ -55,7 +56,7 @@ public class PointGivenHistoryAdapter extends RecyclerView.Adapter<PointGivenHis
     }
 
 
-    class PointGivenHistoryViewHolder extends RecyclerView.ViewHolder  implements View.OnClickListener {
+    class PointGivenHistoryViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private TextView tv_given_username;
         private TextView tv_given_date;
         private TextView tv_given_amount;

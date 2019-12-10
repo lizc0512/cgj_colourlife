@@ -14,9 +14,8 @@ import com.tg.coloursteward.base.BaseActivity;
 import com.tg.coloursteward.baseModel.HttpResponse;
 import com.tg.coloursteward.util.GsonUtils;
 import com.tg.point.adapter.PointGivenHistoryAdapter;
-import com.tg.point.entity.PointTransferListEntity;
+import com.tg.point.entity.PointHistoryEntity;
 import com.tg.point.model.PointModel;
-import com.youmai.hxsdk.utils.GsonUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,10 +32,12 @@ public class GivenPointHistoryActivity extends BaseActivity implements View.OnCl
     private TextView mTitle;
     private XRecyclerView rv_given_history;//当前类型的饭票或积分赠送记录
     private TextView tv_no_record;
-    private List<PointTransferListEntity.ContentBean.ListBean> totalContentBeanList = new ArrayList<>();
+    private List<PointHistoryEntity.ContentBean> totalListBean = new ArrayList<>();
     private PointGivenHistoryAdapter pointGivenHistoryAdapter;
     private PointModel pointModel;
     private int page = 1;
+    private long time_start;//开始的时间
+    private long time_stop;//结束时间
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,8 +51,8 @@ public class GivenPointHistoryActivity extends BaseActivity implements View.OnCl
         mTitle.setText("历史记录");
         pointModel = new PointModel(GivenPointHistoryActivity.this);
         String pano = getIntent().getStringExtra(POINTTPANO);
-        pointModel.getTransferList(0, pano, page, true, GivenPointHistoryActivity.this);
-        pointGivenHistoryAdapter = new PointGivenHistoryAdapter(totalContentBeanList);
+        pointModel.getAccountFlowList(0, page, pano, time_start, time_stop, 1, true, GivenPointHistoryActivity.this);
+        pointGivenHistoryAdapter = new PointGivenHistoryAdapter(totalListBean);
         rv_given_history.setLayoutManager(new LinearLayoutManager(GivenPointHistoryActivity.this, LinearLayoutManager.VERTICAL, false));
         rv_given_history.setAdapter(pointGivenHistoryAdapter);
         rv_given_history.setLoadingMoreEnabled(true);
@@ -65,9 +66,12 @@ public class GivenPointHistoryActivity extends BaseActivity implements View.OnCl
             @Override
             public void onLoadMore() {
                 page++;
-                pointModel.getTransferList(0, pano, page, false, GivenPointHistoryActivity.this);
+                pointModel.getAccountFlowList(0, page, pano, time_start, time_stop, 1, false, GivenPointHistoryActivity.this);
             }
         });
+    }
+
+    private void initData() {
     }
 
     @Override
@@ -96,21 +100,18 @@ public class GivenPointHistoryActivity extends BaseActivity implements View.OnCl
                 boolean moreEmpty = false;
                 if (!TextUtils.isEmpty(result)) {
                     try {
-                        PointTransferListEntity pointTransferListEntity = GsonUtils.gsonToBean(result, PointTransferListEntity.class);
-                        PointTransferListEntity.ContentBean contentBean = pointTransferListEntity.getContent();
+                        PointHistoryEntity entity = GsonUtils.gsonToBean(result, PointHistoryEntity.class);
                         if (page == 1) {
-                            totalContentBeanList.clear();
+                            totalListBean.clear();
                         }
-                        if (null != contentBean) {
-                            List<PointTransferListEntity.ContentBean.ListBean> listBeanList = contentBean.getList();
-                            if (null == listBeanList || listBeanList.size() == 0) {
+                        if (null != entity.getContent()) {
+                            List<PointHistoryEntity.ContentBean> listBeanList = entity.getContent();
+                            if (null == listBeanList || listBeanList.size() < 20) {
                                 moreEmpty = false;
                             } else {
                                 moreEmpty = true;
                             }
-                            if (listBeanList!=null){
-                                totalContentBeanList.addAll(listBeanList);
-                            }
+                            totalListBean.addAll(listBeanList);
                         }
                     } catch (Exception e) {
 
@@ -118,7 +119,7 @@ public class GivenPointHistoryActivity extends BaseActivity implements View.OnCl
                 }
                 rv_given_history.setLoadingMoreEnabled(moreEmpty);
                 rv_given_history.loadMoreComplete();
-                if (totalContentBeanList.size() > 0) {
+                if (totalListBean.size() > 0) {
                     rv_given_history.setVisibility(View.VISIBLE);
                     tv_no_record.setVisibility(View.GONE);
                 } else {
@@ -128,7 +129,7 @@ public class GivenPointHistoryActivity extends BaseActivity implements View.OnCl
                 pointGivenHistoryAdapter.notifyDataSetChanged();
                 pointGivenHistoryAdapter.setOnItemClickListener(i -> {
                     Intent intent = new Intent();
-                    intent.putExtra(GivenPointAmountActivity.GIVENMOBILE, totalContentBeanList.get(i - 1).getMobile());
+//                    intent.putExtra(GivenPointAmountActivity.GIVENMOBILE, totalListBean.get(i - 1).getMobile());
                     setResult(200, intent);
                     finish();
                 });

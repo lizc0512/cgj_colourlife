@@ -44,7 +44,7 @@ public class WithDrawalStatusActivity extends BaseActivity implements View.OnCli
         tv_cash_btn.setOnClickListener(this);
         if (null != getIntent()) {
             money = getIntent().getStringExtra("money");
-            tv_cash_num.setText(money);
+            tv_cash_num.setText("提现金额" + money + "元");
         }
     }
 
@@ -70,6 +70,7 @@ public class WithDrawalStatusActivity extends BaseActivity implements View.OnCli
                 break;
             case R.id.tv_cash_btn:
                 startActivity(new Intent(this, InstantDistributionActivity.class));
+                finish();
                 break;
         }
     }

@@ -58,7 +58,7 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tv_cash_num"
-        tools:text="非实时到账,具体到账时间以银行卡到账提醒为准" />
+        android:text="非实时到账,具体到账时间以银行卡到账提醒为准" />
 
     <TextView
         android:id="@+id/tv_cash_btn"
@@ -72,5 +72,5 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tv_cash_msg"
-        tools:text="继续提现" />
+        android:text="继续提现" />
 </android.support.constraint.ConstraintLayout>

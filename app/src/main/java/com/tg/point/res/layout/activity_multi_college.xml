@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:context="com.tg.point.activity.MultiCollegeActivity">
+
+    <include
+        android:id="@+id/top_view"
+        layout="@layout/base_actionbar" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rv_mulitcollege"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/top_view"
+        tools:listitem="@layout/item_multi_college" />
+</android.support.constraint.ConstraintLayout>

@@ -60,7 +60,7 @@ public class PointTransactionListActivity extends BaseActivity implements View.O
         mTitle.setText(intent.getStringExtra(POINTTITLE));
         pano = intent.getStringExtra(POINTTPANO);
         pointModel = new PointModel(PointTransactionListActivity.this);
-        pointModel.getAccountFlowList(0, page, pano, time_start, time_stop, true, PointTransactionListActivity.this);
+        pointModel.getAccountFlowList(0, page, pano, time_start, time_stop, 0,true, PointTransactionListActivity.this);
         pointTransactionAdapter = new PointTransactionAdapter(totalListBean);
         rv_transaction.setLayoutManager(new LinearLayoutManager(PointTransactionListActivity.this, LinearLayoutManager.VERTICAL, false));
         rv_transaction.setAdapter(pointTransactionAdapter);
@@ -75,7 +75,7 @@ public class PointTransactionListActivity extends BaseActivity implements View.O
             @Override
             public void onLoadMore() {
                 page++;
-                pointModel.getAccountFlowList(0, page, pano, time_start, time_stop, false, PointTransactionListActivity.this);
+                pointModel.getAccountFlowList(0, page, pano, time_start, time_stop, 0,false, PointTransactionListActivity.this);
             }
         });
     }
@@ -111,7 +111,7 @@ public class PointTransactionListActivity extends BaseActivity implements View.O
                     time_stop = calendar.getTimeInMillis() / 1000 + 24 * 3600 - 1;
                     page = 1;
                     rv_transaction.setLoadingMoreEnabled(true);
-                    pointModel.getAccountFlowList(0, page, pano, time_start, time_stop, true, PointTransactionListActivity.this);
+                    pointModel.getAccountFlowList(0, page, pano, time_start, time_stop, 0,true, PointTransactionListActivity.this);
 
                 })
                         .setType(new boolean[]{true, true, false, false, false, false})

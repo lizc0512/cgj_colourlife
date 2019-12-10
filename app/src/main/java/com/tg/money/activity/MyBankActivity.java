@@ -20,6 +20,8 @@ import com.tg.coloursteward.base.BaseActivity;
 import com.tg.coloursteward.baseModel.HttpResponse;
 import com.tg.coloursteward.baseModel.RequestEncryptionUtils;
 import com.tg.coloursteward.util.GsonUtils;
+import com.tg.coloursteward.util.ToastUtil;
+import com.tg.coloursteward.view.dialog.DialogFactory;
 import com.tg.money.adapter.MyBankAdapter;
 import com.tg.money.entity.MyBankEntity;
 import com.tg.money.model.MoneyModel;
@@ -48,6 +50,7 @@ public class MyBankActivity extends BaseActivity implements View.OnClickListener
     private List<MyBankEntity.ContentBean.DataBean> bankList = new ArrayList<>();
     private MyBankAdapter adapter;
     private String checkItemId;
+    private int isDelPostion;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,7 +87,7 @@ public class MyBankActivity extends BaseActivity implements View.OnClickListener
     }
 
     private void initData(int page) {
-        moneyModel.getMyBank(0, page, "10", this);
+        moneyModel.getMyBank(0, page, "10", true,this);
     }
 
     @Override
@@ -159,7 +162,27 @@ public class MyBankActivity extends BaseActivity implements View.OnClickListener
                                 finish();
                             }
                         });
+                        adapter.setOnItemLongClickListener(new BaseQuickAdapter.OnItemLongClickListener() {
+                            @Override
+                            public boolean onItemLongClick(BaseQuickAdapter adapter, View view, int position) {
+                                DialogFactory.getInstance().showDoorDialog(MyBankActivity.this, new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        isDelPostion = position;
+                                        moneyModel.postDelBank(1, bankList.get(position).getUuid(), MyBankActivity.this);
+                                    }
+                                }, null, 1, "你即将解绑该银行卡，是否确认解绑", "解绑", "取消");
+                                return false;
+                            }
+                        });
                     }
+                }
+                break;
+            case 1:
+                if (!TextUtils.isEmpty(result)) {
+                    ToastUtil.showShortToast(this, "解绑成功");
+                    bankList.remove(isDelPostion);
+                    adapter.setNewData(bankList);
                 }
                 break;
         }

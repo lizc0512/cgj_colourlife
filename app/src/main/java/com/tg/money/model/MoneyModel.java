@@ -560,7 +560,7 @@ public class MoneyModel extends BaseModel {
      * @param page_size
      * @param httpResponse
      */
-    public void getMyBank(int what, int page, String page_size, final HttpResponse httpResponse) {
+    public void getMyBank(int what, int page, String page_size,boolean isloading, final HttpResponse httpResponse) {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("page", page);
         params.put("page_size", page_size);
@@ -586,7 +586,7 @@ public class MoneyModel extends BaseModel {
             public void onFailed(int what, Response<String> response) {
                 showExceptionMessage(what, response);
             }
-        }, true, true);
+        }, true, isloading);
     }
 
     /**

@@ -50,7 +50,8 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:replace="android:allowBackup,android:theme,android:label">
-        <activity android:name="com.tg.point.activity.GivenUserTypeActivity"></activity>
+        <activity android:name="com.tg.point.activity.MultiCollegeActivity"></activity>
+        <activity android:name="com.tg.point.activity.GivenUserTypeActivity" />
         <activity
             android:name="com.tg.money.activity.MyBankActivity"
             android:screenOrientation="portrait" />

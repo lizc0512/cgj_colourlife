@@ -23,6 +23,7 @@ import com.tg.coloursteward.util.ToastUtil;
 import com.tg.coloursteward.view.dialog.DialogFactory;
 import com.tg.money.entity.CashInfoEntity;
 import com.tg.money.entity.MyBankEntity;
+import com.tg.money.entity.WithDrawalEntity;
 import com.tg.money.model.MoneyModel;
 import com.tg.money.utils.DecimalDigitsInputFilter;
 
@@ -73,6 +74,8 @@ public class WithDrawalActivity extends BaseActivity implements View.OnClickList
     private double high_rate;
     private double user_rate;
     private double service_charge;
+    private double realMoney;//到账金额
+    private String money;//输入提现金额
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -122,13 +125,22 @@ public class WithDrawalActivity extends BaseActivity implements View.OnClickList
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (!TextUtils.isEmpty(s)) {
+                if (!TextUtils.isEmpty(s) && !s.toString().endsWith(".")) {
                     double money = Double.parseDouble(et_withdrawal_money.getText().toString().trim());
-                    if (money >= 0) {
-                        double realMoney = NumberUtils.sub(money, service_charge);
-                        String number = NumberUtils.format(String.valueOf(realMoney));
-                        tv_withdraw_relmoney.setText("到账金额: " + number + "元");
+                    if (money > 0) {
+                        realMoney = NumberUtils.sub(money, service_charge);
+                        if (realMoney > 0) {
+                            String number = NumberUtils.format(String.valueOf(realMoney));
+                            tv_withdraw_relmoney.setText("到账金额: " + number + "元");
+                        } else {
+                            ToastUtil.showShortToast(WithDrawalActivity.this, "到账金额不能为负值");
+                            et_withdrawal_money.getText().clear();
+                        }
                     }
+                } else if (s.length() > 0) {
+
+                } else {
+                    tv_withdraw_relmoney.setText("到账金额: 0.00元");
                 }
             }
         });
@@ -137,7 +149,7 @@ public class WithDrawalActivity extends BaseActivity implements View.OnClickList
     private void initData() {
         moneyModel.getCashInfo(0, this);
         moneyModel.getCashAccount(1, split_type, split_target, general_uuid, this);
-        moneyModel.getMyBank(2, 1, "10", this);
+        moneyModel.getMyBank(2, 1, "10", true, this);
     }
 
     @Override
@@ -169,14 +181,14 @@ public class WithDrawalActivity extends BaseActivity implements View.OnClickList
                 startActivityForResult(it, 200);
                 break;
             case R.id.tv_withdraw_btn:
-                String money = et_withdrawal_money.getText().toString().trim();
+                money = et_withdrawal_money.getText().toString().trim();
                 if (!TextUtils.isEmpty(money) && !money.endsWith(".")) {
                     try {
                         if (Double.valueOf(money) == 0) {
                             ToastUtil.showShortToast(this, "提现金额不能为0");
                         } else {
                             if (Double.valueOf(money) < Double.valueOf(tqMoney)) { //输入金额 < 可提现金额
-                                moneyModel.postCashMoney(2, general_uuid, split_type, split_target, money, bankName,
+                                moneyModel.postCashMoney(3, general_uuid, split_type, split_target, money, bankName,
                                         bankNo, userName, bankCode, this);
                             } else {
                                 ToastUtil.showShortToast(this, "输入金额不能超过可提取金额");
@@ -200,15 +212,17 @@ public class WithDrawalActivity extends BaseActivity implements View.OnClickList
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 100) {
-            if (resultCode == 101) {
-
-            }
+            moneyModel.getMyBank(2, 1, "10", false, this);
         } else if (requestCode == 200) {
             if (resultCode == 201) {
                 String bankjson = data.getStringExtra("bankjson");
-                MyBankEntity.ContentBean.DataBean dataBean = new MyBankEntity.ContentBean.DataBean();
-                dataBean = GsonUtils.gsonToBean(bankjson, MyBankEntity.ContentBean.DataBean.class);
-                setBankData(dataBean);
+                if (!TextUtils.isEmpty(bankjson)) {
+                    MyBankEntity.ContentBean.DataBean dataBean = new MyBankEntity.ContentBean.DataBean();
+                    dataBean = GsonUtils.gsonToBean(bankjson, MyBankEntity.ContentBean.DataBean.class);
+                    setBankData(dataBean);
+                }
+            } else {
+                moneyModel.getMyBank(2, 1, "10", false, this);
             }
         }
     }
@@ -246,6 +260,7 @@ public class WithDrawalActivity extends BaseActivity implements View.OnClickList
                     entity = GsonUtils.gsonToBean(result, MyBankEntity.class);
                     String content = RequestEncryptionUtils.getContentString(result);
                     if (!TextUtils.isEmpty(content)) {
+                        bankList.clear();
                         bankList.addAll(entity.getContent().getData());
                         if (bankList.size() > 0) {
                             rl_withdrawal_mycard.setVisibility(View.VISIBLE);
@@ -260,6 +275,19 @@ public class WithDrawalActivity extends BaseActivity implements View.OnClickList
                         rl_withdrawal_card.setVisibility(View.VISIBLE);
                     }
 
+                }
+                break;
+            case 3:
+                if (!TextUtils.isEmpty(result)) {
+                    WithDrawalEntity entity = new WithDrawalEntity();
+                    entity = GsonUtils.gsonToBean(result, WithDrawalEntity.class);
+                    if (entity.getContent().getResult().getState().equals("2")) {//1未处理2申请成功3申请失败
+                        Intent intent = new Intent(this, WithDrawalStatusActivity.class);
+                        intent.putExtra("money", money);
+                        startActivity(intent);
+                        finish();
+                    }
+                    ToastUtil.showShortToast(this, entity.getContent().getResult().getResult());
                 }
                 break;
         }

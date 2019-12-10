@@ -71,12 +71,24 @@ public class PointModel extends BaseModel {
         }, true, false);
     }
 
-    public void getAccountFlowList(int what, int page, String pano, long time_start, long time_stop, boolean isLoading, final HttpResponse newHttpResponse) {
+    /**
+     * 彩管家饭票交易列表查询
+     *
+     * @param what
+     * @param page
+     * @param pano
+     * @param time_start
+     * @param time_stop
+     * @param is_pay
+     * @param isLoading
+     * @param newHttpResponse
+     */
+    public void getAccountFlowList(int what, int page, String pano, long time_start, long time_stop, int is_pay, boolean isLoading, final HttpResponse newHttpResponse) {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("type", 0);
         params.put("page", page);
         params.put("page_size", 20);
-        params.put("is_pay", 0);
+        params.put("is_pay", is_pay);
         params.put("pano", pano);
         if (time_start != 0) {
             params.put("time_start", time_start);
@@ -292,7 +304,7 @@ public class PointModel extends BaseModel {
 
     public void transferTransaction(int what, int transfer_fee, String token, String order_no, String dest_account, String pano, String detail, String type, final HttpResponse newHttpResponse) {
         Map<String, Object> params = new HashMap<String, Object>();
-        params.put("transfer_type", 1);
+        params.put("transfer_type", 2);
         params.put("transfer_fee", transfer_fee);
         params.put("dest_account", dest_account);//收款方的
         params.put("token", token);

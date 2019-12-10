@@ -21,10 +21,11 @@
 
         <ImageView
             android:id="@+id/iv_usertype_college"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/size_15dp"
+            android:layout_height="@dimen/size_15dp"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="@dimen/size_15dp" />
+            android:layout_marginLeft="@dimen/size_15dp"
+            android:src="@drawable/to_colleag" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -62,10 +63,11 @@
 
         <ImageView
             android:id="@+id/iv_usertype_czyuser"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/size_15dp"
+            android:layout_height="@dimen/size_15dp"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="@dimen/size_15dp" />
+            android:layout_marginLeft="@dimen/size_15dp"
+            android:src="@drawable/to_czy" />
 
         <TextView
             android:layout_width="wrap_content"

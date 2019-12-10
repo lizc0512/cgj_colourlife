@@ -241,6 +241,15 @@ public class GivenPointMobileActivity extends BaseActivity implements View.OnCli
                         amount_Intent.putExtra(GivenPointAmountActivity.LASTAMOUNT, last_amount);
                         amount_Intent.putExtra(GivenPointAmountActivity.LASTTIME, last_times);
                         startActivity(amount_Intent);
+                    } else {
+                        Intent it = new Intent(GivenPointMobileActivity.this, MultiCollegeActivity.class);
+                        it.putExtra("json", result);
+                        it.putExtra("last_amount", last_amount);
+                        it.putExtra("last_times", last_times);
+                        it.putExtra("pano", pano);
+                        it.putExtra("givePhone", givePhone);
+                        it.putExtra("type", type);
+                        startActivity(it);
                     }
                 } catch (Exception e) {
 

@@ -70,6 +70,7 @@ public class ExchangeSuccessActivity extends BaseActivity implements View.OnClic
                 break;
             case R.id.tv_exchangeok_again:
                 startActivity(new Intent(this, InstantDistributionActivity.class));
+                finish();
                 break;
         }
     }

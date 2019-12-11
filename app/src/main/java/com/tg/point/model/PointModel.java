@@ -8,7 +8,6 @@ import com.tg.coloursteward.baseModel.HttpListener;
 import com.tg.coloursteward.baseModel.HttpResponse;
 import com.tg.coloursteward.baseModel.RequestEncryptionUtils;
 import com.tg.coloursteward.constant.Contants;
-import com.tg.coloursteward.info.UserInfo;
 import com.tg.coloursteward.util.RSAUtil;
 import com.tg.coloursteward.util.SharedPreferencesUtils;
 import com.yanzhenjie.nohttp.NoHttp;
@@ -43,6 +42,7 @@ public class PointModel extends BaseModel {
     private String transactionTokenUrl = "/app/employee/transaction/checkpwd";//交易密码校验接口
     private String transactionTransferUrl = "/app/employee/fp/transfer";//彩管家饭票转账交易
     private String checkPwdUrl = "/app/employee/password/checkPayPwd";//校验用户支付密码是否正确
+    private String getHistoryUrl = "/app/employee/transfer/history";//获取历史转账接收人账号信息
 
 
     public PointModel(Context context) {
@@ -220,6 +220,13 @@ public class PointModel extends BaseModel {
         }, true, true);
     }
 
+    /**
+     * oa账号/手机号码模糊搜索（）
+     *
+     * @param what
+     * @param keyword
+     * @param newHttpResponse
+     */
     public void getUserInfor(int what, String keyword, final HttpResponse newHttpResponse) {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("keyword", keyword);
@@ -302,14 +309,24 @@ public class PointModel extends BaseModel {
         }, true, true);
     }
 
-    public void transferTransaction(int what, int transfer_fee, String token, String order_no, String dest_account, String pano, String detail, String type, final HttpResponse newHttpResponse) {
+    /**
+     * 彩管家饭票赠送
+     *
+     * @param what
+     * @param transfer_fee
+     * @param token
+     * @param dest_account
+     * @param pano
+     * @param detail
+     * @param type
+     * @param newHttpResponse
+     */
+    public void transferTransaction(int what, int transfer_fee, String token, String dest_account, String pano, String detail, String type, final HttpResponse newHttpResponse) {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("transfer_type", 2);
         params.put("transfer_fee", transfer_fee);
         params.put("dest_account", dest_account);//收款方的
         params.put("token", token);
-        params.put("order_no", order_no);
-        params.put("org_account", UserInfo.employeeAccount);
         params.put("dest_pano", pano);
         params.put("org_pano", pano);
         params.put("type", type);
@@ -409,5 +426,33 @@ public class PointModel extends BaseModel {
         }, true, true);
     }
 
+    /**
+     * 获取员工历史转账接收人的账号信息
+     *
+     * @param what
+     * @param newHttpResponse
+     */
+    public void getHistoryAmount(int what, final HttpResponse newHttpResponse) {
+        final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 16, getHistoryUrl), RequestMethod.GET);
+        request(what, request, null, new HttpListener<String>() {
+            @Override
+            public void onSucceed(int what, Response<String> response) {
+                int responseCode = response.getHeaders().getResponseCode();
+                String result = response.get();
+                if (responseCode == RequestEncryptionUtils.responseSuccess) {
+                    int resultCode = showSuccesResultMessage(result);
+                    if (resultCode == 0) {
+                        newHttpResponse.OnHttpResponse(what, result);
+                    }
+                } else {
+                    showErrorCodeMessage(responseCode, response);
+                }
+            }
 
+            @Override
+            public void onFailed(int what, Response<String> response) {
+                showExceptionMessage(what, response);
+            }
+        }, true, true);
+    }
 }

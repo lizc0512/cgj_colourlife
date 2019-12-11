@@ -2,6 +2,7 @@ package com.tg.point.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Message;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -11,9 +12,12 @@ import android.widget.TextView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.base.BaseActivity;
+import com.tg.coloursteward.constant.UserMessageConstant;
 import com.tg.coloursteward.util.GsonUtils;
 import com.tg.point.adapter.MultiCollegeAdapter;
 import com.tg.point.entity.UserIdInforEntity;
+
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -112,6 +116,17 @@ public class MultiCollegeActivity extends BaseActivity implements View.OnClickLi
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.iv_base_back:
+                finish();
+                break;
+        }
+    }
+
+    @Subscribe
+    public void onEvent(Object event) {
+        final Message message = (Message) event;
+        switch (message.what) {
+            case UserMessageConstant.POINT_SUCCESS_RETURN:
+            case UserMessageConstant.POINT_CONTINUE_GIVEN:
                 finish();
                 break;
         }

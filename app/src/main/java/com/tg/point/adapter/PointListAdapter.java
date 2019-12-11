@@ -11,11 +11,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.tg.coloursteward.R;
+import com.tg.money.activity.WithDrawalActivity;
 import com.tg.point.activity.GivenPointAmountActivity;
-import com.tg.point.activity.GivenPointMobileActivity;
 import com.tg.point.activity.GivenUserTypeActivity;
 import com.tg.point.activity.PointTransactionListActivity;
-import com.tg.point.activity.ReturnPointPlanActivity;
 import com.tg.point.entity.PointAccountListEntity;
 
 import java.util.List;
@@ -78,9 +77,9 @@ public class PointListAdapter extends RecyclerView.Adapter<PointListAdapter.Poin
             intent.putExtra(POINTTPANO, listBean.getPano());
             mContext.startActivity(intent);
         });
-        viewHolder.tv_point_return.setOnClickListener(v -> {
+        viewHolder.tv_point_whthdrawal.setOnClickListener(v -> {
             Context mContext = viewHolder.itemView.getContext();
-            Intent intent = new Intent(mContext, ReturnPointPlanActivity.class);
+            Intent intent = new Intent(mContext, WithDrawalActivity.class);
             intent.putExtra(POINTTPANO, listBean.getPano());
             mContext.startActivity(intent);
         });

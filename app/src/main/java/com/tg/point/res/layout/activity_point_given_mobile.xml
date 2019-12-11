@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/color_f9f9f9"
     android:fitsSystemWindows="true"
     android:orientation="vertical">
@@ -10,32 +10,31 @@
     <include layout="@layout/base_actionbar" />
 
 
-
-        <com.tg.coloursteward.view.ClearEditText
-            android:id="@+id/input_given_mobile"
-            android:layout_width="match_parent"
-            android:layout_height="44dp"
-            android:background="@color/white"
-            android:hint="请输入获赠人账号（手机号)"
-            android:inputType="number"
-            android:layout_marginTop="12dp"
-            android:paddingLeft="16dp"
-            android:maxLength="11"
-            android:maxLines="1"
-            android:paddingRight="16dp"
-            android:textColor="@color/color_25282e"
-            android:textColorHint="@color/color_a9afb8"
-            android:textSize="15sp" />
+    <com.tg.coloursteward.view.ClearEditText
+        android:id="@+id/input_given_mobile"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:layout_marginTop="12dp"
+        android:background="@color/white"
+        android:hint="请输入获赠人账号（手机号)"
+        android:inputType="number"
+        android:maxLength="30"
+        android:maxLines="1"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:textColor="@color/color_25282e"
+        android:textColorHint="@color/color_a9afb8"
+        android:textSize="15sp" />
 
 
     <Button
         android:id="@+id/btn_next_step"
         android:layout_width="match_parent"
         android:layout_height="44dp"
-        android:layout_marginTop="40dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
         android:layout_gravity="center_horizontal"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="40dp"
+        android:layout_marginRight="16dp"
         android:background="@drawable/point_password_default_bg"
         android:text="下一步"
         android:textColor="@color/white"
@@ -46,11 +45,25 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:gravity="center"
         android:layout_marginTop="20dp"
+        android:gravity="center"
         android:padding="5dp"
-        tools:text="今天可赠送10次，剩余额度5000饭票"
         android:textColor="@color/color_25282e"
-        android:textSize="12sp"  />
+        android:textSize="12sp"
+        tools:text="今天可赠送10次，剩余额度5000饭票" />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/size_15dp"
+        android:layout_marginTop="@dimen/size_20dp"
+        android:text="最近联系"
+        android:textColor="@color/color_999999"
+        android:textSize="@dimen/font_14sp" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rv_point_mobile"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/size_10dp" />
 </LinearLayout>

@@ -73,9 +73,7 @@ public class GivenPointAmountActivity extends BaseActivity implements View.OnCli
     private NewUserModel newUserModel;
     private String keyword_sign;//是积分还是饭票的标识
     private String pano;//饭票类型
-    private String token;//交易时的传参
     private String state;//支付密码的状态
-    private String order_no;//支付订单号
     private String dest_account;//目标用户的id
     private int last_time; //剩余次数
     private float last_amount;//剩余金额
@@ -243,9 +241,7 @@ public class GivenPointAmountActivity extends BaseActivity implements View.OnCli
                 try {
                     PointTransactionTokenEntity pointTransactionTokenEntity = GsonUtils.gsonToBean(result, PointTransactionTokenEntity.class);
                     PointTransactionTokenEntity.ContentBean contentBean = pointTransactionTokenEntity.getContent();
-                    token = contentBean.getToken();
                     state = contentBean.getState();
-                    order_no = contentBean.getOrder_no();
                     switch (state) {//1 已实名已设置支付密码2 已实名未设置支付密码3 未实名未设置支付密码4 未实名已设置支付密码
                         case "2"://已实名未设置支付密码
                             Intent intent = new Intent(GivenPointAmountActivity.this, ChangePawdTwoStepActivity.class);
@@ -317,7 +313,7 @@ public class GivenPointAmountActivity extends BaseActivity implements View.OnCli
                     CheckPwdEntiy entiy = new CheckPwdEntiy();
                     entiy = GsonUtils.gsonToBean(result, CheckPwdEntiy.class);
                     if (entiy.getContent().getRight_pwd().equals("1")) {
-                        pointModel.transferTransaction(4, giveBalance, entiy.getContent().getToken(), entiy.getContent().getOpen_id(), dest_account, pano,
+                        pointModel.transferTransaction(4, giveBalance, entiy.getContent().getToken(), dest_account, pano,
                                 ed_given_remark.getText().toString().trim(), "cgj-czy", GivenPointAmountActivity.this);
                     } else {
                         String remain = entiy.getContent().getRemain();

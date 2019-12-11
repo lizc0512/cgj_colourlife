@@ -3,7 +3,10 @@ package com.tg.point.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Message;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.View;
@@ -15,12 +18,15 @@ import android.widget.TextView;
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.base.BaseActivity;
 import com.tg.coloursteward.baseModel.HttpResponse;
+import com.tg.coloursteward.baseModel.RequestEncryptionUtils;
 import com.tg.coloursteward.constant.SpConstants;
 import com.tg.coloursteward.constant.UserMessageConstant;
 import com.tg.coloursteward.info.UserInfo;
 import com.tg.coloursteward.util.GsonUtils;
 import com.tg.coloursteward.util.ToastUtil;
 import com.tg.coloursteward.view.ClearEditText;
+import com.tg.point.adapter.GivenMobileAdapter;
+import com.tg.point.entity.GivenMobileEntity;
 import com.tg.point.entity.PointAccountLimitEntity;
 import com.tg.point.entity.UserIdInforEntity;
 import com.tg.point.model.PointModel;
@@ -57,7 +63,8 @@ public class GivenPointMobileActivity extends BaseActivity implements View.OnCli
     private int last_times;//剩余次数
     private int last_amount;//剩余金额
     private boolean isColleag;
-
+    private RecyclerView rv_point_mobile;
+    private GivenMobileAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +77,8 @@ public class GivenPointMobileActivity extends BaseActivity implements View.OnCli
         input_given_mobile = findViewById(R.id.input_given_mobile);
         btn_next_step = findViewById(R.id.btn_next_step);
         tv_remain_notice = findViewById(R.id.tv_remain_notice);
+        rv_point_mobile = findViewById(R.id.rv_point_mobile);
+        rv_point_mobile.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         mBack.setOnClickListener(this);
         btn_next_step.setEnabled(false);
         btn_next_step.setOnClickListener(this);
@@ -85,6 +94,7 @@ public class GivenPointMobileActivity extends BaseActivity implements View.OnCli
         type = intent.getStringExtra(TYPE);
         pointModel = new PointModel(GivenPointMobileActivity.this);
         pointModel.getAccountLimit(0, pano, GivenPointMobileActivity.this);
+        pointModel.getHistoryAmount(2, this);
         if (!EventBus.getDefault().isRegistered(GivenPointMobileActivity.this)) {
             EventBus.getDefault().register(GivenPointMobileActivity.this);
         }
@@ -95,7 +105,8 @@ public class GivenPointMobileActivity extends BaseActivity implements View.OnCli
         if (!TextUtils.isEmpty(type)) {
             if ("cgj-cgj".equals(type)) {
                 isColleag = true;
-                btn_next_step.setEnabled(true);
+                input_given_mobile.setHint("请输入获赠人手机号、OA、姓名搜索");
+                input_given_mobile.setInputType(InputType.TYPE_CLASS_TEXT);
             } else {
                 isColleag = false;
             }
@@ -135,7 +146,11 @@ public class GivenPointMobileActivity extends BaseActivity implements View.OnCli
                     if (UserInfo.mobile.equals(givePhone)) {
                         ToastUtil.showShortToast(GivenPointMobileActivity.this, "不能给自己赠送" + keyword_sign);
                     } else {
-                        pointModel.getUserInfor(1, givePhone, GivenPointMobileActivity.this);
+                        if (givePhone.length() == 11) {
+                            pointModel.getUserInfor(1, givePhone, GivenPointMobileActivity.this);
+                        } else {
+                            ToastUtil.showShortToast(this, "请输入11位手机号");
+                        }
                     }
                 }
                 break;
@@ -177,14 +192,12 @@ public class GivenPointMobileActivity extends BaseActivity implements View.OnCli
     @Override
     public void afterTextChanged(Editable s) {
         givePhone = s.toString().trim();
-        if (!isColleag) {
-            setBtnClick();
-        }
+        setBtnClick();
     }
 
 
     private void setBtnClick() {
-        if (TextUtils.isEmpty(givePhone) || 11 != givePhone.length() || !canGiven) {
+        if (TextUtils.isEmpty(givePhone) || !canGiven) {
             btn_next_step.setEnabled(false);
             btn_next_step.setBackgroundResource(R.drawable.point_password_default_bg);
         } else {
@@ -224,7 +237,7 @@ public class GivenPointMobileActivity extends BaseActivity implements View.OnCli
                 }
                 break;
             case 1:
-                try {
+                if (!TextUtils.isEmpty(RequestEncryptionUtils.getContentString(result))) {
                     UserIdInforEntity userIdInforEntity = GsonUtils.gsonToBean(result, UserIdInforEntity.class);
                     List<UserIdInforEntity.ContentBean> mList = new ArrayList<>(userIdInforEntity.getContent());
                     if (mList.size() == 1) {
@@ -251,10 +264,23 @@ public class GivenPointMobileActivity extends BaseActivity implements View.OnCli
                         it.putExtra("type", type);
                         startActivity(it);
                     }
-                } catch (Exception e) {
-
+                } else {
+                    ToastUtil.showShortToast(this, "暂无此用户");
                 }
-
+                break;
+            case 2:
+                if (!TextUtils.isEmpty(result)) {
+                    GivenMobileEntity entity = new GivenMobileEntity();
+                    entity = GsonUtils.gsonToBean(result, GivenMobileEntity.class);
+                    List<GivenMobileEntity.ContentBean> mHistoryList = new ArrayList<>();
+                    mHistoryList.addAll(entity.getContent());
+                    if (null == adapter) {
+                        adapter = new GivenMobileAdapter(R.layout.item_given_mobile, mHistoryList);
+                        rv_point_mobile.setAdapter(adapter);
+                    } else {
+                        adapter.notifyDataSetChanged();
+                    }
+                }
                 break;
         }
     }

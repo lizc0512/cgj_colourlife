@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/size_55dp"
+    android:background="@color/white">
+
+    <TextView
+        android:id="@+id/tv_lastname"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="@dimen/size_15dp"
+        android:text="李"
+        android:textColor="@color/color_333b46"
+        android:textSize="@dimen/font_14sp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/size_15dp"
+        android:layout_toRightOf="@id/tv_lastname"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/size_6dp"
+            android:textColor="@color/color_333b46"
+            android:textSize="@dimen/font_14sp"
+            tools:text="xxxx" />
+
+        <TextView
+            android:id="@+id/tv_oa"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/size_3dp"
+            android:textColor="@color/color_999999"
+            android:textSize="@dimen/font_12sp"
+            tools:text="xxxx" />
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/size_1px"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="@dimen/size_15dp"
+        android:layout_marginRight="@dimen/size_15dp"
+        android:background="@color/line_color" />
+</RelativeLayout>

@@ -15,7 +15,7 @@ import com.tg.coloursteward.base.BaseActivity;
 import com.tg.coloursteward.baseModel.HttpResponse;
 import com.tg.coloursteward.util.GsonUtils;
 import com.tg.point.adapter.PointTransactionAdapter;
-import com.tg.point.entity.PointTransactionRecordEntity;
+import com.tg.point.entity.PointHistoryEntity;
 import com.tg.point.model.PointModel;
 import com.tg.point.utils.TimeUtil;
 import com.youmai.hxsdk.view.pickerview.TimePickerView;
@@ -43,6 +43,8 @@ public class PointTransactionListActivity extends BaseActivity implements View.O
     private long time_start;//开始的时间
     private long time_stop;//结束时间
     private String pano;//饭票的类型
+    private List<PointHistoryEntity.ContentBean> totalListBean = new ArrayList<>();
+    private PointTransactionAdapter pointTransactionAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,7 +62,7 @@ public class PointTransactionListActivity extends BaseActivity implements View.O
         mTitle.setText(intent.getStringExtra(POINTTITLE));
         pano = intent.getStringExtra(POINTTPANO);
         pointModel = new PointModel(PointTransactionListActivity.this);
-        pointModel.getAccountFlowList(0, page, pano, time_start, time_stop, 0,true, PointTransactionListActivity.this);
+        pointModel.getAccountFlowList(0, page, pano, time_start, time_stop, 0, true, PointTransactionListActivity.this);
         pointTransactionAdapter = new PointTransactionAdapter(totalListBean);
         rv_transaction.setLayoutManager(new LinearLayoutManager(PointTransactionListActivity.this, LinearLayoutManager.VERTICAL, false));
         rv_transaction.setAdapter(pointTransactionAdapter);
@@ -75,7 +77,7 @@ public class PointTransactionListActivity extends BaseActivity implements View.O
             @Override
             public void onLoadMore() {
                 page++;
-                pointModel.getAccountFlowList(0, page, pano, time_start, time_stop, 0,false, PointTransactionListActivity.this);
+                pointModel.getAccountFlowList(0, page, pano, time_start, time_stop, 0, false, PointTransactionListActivity.this);
             }
         });
     }
@@ -111,7 +113,7 @@ public class PointTransactionListActivity extends BaseActivity implements View.O
                     time_stop = calendar.getTimeInMillis() / 1000 + 24 * 3600 - 1;
                     page = 1;
                     rv_transaction.setLoadingMoreEnabled(true);
-                    pointModel.getAccountFlowList(0, page, pano, time_start, time_stop, 0,true, PointTransactionListActivity.this);
+                    pointModel.getAccountFlowList(0, page, pano, time_start, time_stop, 0, true, PointTransactionListActivity.this);
 
                 })
                         .setType(new boolean[]{true, true, false, false, false, false})
@@ -136,9 +138,6 @@ public class PointTransactionListActivity extends BaseActivity implements View.O
         }
     }
 
-    private List<PointTransactionRecordEntity.ContentBean.ListBean> totalListBean = new ArrayList<>();
-    private PointTransactionAdapter pointTransactionAdapter;
-
     @Override
     public void OnHttpResponse(int what, String result) {
         switch (what) {
@@ -146,13 +145,12 @@ public class PointTransactionListActivity extends BaseActivity implements View.O
                 boolean moreEmpty = false;
                 if (!TextUtils.isEmpty(result)) {
                     try {
-                        PointTransactionRecordEntity pointTransactionRecordEntity = GsonUtils.gsonToBean(result, PointTransactionRecordEntity.class);
-                        PointTransactionRecordEntity.ContentBean contentBean = pointTransactionRecordEntity.getContent();
+                        PointHistoryEntity entity = GsonUtils.gsonToBean(result, PointHistoryEntity.class);
                         if (page == 1) {
                             totalListBean.clear();
                         }
-                        if (null != contentBean) {
-                            List<PointTransactionRecordEntity.ContentBean.ListBean> listBeanList = contentBean.getList();
+                        if (null != entity.getContent()) {
+                            List<PointHistoryEntity.ContentBean> listBeanList = entity.getContent();
                             if (null == listBeanList || listBeanList.size() < 20) {
                                 moreEmpty = false;
                             } else {
@@ -176,7 +174,7 @@ public class PointTransactionListActivity extends BaseActivity implements View.O
                 pointTransactionAdapter.notifyDataSetChanged();
                 pointTransactionAdapter.setOnItemClickListener(i -> {
                     Intent intent = new Intent(PointTransactionListActivity.this, PointTransactionDetailsActivity.class);
-                    intent.putExtra(PointTransactionDetailsActivity.POINTTRANSACTIONDETAIL, totalListBean.get(i - 1));
+                    intent.putExtra(PointTransactionDetailsActivity.POINTTRANSACTIONDETAIL, totalListBean.get(i - 1).toString());
                     startActivity(intent);
                 });
                 break;

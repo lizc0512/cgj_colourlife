@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.base.BaseActivity;
 import com.tg.coloursteward.baseModel.HttpResponse;
@@ -51,6 +52,7 @@ public class GivenPointMobileActivity extends BaseActivity implements View.OnCli
     private ImageView mBack;
     private TextView mTitle;
     private TextView user_top_view_right;
+    private TextView tv_given_contact;
     private ClearEditText input_given_mobile;//赠送人的手机号
     private Button btn_next_step;
     private TextView tv_remain_notice;
@@ -73,6 +75,7 @@ public class GivenPointMobileActivity extends BaseActivity implements View.OnCli
         setContentView(R.layout.activity_point_given_mobile);
         mBack = findViewById(R.id.iv_base_back);
         mTitle = findViewById(R.id.tv_base_title);
+        tv_given_contact = findViewById(R.id.tv_given_contact);
         user_top_view_right = findViewById(R.id.tv_base_confirm);
         input_given_mobile = findViewById(R.id.input_given_mobile);
         btn_next_step = findViewById(R.id.btn_next_step);
@@ -94,7 +97,6 @@ public class GivenPointMobileActivity extends BaseActivity implements View.OnCli
         type = intent.getStringExtra(TYPE);
         pointModel = new PointModel(GivenPointMobileActivity.this);
         pointModel.getAccountLimit(0, pano, GivenPointMobileActivity.this);
-        pointModel.getHistoryAmount(2, this);
         if (!EventBus.getDefault().isRegistered(GivenPointMobileActivity.this)) {
             EventBus.getDefault().register(GivenPointMobileActivity.this);
         }
@@ -107,6 +109,8 @@ public class GivenPointMobileActivity extends BaseActivity implements View.OnCli
                 isColleag = true;
                 input_given_mobile.setHint("请输入获赠人手机号、OA、姓名搜索");
                 input_given_mobile.setInputType(InputType.TYPE_CLASS_TEXT);
+                tv_given_contact.setVisibility(View.VISIBLE);
+                pointModel.getHistoryAmount(2, this);
             } else {
                 isColleag = false;
             }
@@ -280,6 +284,15 @@ public class GivenPointMobileActivity extends BaseActivity implements View.OnCli
                     } else {
                         adapter.notifyDataSetChanged();
                     }
+                    adapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                            String oa = mHistoryList.get(position).getUsername();
+                            input_given_mobile.getText().clear();
+                            input_given_mobile.setText(oa);
+                            input_given_mobile.setSelection(oa.length());
+                        }
+                    });
                 }
                 break;
         }

@@ -1,7 +1,6 @@
 package com.tg.point.activity;
 
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Message;
 import android.support.v7.widget.LinearLayoutManager;
@@ -28,7 +27,6 @@ import org.greenrobot.eventbus.Subscribe;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.tg.coloursteward.constant.SpConstants.storage.COLOUR_OLD_WALLET_DIALOG;
 import static com.tg.coloursteward.constant.SpConstants.storage.COLOUR_WALLET_ACCOUNT_LIST;
 import static com.tg.coloursteward.constant.SpConstants.storage.COLOUR_WALLET_KEYWORD_SIGN;
 import static com.tg.coloursteward.module.MainActivity.getEnvironment;
@@ -43,7 +41,6 @@ public class MyPointActivity extends BaseActivity implements View.OnClickListene
 
     private ImageView mBack;
     private TextView mTitle;
-    private TextView user_top_view_right;
     private ImageView iv_point_desc;
     private TextView tv_point_title;//显示是积分还是饭票的类型
     private TextView tv_point_total; //积分或饭票的余额
@@ -60,7 +57,6 @@ public class MyPointActivity extends BaseActivity implements View.OnClickListene
         setContentView(R.layout.activity_point_list);
         mBack = findViewById(R.id.iv_base_back);
         mTitle = findViewById(R.id.tv_base_title);
-        user_top_view_right = findViewById(R.id.tv_base_confirm);
         iv_point_desc = findViewById(R.id.iv_point_desc);
         tv_point_title = findViewById(R.id.tv_point_title);
         tv_point_total = findViewById(R.id.tv_point_total);
@@ -68,7 +64,6 @@ public class MyPointActivity extends BaseActivity implements View.OnClickListene
         mBack.setOnClickListener(this);
         iv_point_desc.setOnClickListener(this);
         tv_point_total.setOnClickListener(this);
-        user_top_view_right.setOnClickListener(this);
         pointModel = new PointModel(MyPointActivity.this);
         Intent intent = getIntent();
         mobilePhone = intent.getStringExtra(GIVENMOBILE);
@@ -77,12 +72,6 @@ public class MyPointActivity extends BaseActivity implements View.OnClickListene
         if (!TextUtils.isEmpty(keyWordSign)) {
             mTitle.setText("彩" + keyWordSign);
         }
-        Drawable dra = getResources().getDrawable(R.drawable.next);
-        dra.setBounds(0, 0, dra.getMinimumWidth(), dra.getMinimumHeight());
-        user_top_view_right.setCompoundDrawables(null, null, dra, null);
-        user_top_view_right.setCompoundDrawablePadding(5);
-        user_top_view_right.setVisibility(View.VISIBLE);
-        user_top_view_right.setText("旧版");
         if (!TextUtils.isEmpty(accountList)) {
             isLoading = false;
             showAccountList(accountList);
@@ -127,20 +116,14 @@ public class MyPointActivity extends BaseActivity implements View.OnClickListene
     public void OnHttpResponse(int what, String result) {
         switch (what) {
             case 0:
-                try {
+                if (!TextUtils.isEmpty(result)) {
                     PointKeywordEntity pointKeywordEntity = GsonUtils.gsonToBean(result, PointKeywordEntity.class);
                     PointKeywordEntity.ContentBean contentBean = pointKeywordEntity.getContent();
                     String keywordSign = contentBean.getKeyword();
-                    spUtils.saveStringData(COLOUR_WALLET_KEYWORD_SIGN, keywordSign);
-                    mTitle.setText("彩" + keywordSign);
-                    if ("1".equals(contentBean.getIs_show_old())) {
-                        user_top_view_right.setVisibility(View.VISIBLE);
-                        showOldWalletDialog();
-                    } else {
-                        user_top_view_right.setVisibility(View.GONE);
+                    if (!TextUtils.isEmpty(keywordSign)) {
+                        spUtils.saveStringData(COLOUR_WALLET_KEYWORD_SIGN, keywordSign);
+                        mTitle.setText("彩" + keywordSign);
                     }
-                } catch (Exception e) {
-
                 }
                 break;
             case 1:
@@ -148,16 +131,6 @@ public class MyPointActivity extends BaseActivity implements View.OnClickListene
                 break;
         }
     }
-
-    private void showOldWalletDialog() {
-        boolean dialogShow = spUtils.getBooleanData(COLOUR_OLD_WALLET_DIALOG, false);
-        if (!dialogShow) {
-            PointOldWalletDialog pointOldWalletDialog = new PointOldWalletDialog(MyPointActivity.this);
-            pointOldWalletDialog.show();
-            spUtils.saveBooleanData(COLOUR_OLD_WALLET_DIALOG, true);
-        }
-    }
-
 
     private void showAccountList(String result) {
         try {
@@ -186,6 +159,7 @@ public class MyPointActivity extends BaseActivity implements View.OnClickListene
 
         }
     }
+
     @Subscribe
     public void onEvent(Object event) {
         final Message message = (Message) event;

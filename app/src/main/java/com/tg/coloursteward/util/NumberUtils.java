@@ -2,6 +2,7 @@ package com.tg.coloursteward.util;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.text.DecimalFormat;
 
 /**
  * Created by Administrator on 2018/10/19.
@@ -152,6 +153,17 @@ public class NumberUtils {
         BigDecimal b1 = new BigDecimal(v1);
         BigDecimal b2 = new BigDecimal(v2);
         return b1.compareTo(b2);
+    }
+
+    /**
+     * 百分数 ，2位小数
+     *
+     * @param v1
+     * @return
+     */
+    public static String returnPercent(float v1) {
+        DecimalFormat df = new DecimalFormat("0.00%");
+        return df.format(v1);
     }
 
     /**

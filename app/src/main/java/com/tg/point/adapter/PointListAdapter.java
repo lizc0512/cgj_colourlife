@@ -19,6 +19,9 @@ import com.tg.point.entity.PointAccountListEntity;
 
 import java.util.List;
 
+import static com.tg.money.activity.WithDrawalActivity.DRAWALTYPE;
+import static com.tg.money.activity.WithDrawalActivity.DRAWALTax;
+import static com.tg.money.activity.WithDrawalActivity.FPMONEY;
 import static com.tg.point.activity.PointTransactionListActivity.POINTTITLE;
 import static com.tg.point.activity.PointTransactionListActivity.POINTTPANO;
 
@@ -81,6 +84,9 @@ public class PointListAdapter extends RecyclerView.Adapter<PointListAdapter.Poin
             Context mContext = viewHolder.itemView.getContext();
             Intent intent = new Intent(mContext, WithDrawalActivity.class);
             intent.putExtra(POINTTPANO, listBean.getPano());
+            intent.putExtra(DRAWALTYPE, "point");
+            intent.putExtra(DRAWALTax, Float.valueOf(listBean.getWithdrawal_rate()));
+            intent.putExtra(FPMONEY, String.valueOf(listBean.getBalance() * 1.0f / 100));
             mContext.startActivity(intent);
         });
     }

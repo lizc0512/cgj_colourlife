@@ -148,16 +148,41 @@
         app:layout_constraintTop_toBottomOf="@id/view_withdrawal" />
 
     <TextView
+        android:id="@+id/tv_withdraw_point_fee"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/size_15dp"
+        android:layout_marginTop="@dimen/size_4dp"
+        android:text="个税扣除: "
+        android:textColor="@color/color_333b46"
+        android:textSize="@dimen/font_14sp"
+        android:visibility="gone"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_withdraw_tqnum" />
+
+    <TextView
+        android:id="@+id/tv_withdraw_point_feenum"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/size_4dp"
+        android:textColor="@color/red"
+        android:textSize="@dimen/font_14sp"
+        android:visibility="gone"
+        app:layout_constraintLeft_toRightOf="@id/tv_withdraw_fee"
+        app:layout_constraintTop_toBottomOf="@id/tv_withdraw_tqnum"
+        tools:text="20.00%" />
+
+    <TextView
         android:id="@+id/tv_withdraw_fee"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/size_15dp"
         android:layout_marginTop="@dimen/size_4dp"
-        android:text="手 续 费:  "
+        android:text="手  续  费: "
         android:textColor="@color/color_333b46"
         android:textSize="@dimen/font_14sp"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_withdraw_tqnum" />
+        app:layout_constraintTop_toBottomOf="@id/tv_withdraw_point_fee" />
 
     <TextView
         android:id="@+id/tv_withdraw_feenum"
@@ -167,7 +192,7 @@
         android:textColor="@color/red"
         android:textSize="@dimen/font_14sp"
         app:layout_constraintLeft_toRightOf="@id/tv_withdraw_fee"
-        app:layout_constraintTop_toBottomOf="@id/tv_withdraw_tqnum"
+        app:layout_constraintTop_toBottomOf="@id/tv_withdraw_point_fee"
         tools:text="0.0元/笔" />
 
     <TextView
@@ -191,12 +216,12 @@
         android:layout_marginTop="@dimen/size_4dp"
         android:drawableRight="@drawable/withcardh_ask"
         android:drawablePadding="@dimen/size_5dp"
+        android:text=" 0.00元"
         android:textColor="@color/red"
         android:textSize="@dimen/font_14sp"
         android:visibility="gone"
         app:layout_constraintLeft_toRightOf="@id/tv_withdraw_income"
-        app:layout_constraintTop_toBottomOf="@id/tv_withdraw_fee"
-        android:text=" 0.00元" />
+        app:layout_constraintTop_toBottomOf="@id/tv_withdraw_fee" />
 
     <TextView
         android:id="@+id/tv_withdraw_relmoney"
@@ -237,4 +262,16 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tv_withdraw_relmoney" />
+
+    <TextView
+        android:id="@+id/tv_withdraw_note"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/size_15dp"
+        android:layout_marginTop="@dimen/size_20dp"
+        android:layout_marginRight="@dimen/size_15dp"
+        android:textColor="@color/color_999999"
+        android:textSize="@dimen/font_12sp"
+        app:layout_constraintTop_toBottomOf="@id/tv_withdraw_btn"
+        tools:text="00000" />
 </android.support.constraint.ConstraintLayout>

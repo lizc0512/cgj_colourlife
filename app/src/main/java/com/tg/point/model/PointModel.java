@@ -31,7 +31,7 @@ import static com.tg.coloursteward.constant.SpConstants.storage.COLOUR_WALLET_AC
  **/
 public class PointModel extends BaseModel {
 
-    private String walletKeywordUrl = "/app/wallet/getKeyword";//获取钱包内用户显示的标识
+    private String walletKeywordUrl = "/app/employee/getKeyword";//获取钱包内用户显示的标识
     private String accountListUrl = "/app/employee/fp/list";//获取用户的账户列表
     private String accountFlowUrl = "/app/employee/fp/flowing";//获取某个账户的详细流水
     private String accountLimitUrl = "/app/employee/transfer/limit";//获取用户的转账额度和次数
@@ -49,6 +49,12 @@ public class PointModel extends BaseModel {
         super(context);
     }
 
+    /**
+     * 获取饭票关键字
+     *
+     * @param what
+     * @param newHttpResponse
+     */
     public void getWalletKeyWord(int what, final HttpResponse newHttpResponse) {
         final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 16, walletKeywordUrl), RequestMethod.GET);
         request(what, request, null, new HttpListener<String>() {

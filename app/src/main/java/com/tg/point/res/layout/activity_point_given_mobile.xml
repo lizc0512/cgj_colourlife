@@ -53,17 +53,20 @@
         tools:text="今天可赠送10次，剩余额度5000饭票" />
 
     <TextView
+        android:id="@+id/tv_given_contact"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/size_15dp"
         android:layout_marginTop="@dimen/size_20dp"
         android:text="最近联系"
         android:textColor="@color/color_999999"
-        android:textSize="@dimen/font_14sp" />
+        android:textSize="@dimen/font_14sp"
+        android:visibility="gone" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rv_point_mobile"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/size_10dp" />
+        android:layout_marginTop="@dimen/size_10dp"
+        tools:listitem="@layout/item_given_mobile" />
 </LinearLayout>

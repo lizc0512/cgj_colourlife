@@ -2,6 +2,7 @@ package com.tg.money.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Message;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextUtils;
@@ -26,12 +27,20 @@ import com.tg.money.entity.MyBankEntity;
 import com.tg.money.entity.WithDrawalEntity;
 import com.tg.money.model.MoneyModel;
 import com.tg.money.utils.DecimalDigitsInputFilter;
+import com.tg.point.activity.PointPasswordDialog;
+import com.tg.point.entity.CheckPwdEntiy;
+import com.tg.point.model.PointModel;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.tg.coloursteward.constant.UserMessageConstant.POINT_INPUT_PAYPAWD;
+import static com.tg.coloursteward.constant.UserMessageConstant.POINT_SET_PAYPAWD;
 
 /**
  * @name ${lizc}
@@ -44,6 +53,9 @@ import java.util.List;
  * @class describe 即时分配页面子选项提现页面
  */
 public class WithDrawalActivity extends BaseActivity implements View.OnClickListener, HttpResponse {
+    public static final String DRAWALTYPE = "drawaltype";
+    public static final String DRAWALTax = "drawaltax";
+    public static final String FPMONEY = "fpmoney";
     private TextView tv_base_title;
     private ImageView iv_base_back;
     private RelativeLayout rl_withdrawal_card;
@@ -53,6 +65,9 @@ public class WithDrawalActivity extends BaseActivity implements View.OnClickList
     private TextView tv_withdraw_btn;
     private TextView tv_withdraw_all;
     private TextView tv_withdraw_relmoney;
+    private TextView tv_withdraw_point_fee;
+    private TextView tv_withdraw_point_feenum;
+    private TextView tv_withdraw_note;
     private EditText et_withdrawal_money;
     private MoneyModel moneyModel;
     private String detail_content;
@@ -76,6 +91,9 @@ public class WithDrawalActivity extends BaseActivity implements View.OnClickList
     private double service_charge;
     private double realMoney;//到账金额
     private String money;//输入提现金额
+    private String drawalType;
+    private float persionalTax;
+    private String fpMoney;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,6 +105,9 @@ public class WithDrawalActivity extends BaseActivity implements View.OnClickList
     }
 
     private void initView() {
+        if (!EventBus.getDefault().isRegistered(WithDrawalActivity.this)) {
+            EventBus.getDefault().register(WithDrawalActivity.this);
+        }
         tv_base_title = findViewById(R.id.tv_base_title);
         iv_base_back = findViewById(R.id.iv_base_back);
         rl_withdrawal_card = findViewById(R.id.rl_withdrawal_card);
@@ -100,6 +121,9 @@ public class WithDrawalActivity extends BaseActivity implements View.OnClickList
         rl_withdrawal_mycard = findViewById(R.id.rl_withdrawal_mycard);
         iv_withdrawal_mycard = findViewById(R.id.iv_withdrawal_mycard);
         tv_withdrawal_mycard = findViewById(R.id.tv_withdrawal_mycard);
+        tv_withdraw_point_fee = findViewById(R.id.tv_withdraw_point_fee);
+        tv_withdraw_point_feenum = findViewById(R.id.tv_withdraw_point_feenum);
+        tv_withdraw_note = findViewById(R.id.tv_withdraw_note);
         et_withdrawal_money.setFilters(new InputFilter[]{new DecimalDigitsInputFilter(2), new InputFilter.LengthFilter(11)});
         tv_base_title.setText("提现");
         iv_base_back.setOnClickListener(this);
@@ -113,6 +137,18 @@ public class WithDrawalActivity extends BaseActivity implements View.OnClickList
             general_uuid = intent.getStringExtra("general_uuid");
             split_type = intent.getStringExtra("split_type");
             split_target = intent.getStringExtra("split_target");
+            drawalType = intent.getStringExtra(DRAWALTYPE);
+            persionalTax = intent.getFloatExtra(DRAWALTax, 0);
+            fpMoney = intent.getStringExtra(FPMONEY);
+        }
+        if ("point".equals(drawalType)) {//饭票提现
+            tv_withdraw_point_fee.setVisibility(View.VISIBLE);
+            tv_withdraw_point_feenum.setVisibility(View.VISIBLE);
+            tv_withdraw_relmoney.setVisibility(View.GONE);
+            String res = NumberUtils.returnPercent(persionalTax / 100.00f);
+            tv_withdraw_point_feenum.setText(res);
+            tv_withdraw_tqnum.setText("可提取金额:" + fpMoney);
+            tv_withdraw_note.setText("备注:");
         }
         et_withdrawal_money.addTextChangedListener(new TextWatcher() {
             @Override
@@ -188,8 +224,7 @@ public class WithDrawalActivity extends BaseActivity implements View.OnClickList
                             ToastUtil.showShortToast(this, "提现金额不能为0");
                         } else {
                             if (Double.valueOf(money) < Double.valueOf(tqMoney)) { //输入金额 < 可提现金额
-                                moneyModel.postCashMoney(3, general_uuid, split_type, split_target, money, bankName,
-                                        bankNo, userName, bankCode, this);
+                                showPayDialog();
                             } else {
                                 ToastUtil.showShortToast(this, "输入金额不能超过可提取金额");
                             }
@@ -204,6 +239,24 @@ public class WithDrawalActivity extends BaseActivity implements View.OnClickList
                 et_withdrawal_money.getText().clear();
                 et_withdrawal_money.setText(tqMoney);
                 et_withdrawal_money.setSelection(tqMoney.length());
+                break;
+        }
+    }
+
+    private void showPayDialog() {
+        PointPasswordDialog pointPasswordDialog = new PointPasswordDialog(this);
+        pointPasswordDialog.show();
+    }
+
+    @Subscribe
+    public void onEvent(Object event) {
+        final Message message = (Message) event;
+        switch (message.what) {
+            case POINT_INPUT_PAYPAWD://密码框输入密码
+            case POINT_SET_PAYPAWD: //设置支付密码成功 直接拿密码进行支付
+                String password = message.obj.toString();
+                PointModel pointModel = new PointModel(this);
+                pointModel.postCheckPwd(4, password, 3, this);
                 break;
         }
     }
@@ -236,7 +289,7 @@ public class WithDrawalActivity extends BaseActivity implements View.OnClickList
                     cashInfoEntity = GsonUtils.gsonToBean(result, CashInfoEntity.class);
                     detail_content = cashInfoEntity.getContent().getDetail_content();
                     service_charge = Double.parseDouble(cashInfoEntity.getContent().getService_charge());
-                    tv_withdraw_feenum.setText(" " + service_charge + "元/笔");
+                    tv_withdraw_feenum.setText(service_charge + "元/笔");
                     divide_money = Double.parseDouble(cashInfoEntity.getContent().getDivide_money());
                     low_rate = Double.parseDouble(cashInfoEntity.getContent().getLow_rate());
                     high_rate = Double.parseDouble(cashInfoEntity.getContent().getHigh_rate());
@@ -288,6 +341,23 @@ public class WithDrawalActivity extends BaseActivity implements View.OnClickList
                         finish();
                     }
                     ToastUtil.showShortToast(this, entity.getContent().getResult().getResult());
+                }
+                break;
+            case 4:
+                if (!TextUtils.isEmpty(result)) {
+                    CheckPwdEntiy entiy = new CheckPwdEntiy();
+                    entiy = GsonUtils.gsonToBean(result, CheckPwdEntiy.class);
+                    if (entiy.getContent().getRight_pwd().equals("1")) {
+                        moneyModel.postCashMoney(3, general_uuid, split_type, split_target, money, bankName,
+                                bankNo, userName, bankCode, this);
+                    } else {
+                        String remain = entiy.getContent().getRemain();
+                        if (remain.equals("0")) {
+                            ToastUtil.showShortToast(this, "您已输入5次错误密码，账户被锁定，请明日再进行操作");
+                        } else {
+                            ToastUtil.showShortToast(this, "支付密码不正确，您还可以输入" + remain + "次");
+                        }
+                    }
                 }
                 break;
         }

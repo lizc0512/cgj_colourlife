@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.util.GlideUtils;
-import com.tg.point.entity.PointTransactionRecordEntity;
+import com.tg.point.entity.PointHistoryEntity;
 import com.tg.setting.util.OnItemClickListener;
 
 import java.util.List;
@@ -19,10 +19,10 @@ import java.util.List;
 
 public class PointTransactionAdapter extends RecyclerView.Adapter<PointTransactionAdapter.PointTransactionViewHolder> {
 
-    private List<PointTransactionRecordEntity.ContentBean.ListBean> totalListBean;
+    private List<PointHistoryEntity.ContentBean> totalListBean;
     public OnItemClickListener onClickListener;
 
-    public PointTransactionAdapter(List<PointTransactionRecordEntity.ContentBean.ListBean> totalListBean) {
+    public PointTransactionAdapter(List<PointHistoryEntity.ContentBean> totalListBean) {
         this.totalListBean = totalListBean;
     }
 
@@ -41,10 +41,10 @@ public class PointTransactionAdapter extends RecyclerView.Adapter<PointTransacti
 
     @Override
     public void onBindViewHolder(@NonNull PointTransactionViewHolder viewHolder, int i) {
-        PointTransactionRecordEntity.ContentBean.ListBean listBean = totalListBean.get(i);
+        PointHistoryEntity.ContentBean listBean = totalListBean.get(i);
         viewHolder.tv_transaction_name.setText(listBean.getTrans_name());
         viewHolder.tv_transaction_date.setText(listBean.getCreate_time());
-        int org_money = listBean.getOrg_money();
+        int org_money = Integer.valueOf(listBean.getOrg_money());
         String type = listBean.getType();
         if ("1".equals(type)) {
             viewHolder.tv_transaction_amout.setText("+" + org_money * 1.0f / 100);

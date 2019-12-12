@@ -1,5 +1,7 @@
 package com.tg.point.adapter;
 
+import android.text.TextUtils;
+
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.tg.coloursteward.R;
@@ -26,6 +28,9 @@ public class GivenMobileAdapter extends BaseQuickAdapter<GivenMobileEntity.Conte
     protected void convert(BaseViewHolder helper, GivenMobileEntity.ContentBean item) {
         helper.setText(R.id.tv_name, item.getName());
         helper.setText(R.id.tv_oa, item.getUsername());
+        if (!TextUtils.isEmpty(item.getName())) {
+            helper.setText(R.id.tv_lastname, item.getName().substring(0, 1));
+        }
     }
 
 }

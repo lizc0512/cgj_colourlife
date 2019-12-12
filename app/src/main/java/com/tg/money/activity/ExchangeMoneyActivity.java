@@ -2,6 +2,7 @@ package com.tg.money.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Message;
 import android.text.InputFilter;
 import android.text.TextUtils;
 import android.view.View;
@@ -17,6 +18,15 @@ import com.tg.coloursteward.view.ClearEditText;
 import com.tg.money.entity.ExchangeMoneyEntity;
 import com.tg.money.model.MoneyModel;
 import com.tg.money.utils.DecimalDigitsInputFilter;
+import com.tg.point.activity.PointPasswordDialog;
+import com.tg.point.entity.CheckPwdEntiy;
+import com.tg.point.model.PointModel;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+
+import static com.tg.coloursteward.constant.UserMessageConstant.POINT_INPUT_PAYPAWD;
+import static com.tg.coloursteward.constant.UserMessageConstant.POINT_SET_PAYPAWD;
 
 /**
  * @name ${lizc}
@@ -51,6 +61,9 @@ public class ExchangeMoneyActivity extends BaseActivity implements View.OnClickL
     }
 
     private void initView() {
+        if (!EventBus.getDefault().isRegistered(ExchangeMoneyActivity.this)) {
+            EventBus.getDefault().register(ExchangeMoneyActivity.this);
+        }
         tv_base_title = findViewById(R.id.tv_base_title);
         iv_base_back = findViewById(R.id.iv_base_back);
         et_exchange_money = findViewById(R.id.et_exchange_money);
@@ -107,7 +120,7 @@ public class ExchangeMoneyActivity extends BaseActivity implements View.OnClickL
                                 ToastUtil.showShortToast(this, "金额不能为0");
                             } else {
                                 if (Double.valueOf(money) >= Double.valueOf(content)) {
-                                    initData(content);
+                                    showPayDialog();
                                 } else {
                                     ToastUtil.showShortToast(this, "输入金额不能超过可兑换金额");
                                 }
@@ -119,6 +132,32 @@ public class ExchangeMoneyActivity extends BaseActivity implements View.OnClickL
                     ToastUtil.showShortToast(this, "金额不能为空");
                 }
                 break;
+        }
+    }
+
+    private void showPayDialog() {
+        PointPasswordDialog pointPasswordDialog = new PointPasswordDialog(ExchangeMoneyActivity.this);
+        pointPasswordDialog.show();
+    }
+
+    @Subscribe
+    public void onEvent(Object event) {
+        final Message message = (Message) event;
+        switch (message.what) {
+            case POINT_INPUT_PAYPAWD://密码框输入密码
+            case POINT_SET_PAYPAWD: //设置支付密码成功 直接拿密码进行支付
+                String password = message.obj.toString();
+                PointModel pointModel = new PointModel(this);
+                pointModel.postCheckPwd(1, password, 3, this);
+                break;
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (EventBus.getDefault().isRegistered(ExchangeMoneyActivity.this)) {
+            EventBus.getDefault().unregister(ExchangeMoneyActivity.this);
         }
     }
 
@@ -139,6 +178,22 @@ public class ExchangeMoneyActivity extends BaseActivity implements View.OnClickL
                         }
                     } catch (Exception e) {
                         ToastUtil.showShortToast(this, "请稍后重试");
+                    }
+                }
+                break;
+            case 1:
+                if (!TextUtils.isEmpty(result)) {
+                    CheckPwdEntiy entiy = new CheckPwdEntiy();
+                    entiy = GsonUtils.gsonToBean(result, CheckPwdEntiy.class);
+                    if (entiy.getContent().getRight_pwd().equals("1")) {
+                        initData(content);
+                    } else {
+                        String remain = entiy.getContent().getRemain();
+                        if (remain.equals("0")) {
+                            ToastUtil.showShortToast(ExchangeMoneyActivity.this, "您已输入5次错误密码，账户被锁定，请明日再进行操作");
+                        } else {
+                            ToastUtil.showShortToast(ExchangeMoneyActivity.this, "支付密码不正确，您还可以输入" + remain + "次");
+                        }
                     }
                 }
                 break;

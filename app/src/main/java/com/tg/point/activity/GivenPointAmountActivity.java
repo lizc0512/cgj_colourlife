@@ -80,6 +80,7 @@ public class GivenPointAmountActivity extends BaseActivity implements View.OnCli
     private float balanceAmount = 0.01f;//账户余额
     private String realName;//用户实名的
     private int giveBalance;//赠送的金额(单位分)
+    private String type;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,6 +108,7 @@ public class GivenPointAmountActivity extends BaseActivity implements View.OnCli
         last_time = intent.getIntExtra(LASTTIME, 0);
         last_amount = intent.getIntExtra(LASTAMOUNT, 0);
         dest_account = intent.getStringExtra(USERID);
+        type = intent.getStringExtra(TYPE);
         last_amount = last_amount * 1.0f / 100;
         pano = intent.getStringExtra(PointTransactionListActivity.POINTTPANO);
         pointModel = new PointModel(GivenPointAmountActivity.this);
@@ -120,7 +122,7 @@ public class GivenPointAmountActivity extends BaseActivity implements View.OnCli
         String user_name = intent.getStringExtra(USERNAME);
         String user_portrait = intent.getStringExtra(USERPORTRAIT);
         tv_given_username.setText("正在向" + user_name + "\n" + "赠送" + keyword_sign);
-        GlideUtils.loadImageView(GivenPointAmountActivity.this, user_portrait, iv_given_photo);
+        GlideUtils.loadImageDefaultDisplay(GivenPointAmountActivity.this, user_portrait, iv_given_photo, R.drawable.default_header, R.drawable.default_header);
     }
 
     @Override
@@ -314,7 +316,7 @@ public class GivenPointAmountActivity extends BaseActivity implements View.OnCli
                     entiy = GsonUtils.gsonToBean(result, CheckPwdEntiy.class);
                     if (entiy.getContent().getRight_pwd().equals("1")) {
                         pointModel.transferTransaction(4, giveBalance, entiy.getContent().getToken(), dest_account, pano,
-                                ed_given_remark.getText().toString().trim(), "cgj-czy", GivenPointAmountActivity.this);
+                                ed_given_remark.getText().toString().trim(), type, GivenPointAmountActivity.this);
                     } else {
                         String remain = entiy.getContent().getRemain();
                         if (remain.equals("0")) {

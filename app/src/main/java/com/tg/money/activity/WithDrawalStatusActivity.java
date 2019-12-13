@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.base.BaseActivity;
+import com.tg.point.activity.MyPointActivity;
 
 /**
  * @name ${lizc}
@@ -25,6 +26,7 @@ public class WithDrawalStatusActivity extends BaseActivity implements View.OnCli
     private TextView tv_cash_btn;
     private TextView tv_cash_num;
     private String money;
+    private String type;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +46,7 @@ public class WithDrawalStatusActivity extends BaseActivity implements View.OnCli
         tv_cash_btn.setOnClickListener(this);
         if (null != getIntent()) {
             money = getIntent().getStringExtra("money");
+            type = getIntent().getStringExtra("type");
             tv_cash_num.setText("提现金额" + money + "元");
         }
     }
@@ -69,7 +72,11 @@ public class WithDrawalStatusActivity extends BaseActivity implements View.OnCli
                 finish();
                 break;
             case R.id.tv_cash_btn:
-                startActivity(new Intent(this, InstantDistributionActivity.class));
+                if ("fp".equals(type)) {
+                    startActivity(new Intent(this, MyPointActivity.class));
+                } else {
+//                    startActivity(new Intent(this, InstantDistributionActivity.class));
+                }
                 finish();
                 break;
         }

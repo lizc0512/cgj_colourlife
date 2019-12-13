@@ -43,6 +43,7 @@ public class PointModel extends BaseModel {
     private String transactionTransferUrl = "/app/employee/fp/transfer";//彩管家饭票转账交易
     private String checkPwdUrl = "/app/employee/password/checkPayPwd";//校验用户支付密码是否正确
     private String getHistoryUrl = "/app/employee/transfer/history";//获取历史转账接收人账号信息
+    private String postWithdrawalUrl = "/app/employee/fp/withdrawal";//彩管家饭票提现
 
 
     public PointModel(Context context) {
@@ -441,6 +442,45 @@ public class PointModel extends BaseModel {
     public void getHistoryAmount(int what, final HttpResponse newHttpResponse) {
         final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 16, getHistoryUrl), RequestMethod.GET);
         request(what, request, null, new HttpListener<String>() {
+            @Override
+            public void onSucceed(int what, Response<String> response) {
+                int responseCode = response.getHeaders().getResponseCode();
+                String result = response.get();
+                if (responseCode == RequestEncryptionUtils.responseSuccess) {
+                    int resultCode = showSuccesResultMessage(result);
+                    if (resultCode == 0) {
+                        newHttpResponse.OnHttpResponse(what, result);
+                    }
+                } else {
+                    showErrorCodeMessage(responseCode, response);
+                }
+            }
+
+            @Override
+            public void onFailed(int what, Response<String> response) {
+                showExceptionMessage(what, response);
+            }
+        }, true, true);
+    }
+
+    /**
+     * 彩管家饭票提现（）
+     *
+     * @param what
+     * @param pano
+     * @param withdrawal_amount
+     * @param bank_uuid
+     * @param token
+     * @param newHttpResponse
+     */
+    public void postFpWithdrawal(int what, String pano, String withdrawal_amount, String bank_uuid, String token, final HttpResponse newHttpResponse) {
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("pano", pano);
+        params.put("withdrawal_amount", Float.valueOf(withdrawal_amount) * 100); //单位为分，所以输入值*100
+        params.put("bank_uuid", bank_uuid);
+        params.put("token", token);
+        final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 16, postWithdrawalUrl), RequestMethod.POST);
+        request(what, request, params, new HttpListener<String>() {
             @Override
             public void onSucceed(int what, Response<String> response) {
                 int responseCode = response.getHeaders().getResponseCode();

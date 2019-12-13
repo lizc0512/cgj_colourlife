@@ -56,6 +56,7 @@ public class WithDrawalActivity extends BaseActivity implements View.OnClickList
     public static final String DRAWALTYPE = "drawaltype";
     public static final String DRAWALTax = "drawaltax";
     public static final String FPMONEY = "fpmoney";
+    public static final String PANO = "pano";
     private TextView tv_base_title;
     private ImageView iv_base_back;
     private RelativeLayout rl_withdrawal_card;
@@ -94,12 +95,16 @@ public class WithDrawalActivity extends BaseActivity implements View.OnClickList
     private String drawalType;
     private float persionalTax;
     private String fpMoney;
+    private boolean isFpMoney = false;
+    private PointModel pointModel;
+    private String pano;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_with_drawal);
         moneyModel = new MoneyModel(this);
+        pointModel = new PointModel(this);
         initView();
         initData();
     }
@@ -140,8 +145,10 @@ public class WithDrawalActivity extends BaseActivity implements View.OnClickList
             drawalType = intent.getStringExtra(DRAWALTYPE);
             persionalTax = intent.getFloatExtra(DRAWALTax, 0);
             fpMoney = intent.getStringExtra(FPMONEY);
+            pano = intent.getStringExtra(PANO);
         }
         if ("point".equals(drawalType)) {//饭票提现
+            isFpMoney = true;
             tv_withdraw_point_fee.setVisibility(View.VISIBLE);
             tv_withdraw_point_feenum.setVisibility(View.VISIBLE);
             tv_withdraw_relmoney.setVisibility(View.GONE);
@@ -149,6 +156,8 @@ public class WithDrawalActivity extends BaseActivity implements View.OnClickList
             tv_withdraw_point_feenum.setText(res);
             tv_withdraw_tqnum.setText("可提取金额:" + fpMoney);
             tv_withdraw_note.setText("备注:");
+        } else {
+            isFpMoney = false;
         }
         et_withdrawal_money.addTextChangedListener(new TextWatcher() {
             @Override
@@ -223,10 +232,18 @@ public class WithDrawalActivity extends BaseActivity implements View.OnClickList
                         if (Double.valueOf(money) == 0) {
                             ToastUtil.showShortToast(this, "提现金额不能为0");
                         } else {
-                            if (Double.valueOf(money) < Double.valueOf(tqMoney)) { //输入金额 < 可提现金额
-                                showPayDialog();
-                            } else {
-                                ToastUtil.showShortToast(this, "输入金额不能超过可提取金额");
+                            if (!isFpMoney) {//即时分配提现
+                                if (Double.valueOf(money) < Double.valueOf(tqMoney)) { //输入金额 < 可提现金额
+                                    showPayDialog();
+                                } else {
+                                    ToastUtil.showShortToast(this, "输入金额不能超过可提取金额");
+                                }
+                            } else {//饭票提现
+                                if (Double.valueOf(money) < Double.valueOf(fpMoney)) { //输入金额 < 可提现金额
+                                    showPayDialog();
+                                } else {
+                                    ToastUtil.showShortToast(this, "输入金额不能超过可提取金额");
+                                }
                             }
                         }
                     } catch (Exception e) {
@@ -255,7 +272,6 @@ public class WithDrawalActivity extends BaseActivity implements View.OnClickList
             case POINT_INPUT_PAYPAWD://密码框输入密码
             case POINT_SET_PAYPAWD: //设置支付密码成功 直接拿密码进行支付
                 String password = message.obj.toString();
-                PointModel pointModel = new PointModel(this);
                 pointModel.postCheckPwd(4, password, 3, this);
                 break;
         }
@@ -348,8 +364,12 @@ public class WithDrawalActivity extends BaseActivity implements View.OnClickList
                     CheckPwdEntiy entiy = new CheckPwdEntiy();
                     entiy = GsonUtils.gsonToBean(result, CheckPwdEntiy.class);
                     if (entiy.getContent().getRight_pwd().equals("1")) {
-                        moneyModel.postCashMoney(3, general_uuid, split_type, split_target, money, bankName,
-                                bankNo, userName, bankCode, this);
+                        if (!isFpMoney) {
+                            moneyModel.postCashMoney(3, general_uuid, split_type, split_target, money, bankName,
+                                    bankNo, userName, bankCode, this);
+                        } else {
+                            pointModel.postFpWithdrawal(5, pano, money, bankId, entiy.getContent().getToken(), this);
+                        }
                     } else {
                         String remain = entiy.getContent().getRemain();
                         if (remain.equals("0")) {
@@ -358,6 +378,16 @@ public class WithDrawalActivity extends BaseActivity implements View.OnClickList
                             ToastUtil.showShortToast(this, "支付密码不正确，您还可以输入" + remain + "次");
                         }
                     }
+                }
+                break;
+            case 5:
+                if (!TextUtils.isEmpty(result)) {
+                    ToastUtil.showShortToast(this, "提现成功");
+                    Intent intent = new Intent(this, WithDrawalStatusActivity.class);
+                    intent.putExtra("money", money);
+                    intent.putExtra("type", "fp");
+                    startActivity(intent);
+                    finish();
                 }
                 break;
         }

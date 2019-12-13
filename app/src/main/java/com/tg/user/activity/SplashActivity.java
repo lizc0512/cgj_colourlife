@@ -39,7 +39,7 @@ import pl.droidsonroids.gif.GifImageView;
  * @chang time
  */
 public class SplashActivity extends BaseActivity implements View.OnClickListener {
-    private String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES) + "/Colourlife/colourlifeAd.gif";
+    private String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/Colourlife/colourlifeAd.gif";
     private MyTimeCount myTimeCount = null;
     private RelativeLayout rl_login_ad;
     private GifImageView gif_login;
@@ -103,9 +103,9 @@ public class SplashActivity extends BaseActivity implements View.OnClickListener
                 rl_login_ad.setVisibility(View.VISIBLE);
                 String imageType = Tools.getStringValue(SplashActivity.this, Contants.storage.ImageType);
                 if (imageType.equals("gif")) {
-                    path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES) + "/Colourlife/colourlifeAd.gif";
+                    path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/Colourlife/colourlifeAd.gif";
                 } else if (imageType.equals("png")) {
-                    path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES) + "/Colourlife/colourlifeAd.png";
+                    path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/Colourlife/colourlifeAd.png";
                 }
                 File mFile = new File(path);
                 if (mFile.canRead()) {

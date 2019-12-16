@@ -67,10 +67,10 @@ public class MyPointActivity extends BaseActivity implements View.OnClickListene
         pointModel = new PointModel(MyPointActivity.this);
         Intent intent = getIntent();
         mobilePhone = intent.getStringExtra(GIVENMOBILE);
-        String keyWordSign = spUtils.getStringData(COLOUR_WALLET_KEYWORD_SIGN, "积分");
+        String keyWordSign = spUtils.getStringData(COLOUR_WALLET_KEYWORD_SIGN, "饭票");
         String accountList = spUtils.getStringData(COLOUR_WALLET_ACCOUNT_LIST, "");
         if (!TextUtils.isEmpty(keyWordSign)) {
-            mTitle.setText("彩" + keyWordSign);
+            mTitle.setText(keyWordSign);
         }
         if (!TextUtils.isEmpty(accountList)) {
             isLoading = false;
@@ -122,7 +122,7 @@ public class MyPointActivity extends BaseActivity implements View.OnClickListene
                     String keywordSign = contentBean.getKeyword();
                     if (!TextUtils.isEmpty(keywordSign)) {
                         spUtils.saveStringData(COLOUR_WALLET_KEYWORD_SIGN, keywordSign);
-                        mTitle.setText("彩" + keywordSign);
+                        mTitle.setText(keywordSign);
                     }
                 }
                 break;

@@ -129,7 +129,7 @@ public class GivenPointHistoryActivity extends BaseActivity implements View.OnCl
                 pointGivenHistoryAdapter.notifyDataSetChanged();
                 pointGivenHistoryAdapter.setOnItemClickListener(i -> {
                     Intent intent = new Intent();
-//                    intent.putExtra(GivenPointAmountActivity.GIVENMOBILE, totalListBean.get(i - 1).getMobile());
+                    intent.putExtra(GivenPointAmountActivity.GIVENMOBILE, totalListBean.get(i - 1).getMobile());
                     setResult(200, intent);
                     finish();
                 });

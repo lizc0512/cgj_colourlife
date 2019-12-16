@@ -43,7 +43,7 @@ public class GivenPointResultActivity extends BaseActivity implements View.OnCli
         mBack.setOnClickListener(this);
         tv_continue_given.setOnClickListener(this);
         tv_return.setOnClickListener(this);
-        mTitle.setText(spUtils.getStringData(SpConstants.storage.COLOUR_WALLET_KEYWORD_SIGN, "积分") + "赠送");
+        mTitle.setText(spUtils.getStringData(SpConstants.storage.COLOUR_WALLET_KEYWORD_SIGN, "饭票") + "赠送");
         Intent intent = getIntent();
         tv_given_amount.setText(intent.getStringExtra(GivenPointAmountActivity.GIVENAMOUNT));
         tv_given_username.setText(intent.getStringExtra(GivenPointAmountActivity.GIVENMOBILE));

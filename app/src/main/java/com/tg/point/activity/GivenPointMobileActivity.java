@@ -63,7 +63,7 @@ public class GivenPointMobileActivity extends BaseActivity implements View.OnCli
     private PointModel pointModel;
     private boolean canGiven = true;
     private int last_times;//剩余次数
-    private int last_amount;//剩余金额
+    private float last_amount;//剩余金额
     private boolean isColleag;
     private RecyclerView rv_point_mobile;
     private GivenMobileAdapter adapter;
@@ -85,10 +85,10 @@ public class GivenPointMobileActivity extends BaseActivity implements View.OnCli
         mBack.setOnClickListener(this);
         btn_next_step.setEnabled(false);
         btn_next_step.setOnClickListener(this);
-        keyword_sign = spUtils.getStringData(SpConstants.storage.COLOUR_WALLET_KEYWORD_SIGN, "积分");
+        keyword_sign = spUtils.getStringData(SpConstants.storage.COLOUR_WALLET_KEYWORD_SIGN, "饭票");
         mTitle.setText(keyword_sign + "赠送");
-        user_top_view_right.setVisibility(View.VISIBLE);
-        user_top_view_right.setText("记录");
+        user_top_view_right.setVisibility(View.GONE);
+        user_top_view_right.setText("历史记录");
         user_top_view_right.setOnClickListener(this::onClick);
         input_given_mobile.addTextChangedListener(this);
         Intent intent = getIntent();
@@ -141,20 +141,20 @@ public class GivenPointMobileActivity extends BaseActivity implements View.OnCli
             case R.id.btn_next_step:
                 if (isColleag) {
                     String keyword = input_given_mobile.getText().toString().trim();
+                    if (UserInfo.mobile.equals(keyword)) {
+                        ToastUtil.showShortToast(GivenPointMobileActivity.this, "不能给自己赠送" + keyword_sign);
+                        return;
+                    }
                     if (!TextUtils.isEmpty(keyword)) {
                         pointModel.getUserInfor(1, keyword, GivenPointMobileActivity.this);
                     } else {
                         ToastUtil.showShortToast(this, "输入内容不能为空");
                     }
                 } else {
-                    if (UserInfo.mobile.equals(givePhone)) {
-                        ToastUtil.showShortToast(GivenPointMobileActivity.this, "不能给自己赠送" + keyword_sign);
+                    if (givePhone.length() == 11) {
+                        pointModel.getUserInfor(1, givePhone, GivenPointMobileActivity.this);
                     } else {
-                        if (givePhone.length() == 11) {
-                            pointModel.getUserInfor(1, givePhone, GivenPointMobileActivity.this);
-                        } else {
-                            ToastUtil.showShortToast(this, "请输入11位手机号");
-                        }
+                        ToastUtil.showShortToast(this, "请输入11位手机号");
                     }
                 }
                 break;
@@ -235,7 +235,7 @@ public class GivenPointMobileActivity extends BaseActivity implements View.OnCli
                         canGiven = false;
                     }
                     setBtnClick();
-                    tv_remain_notice.setText("今天可赠送" + last_times + "次，剩余额度" + last_amount * 1.0f / 100 + keyword_sign);
+                    tv_remain_notice.setText("今天可赠送" + last_times + "次，剩余额度" + last_amount + keyword_sign);
                 } catch (Exception e) {
 
                 }

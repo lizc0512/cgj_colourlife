@@ -1,5 +1,8 @@
 package com.tg.point.entity;
 
+import com.tg.coloursteward.entity.BaseContentEntity;
+
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -12,7 +15,7 @@ import java.util.List;
  * @chang time
  * @class describe
  */
-public class PointHistoryEntity {
+public class PointHistoryEntity extends BaseContentEntity {
 
     /**
      * code : 0
@@ -21,34 +24,7 @@ public class PointHistoryEntity {
      * contentEncrypt :
      */
 
-    private int code;
-    private String message;
-    private String contentEncrypt;
     private List<ContentBean> content;
-
-    public int getCode() {
-        return code;
-    }
-
-    public void setCode(int code) {
-        this.code = code;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public String getContentEncrypt() {
-        return contentEncrypt;
-    }
-
-    public void setContentEncrypt(String contentEncrypt) {
-        this.contentEncrypt = contentEncrypt;
-    }
 
     public List<ContentBean> getContent() {
         return content;
@@ -58,7 +34,7 @@ public class PointHistoryEntity {
         this.content = content;
     }
 
-    public static class ContentBean {
+    public static class ContentBean implements Serializable {
         /**
          * ano : 100854d1a7726b004473a5f4414e1991
          * finance_no : 1912_20191204143150d3cf4ae6a2b80

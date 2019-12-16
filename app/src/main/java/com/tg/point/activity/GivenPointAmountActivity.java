@@ -100,16 +100,16 @@ public class GivenPointAmountActivity extends BaseActivity implements View.OnCli
         btn_given.setEnabled(false);
         mBack.setOnClickListener(this);
         btn_given.setOnClickListener(this);
-        keyword_sign = spUtils.getStringData(SpConstants.storage.COLOUR_WALLET_KEYWORD_SIGN, "积分");
+        keyword_sign = spUtils.getStringData(SpConstants.storage.COLOUR_WALLET_KEYWORD_SIGN, "饭票");
         mTitle.setText(keyword_sign + "赠送");
         ed_given_amount.addTextChangedListener(this);
         Intent intent = getIntent();
         givenMobile = intent.getStringExtra(GIVENMOBILE);
         last_time = intent.getIntExtra(LASTTIME, 0);
-        last_amount = intent.getIntExtra(LASTAMOUNT, 0);
+        last_amount = intent.getFloatExtra(LASTAMOUNT, 0);
         dest_account = intent.getStringExtra(USERID);
         type = intent.getStringExtra(TYPE);
-        last_amount = last_amount * 1.0f / 100;
+//        last_amount = last_amount * 1.0f / 100;
         pano = intent.getStringExtra(PointTransactionListActivity.POINTTPANO);
         pointModel = new PointModel(GivenPointAmountActivity.this);
         pointModel.getAccountBalance(1, pano, GivenPointAmountActivity.this);
@@ -156,7 +156,7 @@ public class GivenPointAmountActivity extends BaseActivity implements View.OnCli
                         ToastUtil.showShortToast(GivenPointAmountActivity.this, "赠送金额不能超过可用余额");
                         return;
                     }
-                    if (give_Amount > last_amount) {
+                    if (last_amount < 0) {
                         ToastUtil.showShortToast(GivenPointAmountActivity.this, "赠送金额不能超过剩余额度");
                         return;
                     }

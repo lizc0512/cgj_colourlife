@@ -10,7 +10,7 @@ import android.widget.TextView;
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.base.BaseActivity;
 import com.tg.coloursteward.util.GlideUtils;
-import com.tg.point.entity.PointTransactionRecordEntity;
+import com.tg.point.entity.PointHistoryEntity;
 
 
 /***
@@ -46,10 +46,10 @@ public class PointTransactionDetailsActivity extends BaseActivity implements Vie
         mBack.setOnClickListener(this::onClick);
         mTitle.setText("交易详情");
         Intent intent = getIntent();
-        PointTransactionRecordEntity.ContentBean.ListBean listBean = (PointTransactionRecordEntity.ContentBean.ListBean) intent.getSerializableExtra(POINTTRANSACTIONDETAIL);
+        PointHistoryEntity.ContentBean listBean = (PointHistoryEntity.ContentBean) intent.getSerializableExtra(POINTTRANSACTIONDETAIL);
         GlideUtils.loadImageView(PointTransactionDetailsActivity.this, listBean.getLogo(), iv_transaction_logo);
         tv_transaction_name.setText(listBean.getTrans_name());
-        int amount = listBean.getDest_money();
+        int amount = Integer.valueOf(listBean.getOrg_money());
         if ("1".equals(listBean.getType())) {
             tv_transaction_amount.setTextColor(Color.parseColor("#F24724"));
             tv_transaction_amount.setText("+" + amount / 100.0f);

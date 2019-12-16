@@ -41,15 +41,15 @@ public class PointAccountLimitEntity extends BaseContentEntity {
          * pano : 9f22bdb6934141ecb7e5a4506958a51b
          */
 
-        private int last_amount;
+        private float last_amount;
         private int last_times;
         private String pano;
 
-        public int getLast_amount() {
+        public float getLast_amount() {
             return last_amount;
         }
 
-        public void setLast_amount(int last_amount) {
+        public void setLast_amount(float last_amount) {
             this.last_amount = last_amount;
         }
 

@@ -43,7 +43,7 @@ public class MultiCollegeActivity extends BaseActivity implements View.OnClickLi
     private MultiCollegeAdapter adapter;
     private String result;
     private int last_times;//剩余次数
-    private int last_amount;//剩余金额
+    private float last_amount;//剩余金额
     private String pano;
     private String givePhone;
     private String type;
@@ -69,7 +69,7 @@ public class MultiCollegeActivity extends BaseActivity implements View.OnClickLi
             givePhone = getIntent().getStringExtra("givePhone");
             type = getIntent().getStringExtra("type");
             last_times = getIntent().getIntExtra("last_times", 0);
-            last_amount = getIntent().getIntExtra("last_amount", 0);
+            last_amount = getIntent().getFloatExtra("last_amount", 0);
         }
     }
 

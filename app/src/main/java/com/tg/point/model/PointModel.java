@@ -260,6 +260,13 @@ public class PointModel extends BaseModel {
         }, true, true);
     }
 
+    /**
+     * 彩管家饭票余额
+     *
+     * @param what
+     * @param pano
+     * @param newHttpResponse
+     */
     public void getAccountBalance(int what, String pano, final HttpResponse newHttpResponse) {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("pano", pano);

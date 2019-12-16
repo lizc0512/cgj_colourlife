@@ -174,7 +174,7 @@ public class PointTransactionListActivity extends BaseActivity implements View.O
                 pointTransactionAdapter.notifyDataSetChanged();
                 pointTransactionAdapter.setOnItemClickListener(i -> {
                     Intent intent = new Intent(PointTransactionListActivity.this, PointTransactionDetailsActivity.class);
-                    intent.putExtra(PointTransactionDetailsActivity.POINTTRANSACTIONDETAIL, totalListBean.get(i - 1).toString());
+                    intent.putExtra(PointTransactionDetailsActivity.POINTTRANSACTIONDETAIL, totalListBean.get(i - 1));
                     startActivity(intent);
                 });
                 break;

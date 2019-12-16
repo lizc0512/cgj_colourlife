@@ -32,7 +32,7 @@ public class PointDescDialog {
         TextView tv_honor_point_desc = view.findViewById(R.id.tv_honor_point_desc);
         TextView tv_normal_point = view.findViewById(R.id.tv_normal_point);
         TextView tv_normal_point_desc = view.findViewById(R.id.tv_normal_point_desc);
-        String keyword_sign = SharedPreferencesUtils.getInstance().getStringData(SpConstants.storage.COLOUR_WALLET_KEYWORD_SIGN, "积分");
+        String keyword_sign = SharedPreferencesUtils.getInstance().getStringData(SpConstants.storage.COLOUR_WALLET_KEYWORD_SIGN, "饭票");
         String honor_point_title = String.format(context.getResources().getString(R.string.point_honor_title), keyword_sign);
         String honor_point_desc = String.format(context.getResources().getString(R.string.point_honor_desc), keyword_sign, keyword_sign);
         String honor_normal_title = String.format(context.getResources().getString(R.string.point_normal_title), keyword_sign);

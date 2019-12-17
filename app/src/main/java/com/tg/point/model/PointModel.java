@@ -44,6 +44,7 @@ public class PointModel extends BaseModel {
     private String checkPwdUrl = "/app/employee/password/checkPayPwd";//校验用户支付密码是否正确
     private String getHistoryUrl = "/app/employee/transfer/history";//获取历史转账接收人账号信息
     private String postWithdrawalUrl = "/app/employee/fp/withdrawal";//彩管家饭票提现
+    private String getCzyUserUrl = "/app/employee/czyuser";//查询彩之云用户
 
 
     public PointModel(Context context) {
@@ -320,7 +321,7 @@ public class PointModel extends BaseModel {
             public void onFailed(int what, Response<String> response) {
                 showExceptionMessage(what, response);
             }
-        }, true, true);
+        }, false, true);
     }
 
     /**
@@ -486,6 +487,38 @@ public class PointModel extends BaseModel {
         params.put("bank_uuid", bank_uuid);
         params.put("token", token);
         final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 16, postWithdrawalUrl), RequestMethod.POST);
+        request(what, request, params, new HttpListener<String>() {
+            @Override
+            public void onSucceed(int what, Response<String> response) {
+                int responseCode = response.getHeaders().getResponseCode();
+                String result = response.get();
+                if (responseCode == RequestEncryptionUtils.responseSuccess) {
+                    int resultCode = showSuccesResultMessage(result);
+                    if (resultCode == 0) {
+                        newHttpResponse.OnHttpResponse(what, result);
+                    }
+                } else {
+                    showErrorCodeMessage(responseCode, response);
+                }
+            }
+
+            @Override
+            public void onFailed(int what, Response<String> response) {
+                showExceptionMessage(what, response);
+            }
+        }, true, true);
+    }
+
+    /**
+     * 查询彩之云用户
+     *
+     * @param what
+     * @param newHttpResponse
+     */
+    public void getCzyUser(int what, String mobile, final HttpResponse newHttpResponse) {
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("mobile", mobile);
+        final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 16, getCzyUserUrl), RequestMethod.GET);
         request(what, request, params, new HttpListener<String>() {
             @Override
             public void onSucceed(int what, Response<String> response) {

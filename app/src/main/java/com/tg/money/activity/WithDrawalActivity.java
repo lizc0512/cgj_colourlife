@@ -388,10 +388,13 @@ public class WithDrawalActivity extends BaseActivity implements View.OnClickList
                 break;
             case 5:
                 if (!TextUtils.isEmpty(result)) {
-                    ToastUtil.showShortToast(this, "提现成功");
                     Intent intent = new Intent(this, WithDrawalStatusActivity.class);
                     intent.putExtra("money", money);
                     intent.putExtra("type", "fp");
+                    intent.putExtra("pano", pano);
+                    intent.putExtra("withDrawal_rate", persionalTax);
+                    intent.putExtra("fpmoney", Float.valueOf(money));
+                    intent.putExtra("restMoney", Float.valueOf(fpMoney));
                     startActivity(intent);
                     finish();
                 }

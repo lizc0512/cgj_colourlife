@@ -29,6 +29,7 @@ import com.tg.coloursteward.view.ClearEditText;
 import com.tg.point.adapter.GivenMobileAdapter;
 import com.tg.point.entity.GivenMobileEntity;
 import com.tg.point.entity.PointAccountLimitEntity;
+import com.tg.point.entity.PointCzyUserEntity;
 import com.tg.point.entity.UserIdInforEntity;
 import com.tg.point.model.PointModel;
 
@@ -146,7 +147,7 @@ public class GivenPointMobileActivity extends BaseActivity implements View.OnCli
                         return;
                     }
                     if (!TextUtils.isEmpty(keyword)) {
-                        pointModel.getUserInfor(1, keyword, GivenPointMobileActivity.this);
+                        pointModel.getCzyUser(3, keyword, GivenPointMobileActivity.this);
                     } else {
                         ToastUtil.showShortToast(this, "输入内容不能为空");
                     }
@@ -293,6 +294,22 @@ public class GivenPointMobileActivity extends BaseActivity implements View.OnCli
                             input_given_mobile.setSelection(oa.length());
                         }
                     });
+                }
+                break;
+            case 3:
+                if (!TextUtils.isEmpty(result)) {
+                    PointCzyUserEntity userEntity = new PointCzyUserEntity();
+                    userEntity = GsonUtils.gsonToBean(result, PointCzyUserEntity.class);
+                    Intent amount_Intent = new Intent(GivenPointMobileActivity.this, GivenPointAmountActivity.class);
+                    amount_Intent.putExtra(POINTTPANO, pano);
+                    amount_Intent.putExtra(GIVENMOBILE, givePhone);
+                    amount_Intent.putExtra(TYPE, type);
+                    amount_Intent.putExtra(GivenPointAmountActivity.USERPORTRAIT, userEntity.getContent().getPortrait());
+                    amount_Intent.putExtra(GivenPointAmountActivity.USERID, userEntity.getContent().getUuid());
+                    amount_Intent.putExtra(GivenPointAmountActivity.USERNAME, userEntity.getContent().getNick_name());
+                    amount_Intent.putExtra(GivenPointAmountActivity.LASTAMOUNT, last_amount);
+                    amount_Intent.putExtra(GivenPointAmountActivity.LASTTIME, last_times);
+                    startActivity(amount_Intent);
                 }
                 break;
         }

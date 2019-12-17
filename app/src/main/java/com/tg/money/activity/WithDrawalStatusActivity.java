@@ -9,6 +9,11 @@ import android.widget.TextView;
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.base.BaseActivity;
 
+import static com.tg.money.activity.WithDrawalActivity.DRAWALTYPE;
+import static com.tg.money.activity.WithDrawalActivity.DRAWALTax;
+import static com.tg.money.activity.WithDrawalActivity.FPMONEY;
+import static com.tg.money.activity.WithDrawalActivity.PANO;
+
 /**
  * @name ${lizc}
  * @class name：com.tg.money.activity
@@ -26,6 +31,10 @@ public class WithDrawalStatusActivity extends BaseActivity implements View.OnCli
     private TextView tv_cash_num;
     private String money;
     private String type;
+    private String pano;
+    private float withDrawal_rate;
+    private float fpmoney;
+    private float restMoney;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +55,10 @@ public class WithDrawalStatusActivity extends BaseActivity implements View.OnCli
         if (null != getIntent()) {
             money = getIntent().getStringExtra("money");
             type = getIntent().getStringExtra("type");
+            pano = getIntent().getStringExtra("pano");
+            withDrawal_rate = getIntent().getFloatExtra("withDrawal_rate", 0);
+            fpmoney = getIntent().getFloatExtra("fpmoney", 0);
+            restMoney = getIntent().getFloatExtra("restMoney", 0);
             tv_cash_num.setText("提现金额" + money + "元");
         }
     }
@@ -72,12 +85,21 @@ public class WithDrawalStatusActivity extends BaseActivity implements View.OnCli
                 break;
             case R.id.tv_cash_btn:
                 if ("fp".equals(type)) {
-                    startActivity(new Intent(this, WithDrawalActivity.class));
-                } else {
-//                    startActivity(new Intent(this, InstantDistributionActivity.class));
+                    Intent intent = new Intent(this, WithDrawalActivity.class);
+                    intent.putExtra(DRAWALTYPE, "point");
+                    intent.putExtra(PANO, pano);
+                    intent.putExtra(DRAWALTax, withDrawal_rate);
+                    intent.putExtra(FPMONEY, String.valueOf((restMoney - fpmoney)));
+                    startActivity(intent);
                 }
                 finish();
                 break;
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
     }
 }

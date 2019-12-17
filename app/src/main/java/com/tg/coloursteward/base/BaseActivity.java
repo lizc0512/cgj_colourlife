@@ -65,6 +65,8 @@ import cn.jpush.android.api.JPushInterface;
 
 public abstract class BaseActivity extends AppCompatActivity implements ResponseListener {
 
+    private static long lastClick = 0;
+
     public interface ActivityResultCallBack {
         void onResult(int requestCode, int resultCode, Intent data);
     }
@@ -72,6 +74,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Response
     public interface ActivityBackListener {
         void onBackPressed(Activity activity);
     }
+
     protected SharedPreferencesUtils spUtils;
     public static boolean isActive; //全局变量
     private ActivityBackListener backListener;
@@ -190,6 +193,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Response
 
         }
     }
+
     /**
      * 屏蔽在9.0系统提示引用了非公开SDK方法弹窗
      */
@@ -213,6 +217,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Response
             e.printStackTrace();
         }
     }
+
     @TargetApi(19)
     private void initWindow() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
@@ -614,8 +619,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Response
     }
 
     protected boolean fastClick() {
-        long lastClick = 0;
-        if (System.currentTimeMillis() - lastClick <= 1000) {
+        if (System.currentTimeMillis() - lastClick <= 2000) {
             return false;
         }
         lastClick = System.currentTimeMillis();

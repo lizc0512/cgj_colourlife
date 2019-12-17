@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.tg.coloursteward.R;
 import com.tg.money.activity.WithDrawalActivity;
 import com.tg.point.activity.GivenPointAmountActivity;
+import com.tg.point.activity.GivenPointMobileActivity;
 import com.tg.point.activity.GivenUserTypeActivity;
 import com.tg.point.activity.PointTransactionListActivity;
 import com.tg.point.entity.PointAccountListEntity;
@@ -75,11 +76,19 @@ public class PointListAdapter extends RecyclerView.Adapter<PointListAdapter.Poin
 
         });
         viewHolder.tv_point_given.setOnClickListener(v -> {
-            Context mContext = viewHolder.itemView.getContext();
-            Intent intent = new Intent(mContext, GivenUserTypeActivity.class);
-            intent.putExtra(GivenPointAmountActivity.GIVENMOBILE, mobilePhone);
-            intent.putExtra(POINTTPANO, listBean.getPano());
-            mContext.startActivity(intent);
+            if (!"1".equals(listBean.getCgj_fp())) {
+                Context mContext = viewHolder.itemView.getContext();
+                Intent it = new Intent(mContext, GivenPointMobileActivity.class);
+                it.putExtra(POINTTPANO, listBean.getPano());
+                it.putExtra(GivenPointAmountActivity.TYPE, "cgj-czy");
+                mContext.startActivity(it);
+            } else {
+                Context mContext = viewHolder.itemView.getContext();
+                Intent intent = new Intent(mContext, GivenUserTypeActivity.class);
+                intent.putExtra(GivenPointAmountActivity.GIVENMOBILE, mobilePhone);
+                intent.putExtra(POINTTPANO, listBean.getPano());
+                mContext.startActivity(intent);
+            }
         });
         viewHolder.tv_point_whthdrawal.setOnClickListener(v -> {
             Context mContext = viewHolder.itemView.getContext();

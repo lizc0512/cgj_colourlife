@@ -341,7 +341,6 @@ public class PointModel extends BaseModel {
         params.put("transfer_fee", transfer_fee);
         params.put("dest_account", dest_account);//收款方的
         params.put("token", token);
-        params.put("dest_pano", pano);
         params.put("org_pano", pano);
         params.put("type", type);
         if (TextUtils.isEmpty(detail)) {

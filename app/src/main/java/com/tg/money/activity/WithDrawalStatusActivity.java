@@ -8,7 +8,6 @@ import android.widget.TextView;
 
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.base.BaseActivity;
-import com.tg.point.activity.MyPointActivity;
 
 /**
  * @name ${lizc}
@@ -73,7 +72,7 @@ public class WithDrawalStatusActivity extends BaseActivity implements View.OnCli
                 break;
             case R.id.tv_cash_btn:
                 if ("fp".equals(type)) {
-                    startActivity(new Intent(this, MyPointActivity.class));
+                    startActivity(new Intent(this, WithDrawalActivity.class));
                 } else {
 //                    startActivity(new Intent(this, InstantDistributionActivity.class));
                 }

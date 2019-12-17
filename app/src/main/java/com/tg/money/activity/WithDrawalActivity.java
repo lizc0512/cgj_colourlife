@@ -155,7 +155,7 @@ public class WithDrawalActivity extends BaseActivity implements View.OnClickList
             String res = NumberUtils.returnPercent(persionalTax / 100.00f);
             tv_withdraw_point_feenum.setText(res);
             tv_withdraw_tqnum.setText("可提取金额:" + fpMoney);
-            tv_withdraw_note.setText("备注:");
+            tv_withdraw_note.setText("备注:遵循国家法律规定，提现至银行账户所需缴纳提现金额的" + res + "做为所得税，提现申请日期依据审批而定，节假日顺延");
         } else {
             isFpMoney = false;
         }
@@ -253,9 +253,15 @@ public class WithDrawalActivity extends BaseActivity implements View.OnClickList
                 }
                 break;
             case R.id.tv_withdraw_all:
-                et_withdrawal_money.getText().clear();
-                et_withdrawal_money.setText(tqMoney);
-                et_withdrawal_money.setSelection(tqMoney.length());
+                if ("point".equals(drawalType)) {
+                    et_withdrawal_money.getText().clear();
+                    et_withdrawal_money.setText(fpMoney);
+                    et_withdrawal_money.setSelection(fpMoney.length());
+                } else {
+                    et_withdrawal_money.getText().clear();
+                    et_withdrawal_money.setText(tqMoney);
+                    et_withdrawal_money.setSelection(tqMoney.length());
+                }
                 break;
         }
     }

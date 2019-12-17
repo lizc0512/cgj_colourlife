@@ -13,6 +13,7 @@ import com.jcodecraeer.xrecyclerview.XRecyclerView;
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.base.BaseActivity;
 import com.tg.coloursteward.baseModel.HttpResponse;
+import com.tg.coloursteward.util.DateUtils;
 import com.tg.coloursteward.util.GsonUtils;
 import com.tg.point.adapter.PointTransactionAdapter;
 import com.tg.point.entity.PointHistoryEntity;
@@ -104,13 +105,9 @@ public class PointTransactionListActivity extends BaseActivity implements View.O
                 int year = selectedDate.get(Calendar.YEAR) - 5;
                 beforeDate.set(Calendar.YEAR, year);
                 pvTime = new TimePickerView.Builder(this, (date, v1) -> {//选中事件回调
-                    time_start = date.getTime() / 1000;
                     tv_filter_month.setText(TimeUtil.getYearMonthToString(date.getTime()));
-                    Calendar calendar = Calendar.getInstance();
-                    calendar.setTime(date);
-                    int lastDay = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
-                    calendar.set(Calendar.DAY_OF_MONTH, lastDay);
-                    time_stop = calendar.getTimeInMillis() / 1000 + 24 * 3600 - 1;
+                    time_start = DateUtils.getFirstDay(date);
+                    time_stop = DateUtils.getEndDay(date);
                     page = 1;
                     rv_transaction.setLoadingMoreEnabled(true);
                     pointModel.getAccountFlowList(0, page, pano, time_start, time_stop, 0, true, PointTransactionListActivity.this);

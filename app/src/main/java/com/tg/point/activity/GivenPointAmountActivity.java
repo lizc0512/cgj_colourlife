@@ -1,6 +1,7 @@
 package com.tg.point.activity;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Message;
 import android.text.Editable;
@@ -35,6 +36,7 @@ import com.tg.point.entity.RealNameTokenEntity;
 import com.tg.point.model.NewUserModel;
 import com.tg.point.model.PointModel;
 import com.tg.point.view.CashierInputFilter;
+import com.youmai.hxsdk.utils.AppUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -251,7 +253,17 @@ public class GivenPointAmountActivity extends BaseActivity implements View.OnCli
                             break;
                         case "3"://未实名未设置支付密码
                         case "4"://未实名已设置支付密码
-                            DialogFactory.getInstance().showSingleDialog(this, "提示", "你还未实名认证，请前往彩之云APP实名认证后再次操作");
+                            DialogFactory.getInstance().showDoorDialog(this, new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    if (AppUtils.isApkInstalled(GivenPointAmountActivity.this, "cn.net.cyberway")) {
+                                        Intent it = new Intent(Intent.ACTION_VIEW, Uri.parse("colourlifeauth://web?linkURL=colourlife://proto?type=Information"));
+                                        startActivity(it);
+                                    } else {
+                                        AppUtils.launchAppDetail(GivenPointAmountActivity.this, "cn.net.cyberway", "");
+                                    }
+                                }
+                            }, null, 1, "您还未实名认证，请前往彩之云APP实名认证后再次操作", "去认证", null);
                             break;
                         default://1已实名已设置支付密码
                             showPayDialog();

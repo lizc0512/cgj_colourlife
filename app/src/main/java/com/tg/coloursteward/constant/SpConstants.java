@@ -24,6 +24,7 @@ public interface SpConstants {
         String MICROVIEWPAGERITEM = "microvpitem";
         String ACCOUNT_UUID = "account_uuid";
         String VERSION_NAME = "version_name";
+        String ISNAMEAUTH = "nameauth";
     }
 
     interface MicroContant {

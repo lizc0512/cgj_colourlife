@@ -140,20 +140,20 @@ public class GivenPointMobileActivity extends BaseActivity implements View.OnCli
                 startActivityForResult(intent, 200);
                 break;
             case R.id.btn_next_step:
+                givePhone = input_given_mobile.getText().toString().trim();
                 if (isColleag) {
-                    String keyword = input_given_mobile.getText().toString().trim();
-                    if (UserInfo.mobile.equals(keyword)) {
+                    if (UserInfo.mobile.equals(givePhone)) {
                         ToastUtil.showShortToast(GivenPointMobileActivity.this, "不能给自己赠送" + keyword_sign);
                         return;
                     }
-                    if (!TextUtils.isEmpty(keyword)) {
-                        pointModel.getCzyUser(3, keyword, GivenPointMobileActivity.this);
+                    if (!TextUtils.isEmpty(givePhone)) {
+                        pointModel.getUserInfor(1, givePhone, GivenPointMobileActivity.this);
                     } else {
                         ToastUtil.showShortToast(this, "输入内容不能为空");
                     }
                 } else {
                     if (givePhone.length() == 11) {
-                        pointModel.getUserInfor(1, givePhone, GivenPointMobileActivity.this);
+                        pointModel.getCzyUser(3, givePhone, GivenPointMobileActivity.this);
                     } else {
                         ToastUtil.showShortToast(this, "请输入11位手机号");
                     }

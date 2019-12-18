@@ -33,6 +33,9 @@ import com.tg.coloursteward.util.GsonUtils;
 import com.tg.coloursteward.util.ToastUtil;
 import com.tg.coloursteward.view.dialog.DialogFactory;
 import com.tg.point.activity.ChangePawdStyleActivity;
+import com.tg.point.activity.ChangePawdTwoStepActivity;
+import com.tg.point.entity.PointTransactionTokenEntity;
+import com.tg.point.model.PointModel;
 import com.tg.setting.adapter.UpdateAdapter;
 import com.tg.setting.entity.VersionEntity;
 import com.tg.setting.model.SettingModel;
@@ -77,12 +80,14 @@ public class SettingActivity extends BaseActivity implements OnClickListener, Ht
     private UpdateVerSionDialog updateDialog;
     private UpdateAdapter updateAdapter;
     private boolean isCheck = false;
+    private PointModel pointModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         settingModel = new SettingModel(this);
         userModel = new UserModel(this);
+        pointModel = new PointModel(this);
         initView();
         getVersion(false);
     }
@@ -184,7 +189,11 @@ public class SettingActivity extends BaseActivity implements OnClickListener, Ht
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.rl_setting_paypwd:
-                startActivity(new Intent(this, ChangePawdStyleActivity.class));
+                if (spUtils.getBooleanData(SpConstants.UserModel.ISNAMEAUTH, false)) {
+                    startActivity(new Intent(this, ChangePawdStyleActivity.class));
+                } else {
+                    pointModel.getTransactionToken(3, this);
+                }
                 break;
             case R.id.rl_setting_changepwd:
                 startActivity(new Intent(this, ModifiedPasswordActivity.class));
@@ -273,6 +282,37 @@ public class SettingActivity extends BaseActivity implements OnClickListener, Ht
                     Message msghome = new Message();
                     msghome.what = Contants.LOGO.CLEAR_HOMELIST;
                     EventBus.getDefault().post(msghome);
+                }
+                break;
+            case 3:
+                if (!TextUtils.isEmpty(result)) {
+                    PointTransactionTokenEntity pointTransactionTokenEntity = GsonUtils.gsonToBean(result, PointTransactionTokenEntity.class);
+                    PointTransactionTokenEntity.ContentBean contentBean = pointTransactionTokenEntity.getContent();
+                    String state = contentBean.getState();
+                    switch (state) {//1 已实名已设置支付密码2 已实名未设置支付密码3 未实名未设置支付密码4 未实名已设置支付密码
+                        case "2"://已实名未设置支付密码
+                            Intent intent = new Intent(this, ChangePawdTwoStepActivity.class);
+                            startActivity(intent);
+                            break;
+                        case "3"://未实名未设置支付密码
+                        case "4"://未实名已设置支付密码
+                            DialogFactory.getInstance().showDoorDialog(this, new OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    if (AppUtils.isApkInstalled(SettingActivity.this, "cn.net.cyberway")) {
+                                        Intent it = new Intent(Intent.ACTION_VIEW, Uri.parse("colourlifeauth://web?linkURL=colourlife://proto?type=Information"));
+                                        startActivity(it);
+                                    } else {
+                                        AppUtils.launchAppDetail(SettingActivity.this, "cn.net.cyberway", "");
+                                    }
+                                }
+                            }, null, 1, "您还未实名认证，请前往彩之云APP实名认证后再次操作", "去认证", null);
+                            break;
+                        default://1已实名已设置支付密码
+                            startActivity(new Intent(this, ChangePawdStyleActivity.class));
+                            spUtils.saveBooleanData(SpConstants.UserModel.ISNAMEAUTH, true);
+                            break;
+                    }
                 }
                 break;
         }

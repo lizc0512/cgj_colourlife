@@ -10,8 +10,16 @@ import android.widget.TextView;
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.base.BaseActivity;
 
-
-
+/**
+ * @name
+ * @class name：com.tg.point.activity;
+ * @class describe
+ * @anthor QQ:510906433
+ * @time 2019/12/12 15:46
+ * @change
+ * @chang time
+ * @class 设置支付密码类型选择页面
+ */
 public class ChangePawdStyleActivity extends BaseActivity implements View.OnClickListener {
     private ImageView mBack;
     private TextView mTitle;
@@ -49,13 +57,13 @@ public class ChangePawdStyleActivity extends BaseActivity implements View.OnClic
                 finish();
                 break;
             case R.id.change_paypawd_layout:
-                if (fastClick()){
+                if (fastClick()) {
                     Intent intent = new Intent(ChangePawdStyleActivity.this, ChangePawdOneStepActivity.class);
                     startActivity(intent);
                 }
                 break;
             case R.id.forget_paypawd_layout:
-                if (fastClick()){
+                if (fastClick()) {
                     Intent forget_intent = new Intent(ChangePawdStyleActivity.this, ForgetPayPawdActivity.class);
                     startActivity(forget_intent);
                 }

@@ -40,7 +40,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.tg.coloursteward.constant.UserMessageConstant.POINT_INPUT_PAYPAWD;
-import static com.tg.coloursteward.constant.UserMessageConstant.POINT_SET_PAYPAWD;
 
 /**
  * @name ${lizc}
@@ -61,6 +60,7 @@ public class WithDrawalActivity extends BaseActivity implements View.OnClickList
     private ImageView iv_base_back;
     private RelativeLayout rl_withdrawal_card;
     private TextView tv_withdraw_incomefee;
+    private TextView tv_withdraw_fee;
     private TextView tv_withdraw_feenum;
     private TextView tv_withdraw_tqnum;
     private TextView tv_withdraw_btn;
@@ -98,6 +98,7 @@ public class WithDrawalActivity extends BaseActivity implements View.OnClickList
     private boolean isFpMoney = false;
     private PointModel pointModel;
     private String pano;
+    private PointPasswordDialog pointPasswordDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,6 +117,7 @@ public class WithDrawalActivity extends BaseActivity implements View.OnClickList
         tv_base_title = findViewById(R.id.tv_base_title);
         iv_base_back = findViewById(R.id.iv_base_back);
         rl_withdrawal_card = findViewById(R.id.rl_withdrawal_card);
+        tv_withdraw_fee = findViewById(R.id.tv_withdraw_fee);
         tv_withdraw_feenum = findViewById(R.id.tv_withdraw_feenum);
         tv_withdraw_incomefee = findViewById(R.id.tv_withdraw_incomefee);
         tv_withdraw_tqnum = findViewById(R.id.tv_withdraw_tqnum);
@@ -192,7 +194,12 @@ public class WithDrawalActivity extends BaseActivity implements View.OnClickList
     }
 
     private void initData() {
-        moneyModel.getCashInfo(0, this);
+        if (!"point".equals(drawalType)) {
+            moneyModel.getCashInfo(0, this);
+        } else {
+            tv_withdraw_fee.setVisibility(View.GONE);
+            tv_withdraw_note.setVisibility(View.GONE);
+        }
         moneyModel.getCashAccount(1, split_type, split_target, general_uuid, this);
         moneyModel.getMyBank(2, 1, "10", true, this);
     }
@@ -247,6 +254,7 @@ public class WithDrawalActivity extends BaseActivity implements View.OnClickList
                             }
                         }
                     } catch (Exception e) {
+                        ToastUtil.showShortToast(this, "请输入有效提现金额");
                     }
                 } else {
                     ToastUtil.showShortToast(this, "请输入有效提现金额");
@@ -267,8 +275,12 @@ public class WithDrawalActivity extends BaseActivity implements View.OnClickList
     }
 
     private void showPayDialog() {
-        PointPasswordDialog pointPasswordDialog = new PointPasswordDialog(this);
-        pointPasswordDialog.show();
+        if (null == pointPasswordDialog) {
+            pointPasswordDialog = new PointPasswordDialog(this);
+            pointPasswordDialog.show();
+        } else {
+            pointPasswordDialog.show();
+        }
     }
 
     @Subscribe
@@ -276,7 +288,6 @@ public class WithDrawalActivity extends BaseActivity implements View.OnClickList
         final Message message = (Message) event;
         switch (message.what) {
             case POINT_INPUT_PAYPAWD://密码框输入密码
-            case POINT_SET_PAYPAWD: //设置支付密码成功 直接拿密码进行支付
                 String password = message.obj.toString();
                 pointModel.postCheckPwd(4, password, 3, this);
                 break;
@@ -369,7 +380,7 @@ public class WithDrawalActivity extends BaseActivity implements View.OnClickList
                 if (!TextUtils.isEmpty(result)) {
                     CheckPwdEntiy entiy = new CheckPwdEntiy();
                     entiy = GsonUtils.gsonToBean(result, CheckPwdEntiy.class);
-                    if (entiy.getContent().getRight_pwd().equals("1")) {
+                    if (entiy.getContent().getRight_pwd().equals("1") && !TextUtils.isEmpty(money)) {
                         if (!isFpMoney) {
                             moneyModel.postCashMoney(3, general_uuid, split_type, split_target, money, bankName,
                                     bankNo, userName, bankCode, this);
@@ -414,5 +425,13 @@ public class WithDrawalActivity extends BaseActivity implements View.OnClickList
         userName = dataBean.getName();
         GlideUtils.loadImageView(this, dataBean.getBank_logo(), iv_withdrawal_mycard);
         tv_withdrawal_mycard.setText(dataBean.getBank_name() + "(" + sn + ")");
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (EventBus.getDefault().isRegistered(WithDrawalActivity.this)) {
+            EventBus.getDefault().unregister(WithDrawalActivity.this);
+        }
     }
 }

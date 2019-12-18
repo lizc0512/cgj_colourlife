@@ -51,14 +51,17 @@ public class PointPasswordDialog {
             }
         });
         iv_close_dialog.setOnClickListener(v -> dismiss());
-        mDialog.setOnDismissListener(dialog -> SoftKeyboardUtils.hideSoftKeyboard(activity,iv_close_dialog));
+        mDialog.setOnDismissListener(dialog -> SoftKeyboardUtils.hideSoftKeyboard(activity, iv_close_dialog));
     }
 
     public void show() {
-        mDialog.show();
-        new Handler().postDelayed(() -> {
-            grid_pay_pawd.performClick();
-        }, 300);
+        if (null != mDialog && !mDialog.isShowing()) {
+            mDialog.show();
+            grid_pay_pawd.clearPassword();
+            new Handler().postDelayed(() -> {
+                grid_pay_pawd.performClick();
+            }, 300);
+        }
 
     }
 

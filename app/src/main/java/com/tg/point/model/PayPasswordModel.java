@@ -25,7 +25,7 @@ import java.util.Map;
  * 描述:
  **/
 public class PayPasswordModel extends BaseModel {
-    private String addPawdUrl = "/app/password/addPayPwd";//设置用户新支付密码
+    private String addPawdUrl = "/app/employee/password/addPayPwd";//设置用户新支付密码
     private String setPawdUrl = "/app/employee/password/setPayPwd";//修改用户支付密码
     private String checkPawdUrl = "/app/employee/password/setPayPwd";//修改用户支付密码
     private String getIdentityUrl = "/app/employee/checkIdentity";//获取用户是否实名

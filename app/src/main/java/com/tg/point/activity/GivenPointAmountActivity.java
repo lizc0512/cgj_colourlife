@@ -263,7 +263,7 @@ public class GivenPointAmountActivity extends BaseActivity implements View.OnCli
                                         AppUtils.launchAppDetail(GivenPointAmountActivity.this, "cn.net.cyberway", "");
                                     }
                                 }
-                            }, null, 1, "您还未实名认证，请前往彩之云APP实名认证后再次操作", "去认证", null);
+                            }, null, 1, "您的账号尚未实名，请前往彩之云APP进行实名认证", "去认证", null);
                             break;
                         default://1已实名已设置支付密码
                             showPayDialog();

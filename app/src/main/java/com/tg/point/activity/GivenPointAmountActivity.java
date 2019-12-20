@@ -14,10 +14,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.tencent.authsdk.AuthConfig;
-import com.tencent.authsdk.AuthSDKApi;
-import com.tencent.authsdk.IDCardInfo;
-import com.tencent.authsdk.callback.IdentityCallback;
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.base.BaseActivity;
 import com.tg.coloursteward.baseModel.HttpResponse;
@@ -287,8 +283,6 @@ public class GivenPointAmountActivity extends BaseActivity implements View.OnCli
                     try {
                         RealNameTokenEntity entity = GsonUtils.gsonToBean(result, RealNameTokenEntity.class);
                         RealNameTokenEntity.ContentBean bean = entity.getContent();
-                        AuthConfig.Builder configBuilder = new AuthConfig.Builder(bean.getBizToken(), R.class.getPackage().getName());
-                        AuthSDKApi.startMainPage(this, configBuilder.build(), mListener);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -346,18 +340,4 @@ public class GivenPointAmountActivity extends BaseActivity implements View.OnCli
         PointPasswordDialog pointPasswordDialog = new PointPasswordDialog(GivenPointAmountActivity.this);
         pointPasswordDialog.show();
     }
-
-    /**
-     * 监听实名认证返回
-     */
-    private IdentityCallback mListener = data -> {
-        boolean identityStatus = data.getBooleanExtra(AuthSDKApi.EXTRA_IDENTITY_STATUS, false);
-        if (identityStatus) {//identityStatus true 已实名
-            IDCardInfo idCardInfo = data.getExtras().getParcelable(AuthSDKApi.EXTRA_IDCARD_INFO);
-            if (idCardInfo != null) {//身份证信息   idCardInfo.getIDcard();//身份证号码
-                realName = idCardInfo.getName();//姓名
-                newUserModel.submitRealName(6, idCardInfo.getIDcard(), realName, this);//提交实名认证
-            }
-        }
-    };
 }

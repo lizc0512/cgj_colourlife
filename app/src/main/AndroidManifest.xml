@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.tg.coloursteward">
 
-    <uses-sdk tools:overrideLibrary="com.intelspace.library" />
+    <uses-sdk tools:overrideLibrary="com.intelspace.library,cn.sharesdk.onekeyshare" />
 
     <permission
         android:name="com.tg.coloursteward.permission.JPUSH_MESSAGE"

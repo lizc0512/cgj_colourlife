@@ -98,8 +98,6 @@ public class GivenPointAmountActivity extends BaseActivity implements View.OnCli
         btn_given.setEnabled(false);
         mBack.setOnClickListener(this);
         btn_given.setOnClickListener(this);
-        keyword_sign = spUtils.getStringData(SpConstants.storage.COLOUR_WALLET_KEYWORD_SIGN, "饭票");
-        mTitle.setText(keyword_sign + "赠送");
         ed_given_amount.addTextChangedListener(this);
         Intent intent = getIntent();
         givenMobile = intent.getStringExtra(GIVENMOBILE);
@@ -108,6 +106,8 @@ public class GivenPointAmountActivity extends BaseActivity implements View.OnCli
         dest_account = intent.getStringExtra(USERID);
         type = intent.getStringExtra(TYPE);
 //        last_amount = last_amount * 1.0f / 100;
+        keyword_sign = spUtils.getStringData(SpConstants.storage.COLOUR_WALLET_KEYWORD_SIGN, "饭票");
+        mTitle.setText(keyword_sign + "赠送");
         pano = intent.getStringExtra(PointTransactionListActivity.POINTTPANO);
         pointModel = new PointModel(GivenPointAmountActivity.this);
         pointModel.getAccountBalance(1, pano, GivenPointAmountActivity.this);

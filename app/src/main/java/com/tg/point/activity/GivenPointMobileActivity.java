@@ -50,6 +50,7 @@ import static com.tg.point.activity.PointTransactionListActivity.POINTTPANO;
 public class GivenPointMobileActivity extends BaseActivity implements View.OnClickListener, TextWatcher, HttpResponse {
 
 
+    public static final String GIVENNAME = "givenname";
     private ImageView mBack;
     private TextView mTitle;
     private TextView user_top_view_right;
@@ -68,6 +69,7 @@ public class GivenPointMobileActivity extends BaseActivity implements View.OnCli
     private boolean isColleag;
     private RecyclerView rv_point_mobile;
     private GivenMobileAdapter adapter;
+    private String givenName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,8 +88,6 @@ public class GivenPointMobileActivity extends BaseActivity implements View.OnCli
         mBack.setOnClickListener(this);
         btn_next_step.setEnabled(false);
         btn_next_step.setOnClickListener(this);
-        keyword_sign = spUtils.getStringData(SpConstants.storage.COLOUR_WALLET_KEYWORD_SIGN, "饭票");
-        mTitle.setText(keyword_sign + "赠送");
         user_top_view_right.setVisibility(View.GONE);
         user_top_view_right.setText("历史记录");
         user_top_view_right.setOnClickListener(this::onClick);
@@ -96,6 +96,13 @@ public class GivenPointMobileActivity extends BaseActivity implements View.OnCli
         pano = intent.getStringExtra(POINTTPANO);
         givePhone = intent.getStringExtra(GIVENMOBILE);
         type = intent.getStringExtra(TYPE);
+        givenName = intent.getStringExtra(GIVENNAME);
+        keyword_sign = spUtils.getStringData(SpConstants.storage.COLOUR_WALLET_KEYWORD_SIGN, "饭票");
+        if (!TextUtils.isEmpty(givenName)) {
+            mTitle.setText(givenName + "赠送");
+        } else {
+            mTitle.setText(keyword_sign + "赠送");
+        }
         pointModel = new PointModel(GivenPointMobileActivity.this);
         pointModel.getAccountLimit(0, pano, GivenPointMobileActivity.this);
         if (!EventBus.getDefault().isRegistered(GivenPointMobileActivity.this)) {

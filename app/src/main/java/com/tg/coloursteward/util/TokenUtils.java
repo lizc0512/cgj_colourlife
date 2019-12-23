@@ -564,7 +564,7 @@ public class TokenUtils {
     /**
      * 获取当前手机系统版本号
      *
-     * @return  系统版本号
+     * @return 系统版本号
      */
     public static int getSystemVersion() {
         return Integer.parseInt(Build.VERSION.RELEASE);

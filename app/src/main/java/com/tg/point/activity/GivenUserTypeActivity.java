@@ -29,6 +29,7 @@ public class GivenUserTypeActivity extends BaseActivity implements View.OnClickL
     private RelativeLayout rl_usertype_czyuser;
     private String mobilePhone;
     private String mPano;
+    private String givenName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +46,7 @@ public class GivenUserTypeActivity extends BaseActivity implements View.OnClickL
         if (null != getIntent()) {
             mobilePhone = getIntent().getStringExtra(GivenPointAmountActivity.GIVENMOBILE);
             mPano = getIntent().getStringExtra(POINTTPANO);
+            givenName = getIntent().getStringExtra("givenname");
         }
     }
 
@@ -69,6 +71,7 @@ public class GivenUserTypeActivity extends BaseActivity implements View.OnClickL
                 intent.putExtra(GivenPointAmountActivity.GIVENMOBILE, mobilePhone);
                 intent.putExtra(POINTTPANO, mPano);
                 intent.putExtra(GivenPointAmountActivity.TYPE, "cgj-cgj");
+                intent.putExtra(GivenPointMobileActivity.GIVENNAME, givenName);
                 startActivity(intent);
                 break;
             case R.id.rl_usertype_czyuser:
@@ -76,6 +79,7 @@ public class GivenUserTypeActivity extends BaseActivity implements View.OnClickL
                 it.putExtra(GivenPointAmountActivity.GIVENMOBILE, mobilePhone);
                 it.putExtra(POINTTPANO, mPano);
                 it.putExtra(GivenPointAmountActivity.TYPE, "cgj-czy");
+                it.putExtra(GivenPointMobileActivity.GIVENNAME, givenName);
                 startActivity(it);
                 break;
         }

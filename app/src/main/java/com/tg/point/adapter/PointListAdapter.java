@@ -81,12 +81,14 @@ public class PointListAdapter extends RecyclerView.Adapter<PointListAdapter.Poin
                 Intent it = new Intent(mContext, GivenPointMobileActivity.class);
                 it.putExtra(POINTTPANO, listBean.getPano());
                 it.putExtra(GivenPointAmountActivity.TYPE, "cgj-czy");
+                it.putExtra(GivenPointMobileActivity.GIVENNAME, listBean.getName());
                 mContext.startActivity(it);
             } else {
                 Context mContext = viewHolder.itemView.getContext();
                 Intent intent = new Intent(mContext, GivenUserTypeActivity.class);
                 intent.putExtra(GivenPointAmountActivity.GIVENMOBILE, mobilePhone);
                 intent.putExtra(POINTTPANO, listBean.getPano());
+                intent.putExtra("givenname", listBean.getName());
                 mContext.startActivity(intent);
             }
         });

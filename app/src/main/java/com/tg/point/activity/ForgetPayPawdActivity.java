@@ -18,6 +18,7 @@ import com.tg.coloursteward.base.BaseActivity;
 import com.tg.coloursteward.baseModel.HttpResponse;
 import com.tg.coloursteward.constant.UserMessageConstant;
 import com.tg.coloursteward.util.GsonUtils;
+import com.tg.coloursteward.util.NumberUtils;
 import com.tg.coloursteward.util.ToastUtil;
 import com.tg.coloursteward.view.ClearEditText;
 import com.tg.point.entity.CheckPwdEntiy;
@@ -114,8 +115,8 @@ public class ForgetPayPawdActivity extends BaseActivity implements View.OnClickL
                 break;
             case R.id.tv_get_code:
                 mobile = et_user_phone.getText().toString().trim();
-                if (TextUtils.isEmpty(mobile)) {
-                    ToastUtil.showShortToast(this, "手机号不能为空");
+                if (!NumberUtils.IsPhoneNumber(mobile)) {
+                    ToastUtil.showShortToast(this, "请输入正确的手机号");
                     return;
                 }
                 if (fastClick()) {

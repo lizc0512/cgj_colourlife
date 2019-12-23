@@ -17,7 +17,7 @@
             android:id="@+id/progressBar"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            app:progress_color="@color/white" />
+            app:progress_color_rotate="@color/white" />
 
         <TextView
             android:id="@+id/dialog_hint"

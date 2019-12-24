@@ -64,7 +64,6 @@ public class SharedPreferencesTools {
         SharedPreferencesUtils.getInstance().clear();
         Tools.savePassWord(con, "");//保存密码
         Tools.saveStringValue(con, JSFPNUM, "");
-        Tools.saveAccess_token(con, "");
         Tools.saveStringValue(con, Contants.storage.SKINCODE, "");//保存皮肤包
         Tools.savePassWordMD5(con, "");//保存MD5密码
         Tools.saveAccess_token2(con, "");
@@ -72,18 +71,11 @@ public class SharedPreferencesTools {
         Tools.savetokenUserInfo(con, "");
         Tools.saveRefresh_token2Time(con, 0l);
         Tools.saveExpires_in(con, 0l);
-        Tools.saveCurrentTime(con, 0);//获取token值(时间)
-        Tools.saveCurrentTime2(con, 0);//获取token值(时间)
-        Tools.saveCommonInfo(con, "");//常用应用
-        Tools.saveElseInfo(con, "");//其他应用
-        Tools.saveHomeList(con, "");//首页列表
         Tools.saveStringValue(con, Contants.storage.TICKET, "");//我的饭票
         Tools.saveStringValue(con, Contants.storage.AREAHOME, "0");//在管面积
         Tools.saveStringValue(con, Contants.storage.STOCKHOME, "0");//集团股票
         Tools.saveStringValue(con, Contants.storage.TICKETHOME, "0");//我的饭票（首页）
         Tools.saveStringValue(con, Contants.storage.COMMUNITYHOME, "0");//在管小区
-//		Tools.saveStringValue(con,Contants.storage.PERFORMANCEHOME,"无");//绩效评分
-        Tools.saveStringValue(con, Contants.storage.PERFORMANCEHOME, "0.00");//绩效评分
         Tools.saveStringValue(con, Contants.storage.ACCOUNTHOME, "0");//即时分配
         Tools.saveStringValue(con, Contants.storage.SKINCODE, "");//皮肤包
         Tools.saveStringValue(con, Contants.storage.APPAUTH, "");//多租户应用token

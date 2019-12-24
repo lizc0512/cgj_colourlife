@@ -9,8 +9,6 @@ import com.tg.coloursteward.net.GetTwoRecordListener;
 import com.tg.coloursteward.serice.HomeService;
 import com.tg.coloursteward.view.dialog.ToastFactory;
 
-import java.util.Date;
-
 /**
  * 应用授权判断时间是否过期
  */
@@ -42,11 +40,6 @@ public class AuthTimeUtils {
 
                     @Override
                     public void onFinish(String openID, String accessToken, String Expire) {
-                        Date dt = new Date();
-                        Long time = dt.getTime();
-                        Tools.saveOpenID(mActivity, openID);
-                        Tools.saveAccessToken(mActivity, accessToken);
-                        Tools.saveCurrentTime(mActivity, time);
                         String str = "?";
                         String URL;
                         if (url.contains(str)) {//Url有问号
@@ -71,11 +64,6 @@ public class AuthTimeUtils {
 
                     @Override
                     public void onFinish(String username, String accessToken, String Expire) {
-                        Date dt = new Date();
-                        Long time = dt.getTime();
-                        Tools.saveAccess_token(mActivity, accessToken);
-                        Tools.saveCurrentTime2(mActivity, time);
-                        Tools.saveExpiresTime2(mActivity, Long.parseLong(Expire));
                         String str = "?";
                         String URL;
                         if (url.contains(str)) {//Url有问号
@@ -90,7 +78,6 @@ public class AuthTimeUtils {
 
                     @Override
                     public void onFailed(String Message) {
-                        ToastFactory.showToast(mActivity, Message);
                     }
                 });
             } else {

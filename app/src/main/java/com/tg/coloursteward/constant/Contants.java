@@ -126,7 +126,6 @@ public interface Contants {
         String STOCKHOME = "stock_home";
         String TICKETHOME = "ticket_home";
         String COMMUNITYHOME = "community_home";
-        String PERFORMANCEHOME = "performance_home";
         String ACCOUNTHOME = "account_home";
         String SKINCODE = "skin_code";//皮肤包
         String CORPID = "corp_id";//租户Id

@@ -4,13 +4,10 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager.NameNotFoundException;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
 import android.graphics.BitmapFactory;
-import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.BaseColumns;
@@ -22,8 +19,6 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
 
 import com.tg.coloursteward.BuildConfig;
@@ -48,8 +43,6 @@ import java.net.HttpURLConnection;
 import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.net.URL;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -69,26 +62,9 @@ public class Tools {
     private static int TYPE_APP = 4;
     private static int TYPE_OTHERS = 9;
     public static final String PREFERENCES_NAME = "park_cache_map";
-    private static String[] propertys = {"ro.boot.serialno", "ro.serialno"};
     public static final String KEY_USER_NAME = "user_name";
-    public static final String KEY_USER_TOKEN = "user_token";
-    public static final String KEY_GPS_CITY_NAME = "gps_city";
-    public static final String KEY_GPS_PROVINCE_NAME = "gps_province";
-    public static final String KEY_TIME_STAMP = "time_stamp";
-    public static final String KEY_JPUSH_ALIAS = "jpush_alias";
     private static DisplayMetrics metrics;
-    private static Animation progressAnim;
-    private static String deviceSN = null;
     public static Context mContext;
-    public static boolean setAlias = false;
-    //缓存常用门禁列表
-    public final static String CommonDoorList = "CommonDoorList";
-    //缓存开门记录
-    public final static String OpenLogList = "OpenLogList";
-    //缓存开门记录
-    public final static String CZY_CommunityList = "CZY_CommunityList";
-    // 保存JPush信息条数
-    public final static String Jpush_num = "JPUSH_NUM";
     public final static String SHAREPREFENCENAME = "WeiTown";
 
     public static DisplayMetrics getDisplayMetrics(Context context) {
@@ -96,28 +72,6 @@ public class Tools {
             metrics = context.getResources().getDisplayMetrics();
         }
         return metrics;
-    }
-
-
-    public static int getStatusBarHeight(Activity activity) {
-        Rect frame = new Rect();
-        activity.getWindow().getDecorView().getWindowVisibleDisplayFrame(frame);
-        return frame.top;
-    }
-
-    public static void initProgressAnim(Context con) {
-        progressAnim = AnimationUtils.loadAnimation(con, R.anim.progess_anim);
-    }
-
-    public static Animation getProgressAnim(Context con) {
-        if (progressAnim == null) {
-            initProgressAnim(con);
-        }
-        return progressAnim;
-    }
-
-    public static String getRootPath(Context con) {
-        return con.getFilesDir() + "/park";
     }
 
     public static void call(Context context, String phoneNumber) {
@@ -673,21 +627,6 @@ public class Tools {
     }
 
     /**
-     * 保存首页消息列表
-     *
-     * @param con
-     * @return
-     */
-    public static String getHomeList(Context con) {
-        return getSysShare(con).getString("home_list", "");
-    }
-
-    public static void saveHomeList(Context con, String time) {
-        getSysShare(con).edit().
-                putString("home_list", time).commit();
-    }
-
-    /**
      * 保存收藏联系人列表
      *
      * @param con
@@ -700,103 +639,6 @@ public class Tools {
     public static void saveLinkManList(Context con, String time) {
         getSysShare(con).edit().
                 putString("link_man", time).commit();
-    }
-
-    /**
-     * 保存CurrentTime
-     *
-     * @param con
-     * @return
-     */
-    public static long getCurrentTime(Context con) {
-        return getSysShare(con).getLong("CurrentTime", -1);
-    }
-
-    public static void saveCurrentTime(Context con, long time) {
-        getSysShare(con).edit().
-                putLong("CurrentTime", time).commit();
-    }
-
-    /**
-     * 保存有效期（auth2.0）
-     *
-     * @param con
-     * @return
-     */
-    public static long getExpiresTime2(Context con) {
-        return getSysShare(con).getLong("ExpiresTime2", -1);
-    }
-
-    public static void saveExpiresTime2(Context con, long time) {
-        getSysShare(con).edit().
-                putLong("ExpiresTime2", time).commit();
-    }
-
-    /**
-     * 保存CurrentTime2.0
-     *
-     * @param con
-     * @return
-     */
-    public static long getCurrentTime2(Context con) {
-        return getSysShare(con).getLong("CurrentTime2", -1);
-    }
-
-    public static void saveCurrentTime2(Context con, long time) {
-        getSysShare(con).edit().
-                putLong("CurrentTime2", time).commit();
-    }
-
-    /**
-     * 保存OpenID值
-     *
-     * @param con
-     * @return
-     */
-    public static String getOpenID(Context con) {
-        return getSysShare(con).getString("OpenID", "");
-    }
-
-    public static void saveOpenID(Context con, String time) {
-        getSysShare(con).edit().
-                putString("OpenID", time).commit();
-    }
-
-    /**
-     * 保存AccessToken值
-     *
-     * @param con
-     */
-    public static String getAccessToken(Context con) {
-        return getSysShare(con).getString("AccessToken", "");
-    }
-
-    public static void saveAccessToken(Context con, String time) {
-        getSysShare(con).edit().
-                putString("AccessToken", time).commit();
-    }
-
-    /**
-     * 保存Access_token值
-     *
-     * @param con
-     */
-    public static String getAccess_token(Context con) {
-        return getSysShare(con).getString("Access_token", "");
-    }
-
-    public static void saveAccess_token(Context con, String time) {
-        getSysShare(con).edit().
-                putString("Access_token", time).commit();
-    }
-
-    public static String getCommonName(Context con) {
-        return getSysShare(con).getString("common", "");
-    }
-
-    public static void saveCommonInfo(Context con, String time) {
-        getSysShare(con).edit().
-                putString("common", time).commit();
     }
 
     /**
@@ -853,20 +695,6 @@ public class Tools {
 
     public static String getOrgId(Context con) {
         return getSysShare(con).getString("orgId_new", "");
-    }
-
-    /**
-     * 保存饭票明细数据
-     *
-     * @param con
-     */
-    public static void saveFpDetails(Context con, String FpDetails) {
-        getSysShare(con).edit().
-                putString("FpDetails", FpDetails).commit();
-    }
-
-    public static String getFpDetails(Context con) {
-        return getSysShare(con).getString("FpDetails", "");
     }
 
     /**
@@ -969,42 +797,6 @@ public class Tools {
     }
 
     /**
-     * 保存彩之云用户ID
-     *
-     * @return 是否保存成功
-     */
-    public static boolean saveCZYID(Context context,
-                                    String ID) {
-        getSysShare(context).edit().
-                putString("CZYID", ID).commit();
-        return true;
-
-    }
-
-    /**
-     * 获取彩之云用户ID
-     *
-     * @param context
-     * @return 记住实体
-     */
-    public static String getCZYID(Context context) {
-        return getSysShare(context).getString("CZYID", "");
-    }
-
-    /**
-     * 保存彩之云小区ID
-     *
-     * @return 是否保存成功
-     */
-    public static boolean saveCZY_Community_ID(Context context,
-                                               String ID) {
-        getSysShare(context).edit().
-                putString("CZY_Community_ID", ID).commit();
-        return true;
-
-    }
-
-    /**
      * 验证数字
      *
      * @return 如果是符合格式的字符串, 返回 <b>true </b>,否则为 <b>false </b>
@@ -1012,28 +804,6 @@ public class Tools {
     public static boolean IsIntNumber(String str) {
         String regex = "^\\+?[0-9][0-9]*$";
         return str.matches(regex);
-    }
-
-    public static int getAppVersion(Context context) {
-        try {
-            PackageInfo info = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
-            return info.versionCode;
-        } catch (NameNotFoundException e) {
-            e.printStackTrace();
-        }
-        return 1;
-    }
-
-    public static String hashKeyForDisk(String key) {
-        String cacheKey;
-        try {
-            final MessageDigest mDigest = MessageDigest.getInstance("MD5");
-            mDigest.update(key.getBytes());
-            cacheKey = bytesToHexString(mDigest.digest());
-        } catch (NoSuchAlgorithmException e) {
-            cacheKey = String.valueOf(key.hashCode());
-        }
-        return cacheKey;
     }
 
     private static String bytesToHexString(byte[] bytes) {

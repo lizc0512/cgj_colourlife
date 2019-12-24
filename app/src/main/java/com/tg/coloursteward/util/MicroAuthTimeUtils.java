@@ -3,10 +3,8 @@ package com.tg.coloursteward.util;
 import android.app.Activity;
 import android.text.TextUtils;
 
-import com.tg.coloursteward.info.UserInfo;
 import com.tg.coloursteward.net.GetTwoRecordListener;
 import com.tg.coloursteward.serice.HomeService;
-import com.tg.coloursteward.view.dialog.ToastFactory;
 
 import java.util.Date;
 
@@ -18,104 +16,28 @@ public class MicroAuthTimeUtils {
     private Activity mActivity;
     private HomeService homeService;
 
-    public void IsAuthTime(Activity mActivity, final String url,
-                           String clientCode, String oauthType, String developerCode, final String param) {
+    public void IsAuthTime(Activity mActivity, final String url, String oauthType, final String param) {
         this.mActivity = mActivity;
         if (url.startsWith("http")) {
-            getAuth(url, clientCode, oauthType, developerCode, param);
+            getAuth(url, oauthType, param);
         } else {
             LinkParseUtil.parse(mActivity, url, "");
         }
-
     }
 
     /**
      * 应用授权
      *
      * @param url
-     * @param clientCode
-     * @param oauthType
-     * @param developerCode 0：无授权，1：auth1，2：auth2，3：oauth2.0授权，4：原生js授权，5：支持所有授权方式
+     * @param oauthType 0：无授权，1：auth1，2：auth2，3：oauth2.0授权，4：原生js授权，5：支持所有授权方式
      */
-    private void getAuth(final String url,
-                         String clientCode, String oauthType, String developerCode, final String param) {
-        Date dt = new Date();
-        Long time = dt.getTime();
-        long currentTime = Tools.getCurrentTime(mActivity);
-        long currentTime2 = Tools.getCurrentTime2(mActivity);
-        long ExpiresTime2 = Tools.getExpiresTime2(mActivity);
-        String openID = Tools.getOpenID(mActivity);
-        String accessToken = Tools.getAccessToken(mActivity);
-        String access_token = Tools.getAccess_token(mActivity);
-        if (StringUtils.isNotEmpty(openID) && StringUtils.isNotEmpty(accessToken) || StringUtils.isNotEmpty(access_token)) {
-            Long nineHours = 1000 * 60 * 60 * 1L;
-            if (!TextUtils.isEmpty(oauthType)) {
-                if ("1".equals(oauthType))//oauth1认证
-                {
-                    if (time - currentTime <= nineHours) {//判断保存时间是否超过9小时，超过则过期，需要重新获取
-                        String str = "?";
-                        String URL;
-                        if (url.contains(str)) {//Url有问号
-                            URL = url + "&openID=" + openID + "&accessToken=" + accessToken + param;
-                        } else {
-                            URL = url + "?openID=" + openID + "&accessToken=" + accessToken + param;
-                        }
-                        LinkParseUtil.parse(mActivity, oauthType, URL, "");
-                    } else {
-                        getAuthData(url, clientCode, oauthType, developerCode, param);
-                    }
-                } else if ("0".equals(oauthType)) {//0：无授权
-                    LinkParseUtil.parse(mActivity, oauthType, url, "");
-                } else if ("2".equals(oauthType)) {//2：auth2
-                    if (time - currentTime2 <= ExpiresTime2 * 1000) {//判断保存时间是否超过9小时，超过则过期，需要重新获取
-                        String str = "?";
-                        String URL;
-                        if (url.contains(str)) {//Url有问号
-                            URL = url + "&username=" + UserInfo.employeeAccount + "&access_token=" + access_token + param;
-                        } else {
-                            URL = url + "?username=" + UserInfo.employeeAccount + "&access_token=" + access_token + param;
-                        }
-                        LinkParseUtil.parse(mActivity, oauthType, URL, "");
-                    } else {
-                        getAuthData(url, clientCode, oauthType, developerCode, param);
-                    }
-                } else if ("3".equals(oauthType)) {//3：oauth2.0授权，
-                    LinkParseUtil.parse(mActivity, oauthType, url, "");
-                } else if ("4".equals(oauthType)) {//4：原生js授权
-                    LinkParseUtil.parse(mActivity, oauthType, url, "");
-                } else if ("5".equals(oauthType)) {//5：支持所有授权方式
-                    if (time - currentTime2 <= ExpiresTime2 * 1000) {//判断保存时间是否超过9小时，超过则过期，需要重新获取
-                        String str = "?";
-                        String URL;
-                        if (url.contains(str)) {//Url有问号
-                            URL = url + "&username=" + UserInfo.employeeAccount + "&access_token=" + access_token + param;
-                        } else {
-                            URL = url + "?username=" + UserInfo.employeeAccount + "&access_token=" + access_token + param;
-                        }
-                        LinkParseUtil.parse(mActivity, oauthType, URL, "");
-                    } else {
-                        getAuthData(url, clientCode, oauthType, developerCode, param);
-                    }
-                } else {
-                    LinkParseUtil.parse(mActivity, url, "");
-                }
-            } else {
-                LinkParseUtil.parse(mActivity, url, "");
-            }
-        } else {
-            getAuthData(url, clientCode, oauthType, developerCode, param);
-        }
-    }
-
-    private void getAuthData(final String url,
-                             String clientCode, String oauthType, String developerCode, final String param) {
+    private void getAuth(final String url, String oauthType, final String param) {
         if (homeService == null) {
             homeService = new HomeService(mActivity);
         }
         if (!TextUtils.isEmpty(oauthType)) {
-            if ("1".equals(oauthType))//oauth1认证
-            {
-                homeService.getAuth(clientCode, new GetTwoRecordListener<String, String>() {
+            if ("1".equals(oauthType)) {//oauth1认证
+                homeService.getAuth(new GetTwoRecordListener<String, String>() {
 
                     @Override
                     public void onFinish(String openID, String accessToken, String Expire) {
@@ -136,13 +58,12 @@ public class MicroAuthTimeUtils {
 
                     @Override
                     public void onFailed(String Message) {
-                        ToastFactory.showToast(mActivity, Message);
                     }
                 });
-            } else if ("0".equals(oauthType)) {
-                LinkParseUtil.parse(mActivity, url, "");
-            } else if ("2".equals(oauthType)) {//oauth2认证
-                homeService.getAuth2(developerCode, new GetTwoRecordListener<String, String>() {
+            } else if ("0".equals(oauthType)) {//0：无授权
+                LinkParseUtil.parse(mActivity, oauthType, url, "");
+            } else if ("2".equals(oauthType)) {//2：auth2
+                homeService.getAuth2(new GetTwoRecordListener<String, String>() {
 
                     @Override
                     public void onFinish(String username, String accessToken, String Expire) {
@@ -163,7 +84,6 @@ public class MicroAuthTimeUtils {
 
                     @Override
                     public void onFailed(String Message) {
-                        ToastFactory.showToast(mActivity, Message);
                     }
                 });
             } else if ("3".equals(oauthType)) {//3：oauth2.0授权，
@@ -171,7 +91,7 @@ public class MicroAuthTimeUtils {
             } else if ("4".equals(oauthType)) {//4：原生js授权
                 LinkParseUtil.parse(mActivity, oauthType, url, "");
             } else if ("5".equals(oauthType)) {//5：支持所有授权方式
-                homeService.getAuth2(developerCode, new GetTwoRecordListener<String, String>() {
+                homeService.getAuth2(new GetTwoRecordListener<String, String>() {
 
                     @Override
                     public void onFinish(String username, String accessToken, String Expire) {
@@ -192,7 +112,6 @@ public class MicroAuthTimeUtils {
 
                     @Override
                     public void onFailed(String Message) {
-                        ToastFactory.showToast(mActivity, Message);
                     }
                 });
             } else {

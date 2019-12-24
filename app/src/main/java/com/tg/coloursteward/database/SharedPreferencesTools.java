@@ -64,6 +64,7 @@ public class SharedPreferencesTools {
         SharedPreferencesUtils.getInstance().clear();
         Tools.savePassWord(con, "");//保存密码
         Tools.saveStringValue(con, JSFPNUM, "");
+        Tools.saveAccess_token(con, "");
         Tools.saveStringValue(con, Contants.storage.SKINCODE, "");//保存皮肤包
         Tools.savePassWordMD5(con, "");//保存MD5密码
         Tools.saveAccess_token2(con, "");

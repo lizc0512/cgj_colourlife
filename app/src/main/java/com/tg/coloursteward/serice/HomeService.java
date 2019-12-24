@@ -1,126 +1,125 @@
 package com.tg.coloursteward.serice;
 
-import android.content.ContentValues;
+import android.app.Activity;
 import android.content.Context;
+import android.text.TextUtils;
 
-import com.tg.coloursteward.constant.Contants;
+import com.tg.coloursteward.baseModel.HttpResponse;
+import com.tg.coloursteward.constant.SpConstants;
 import com.tg.coloursteward.info.UserInfo;
-import com.tg.coloursteward.net.DES;
+import com.tg.coloursteward.model.HomeModel;
 import com.tg.coloursteward.net.GetTwoRecordListener;
 import com.tg.coloursteward.net.HttpTools;
-import com.tg.coloursteward.net.MD5;
-import com.tg.coloursteward.net.RequestParams;
+import com.tg.coloursteward.util.SharedPreferencesUtils;
 import com.tg.coloursteward.util.Tools;
-import com.youmai.hxsdk.http.IGetListener;
-import com.youmai.hxsdk.http.OkHttpConnector;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.HashMap;
-
-import static com.tg.coloursteward.net.HttpTools.getTime;
-
-public class HomeService {
+public class HomeService implements HttpResponse {
     public Context context;
+    private HomeModel homeModel;
+    private GetTwoRecordListener listener;
 
-    public HomeService(Context context) {
+    public HomeService(Activity context) {
         this.context = context;
+        homeModel = new HomeModel(context);
     }
 
     /**
      * 获取用户应用权限
      */
-    public void getAuth(String clientCode, final GetTwoRecordListener<String, String> listener) {
+    public void getAuth(final GetTwoRecordListener<String, String> mListener) {
         String username = UserInfo.employeeAccount;
         String md5_pwd = Tools.getPassWordMD5(context);
-        String ts = getTime();
-        String Sign = "";
-        try {
-            Sign = MD5.getMd5Value(DES.APP_ID + ts + DES.TOKEN + "false").toLowerCase();
-        } catch (Exception e) {
-            e.printStackTrace();
+        this.listener = mListener;
+        Long nowTime = System.currentTimeMillis();
+        String openID = SharedPreferencesUtils.getInstance().getStringData(SpConstants.accessToken.authOpenId, "");
+        long saveCurrent = SharedPreferencesUtils.getInstance().getLongData(SpConstants.accessToken.authCurrentTime, 0l);
+        long expiress = SharedPreferencesUtils.getInstance().getLongData(SpConstants.accessToken.authExpires_in, 0l);
+        String token = SharedPreferencesUtils.getInstance().getStringData(SpConstants.accessToken.authToken, "");
+        if (nowTime - saveCurrent <= expiress * 1000) {//auth在有效期内，直接返回缓存
+            if (listener != null) {
+                listener.onFinish(openID, token, String.valueOf(expiress));
+            }
+        } else {
+            homeModel.getAuth(1, username, md5_pwd, this);
         }
-        ContentValues paramsMap = new ContentValues();
-        paramsMap.put("username", username);
-        paramsMap.put("password", md5_pwd);
-        paramsMap.put("clientCode", "case");
-        paramsMap.put("getExpire", "1");
-        paramsMap.put("appID", DES.APP_ID);
-        paramsMap.put("sign", Sign);
-        paramsMap.put("ts", ts);
-        OkHttpConnector.httpGet_net(context, null, Contants.URl.URL_ICETEST + "/auth",
-                paramsMap, new IGetListener() {
-                    @Override
-                    public void httpReqResult(String response) {
-                        String result = response.toString();
-                        try {
-                            int codeInt = HttpTools.getCode(result);
-                            JSONObject contentObject = HttpTools.getContentJSONObject(response);
-                            if (codeInt == 0) {
-                                String openID = contentObject.getString("openID");
-                                String accessToken = contentObject.getString("accessToken");
-                                String expires_in = contentObject.getString("expires_in");
-                                if (listener != null) {
-                                    listener.onFinish(openID, accessToken, expires_in);
-                                }
-                            } else {
-                                if (listener != null) {
-                                    listener.onFailed("");
-                                }
-                            }
-                        } catch (Exception e) {
-                        }
-                    }
-                });
     }
 
     /**
-     * 获取用户应用权限（Oauth2）  access_token
+     * 获取用户应用权限（auth2）
      */
-    public void getAuth2(String developerCode, final GetTwoRecordListener<String, String> listener) {
-        String username = UserInfo.employeeAccount;
-        String md5_pwd = Tools.getPassWordMD5(context);
-        RequestParams params = new RequestParams();
-        params.put("username", username);
-        params.put("password", md5_pwd);
-        params.put("developerCode", "case");
-        params.put("getExpire", "1");
-        String url = null;
-        HashMap<String, Object> paramsStr = null;
-        if (params != null) {
-            paramsStr = params.toHashMap();
+    public void getAuth2(GetTwoRecordListener<String, String> mListener) {
+        this.listener = mListener;
+        Long nowTime = System.currentTimeMillis();
+        long saveCurrent = SharedPreferencesUtils.getInstance().getLongData(SpConstants.accessToken.auth2CurrentTime, 0l);
+        long expiress = SharedPreferencesUtils.getInstance().getLongData(SpConstants.accessToken.auth2Expires_in, 0l);
+        String token = SharedPreferencesUtils.getInstance().getStringData(SpConstants.accessToken.auth2Token, "");
+        if (nowTime - saveCurrent <= expiress * 1000) {//auth2在有效期内，直接返回缓存
+            if (listener != null) {
+                listener.onFinish(UserInfo.employeeAccount, token, String.valueOf(expiress));
+            }
         } else {
-            paramsStr = null;
+            homeModel.getAuth2(0, this);
         }
-        try {
-            url = Contants.URl.URL_ICETEST + HttpTools.GetUrl(Contants.URl.URL_ICETEST, "/auth2", paramsStr);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        OkHttpConnector.httpGet_net(context, null, url,
-                null, new IGetListener() {
-                    @Override
-                    public void httpReqResult(String response) {
-                        String result = response.toString();
-                        try {
-                            int codeInt = HttpTools.getCode(result);
-                            JSONObject contentObject = HttpTools.getContentJSONObject(response);
-                            if (codeInt == 0) {
-                                String username = contentObject.getString("username");
-                                String accessToken = contentObject.getString("access_token");
-                                String expires_in = contentObject.getString("expires_in");
-                                if (listener != null) {
-                                    listener.onFinish(username, accessToken, expires_in);
-                                }
-                            } else {
-                                if (listener != null) {
-                                    listener.onFailed("");
-                                }
-                            }
-                        } catch (Exception e) {
-                        }
-                    }
-                });
     }
 
+    @Override
+    public void OnHttpResponse(int what, String result) {
+        switch (what) {
+            case 0:
+                if (!TextUtils.isEmpty(result)) {
+                    int codeInt = HttpTools.getCode(result);
+                    JSONObject contentObject = HttpTools.getContentJSONObject(result);
+                    if (codeInt == 0) {
+                        String username = null;
+                        try {
+                            username = contentObject.getString("username");
+                            String accessToken = contentObject.getString("access_token");
+                            String expires_in = contentObject.getString("expires_in");
+                            SharedPreferencesUtils.getInstance().saveStringData(SpConstants.accessToken.auth2Token, accessToken);
+                            SharedPreferencesUtils.getInstance().saveLongData(SpConstants.accessToken.auth2CurrentTime, System.currentTimeMillis());
+                            SharedPreferencesUtils.getInstance().getLongData(SpConstants.accessToken.auth2Expires_in, Long.valueOf(expires_in));
+                            if (listener != null) {
+                                listener.onFinish(username, accessToken, expires_in);
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    } else {
+                        if (listener != null) {
+                            listener.onFailed("");
+                        }
+                    }
+                }
+                break;
+            case 1:
+                if (!TextUtils.isEmpty(result)) {
+                    try {
+                        int codeInt = HttpTools.getCode(result);
+                        JSONObject contentObject = HttpTools.getContentJSONObject(result);
+                        if (codeInt == 0) {
+                            String openID = contentObject.getString("openID");
+                            String accessToken = contentObject.getString("accessToken");
+                            String expires_in = contentObject.getString("expires_in");
+                            SharedPreferencesUtils.getInstance().saveStringData(SpConstants.accessToken.authOpenId, openID);
+                            SharedPreferencesUtils.getInstance().saveStringData(SpConstants.accessToken.authToken, accessToken);
+                            SharedPreferencesUtils.getInstance().saveLongData(SpConstants.accessToken.authCurrentTime, System.currentTimeMillis());
+                            SharedPreferencesUtils.getInstance().saveLongData(SpConstants.accessToken.authExpires_in, Long.valueOf(expires_in));
+                            if (listener != null) {
+                                listener.onFinish(openID, accessToken, expires_in);
+                            }
+                        } else {
+                            if (listener != null) {
+                                listener.onFailed("");
+                            }
+                        }
+                    } catch (Exception e) {
+                    }
+                }
+                break;
+        }
+
+    }
 }

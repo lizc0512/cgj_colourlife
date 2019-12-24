@@ -35,6 +35,7 @@ public interface SpConstants {
         String accssToken = "access_token2";
         String refreshAccssToken = "refresh_token2";
         String tokenType = "token_type2";
+        String auth2Username = "auth2username";
         String auth2Token = "auth2Token";
         String auth2CurrentTime = "auth2currenttime";
         String auth2Expires_in = "auth2expires_in";

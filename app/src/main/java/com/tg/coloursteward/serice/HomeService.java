@@ -13,7 +13,6 @@ import com.tg.coloursteward.net.HttpTools;
 import com.tg.coloursteward.util.SharedPreferencesUtils;
 import com.tg.coloursteward.util.Tools;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 public class HomeService implements HttpResponse {
@@ -27,7 +26,7 @@ public class HomeService implements HttpResponse {
     }
 
     /**
-     * 获取用户应用权限
+     * 获取用户应用权限auth
      */
     public void getAuth(final GetTwoRecordListener<String, String> mListener) {
         String username = UserInfo.employeeAccount;
@@ -56,9 +55,10 @@ public class HomeService implements HttpResponse {
         long saveCurrent = SharedPreferencesUtils.getInstance().getLongData(SpConstants.accessToken.auth2CurrentTime, 0l);
         long expiress = SharedPreferencesUtils.getInstance().getLongData(SpConstants.accessToken.auth2Expires_in, 0l);
         String token = SharedPreferencesUtils.getInstance().getStringData(SpConstants.accessToken.auth2Token, "");
-        if (nowTime - saveCurrent <= expiress * 1000) {//auth2在有效期内，直接返回缓存
+        String username = SharedPreferencesUtils.getInstance().getStringData(SpConstants.accessToken.auth2Username, UserInfo.employeeAccount);
+        if (nowTime - saveCurrent <= expiress * 1000 && !TextUtils.isEmpty(token) && !TextUtils.isEmpty(username)) {//auth2在有效期内，直接返回缓存
             if (listener != null) {
-                listener.onFinish(UserInfo.employeeAccount, token, String.valueOf(expiress));
+                listener.onFinish(username, token, String.valueOf(expiress));
             }
         } else {
             homeModel.getAuth2(0, this);
@@ -78,19 +78,26 @@ public class HomeService implements HttpResponse {
                             username = contentObject.getString("username");
                             String accessToken = contentObject.getString("access_token");
                             String expires_in = contentObject.getString("expires_in");
+                            SharedPreferencesUtils.getInstance().saveStringData(SpConstants.accessToken.auth2Username, username);
                             SharedPreferencesUtils.getInstance().saveStringData(SpConstants.accessToken.auth2Token, accessToken);
                             SharedPreferencesUtils.getInstance().saveLongData(SpConstants.accessToken.auth2CurrentTime, System.currentTimeMillis());
-                            SharedPreferencesUtils.getInstance().getLongData(SpConstants.accessToken.auth2Expires_in, Long.valueOf(expires_in));
+                            SharedPreferencesUtils.getInstance().saveLongData(SpConstants.accessToken.auth2Expires_in, Long.valueOf(expires_in));
                             if (listener != null) {
                                 listener.onFinish(username, accessToken, expires_in);
                             }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
+                        } catch (Exception e) {
+                            if (listener != null) {
+                                listener.onFailed("");
+                            }
                         }
                     } else {
                         if (listener != null) {
                             listener.onFailed("");
                         }
+                    }
+                } else {
+                    if (listener != null) {
+                        listener.onFailed("");
                     }
                 }
                 break;

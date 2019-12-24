@@ -206,7 +206,6 @@ public class FragmentMine extends Fragment implements OnClickListener, HttpRespo
 
             @Override
             public void onFailed(String Message) {
-                ToastFactory.showToast(mActivity, Message);
             }
         });
     }

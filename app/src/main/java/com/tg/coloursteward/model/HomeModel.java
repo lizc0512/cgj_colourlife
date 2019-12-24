@@ -466,12 +466,17 @@ public class HomeModel extends BaseModel {
                     int code = showSuccesResultMessageTheme(result);
                     if (code == 0) {
                         httpResponse.OnHttpResponse(what, result);
+                    } else {
+                        httpResponse.OnHttpResponse(what, "");
                     }
+                } else {
+                    httpResponse.OnHttpResponse(what, "");
                 }
             }
 
             @Override
             public void onFailed(int what, Response<String> response) {
+                httpResponse.OnHttpResponse(what, "");
             }
         }, true, false);
     }

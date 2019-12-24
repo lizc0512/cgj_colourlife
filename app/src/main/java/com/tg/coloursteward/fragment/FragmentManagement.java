@@ -39,7 +39,6 @@ import com.tg.coloursteward.util.GsonUtils;
 import com.tg.coloursteward.util.MicroAuthTimeUtils;
 import com.tg.coloursteward.util.SharedPreferencesUtils;
 import com.tg.coloursteward.util.TokenUtils;
-import com.tg.coloursteward.util.Tools;
 import com.tg.coloursteward.view.MicroViewPager;
 import com.tg.coloursteward.view.MyGridLayoutManager;
 import com.youmai.hxsdk.config.ColorsConfig;
@@ -49,7 +48,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -95,29 +93,20 @@ public class FragmentManagement extends Fragment implements HttpResponse, View.O
     }
 
     private void initLayout(String corpUuid) {
-        String access_token = Tools.getAccess_token(mActivity);
-        if (TextUtils.isEmpty(access_token)) {
-            if (homeService == null) {
-                homeService = new HomeService(mActivity);
-            }
-            homeService.getAuth2(new GetTwoRecordListener<String, String>() {
-                @Override
-                public void onFinish(String data1, String data2, String data3) {
-                    Date dt = new Date();
-                    Long time = dt.getTime();
-                    Tools.saveAccess_token(mActivity, data2);
-                    Tools.saveCurrentTime2(mActivity, time);
-                    Tools.saveExpiresTime2(mActivity, Long.parseLong(data3));
-                    getData(corpUuid, data2);
-                }
-
-                @Override
-                public void onFailed(String Message) {
-
-                }
-            });
+        if (homeService == null) {
+            homeService = new HomeService(mActivity);
         }
-        microModel.getMicroList(1, corpUuid, access_token, this);
+        homeService.getAuth2(new GetTwoRecordListener<String, String>() {
+            @Override
+            public void onFinish(String data1, String data2, String data3) {
+                getData(corpUuid, data2);
+            }
+
+            @Override
+            public void onFailed(String Message) {
+                getData(corpUuid, "");
+            }
+        });
     }
 
     private void getData(String corpUuid, String access_token) {

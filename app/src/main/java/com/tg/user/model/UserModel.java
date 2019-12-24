@@ -3,7 +3,6 @@ package com.tg.user.model;
 import android.content.Context;
 import android.text.TextUtils;
 
-import com.google.gson.JsonObject;
 import com.tg.coloursteward.BuildConfig;
 import com.tg.coloursteward.baseModel.BaseModel;
 import com.tg.coloursteward.baseModel.HttpListener;
@@ -15,7 +14,6 @@ import com.tg.coloursteward.net.DES;
 import com.tg.coloursteward.net.HttpTools;
 import com.tg.coloursteward.net.MD5;
 import com.tg.coloursteward.util.GsonUtils;
-import com.tg.coloursteward.util.ToastUtil;
 import com.tg.coloursteward.util.TokenUtils;
 import com.yanzhenjie.nohttp.BasicBinary;
 import com.yanzhenjie.nohttp.FileBinary;
@@ -201,7 +199,7 @@ public class UserModel extends BaseModel {
      * @param access_token
      * @param httpResponse 获取用户信息
      */
-    public void getOauthUser(int what, String access_token, final HttpResponse httpResponse) {
+    public void getOauthUser(int what, String access_token, boolean isLoading, final HttpResponse httpResponse) {
         Map<String, Object> params = new HashMap<String, Object>();
         final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 2, oauthUserUrl), RequestMethod.GET);
         request.addHeader("Authorization", "Bearer " + access_token);
@@ -212,22 +210,31 @@ public class UserModel extends BaseModel {
                 String result = response.get();
                 if (responseCode == RequestEncryptionUtils.responseSuccess) {
                     if (!TextUtils.isEmpty(result)) {
-                        int code = showSuccesResultMessage(result);
-                        if (code == 0) {
-                            httpResponse.OnHttpResponse(what, result);
+                        int code = -1;
+                        if (isLoading) {
+                            code = showSuccesResultMessage(result);
+                            if (code == 0) {
+                                httpResponse.OnHttpResponse(what, result);
+                            } else {
+                                showErrorCodeMessage(response);
+                            }
                         } else {
-                            showErrorCodeMessage(response);
+                            code = showSuccesResultMessageTheme(result);
+                            if (code == 0) {
+                                httpResponse.OnHttpResponse(what, result);
+                            }
                         }
-
                     }
                 }
             }
 
             @Override
             public void onFailed(int what, Response<String> response) {
-                showExceptionMessage(what, response);
+                if (isLoading) {
+                    showExceptionMessage(what, response);
+                }
             }
-        }, true, true);
+        }, true, isLoading);
     }
 
     /**
@@ -798,7 +805,7 @@ public class UserModel extends BaseModel {
     }
 
 
-    public void getDoorStatusList(int what, String communityId, String model,int pageNum, int pageSize, final HttpResponse httpResponse) {
+    public void getDoorStatusList(int what, String communityId, String model, int pageNum, int pageSize, final HttpResponse httpResponse) {
         Map<String, Object> params = new HashMap<>();
         params.put("communityId", communityId);
         params.put("pageNum", pageNum);
@@ -862,12 +869,12 @@ public class UserModel extends BaseModel {
         }, true, false);
     }
 
-    public void getModelKeyList(int what, String communityId,String model, int pageNum, int pageSize, final HttpResponse httpResponse) {
+    public void getModelKeyList(int what, String communityId, String model, int pageNum, int pageSize, final HttpResponse httpResponse) {
         Map<String, Object> params = new HashMap<>();
         params.put("communityId", communityId);
         params.put("pageSize", pageSize);
         params.put("pageNum", pageNum);
-        if (!TextUtils.isEmpty(model)){
+        if (!TextUtils.isEmpty(model)) {
             params.put("model", model);
         }
         final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 11, getModelKeyList), RequestMethod.GET);

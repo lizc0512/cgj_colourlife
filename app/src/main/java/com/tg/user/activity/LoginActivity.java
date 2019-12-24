@@ -396,7 +396,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                 userCzyModel.getSmsCode(6, account, 5, 1, true, this);//找回密码获取短信验证码
                 break;
             case R.id.tv_register:
-                Intent register = new Intent(this,  CompanyInfoActivity.class);
+                Intent register = new Intent(this, CompanyInfoActivity.class);
                 startActivity(register);
                 break;
         }
@@ -633,7 +633,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
     }
 
     private void getNetInfo(String access_token) {
-        userModel.getOauthUser(2, access_token, this);
+        userModel.getOauthUser(2, access_token, true, this);
     }
 
 

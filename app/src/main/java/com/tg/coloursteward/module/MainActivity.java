@@ -3,7 +3,6 @@ package com.tg.coloursteward.module;
 import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -95,8 +94,6 @@ import com.tg.setting.view.UpdateVerSionDialog;
 import com.tg.user.model.UserModel;
 import com.youmai.hxsdk.HuxinSdkManager;
 import com.youmai.hxsdk.config.AppConfig;
-import com.youmai.hxsdk.http.IGetListener;
-import com.youmai.hxsdk.http.OkHttpConnector;
 import com.youmai.hxsdk.im.IMMsgManager;
 import com.youmai.hxsdk.utils.AppUtils;
 import com.youmai.hxsdk.view.camera.util.FileUtil;
@@ -108,7 +105,6 @@ import java.io.File;
 import java.lang.ref.WeakReference;
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -238,13 +234,12 @@ public class MainActivity extends BaseActivity implements MessageHandler.Respons
             }
             if (!TextUtils.isEmpty(urlAd)) {
                 AuthTimeUtils authTimeUtils = new AuthTimeUtils();
-                authTimeUtils.IsAuthTime(MainActivity.this, urlAd, "", urlauth_type, "", "");
+                authTimeUtils.IsAuthTime(MainActivity.this, urlAd, urlauth_type, "");
             }
         }
         msgHand = new MessageHandler(this);
         msgHand.setResponseListener(this);
         initView();
-        getTokenInfo();
         initPush();
 
         initProto();
@@ -447,7 +442,7 @@ public class MainActivity extends BaseActivity implements MessageHandler.Respons
             String urlAd = intent.getStringExtra(FROM_AD);
             if (!TextUtils.isEmpty(urlAd)) {
                 AuthTimeUtils authTimeUtils = new AuthTimeUtils();
-                authTimeUtils.IsAuthTime(MainActivity.this, urlAd, "", urlauth_type, "", "");
+                authTimeUtils.IsAuthTime(MainActivity.this, urlAd, urlauth_type, "");
             }
         }
         String extras = intent.getStringExtra(KEY_EXTRAS);
@@ -471,7 +466,7 @@ public class MainActivity extends BaseActivity implements MessageHandler.Respons
             if (null == microAuthTimeUtils) {
                 microAuthTimeUtils = new MicroAuthTimeUtils();
             }
-            microAuthTimeUtils.IsAuthTime(this, url, "", auth_type, "", "");
+            microAuthTimeUtils.IsAuthTime(this, url, auth_type, "");
             Intent intent = new Intent(ACTION_READ_MESSAGEINFO);
             intent.putExtra("messageId", msg_id);
             sendBroadcast(intent);
@@ -784,62 +779,7 @@ public class MainActivity extends BaseActivity implements MessageHandler.Respons
     }
 
     private void getNetInfo(String access_token) {
-        ContentValues header = new ContentValues();
-        header.put("Authorization", "Bearer " + access_token);
-        OkHttpConnector.httpGet(MainActivity.this, Contants.URl.URL_OAUTH2 + "/oauth/user", header, null, new IGetListener() {
-            @Override
-            public void httpReqResult(String jsonString) {
-                if (null != jsonString) {
-                    try {
-                        int code = HttpTools.getCode(jsonString);
-                        if (code == 0) {
-                            String response = HttpTools.getContentString(jsonString);
-                            ResponseData data = HttpTools.getResponseContentObject(response);
-                            Tools.loadUserInfo(data, jsonString);
-                            Tools.savetokenUserInfo(MainActivity.this, jsonString);
-                            int status = data.getInt("status");
-                            String corpId = data.getString("corp_id");
-                            UserInfo.infoorgId = data.getString("org_uuid");
-                            UserInfo.employeeAccount = data.getString("username");
-                            Tools.saveOrgId(MainActivity.this, data.getString("org_uuid"));
-                            Tools.saveStringValue(MainActivity.this, Contants.storage.CORPID, corpId);//租户ID
-                            if (status == 0) {//账号正常
-                                new Handler().postDelayed(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        singleDevicelogin();
-                                    }
-                                }, 2500);
-                                if (("101").equals(skin_code)) {//彩生活
-                                    sendBroadcast(new Intent(ACTION_TICKET_INFO));
-                                }
-                            } else {
-                                ToastFactory.showToast(MainActivity.this, "账号异常，请及时联系管理员");
-                                singleDevicelogout();
-                                SharedPreferencesTools.clearUserId(MainActivity.this);
-                                //清空缓存
-                                SharedPreferencesTools.clearAllData(MainActivity.this);
-                                SharedPreferencesTools.clearCache(MainActivity.this);
-                                CityPropertyApplication.gotoLoginActivity(MainActivity.this);
-                                HuxinSdkManager.instance().loginOut();
-                            }
-                        } else {
-//                            ToastFactory.showToast(MainActivity.this, message); //偶现会弹出Unauth错误信息
-                        }
-                    } catch (Exception e) {
-                    }
-                }
-            }
-        });
-    }
-
-    /**
-     * 获取token
-     * sectet
-     */
-    private void getTokenInfo() {
-        getAuth("", "case", "0", "case", "");
-        getAuth("", "case", "1", "case", "");
+        userModel.getOauthUser(10, access_token, false, this);
     }
 
     /**
@@ -915,58 +855,6 @@ public class MainActivity extends BaseActivity implements MessageHandler.Respons
 
             }
         });
-    }
-
-    /**
-     * 应用授权
-     *
-     * @param url
-     * @param clientCode
-     * @param oauthType
-     * @param developerCode
-     */
-    private void getAuth(final String url,
-                         String clientCode, String oauthType, String developerCode, final String param) {
-        if (homeService == null) {
-            homeService = new HomeService(this);
-        }
-        if ("0".equals(oauthType) || oauthType == null)//oauth1认证
-        {
-            homeService.getAuth(clientCode, new GetTwoRecordListener<String, String>() {
-
-                @Override
-                public void onFinish(String openID, String accessToken, String Expire) {
-                    Date dt = new Date();
-                    Long time = dt.getTime();
-                    Tools.saveOpenID(mContext, openID);
-                    Tools.saveAccessToken(mContext, accessToken);
-                    Tools.saveCurrentTime(mContext, time);
-
-                }
-
-                @Override
-                public void onFailed(String Message) {
-
-                }
-            });
-        } else {//oauth2认证
-            homeService.getAuth2(developerCode, new GetTwoRecordListener<String, String>() {
-
-                @Override
-                public void onFinish(String username, String accessToken, String Expire) {
-                    Date dt = new Date();
-                    Long time = dt.getTime();
-                    Tools.saveAccess_token(mContext, accessToken);
-                    Tools.saveCurrentTime2(mContext, time);
-                    Tools.saveExpiresTime2(mContext, Long.parseLong(Expire));
-                }
-
-                @Override
-                public void onFailed(String Message) {
-
-                }
-            });
-        }
     }
 
     /**
@@ -1173,6 +1061,46 @@ public class MainActivity extends BaseActivity implements MessageHandler.Respons
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
+                    }
+                }
+                break;
+            case 10:
+                if (!TextUtils.isEmpty(result)) {
+                    try {
+                        int code = HttpTools.getCode(result);
+                        if (code == 0) {
+                            String response = HttpTools.getContentString(result);
+                            ResponseData data = HttpTools.getResponseContentObject(response);
+                            Tools.loadUserInfo(data, result);
+                            Tools.savetokenUserInfo(MainActivity.this, result);
+                            int status = data.getInt("status");
+                            String corpId = data.getString("corp_id");
+                            UserInfo.infoorgId = data.getString("org_uuid");
+                            UserInfo.employeeAccount = data.getString("username");
+                            Tools.saveOrgId(MainActivity.this, data.getString("org_uuid"));
+                            Tools.saveStringValue(MainActivity.this, Contants.storage.CORPID, corpId);//租户ID
+                            if (status == 0) {//账号正常
+                                new Handler().postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        singleDevicelogin();
+                                    }
+                                }, 2500);
+                                if (("101").equals(skin_code)) {//彩生活
+                                    sendBroadcast(new Intent(ACTION_TICKET_INFO));
+                                }
+                            } else {
+                                ToastFactory.showToast(MainActivity.this, "账号异常，请及时联系管理员");
+                                singleDevicelogout();
+                                SharedPreferencesTools.clearUserId(MainActivity.this);
+                                //清空缓存
+                                SharedPreferencesTools.clearAllData(MainActivity.this);
+                                SharedPreferencesTools.clearCache(MainActivity.this);
+                                CityPropertyApplication.gotoLoginActivity(MainActivity.this);
+                                HuxinSdkManager.instance().loginOut();
+                            }
+                        }
+                    } catch (Exception e) {
                     }
                 }
                 break;

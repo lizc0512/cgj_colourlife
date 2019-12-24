@@ -1,21 +1,5 @@
 package com.tg.coloursteward.view;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import com.hjq.permissions.OnPermission;
-import com.hjq.permissions.XXPermissions;
-import com.tg.coloursteward.activity.MipcaActivityCapture;
-import com.tg.coloursteward.R;
-import com.tg.coloursteward.constant.Contants;
-import com.tg.coloursteward.info.GridViewInfo;
-import com.tg.coloursteward.serice.HomeService;
-import com.tg.coloursteward.util.AuthTimeUtils;
-import com.tg.coloursteward.util.ToastUtil;
-import com.youmai.hxsdk.HuxinSdkManager;
-import com.youmai.hxsdk.db.bean.ContactBean;
-import com.youmai.hxsdk.group.AddContactsCreateGroupActivity;
-
 import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
@@ -28,14 +12,26 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.PopupWindow;
 
+import com.hjq.permissions.OnPermission;
+import com.hjq.permissions.XXPermissions;
+import com.tg.coloursteward.R;
+import com.tg.coloursteward.activity.MipcaActivityCapture;
+import com.tg.coloursteward.constant.Contants;
+import com.tg.coloursteward.info.GridViewInfo;
+import com.tg.coloursteward.util.MicroAuthTimeUtils;
+import com.tg.coloursteward.util.ToastUtil;
+import com.youmai.hxsdk.HuxinSdkManager;
+import com.youmai.hxsdk.db.bean.ContactBean;
+import com.youmai.hxsdk.group.AddContactsCreateGroupActivity;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public class PopWindowView extends PopupWindow {
     private View conentView;
-    private Intent intent;
-    private Activity context;
-    private HomeService homeService;
+    private MicroAuthTimeUtils microAuthTimeUtils;
 
     public PopWindowView(final Activity context, final ArrayList<GridViewInfo> list) {
-        this.context = context;
         LayoutInflater inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         conentView = inflater.inflate(R.layout.popup_window, null);
@@ -58,7 +54,7 @@ public class PopWindowView extends PopupWindow {
         this.setBackgroundDrawable(dw);
         // 设置SelectPicPopupWindow弹出窗体动画效果  
         this.setAnimationStyle(R.style.AnimationPreview);
-
+        microAuthTimeUtils = new MicroAuthTimeUtils();
         conentView.findViewById(R.id.rl_add_group).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View arg0) {
@@ -84,8 +80,7 @@ public class PopWindowView extends PopupWindow {
 
             @Override
             public void onClick(View arg0) {
-                AuthTimeUtils mAuthTimeUtils = new AuthTimeUtils();
-                mAuthTimeUtils.IsAuthTime(context, Contants.Html5.YJ, "xyj", "1", "xyj", "");
+                microAuthTimeUtils.IsAuthTime(context, Contants.Html5.YJ, "2", "");
                 PopWindowView.this.dismiss();
             }
         });
@@ -93,8 +88,7 @@ public class PopWindowView extends PopupWindow {
 
             @Override
             public void onClick(View arg0) {
-                AuthTimeUtils mAuthTimeUtils = new AuthTimeUtils();
-                mAuthTimeUtils.IsAuthTime(context, Contants.Html5.SP, "tlmyapps", "1", "tlmyapps", "");
+                microAuthTimeUtils.IsAuthTime(context, Contants.Html5.SP, "2", "");
                 PopWindowView.this.dismiss();
             }
         });
@@ -102,8 +96,7 @@ public class PopWindowView extends PopupWindow {
 
             @Override
             public void onClick(View arg0) {
-                AuthTimeUtils mAuthTimeUtils = new AuthTimeUtils();
-                mAuthTimeUtils.IsAuthTime(context, Contants.Html5.QIANDAO, "qiandao", "1", "qiandao", "");
+                microAuthTimeUtils.IsAuthTime(context, Contants.Html5.QIANDAO, "2", "");
                 PopWindowView.this.dismiss();
             }
         });
@@ -123,40 +116,13 @@ public class PopWindowView extends PopupWindow {
 
                             @Override
                             public void noPermission(List<String> denied, boolean quick) {
-                                ToastUtil.showShortToast(context,"拍照权限被拒绝，请到设置中打开");
+                                ToastUtil.showShortToast(context, "拍照权限被拒绝，请到设置中打开");
                             }
                         });
 
 
             }
         });
-    }
-
-    /**
-     * 筛选并跳转url
-     *
-     * @return
-     */
-    private void screeningUrl(Activity context, ArrayList<GridViewInfo> list, String name) {
-        String url = null;
-        String oauthType = null;
-        String developerCode = null;
-        String clientCode = null;
-        if (list.size() > 0) {
-            for (int i = 0; i < list.size(); i++) {
-                if (list.get(i).name.equals(name)) {
-                    url = list.get(i).sso;
-                    oauthType = list.get(i).oauthType;
-                    developerCode = list.get(i).developerCode;
-                    clientCode = list.get(i).clientCode;
-                    break;
-                }
-            }
-            if (url != null && url.length() != 0) {
-                AuthTimeUtils mAuthTimeUtils = new AuthTimeUtils();
-                mAuthTimeUtils.IsAuthTime(context, url, clientCode, oauthType, developerCode, "");
-            }
-        }
     }
 
     /**

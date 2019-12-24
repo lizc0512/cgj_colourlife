@@ -107,7 +107,7 @@ public class GroupAccountDetailsActivity extends BaseActivity implements HttpRes
 
     private void initGetToken() {
         HomeService homeService = new HomeService(GroupAccountDetailsActivity.this);
-        homeService.getAuth2("2", new GetTwoRecordListener<String, String>() {
+        homeService.getAuth2(new GetTwoRecordListener<String, String>() {
             @Override
             public void onFinish(String data1, String data2, String data3) {
                 access_token = data2;

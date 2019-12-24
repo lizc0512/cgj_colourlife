@@ -302,7 +302,7 @@ public class MipcaActivityCapture extends BaseActivity implements Callback, OnCl
                     if (null == mAuthTimeUtils) {
                         mAuthTimeUtils = new AuthTimeUtils();
                     }
-                    mAuthTimeUtils.IsAuthTime(MipcaActivityCapture.this, url, "", String.valueOf(auth_type), "", "");
+                    mAuthTimeUtils.IsAuthTime(MipcaActivityCapture.this, url, String.valueOf(auth_type), "");
                     this.finish();
                 }
                 break;

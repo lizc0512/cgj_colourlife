@@ -330,8 +330,8 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, View.OnC
                     try {
                         if (!TextUtils.isEmpty(homeDialogEntitiy.getContent().getButton().get(positon).getUrl())) {
                             AuthTimeUtils authTimeUtils = new AuthTimeUtils();
-                            authTimeUtils.IsAuthTime(mActivity, homeDialogEntitiy.getContent().getButton().get(positon).getUrl(), "",
-                                    homeDialogEntitiy.getContent().getButton().get(positon).getAuth_type(), "", "");
+                            authTimeUtils.IsAuthTime(mActivity, homeDialogEntitiy.getContent().getButton().get(positon).getUrl(),
+                                    homeDialogEntitiy.getContent().getButton().get(positon).getAuth_type(), "");
                         }
                     } catch (Exception ignored) {
                     }

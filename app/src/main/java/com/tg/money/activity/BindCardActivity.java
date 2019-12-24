@@ -103,7 +103,7 @@ public class BindCardActivity extends BaseActivity implements View.OnClickListen
             @Override
             public void onClick(@NonNull View widget) {
                 MicroAuthTimeUtils microAuthTimeUtils = new MicroAuthTimeUtils();
-                microAuthTimeUtils.IsAuthTime(BindCardActivity.this, url, "", auth_type, "", "");
+                microAuthTimeUtils.IsAuthTime(BindCardActivity.this, url, auth_type, "");
             }
 
             @Override

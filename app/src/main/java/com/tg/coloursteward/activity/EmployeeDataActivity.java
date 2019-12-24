@@ -34,9 +34,9 @@ import com.tg.coloursteward.model.ContactModel;
 import com.tg.coloursteward.net.GetTwoRecordListener;
 import com.tg.coloursteward.net.HttpTools;
 import com.tg.coloursteward.serice.AuthAppService;
-import com.tg.coloursteward.util.AuthTimeUtils;
 import com.tg.coloursteward.util.GlideUtils;
 import com.tg.coloursteward.util.GsonUtils;
+import com.tg.coloursteward.util.MicroAuthTimeUtils;
 import com.tg.coloursteward.util.StringUtils;
 import com.tg.coloursteward.util.Tools;
 import com.tg.coloursteward.view.ManageMentLinearlayout;
@@ -210,8 +210,8 @@ public class EmployeeDataActivity extends BaseActivity implements MyListener, Ht
     protected boolean handClickEvent(View v) {
         switch (v.getId()) {
             case R.id.ll_sendemail:// 发送邮件
-                AuthTimeUtils mAuthTimeUtils = new AuthTimeUtils();
-                mAuthTimeUtils.IsAuthTime(EmployeeDataActivity.this, Contants.Html5.YJ, "xyj", "1", "xyj", "");
+                MicroAuthTimeUtils microAuthTimeUtils = new MicroAuthTimeUtils();
+                microAuthTimeUtils.IsAuthTime(this, Contants.Html5.YJ, "2", "");
                 break;
             case R.id.ll_sendsms:// 发送短信
                 if (null != item) {

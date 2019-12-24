@@ -100,7 +100,7 @@ public class FragmentManagement extends Fragment implements HttpResponse, View.O
             if (homeService == null) {
                 homeService = new HomeService(mActivity);
             }
-            homeService.getAuth2("", new GetTwoRecordListener<String, String>() {
+            homeService.getAuth2(new GetTwoRecordListener<String, String>() {
                 @Override
                 public void onFinish(String data1, String data2, String data3) {
                     Date dt = new Date();
@@ -173,7 +173,7 @@ public class FragmentManagement extends Fragment implements HttpResponse, View.O
                         mMicroAuthTimeUtils = new MicroAuthTimeUtils();
                     }
                     mMicroAuthTimeUtils.IsAuthTime(mActivity, finalBannerList.get(position).getRedirect_url(),
-                            "", finalBannerList.get(position).getAuth_type(), "", "");
+                            finalBannerList.get(position).getAuth_type(), "");
                 }
             });
             bga_banner.setData(bannerUrlList, null);
@@ -232,7 +232,7 @@ public class FragmentManagement extends Fragment implements HttpResponse, View.O
                     if (null == mMicroAuthTimeUtils) {
                         mMicroAuthTimeUtils = new MicroAuthTimeUtils();
                     }
-                    mMicroAuthTimeUtils.IsAuthTime(mActivity, url, "", auth_type, "", "");
+                    mMicroAuthTimeUtils.IsAuthTime(mActivity, url, auth_type, "");
                 });
             }
         }
@@ -283,7 +283,7 @@ public class FragmentManagement extends Fragment implements HttpResponse, View.O
                 mMicroAuthTimeUtils = new MicroAuthTimeUtils();
             }
             mMicroAuthTimeUtils.IsAuthTime(mActivity, url,
-                    "", auth_type, "", "");
+                    auth_type, "");
         });
         initDataItem(dataBeanList.get(vp_micro.getCurrentItem() % dataBeanList.size()).getUuid(), rv_micro_vp);
         vp_micro.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {

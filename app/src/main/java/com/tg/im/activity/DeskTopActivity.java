@@ -264,7 +264,7 @@ public class DeskTopActivity extends BaseActivity implements OnItemClickListener
                     mMicroAuthTimeUtils = new MicroAuthTimeUtils();
                 }
                 mMicroAuthTimeUtils.IsAuthTime(this, info.url,
-                        info.client_code, String.valueOf(info.auth_type), info.client_code, "");
+                        String.valueOf(info.auth_type), "");
             } else {
                 LinkParseUtil.parse(DeskTopActivity.this, info.url, "");
             }
@@ -449,7 +449,7 @@ public class DeskTopActivity extends BaseActivity implements OnItemClickListener
                             mMicroAuthTimeUtils = new MicroAuthTimeUtils();
                         }
                         mMicroAuthTimeUtils.IsAuthTime(DeskTopActivity.this, url,
-                                "", auth_type, "", "");
+                                auth_type, "");
                     } else {
                         LinkParseUtil.parse(DeskTopActivity.this, url, "");
                     }

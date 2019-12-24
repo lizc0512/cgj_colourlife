@@ -188,7 +188,7 @@ public class FragmentMine extends Fragment implements OnClickListener, HttpRespo
         if (homeService == null) {
             homeService = new HomeService(getActivity());
         }
-        homeService.getAuth2(clientCode, new GetTwoRecordListener<String, String>() {
+        homeService.getAuth2(new GetTwoRecordListener<String, String>() {
 
             @Override
             public void onFinish(String openID, String accessToken, String data3) {

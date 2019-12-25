@@ -20,13 +20,10 @@ import com.hjq.permissions.OnPermission;
 import com.hjq.permissions.XXPermissions;
 import com.tg.coloursteward.BuildConfig;
 import com.tg.coloursteward.R;
-import com.tg.coloursteward.application.CityPropertyApplication;
 import com.tg.coloursteward.base.BaseActivity;
 import com.tg.coloursteward.baseModel.HttpResponse;
 import com.tg.coloursteward.constant.Contants;
 import com.tg.coloursteward.constant.SpConstants;
-import com.tg.coloursteward.database.SharedPreferencesTools;
-import com.tg.coloursteward.info.UserInfo;
 import com.tg.coloursteward.net.HttpTools;
 import com.tg.coloursteward.serice.UpdateService;
 import com.tg.coloursteward.util.GsonUtils;
@@ -217,15 +214,7 @@ public class SettingActivity extends BaseActivity implements OnClickListener, Ht
                 DialogFactory.getInstance().showDialog(SettingActivity.this, new OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        UserInfo.initClear();
-                        StopYingYan();
-                        singleDevicelogout();
-                        SharedPreferencesTools.clearUserId(SettingActivity.this);
-                        //清空缓存
-                        SharedPreferencesTools.clearCache(SettingActivity.this);
-                        SharedPreferencesTools.clearAllData(SettingActivity.this);
-                        CityPropertyApplication.gotoLoginActivity(SettingActivity.this);
-                        HuxinSdkManager.instance().loginOut();
+                        exitClearAllData();
                     }
                 }, null, "确定要退出账号吗", null, null);
                 break;

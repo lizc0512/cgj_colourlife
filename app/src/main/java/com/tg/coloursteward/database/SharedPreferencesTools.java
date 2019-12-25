@@ -13,7 +13,6 @@ import com.tg.coloursteward.util.Tools;
 
 import org.json.JSONObject;
 
-import static com.tg.coloursteward.constant.Contants.storage.JSFPNUM;
 
 /**
  * 共享参数工具类
@@ -35,7 +34,7 @@ public class SharedPreferencesTools {
         if (TextUtils.isEmpty(key)) {
             return;
         }
-        getSysShare(con).edit().putString(key, value).commit();
+        getSysShare(con).edit().putString(key, value).apply();
     }
 
     public static void saveUserInfoJson(Context con, JSONObject jsonObj) {
@@ -61,9 +60,6 @@ public class SharedPreferencesTools {
     }
 
     public static void clearCache(Context con) {
-        SharedPreferencesUtils.getInstance().clear();
-        Tools.savePassWord(con, "");//保存密码
-        Tools.saveStringValue(con, JSFPNUM, "");
         Tools.saveStringValue(con, Contants.storage.SKINCODE, "");//保存皮肤包
         Tools.savePassWordMD5(con, "");//保存MD5密码
         Tools.saveAccess_token2(con, "");
@@ -71,12 +67,6 @@ public class SharedPreferencesTools {
         Tools.savetokenUserInfo(con, "");
         Tools.saveRefresh_token2Time(con, 0l);
         Tools.saveExpires_in(con, 0l);
-        Tools.saveStringValue(con, Contants.storage.TICKET, "");//我的饭票
-        Tools.saveStringValue(con, Contants.storage.AREAHOME, "0");//在管面积
-        Tools.saveStringValue(con, Contants.storage.STOCKHOME, "0");//集团股票
-        Tools.saveStringValue(con, Contants.storage.TICKETHOME, "0");//我的饭票（首页）
-        Tools.saveStringValue(con, Contants.storage.COMMUNITYHOME, "0");//在管小区
-        Tools.saveStringValue(con, Contants.storage.ACCOUNTHOME, "0");//即时分配
         Tools.saveStringValue(con, Contants.storage.SKINCODE, "");//皮肤包
         Tools.saveStringValue(con, Contants.storage.APPAUTH, "");//多租户应用token
         Tools.saveStringValue(con, Contants.storage.APPAUTHTIME, "");//多租户应用time
@@ -84,15 +74,11 @@ public class SharedPreferencesTools {
         Tools.saveStringValue(con, Contants.storage.APPAUTHTIME_1, "");//授权time  1.0
         Tools.saveStringValue(con, Contants.storage.ORGNAME, "");//组织架构名称
         Tools.saveStringValue(con, Contants.storage.ORGID, "");//组织架构ID
-        Tools.saveStringValue(con, Contants.MAP.ADDRESS, "");//定位地址保存
         Tools.saveStringValue(con, Contants.storage.PUBLIC_LIST, "");//对公账户搜索历史列表
         Tools.saveLinkManList(con, "");//收藏联系人
         Tools.setBooleanValue(con, Contants.storage.ALIAS, false);
         Tools.setBooleanValue(con, Contants.storage.Tags, false);
-        Tools.saveStringValue(con, Contants.storage.JTJJB, "");//我的饭票奖金包缓存
         Tools.saveStringValue(con, Contants.storage.DEVICE_TOKEN, "");//我的饭票奖金包缓存
-        Tools.saveStringValue(con, Contants.storage.LOGOIN_PHONE, "");//
-        Tools.saveStringValue(con, Contants.storage.LOGOIN_PASSWORD, "");//
     }
 
     public static ResponseData getUserInfo(Context con) {

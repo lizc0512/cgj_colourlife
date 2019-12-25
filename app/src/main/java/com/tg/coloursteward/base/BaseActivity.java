@@ -30,8 +30,12 @@ import android.widget.TextView;
 import com.tg.coloursteward.BuildConfig;
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.application.CityPropertyApplication;
+import com.tg.coloursteward.baseModel.HttpResponse;
 import com.tg.coloursteward.constant.Contants;
+import com.tg.coloursteward.constant.SpConstants;
+import com.tg.coloursteward.database.SharedPreferencesTools;
 import com.tg.coloursteward.entity.SingleDeviceLogin;
+import com.tg.coloursteward.info.UserInfo;
 import com.tg.coloursteward.inter.ResultCallBack;
 import com.tg.coloursteward.inter.SingleClickListener;
 import com.tg.coloursteward.net.HttpTools;
@@ -40,6 +44,7 @@ import com.tg.coloursteward.net.MessageHandler.ResponseListener;
 import com.tg.coloursteward.util.GsonUtils;
 import com.tg.coloursteward.util.SharedPreferencesUtils;
 import com.tg.coloursteward.util.StringUtils;
+import com.tg.coloursteward.util.ToastUtil;
 import com.tg.coloursteward.util.TokenUtils;
 import com.tg.coloursteward.util.Tools;
 import com.tg.coloursteward.view.ActivityHeaderView;
@@ -50,6 +55,8 @@ import com.tg.coloursteward.view.SystemBarTintManager;
 import com.tg.coloursteward.view.dialog.DialogFactory;
 import com.tg.coloursteward.view.dialog.ToastFactory;
 import com.tg.user.activity.LoginActivity;
+import com.tg.user.model.UserModel;
+import com.youmai.hxsdk.HuxinSdkManager;
 import com.youmai.hxsdk.entity.HxSingleDeviceLogout;
 import com.youmai.hxsdk.http.IPostListener;
 import com.youmai.hxsdk.http.OkHttpConnector;
@@ -63,7 +70,9 @@ import java.util.ArrayList;
 
 import cn.jpush.android.api.JPushInterface;
 
-public abstract class BaseActivity extends AppCompatActivity implements ResponseListener {
+import static com.tg.coloursteward.application.CityPropertyApplication.lbsTraceClient;
+
+public abstract class BaseActivity extends AppCompatActivity implements ResponseListener, HttpResponse {
 
     private static long lastClick = 0;
 
@@ -624,5 +633,48 @@ public abstract class BaseActivity extends AppCompatActivity implements Response
         }
         lastClick = System.currentTimeMillis();
         return true;
+    }
+
+    /**
+     * 退出登录，清空一切数据操作
+     */
+    protected void exitClearAllData() {
+        StopYingYan();
+        singleDevicelogout();
+        //清空缓存
+        UserInfo.initClear();
+        SharedPreferencesTools.clearUserId(this);
+        SharedPreferencesTools.clearCache(this);
+        SharedPreferencesTools.clearAllData(this);
+        SharedPreferencesUtils.getInstance().clear();
+        CityPropertyApplication.gotoLoginActivity(this);
+        HuxinSdkManager.instance().loginOut();
+    }
+
+    private void StopYingYan() {
+        if (null != lbsTraceClient) {
+            lbsTraceClient.stopGather(null);
+        }
+    }
+
+    /**
+     * 单设备退出
+     */
+    private void singleDevicelogout() {
+        UserModel userModel = new UserModel(this);
+        String device_code = spUtils.getStringData(SpConstants.storage.DEVICE_TOKEN, "");
+        userModel.postSingleExit(1, device_code, this);
+    }
+
+    @Override
+    public void OnHttpResponse(int what, String result) {
+        switch (what) {
+            case 1:
+                if (!TextUtils.isEmpty(result)) {
+                    String message = HttpTools.getMessageString(result);
+                    ToastUtil.showShortToast(this, message);
+                }
+                break;
+        }
     }
 }

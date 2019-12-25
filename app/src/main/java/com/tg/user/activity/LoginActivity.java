@@ -31,13 +31,11 @@ import com.hjq.permissions.OnPermission;
 import com.hjq.permissions.XXPermissions;
 import com.tg.coloursteward.BuildConfig;
 import com.tg.coloursteward.R;
-import com.tg.coloursteward.application.CityPropertyApplication;
 import com.tg.coloursteward.base.BaseActivity;
 import com.tg.coloursteward.baseModel.HttpResponse;
 import com.tg.coloursteward.baseModel.RequestEncryptionUtils;
 import com.tg.coloursteward.constant.Contants;
 import com.tg.coloursteward.constant.SpConstants;
-import com.tg.coloursteward.database.SharedPreferencesTools;
 import com.tg.coloursteward.info.UserInfo;
 import com.tg.coloursteward.module.MainActivity;
 import com.tg.coloursteward.net.DES;
@@ -189,14 +187,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
             boolean loginOut = intent.getBooleanExtra("login_out", false);
             extras = intent.getStringExtra(MainActivity.KEY_EXTRAS);
             if (loginOut) {
-                UserInfo.initClear();
-                StopYingYan();
-                singleDevicelogout();
-                SharedPreferencesTools.clearUserId(LoginActivity.this);
-                //清空缓存
-                SharedPreferencesTools.clearCache(LoginActivity.this);
-                SharedPreferencesTools.clearAllData(LoginActivity.this);
-                CityPropertyApplication.gotoLoginActivity(LoginActivity.this);
+                exitClearAllData();
             }
 
             String account = intent.getStringExtra(ACCOUNT);
@@ -680,7 +671,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                         int status = oauthUserEntity.getContent().getStatus();
                         if (status == 0) {
                             ResponseData data = HttpTools.getResponseContentObject(response);
-                            Tools.savePassWord(LoginActivity.this, password);//保存密码
                             Tools.savePassWordMD5(LoginActivity.this, getPawdMD5());//保存密码(MD5加密后)
                             Tools.loadUserInfo(data, result);
                             corpId = oauthUserEntity.getContent().getCorp_id();

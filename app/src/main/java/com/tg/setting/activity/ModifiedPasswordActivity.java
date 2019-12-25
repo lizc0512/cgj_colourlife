@@ -7,11 +7,9 @@ import android.view.View;
 import android.widget.EditText;
 
 import com.tg.coloursteward.R;
-import com.tg.coloursteward.application.CityPropertyApplication;
 import com.tg.coloursteward.base.BaseActivity;
 import com.tg.coloursteward.baseModel.HttpResponse;
 import com.tg.coloursteward.constant.SpConstants;
-import com.tg.coloursteward.database.SharedPreferencesTools;
 import com.tg.coloursteward.info.UserInfo;
 import com.tg.coloursteward.net.HttpTools;
 import com.tg.coloursteward.net.MD5;
@@ -107,11 +105,9 @@ public class ModifiedPasswordActivity extends BaseActivity implements HttpRespon
         switch (what) {
             case 1:
                 if (!TextUtils.isEmpty(result)) {
-                    singleDevicelogout();
+                    exitClearAllData();
                     String message = HttpTools.getMessageString(result);
                     ToastFactory.showToast(ModifiedPasswordActivity.this, message);
-                    SharedPreferencesTools.clearUserId(ModifiedPasswordActivity.this);
-                    CityPropertyApplication.gotoLoginActivity(ModifiedPasswordActivity.this);
                     ModifiedPasswordActivity.this.finish();
                 }
                 break;

@@ -121,12 +121,6 @@ public interface Contants {
     }
 
     interface storage {
-        String TICKET = "ticket";
-        String AREAHOME = "area_home";
-        String STOCKHOME = "stock_home";
-        String TICKETHOME = "ticket_home";
-        String COMMUNITYHOME = "community_home";
-        String ACCOUNTHOME = "account_home";
         String SKINCODE = "skin_code";//皮肤包
         String CORPID = "corp_id";//租户Id
         String APPAUTH = "app_auth";//appAuth
@@ -141,13 +135,11 @@ public interface Contants {
         String JTJJB = "jtjjb";//对公账户搜索历史列表
         String DEVICE_TOKEN = "device_token";//设备唯一token
         String LOGOIN_PHONE = "login_phone";//登录手机号
-        String LOGOIN_PASSWORD = "login_password";//登录密码
         String LATITUDE = "str_latitude";//纬度
         String LONGITUDE = "str_longitude";//经度
         String FRAGMENTMINE = "fragmentmine";//我的页面
         String SALARY_TIME = "salary_time";//工资条打开时间
         String SALARY_ISINPUT = "salary_isinput";//工资条打开状态
-        String JSFPNUM = "jsfpmoney";//微服务即时分配金额
         String HomePageAd = "homepagead";
         String ImageType = "imagetype";
         String fragmentminedata = "{\"code\":0,\"message\":\"success\",\"content\":[{\"id\":1,\"data\":[{\"id\":4,\"img\":\"https:\\/\\/pics-czy-cdn.colourlife.com\\/pro-5c1cd7de4f644652159.png\",\"url\":\"colourlife:\\/\\/proto?type=redPacket\",\"name\":\"\\u6211\\u7684\\u996d\\u7968\",\"group_id\":1},{\"id\":5,\"img\":\"https:\\/\\/pics-czy-cdn.colourlife.com\\/pro-5c1cd84176091219280.png\",\"url\":\"colourlife:\\/\\/proto?type=findPwd\",\"name\":\"\\u627e\\u56de\\u652f\\u4ed8\\u5bc6\\u7801\",\"group_id\":1},{\"id\":2,\"img\":\"https:\\/\\/pics-czy-cdn.colourlife.com\\/pro-5c1cd8278f931489523.png\",\"url\":\"https:\\/\\/payroll-hr.colourlife.com\\/redirect\",\"name\":\"\\u6211\\u7684\\u5de5\\u8d44\\u6761\",\"group_id\":1}]},{\"id\":2,\"data\":[{\"id\":1,\"img\":\"https:\\/\\/pics-czy-cdn.colourlife.com\\/pro-5c1cd819d0ae5124346.png\",\"url\":\"colourlife:\\/\\/proto?type=invite\",\"name\":\"\\u9080\\u8bf7\",\"group_id\":2},{\"id\":6,\"img\":\"https:\\/\\/pics-czy-cdn.colourlife.com\\/pro-5c1cd84cea0f0210390.png\",\"url\":\"colourlife:\\/\\/proto?type=mydownload\",\"name\":\"\\u6211\\u7684\\u4e0b\\u8f7d\",\"group_id\":2},{\"id\":3,\"img\":\"https:\\/\\/pics-czy-cdn.colourlife.com\\/pro-5c1cd83307e22424071.png\",\"url\":\"colourlife:\\/\\/proto?type=setting\",\"name\":\"\\u8bbe\\u7f6e\",\"group_id\":2}]}],\"contentEncrypt\":\"\"}";
@@ -159,11 +151,4 @@ public interface Contants {
         String DOWNLOAD_DIRECT = Environment.getExternalStorageDirectory()
                 + "/colourlife/download/";
     }
-
-    interface MAP {
-        // 下载文件保存路径
-        String ADDRESS = "map_address";
-    }
-
-
 }

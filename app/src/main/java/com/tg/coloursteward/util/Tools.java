@@ -642,20 +642,6 @@ public class Tools {
     }
 
     /**
-     * 保存登录密码(加密前)
-     *
-     * @param con
-     */
-    public static void savePassWord(Context con, String pwd) {
-        getSysShare(con).edit().
-                putString("pwd", pwd).commit();
-    }
-
-    public static String getPassWord(Context con) {
-        return getSysShare(con).getString("pwd", "");
-    }
-
-    /**
      * 保存支付密码(加密前)
      *
      * @param con

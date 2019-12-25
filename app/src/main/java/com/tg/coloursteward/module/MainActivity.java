@@ -54,7 +54,6 @@ import com.tg.coloursteward.base.BaseActivity;
 import com.tg.coloursteward.baseModel.HttpResponse;
 import com.tg.coloursteward.constant.Contants;
 import com.tg.coloursteward.constant.SpConstants;
-import com.tg.coloursteward.database.SharedPreferencesTools;
 import com.tg.coloursteward.entity.HomePopWindowEntity;
 import com.tg.coloursteward.fragment.ContactsFragment;
 import com.tg.coloursteward.fragment.FragmentManagement;
@@ -1091,13 +1090,7 @@ public class MainActivity extends BaseActivity implements MessageHandler.Respons
                                 }
                             } else {
                                 ToastFactory.showToast(MainActivity.this, "账号异常，请及时联系管理员");
-                                singleDevicelogout();
-                                SharedPreferencesTools.clearUserId(MainActivity.this);
-                                //清空缓存
-                                SharedPreferencesTools.clearAllData(MainActivity.this);
-                                SharedPreferencesTools.clearCache(MainActivity.this);
-                                CityPropertyApplication.gotoLoginActivity(MainActivity.this);
-                                HuxinSdkManager.instance().loginOut();
+                                exitClearAllData();
                             }
                         }
                     } catch (Exception e) {

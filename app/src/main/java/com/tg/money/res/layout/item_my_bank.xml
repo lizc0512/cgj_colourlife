@@ -9,6 +9,7 @@
         android:id="@+id/iv_mybank_icon"
         android:layout_width="@dimen/size_40dp"
         android:layout_height="@dimen/size_40dp"
+        android:visibility="gone"
         android:layout_centerVertical="true"
         android:layout_marginLeft="@dimen/size_15dp" />
 
@@ -18,7 +19,6 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/size_15dp"
         android:layout_marginTop="@dimen/size_10dp"
-        android:layout_toRightOf="@id/iv_mybank_icon"
         android:textColor="@color/color_333b46"
         android:textSize="@dimen/font_16sp"
         tools:text="xxx银行" />

@@ -28,7 +28,7 @@ public class BankListAdapter extends BaseQuickAdapter<BankListEntity.ContentBean
     @Override
     protected void convert(BaseViewHolder helper, BankListEntity.ContentBean.DataBean item) {
         helper.setText(R.id.tv_support_bank, item.getBank_name());
-        GlideUtils.loadImageView(mContext, item.getBank_logo(), helper.getView(R.id.iv_support_icon));
+//        GlideUtils.loadImageView(mContext, item.getBank_logo(), helper.getView(R.id.iv_support_icon));
 
     }
 }

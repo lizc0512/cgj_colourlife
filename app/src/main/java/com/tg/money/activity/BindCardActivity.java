@@ -44,13 +44,17 @@ public class BindCardActivity extends BaseActivity implements View.OnClickListen
     private ImageView iv_base_back;
     private TextView tv_bindcard_agree;
     private TextView tv_bindcard_bank;
+    private TextView tv_bindcard_bank_type;
     private TextView tv_bindcard_bind;
     private TextView btn_bindcard_send;
     private TextView tv_bindcard_name;
     private TextView tv_bindcard_id;
     private RelativeLayout rl_bindcard_bank;
+    private RelativeLayout rl_bindcard_type;
     private String bankCode;
+    private String bankTypeId;
     private boolean isSelectBank;
+    private boolean isSelectBankType;
     private ClearEditText et_bindcard_sn;
     private ClearEditText et_bindcard_phone;
     private ClearEditText et_bindcard_code;
@@ -80,7 +84,9 @@ public class BindCardActivity extends BaseActivity implements View.OnClickListen
         iv_base_back = findViewById(R.id.iv_base_back);
         tv_bindcard_agree = findViewById(R.id.tv_bindcard_agree);
         rl_bindcard_bank = findViewById(R.id.rl_bindcard_bank);
+        rl_bindcard_type = findViewById(R.id.rl_bindcard_type);
         tv_bindcard_bank = findViewById(R.id.tv_bindcard_bank);
+        tv_bindcard_bank_type = findViewById(R.id.tv_bindcard_bank_type);
         tv_bindcard_bind = findViewById(R.id.tv_bindcard_bind);
         et_bindcard_sn = findViewById(R.id.et_bindcard_sn);
         et_bindcard_code = findViewById(R.id.et_bindcard_code);
@@ -94,6 +100,7 @@ public class BindCardActivity extends BaseActivity implements View.OnClickListen
         tv_base_title.setText("绑定银行卡");
         iv_base_back.setOnClickListener(this);
         rl_bindcard_bank.setOnClickListener(this);
+        rl_bindcard_type.setOnClickListener(this);
         tv_bindcard_bind.setOnClickListener(this);
         btn_bindcard_send.setOnClickListener(this);
         SpannableString spannableString = new SpannableString(tv_bindcard_agree.getText());
@@ -144,6 +151,10 @@ public class BindCardActivity extends BaseActivity implements View.OnClickListen
                 Intent it = new Intent(this, SupportCardActivity.class);
                 startActivityForResult(it, 1000);
                 break;
+            case R.id.rl_bindcard_type:
+                Intent itent = new Intent(this, CardTypeActivity.class);
+                startActivityForResult(itent, 2000);
+                break;
             case R.id.btn_bindcard_send:
                 String mobile = et_bindcard_phone.getText().toString().trim();
                 if (!TextUtils.isEmpty(mobile)) {
@@ -155,6 +166,10 @@ public class BindCardActivity extends BaseActivity implements View.OnClickListen
             case R.id.tv_bindcard_bind:
                 if (!isSelectBank) {
                     ToastUtil.showShortToast(this, "请选择银行");
+                    return;
+                }
+                if (!isSelectBankType) {
+                    ToastUtil.showShortToast(this, "请选择银行卡类型");
                     return;
                 }
                 String sn = et_bindcard_sn.getText().toString().trim();
@@ -190,7 +205,7 @@ public class BindCardActivity extends BaseActivity implements View.OnClickListen
                     ToastUtil.showShortToast(this, "请勾选用户协议");
                     return;
                 }
-                moneyModel.postAddBank(0, bankCode, sn, name, phone, code, idCard, this);
+                moneyModel.postAddBank(0, bankCode, sn, name, phone, code, idCard, bankTypeId, this);
                 break;
         }
     }
@@ -204,6 +219,13 @@ public class BindCardActivity extends BaseActivity implements View.OnClickListen
                 tv_bindcard_bank.setTextColor(ContextCompat.getColor(this, R.color.color_333b46));
                 bankCode = data.getStringExtra("bankCode");
                 isSelectBank = true;
+            }
+        } else if (requestCode == 2000) {
+            if (resultCode == 1001) {
+                tv_bindcard_bank_type.setText(data.getStringExtra("bankType"));
+                tv_bindcard_bank_type.setTextColor(ContextCompat.getColor(this, R.color.color_333b46));
+                bankTypeId = data.getStringExtra("bankTypeId");
+                isSelectBankType = true;
             }
         }
 

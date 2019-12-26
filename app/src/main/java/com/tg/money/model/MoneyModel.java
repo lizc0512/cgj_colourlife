@@ -41,6 +41,7 @@ public class MoneyModel extends BaseModel {
     private String userInfoUrl = "/app/bankcard/userInfo";
     private String myBankUrl = "/app/bankcard/bankcard";
     private String delBankUrl = "/app/bankcard/bankcard/del";
+    private String cardTypeUrl = "/app/bankcard/cardType";
 
 
     public MoneyModel() {
@@ -449,7 +450,7 @@ public class MoneyModel extends BaseModel {
      * @param code
      * @param httpResponse
      */
-    public void postAddBank(int what, String bank_code, String card_no, String name, String mobile, String code, String identity_card, final HttpResponse httpResponse) {
+    public void postAddBank(int what, String bank_code, String card_no, String name, String mobile, String code, String identity_card, String card_type, final HttpResponse httpResponse) {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("bank_code", bank_code);
         params.put("card_no", card_no);
@@ -457,6 +458,7 @@ public class MoneyModel extends BaseModel {
         params.put("mobile", mobile);
         params.put("code", code);
         params.put("identity_card", identity_card);
+        params.put("card_type", card_type);
         final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 0, addBankUrl), RequestMethod.POST);
         request(what, request, params, new HttpListener<String>() {
             @Override
@@ -560,7 +562,7 @@ public class MoneyModel extends BaseModel {
      * @param page_size
      * @param httpResponse
      */
-    public void getMyBank(int what, int page, String page_size,boolean isloading, final HttpResponse httpResponse) {
+    public void getMyBank(int what, int page, String page_size, boolean isloading, final HttpResponse httpResponse) {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("page", page);
         params.put("page_size", page_size);
@@ -622,5 +624,37 @@ public class MoneyModel extends BaseModel {
                 showExceptionMessage(what, response);
             }
         }, true, false);
+    }
+
+    /**
+     * 获取卡类别
+     *
+     * @param what
+     * @param httpResponse
+     */
+    public void getCardType(int what, final HttpResponse httpResponse) {
+        final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 0, cardTypeUrl), RequestMethod.GET);
+        request(what, request, null, new HttpListener<String>() {
+            @Override
+            public void onSucceed(int what, Response<String> response) {
+                int responseCode = response.getHeaders().getResponseCode();
+                String result = response.get();
+                if (responseCode == RequestEncryptionUtils.responseSuccess) {
+                    if (!TextUtils.isEmpty(result)) {
+                        int code = showSuccesResultMessage(result);
+                        if (code == 0) {
+                            httpResponse.OnHttpResponse(what, result);
+                        }
+                    }
+                } else {
+                    showErrorCodeMessage(response);
+                }
+            }
+
+            @Override
+            public void onFailed(int what, Response<String> response) {
+                showExceptionMessage(what, response);
+            }
+        }, true, true);
     }
 }

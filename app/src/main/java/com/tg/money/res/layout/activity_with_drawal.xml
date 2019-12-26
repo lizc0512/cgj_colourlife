@@ -50,14 +50,15 @@
             android:layout_width="@dimen/size_30dp"
             android:layout_height="@dimen/size_30dp"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="@dimen/size_15dp" />
+            android:layout_marginLeft="@dimen/size_15dp"
+            android:visibility="gone" />
 
         <TextView
             android:id="@+id/tv_withdrawal_mycard"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="@dimen/size_10dp"
+            android:layout_marginLeft="@dimen/size_15dp"
             android:layout_toRightOf="@id/iv_withdrawal_mycard"
             android:textColor="@color/color_333b46"
             android:textSize="@dimen/font_14sp"

@@ -612,6 +612,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
 
     private void login(String accout, String pwdMD5, String loginType) {
         SoftKeyboardUtils.hideSoftKeyboard(LoginActivity.this, edit_account);
+        exitClearAllData();
         if (null == auth2ServiceUpdate) {
             auth2ServiceUpdate = new OAuth2ServiceUpdate(LoginActivity.this, loginType);
         } else {

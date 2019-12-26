@@ -76,6 +76,9 @@
             android:name="com.tg.money.activity.FreezeAmountActivity"
             android:screenOrientation="portrait" />
         <activity
+            android:name="com.tg.money.activity.CardTypeActivity"
+            android:screenOrientation="portrait" />
+        <activity
             android:name="com.tg.money.activity.DistributionrecordsActivity"
             android:screenOrientation="portrait" />
         <activity

@@ -87,6 +87,7 @@ public class SupportCardActivity extends BaseActivity implements View.OnClickLis
                             SupportCardActivity.this.getCurrentFocus().getWindowToken(),
                             InputMethodManager.HIDE_NOT_ALWAYS);
                     searchContent = et_support_serach.getText().toString().trim();
+                    mListItem.clear();
                     if (!TextUtils.isEmpty(searchContent)) {
                         for (int i = 0; i < mList.size(); i++) {
                             if (mList.get(i).getBank_name().contains(searchContent)) {

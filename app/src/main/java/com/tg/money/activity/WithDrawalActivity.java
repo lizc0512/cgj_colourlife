@@ -383,7 +383,7 @@ public class WithDrawalActivity extends BaseActivity implements View.OnClickList
                     if (entiy.getContent().getRight_pwd().equals("1") && !TextUtils.isEmpty(money)) {
                         if (!isFpMoney) {
                             moneyModel.postCashMoney(3, general_uuid, split_type, split_target, money, bankName,
-                                    bankNo, userName, bankCode, this);
+                                    bankNo, userName, bankCode, bankId, this);
                         } else {
                             pointModel.postFpWithdrawal(5, pano, money, bankId, entiy.getContent().getToken(), this);
                         }

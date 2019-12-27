@@ -368,7 +368,7 @@ public class MoneyModel extends BaseModel {
      * @param httpResponse
      */
     public void postCashMoney(int what, String general_uuid, String split_type, String split_target, String amount, String bank_name, String bank_num,
-                              String bank_user, String bank_code, final HttpResponse httpResponse) {
+                              String bank_user, String bank_code, String bankcard_uuid, final HttpResponse httpResponse) {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("general_uuid", general_uuid);
         params.put("split_type", split_type);
@@ -378,6 +378,7 @@ public class MoneyModel extends BaseModel {
         params.put("bank_num", bank_num);
         params.put("bank_user", bank_user);
         params.put("bank_code", bank_code);
+        params.put("bankcard_uuid", bankcard_uuid);
         final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 0, jsfpCashMoneyUrl), RequestMethod.POST);
         request(what, request, params, new HttpListener<String>() {
             @Override

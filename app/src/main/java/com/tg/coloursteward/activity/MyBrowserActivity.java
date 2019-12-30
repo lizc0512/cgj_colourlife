@@ -750,6 +750,24 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
     public class JsInteration {
 
         @JavascriptInterface
+        public void getLocationPermisstion() {
+            if (!XXPermissions.isHasPermission(MyBrowserActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION)) {
+                XXPermissions.with(MyBrowserActivity.this).permission(Manifest.permission.ACCESS_COARSE_LOCATION).request(new OnPermission() {
+                    @Override
+                    public void hasPermission(List<String> granted, boolean isAll) {
+
+                    }
+
+                    @Override
+                    public void noPermission(List<String> denied, boolean quick) {
+
+                    }
+                });
+            }
+        }
+
+
+        @JavascriptInterface
         public void GetWebTitle(String title) {
             tvTitle.setText(title);
         }
@@ -1166,8 +1184,8 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
      */
     private void openFileChooseProcess() {
         Intent i = new Intent(Intent.ACTION_PICK);
-        i.setType("image/*");
-        startActivityForResult(Intent.createChooser(i, "相册"), 0);
+        i.setType("video/*;image/*");//同时选择视频和图片
+        startActivityForResult(Intent.createChooser(i, "文件"), 0);
     }
 
     /**

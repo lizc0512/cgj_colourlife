@@ -387,7 +387,7 @@ public class MoneyModel extends BaseModel {
                 String result = response.get();
                 if (responseCode == RequestEncryptionUtils.responseSuccess) {
                     if (!TextUtils.isEmpty(result)) {
-                        int code = showSuccesResultMessageTheme(result);
+                        int code = showSuccesResultMessage(result);
                         if (code == 0) {
                             httpResponse.OnHttpResponse(what, result);
                         }

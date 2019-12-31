@@ -303,7 +303,7 @@ public class StringUtils {
      * @return Integer
      */
     public static Integer toInt(String data) {
-        Integer result = 0;
+        Integer result = -1;
 
         try {
             result = Integer.valueOf(data);
@@ -321,7 +321,7 @@ public class StringUtils {
      * @return Long
      */
     public static Long toLong(String data) {
-        Long result = 0L;
+        Long result = -1L;
 
         try {
             result = Long.valueOf(data);
@@ -339,7 +339,7 @@ public class StringUtils {
      * @return Float
      */
     public static Float toFloat(String data) {
-        Float result = 0.0f;
+        Float result = -1.0f;
 
         if (data != null && data.length() > 0) {
             try {
@@ -359,7 +359,7 @@ public class StringUtils {
      * @return Double
      */
     public static Double toDouble(String data) {
-        Double result = 0.0;
+        Double result = -1.0;
 
         try {
             result = Double.valueOf(data);

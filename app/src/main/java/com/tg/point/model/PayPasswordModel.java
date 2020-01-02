@@ -173,14 +173,12 @@ public class PayPasswordModel extends BaseModel {
      * 验证用户身份信息
      *
      * @param what
-     * @param mobile
      * @param code
      * @param identity_val
      * @param newHttpResponse
      */
-    public void validIdentityInfor(int what, String mobile, String code, String identity_val, final HttpResponse newHttpResponse) {
+    public void validIdentityInfor(int what, String code, String identity_val, final HttpResponse newHttpResponse) {
         Map<String, Object> params = new HashMap<String, Object>();
-        params.put("mobile", mobile);
         params.put("code", code);
         params.put("identity_val", identity_val);
         final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 16, validIdentityUrl), RequestMethod.GET);
@@ -210,14 +208,11 @@ public class PayPasswordModel extends BaseModel {
      * 发送验证码
      *
      * @param what
-     * @param mobile
      * @param newHttpResponse
      */
-    public void postSendCode(int what, String mobile, final HttpResponse newHttpResponse) {
-        Map<String, Object> map = new HashMap<>();
-        map.put("mobile", mobile);
+    public void postSendCode(int what, final HttpResponse newHttpResponse) {
         final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 16, sendCodeUrl), RequestMethod.POST);
-        request(what, request, map, new HttpListener<String>() {
+        request(what, request, null, new HttpListener<String>() {
             @Override
             public void onSucceed(int what, Response<String> response) {
                 int responseCode = response.getHeaders().getResponseCode();

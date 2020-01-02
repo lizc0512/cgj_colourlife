@@ -17,10 +17,12 @@ import com.tg.coloursteward.R;
 import com.tg.coloursteward.base.BaseActivity;
 import com.tg.coloursteward.baseModel.HttpResponse;
 import com.tg.coloursteward.constant.UserMessageConstant;
+import com.tg.coloursteward.info.UserInfo;
 import com.tg.coloursteward.util.GsonUtils;
-import com.tg.coloursteward.util.NumberUtils;
+import com.tg.coloursteward.util.LinkParseUtil;
 import com.tg.coloursteward.util.ToastUtil;
 import com.tg.coloursteward.view.ClearEditText;
+import com.tg.coloursteward.view.dialog.DialogFactory;
 import com.tg.point.entity.CheckPwdEntiy;
 import com.tg.point.entity.IndentityInforEntity;
 import com.tg.point.model.PayPasswordModel;
@@ -41,8 +43,8 @@ public class ForgetPayPawdActivity extends BaseActivity implements View.OnClickL
     private ClearEditText input_pawd_code;
     private TextView tv_get_code;
     private TextView tv_user_realname;
+    private TextView tv_user_phone;
     private ClearEditText input_pawd_idcard;
-    private ClearEditText et_user_phone;
     private Button btn_define;
     private TextView tv_contact_service;
     private MyTimeCount myTimeCount = null;
@@ -57,11 +59,11 @@ public class ForgetPayPawdActivity extends BaseActivity implements View.OnClickL
         setContentView(R.layout.activity_password_forget_layout);
         mBack = findViewById(R.id.iv_base_back);
         mTitle = findViewById(R.id.tv_base_title);
-        et_user_phone = findViewById(R.id.et_user_phone);
         input_pawd_code = findViewById(R.id.input_pawd_code);
         tv_get_code = findViewById(R.id.tv_get_code);
         tv_user_realname = findViewById(R.id.tv_user_realname);
         input_pawd_idcard = findViewById(R.id.input_pawd_idcard);
+        tv_user_phone = findViewById(R.id.tv_user_phone);
         btn_define = findViewById(R.id.btn_define);
         btn_define.setEnabled(false);
         tv_contact_service = findViewById(R.id.tv_contact_service);
@@ -76,6 +78,7 @@ public class ForgetPayPawdActivity extends BaseActivity implements View.OnClickL
         if (!EventBus.getDefault().isRegistered(ForgetPayPawdActivity.this)) {
             EventBus.getDefault().register(ForgetPayPawdActivity.this);
         }
+        tv_user_phone.setText(UserInfo.mobile);
         payPasswordModel.getIdentityInfor(0, ForgetPayPawdActivity.this);
     }
 
@@ -114,19 +117,23 @@ public class ForgetPayPawdActivity extends BaseActivity implements View.OnClickL
                 finish();
                 break;
             case R.id.tv_get_code:
-                mobile = et_user_phone.getText().toString().trim();
-                if (!NumberUtils.IsPhoneNumber(mobile)) {
+                if (TextUtils.isEmpty(UserInfo.mobile)) {
                     ToastUtil.showShortToast(this, "请输入正确的手机号");
+                    DialogFactory.getInstance().showDoorDialog(this, v12 ->
+                                    LinkParseUtil.parse(ForgetPayPawdActivity.this, "colourlife://proto?type=bindMobile", ""),
+                            null, 1, "您的账号尚未绑定手机号码，请前往添加绑定", "去绑定", null);
                     return;
                 }
                 if (fastClick()) {
-                    payPasswordModel.postSendCode(1, mobile, this);
+                    payPasswordModel.postSendCode(1, this);
                 }
                 break;
             case R.id.btn_define:
-                mobile = et_user_phone.getText().toString().trim();
-                if (TextUtils.isEmpty(mobile)) {
-                    ToastUtil.showShortToast(this, "手机号不能为空");
+                if (TextUtils.isEmpty(UserInfo.mobile)) {
+                    ToastUtil.showShortToast(this, "请输入正确的手机号");
+                    DialogFactory.getInstance().showDoorDialog(this, v1 ->
+                                    LinkParseUtil.parse(ForgetPayPawdActivity.this, "colourlife://proto?type=bindMobile", ""),
+                            null, 1, "您的账号尚未绑定手机号码，请前往添加绑定", "去绑定", null);
                     return;
                 }
                 if (TextUtils.isEmpty(smsCode)) {
@@ -138,7 +145,7 @@ public class ForgetPayPawdActivity extends BaseActivity implements View.OnClickL
                     return;
                 }
                 if (fastClick()) {
-                    payPasswordModel.validIdentityInfor(2, mobile, smsCode, idCardNumber, ForgetPayPawdActivity.this);
+                    payPasswordModel.validIdentityInfor(2, smsCode, idCardNumber, ForgetPayPawdActivity.this);
                 }
                 break;
             case R.id.tv_contact_service:

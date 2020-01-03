@@ -638,7 +638,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Response
     /**
      * 退出登录，清空一切数据操作
      */
-    protected void exitClearAllData() {
+    protected void exitClearAllData(boolean isLoginActivity) {
         StopYingYan();
         singleDevicelogout();
         //清空缓存
@@ -647,7 +647,9 @@ public abstract class BaseActivity extends AppCompatActivity implements Response
         SharedPreferencesTools.clearCache(this);
         SharedPreferencesTools.clearAllData(this);
         SharedPreferencesUtils.getInstance().clear();
-        CityPropertyApplication.gotoLoginActivity(this);
+        if (!isLoginActivity) {
+            CityPropertyApplication.gotoLoginActivity(this);
+        }
         HuxinSdkManager.instance().loginOut();
     }
 

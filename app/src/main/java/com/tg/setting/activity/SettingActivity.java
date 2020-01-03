@@ -214,7 +214,7 @@ public class SettingActivity extends BaseActivity implements OnClickListener, Ht
                 DialogFactory.getInstance().showDialog(SettingActivity.this, new OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        exitClearAllData();
+                        exitClearAllData(false);
                     }
                 }, null, "确定要退出账号吗", null, null);
                 break;

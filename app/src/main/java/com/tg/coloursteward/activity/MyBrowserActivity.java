@@ -133,6 +133,7 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
     public static final String ACTION_FRESH_PAYINFO = "com.tg.coloursteward.ACTION_FRESH_PAYINFO";
     public static final String PAY_STATE = "pay_state";
     public static final int PIC_PHOTO_BY_CAMERA = 1010;
+    public static final int PIC_PHOTO_BY_VIDEO = 1011;
     private final String TAG = "MyBrowserActivity";
     public static final String KEY_HIDE_TITLE = "hide";
     public static final String KEY_TITLE = "title";
@@ -205,6 +206,7 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
             }
         }
     };
+    private Uri videoUrl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -567,33 +569,47 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
         public void openFileChooser(ValueCallback<Uri> uploadMsg, String acceptType) {
             Log.i("test", "openFileChooser 1");
             MyBrowserActivity.this.uploadFile = uploadFile;
-            showPhotoSelector();
+            showPhotoSelector(false, "");
         }
 
         // For Android < 3.0
         public void openFileChooser(ValueCallback<Uri> uploadMsgs) {
             Log.i("test", "openFileChooser 2");
             MyBrowserActivity.this.uploadFile = uploadFile;
-            showPhotoSelector();
+            showPhotoSelector(false, "");
         }
 
         // For Android  > 4.1.1
         public void openFileChooser(ValueCallback<Uri> uploadMsg, String acceptType, String capture) {
             Log.i("test", "openFileChooser 3");
             MyBrowserActivity.this.uploadFile = uploadFile;
-            showPhotoSelector();
+            showPhotoSelector(false, "");
         }
 
         // For Android  >= 5.0
         public boolean onShowFileChooser(com.tencent.smtt.sdk.WebView webView,
                                          ValueCallback<Uri[]> filePathCallback,
                                          WebChromeClient.FileChooserParams fileChooserParams) {
-            Log.i("test", "openFileChooser 4:" + filePathCallback.toString());
+            boolean isCam = fileChooserParams.isCaptureEnabled();
+            String type[] = fileChooserParams.getAcceptTypes();
             MyBrowserActivity.this.uploadFiles = filePathCallback;
-            showPhotoSelector();
+            if (isCam) {
+                showPhotoSelector(isCam, "");
+            } else {
+                if (type.length > 0) {
+                    if ("image/*".equals(type[0])) {
+                        showPhotoSelector(isCam, "image");
+                    } else if ("video/*".equals(type[0])) {
+                        showPhotoSelector(isCam, "video");
+                    } else {
+                        showPhotoSelector(isCam, "");
+                    }
+                } else {
+                    showPhotoSelector(false, "");
+                }
+            }
             return true;
         }
-
     }
 
     /**
@@ -1182,43 +1198,72 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
     /**
      * 调用相册
      */
-    private void openFileChooseProcess() {
+    private void openFileChooseProcess(String type) {
         Intent i = new Intent(Intent.ACTION_PICK);
-        i.setType("video/*;image/*");//同时选择视频和图片
+        if ("image".equals(type)) {
+            i.setType("image/*");//选择图片
+        } else if ("video".equals(type)) {
+            i.setType("video/*");//选择视频和
+        } else {
+            i.setType("video/*;image/*");//同时选择视频和图片
+        }
         startActivityForResult(Intent.createChooser(i, "文件"), 0);
     }
 
     /**
      * 调用相机
      */
-    private void openFileChooseCamera() {
-        int maxMemory = (int) Runtime.getRuntime().maxMemory();
-        //M兆
-        int maxMemorySize = maxMemory / (1024 * 1024);
-        if (android.os.Build.VERSION.SDK_INT <= 10 || maxMemorySize <= 32) {
-            Intent cameraintent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            startActivityForResult(cameraintent,
-                    PIC_PHOTO_BY_CAMERA);
+    private void openFileChooseCamera(String type) {
+        if ("video".equals(type)) {
+            //将拍摄的照片保存在一个指定好的文件下
+            File f = new File(Environment.getExternalStorageDirectory() + "/" + System.currentTimeMillis() + ".mp4");
+            videoUrl = Uri.fromFile(f);
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                //通过FileProvider创建一个content类型的Uri
+                videoUrl = FileProvider.getUriForFile(MyBrowserActivity.this, BuildConfig.APPLICATION_ID + ".fileProvider", f);
+            }
+            //调用系统相机
+            Intent intentVideo = new Intent();
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                //添加这一句表示对目标应用临时授权该Uri所代表的文件
+                intentVideo.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            }
+            intentVideo.setAction(MediaStore.ACTION_VIDEO_CAPTURE);
+            intentVideo.addCategory(Intent.CATEGORY_DEFAULT);
+            //将拍照结果保存至photo_file的Uri中
+            intentVideo.putExtra(MediaStore.EXTRA_OUTPUT, videoUrl);
+            startActivityForResult(intentVideo, PIC_PHOTO_BY_VIDEO);
+
         } else {
-            if (null != updateFile && updateFile.exists()) {
-                updateFile.delete();
-            }
-            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
-                TAKE_PHOTO_PATH = Environment.getExternalStorageDirectory().getAbsolutePath() + System.currentTimeMillis() + ".jpg";
-                updateFile = new File(TAKE_PHOTO_PATH);
-                uri = FileProvider.getUriForFile(MyBrowserActivity.this, BuildConfig.APPLICATION_ID + ".fileProvider", updateFile);
-                intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            int maxMemory = (int) Runtime.getRuntime().maxMemory();
+            //M兆
+            int maxMemorySize = maxMemory / (1024 * 1024);
+            if (android.os.Build.VERSION.SDK_INT <= 10 || maxMemorySize <= 32) {
+                Intent cameraintent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                startActivityForResult(cameraintent,
+                        PIC_PHOTO_BY_CAMERA);
             } else {
-                {
-                    TAKE_PHOTO_PATH = Environment.getExternalStorageDirectory() +
-                            File.separator + System.currentTimeMillis() + ".jpg";
-                    updateFile = new File(TAKE_PHOTO_PATH);
-                    uri = Uri.fromFile(updateFile);
+                if (null != updateFile && updateFile.exists()) {
+                    updateFile.delete();
                 }
+                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
+                    TAKE_PHOTO_PATH = Environment.getExternalStorageDirectory().getAbsolutePath() + System.currentTimeMillis() + ".jpg";
+                    updateFile = new File(TAKE_PHOTO_PATH);
+                    uri = FileProvider.getUriForFile(MyBrowserActivity.this, BuildConfig.APPLICATION_ID + ".fileProvider", updateFile);
+                    intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                } else {
+                    {
+                        TAKE_PHOTO_PATH = Environment.getExternalStorageDirectory() +
+                                File.separator + System.currentTimeMillis() + ".jpg";
+                        updateFile = new File(TAKE_PHOTO_PATH);
+                        uri = Uri.fromFile(updateFile);
+                    }
+                }
+                intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+                startActivityForResult(intent, PIC_PHOTO_BY_CAMERA);
             }
-            intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
-            startActivityForResult(intent, PIC_PHOTO_BY_CAMERA);
         }
     }
 
@@ -1318,6 +1363,18 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
                 }
 
 
+            }
+        } else if (requestCode == PIC_PHOTO_BY_VIDEO && resultCode == Activity.RESULT_OK) {
+            if (null != uploadFiles) {
+                if (data != null) {
+                    Uri result = data == null || resultCode != RESULT_OK ? null
+                            : data.getData();
+                    uploadFiles.onReceiveValue(new Uri[]{result});
+                    uploadFiles = null;
+                } else {
+                    uploadFiles.onReceiveValue(new Uri[]{videoUrl});
+                    uploadFiles = null;
+                }
             }
         } else if (requestCode == YUN_SHANG_SCANNERCODE) {
             if (data != null) {
@@ -1885,13 +1942,17 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
      */
     AlertDialog photoDialog;
 
-    public void showPhotoSelector() {
+    public void showPhotoSelector(boolean isCam, String type) {
         XXPermissions.with(this)
                 .permission(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 .request(new OnPermission() {
                     @Override
                     public void hasPermission(List<String> granted, boolean isAll) {
-                        openCarema();
+                        if (isCam) {
+                            openFileChooseCamera("");
+                        } else {
+                            openCarema(type);
+                        }
                     }
 
                     @Override
@@ -1902,66 +1963,69 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
 
     }
 
-    private void openCarema() {
-        if (photoDialog == null) {
-            photoDialog = new AlertDialog.Builder(MyBrowserActivity.this).create();
-            photoDialog.show();
-            View v = LayoutInflater.from(MyBrowserActivity.this).inflate(
-                    R.layout.set_photo_dialog_layout, null);
-            v.findViewById(R.id.take_photo).setOnClickListener(
-                    new OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            // TODO Auto-generated method stub
-                            openFileChooseCamera();
-                            photoDialog.dismiss();
-                        }
-                    });
-            v.findViewById(R.id.choose_photo).setOnClickListener(
-                    new OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            // TODO Auto-generated method stub
-                            openFileChooseProcess();
-                            photoDialog.dismiss();
-                        }
-                    });
-            v.findViewById(R.id.cancel).setOnClickListener(
-                    new OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            if (uploadFile != null) {    //xie ：直接点击取消时，ValueCallback回调会被挂起，需要手动结束掉回调，否则再次点击选择照片无响应
-                                uploadFile.onReceiveValue(null);
-                                uploadFile = null;
-                            }
-                            if (uploadFiles != null) {    //xie ：直接点击取消时，ValueCallback回调会被挂起，需要手动结束掉回调，否则再次点击选择照片无响应
-                                uploadFiles.onReceiveValue(null);
-                                uploadFiles = null;
-                            }
-                            photoDialog.dismiss();
-                        }
-                    });
-            photoDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-                @Override
-                public void onCancel(DialogInterface dialog) {
-                    if (uploadFile != null) {    //xie ：直接点击取消时，ValueCallback回调会被挂起，需要手动结束掉回调，否则再次点击选择照片无响应
-                        uploadFile.onReceiveValue(null);
-                        uploadFile = null;
-                    }
-                    if (uploadFiles != null) {    //xie ：直接点击取消时，ValueCallback回调会被挂起，需要手动结束掉回调，否则再次点击选择照片无响应
-                        uploadFiles.onReceiveValue(null);
-                        uploadFiles = null;
-                    }
-                }
-            });
-            Window window = photoDialog.getWindow();
-            WindowManager.LayoutParams p = window.getAttributes();
-            DisplayMetrics metrics = Tools.getDisplayMetrics(MyBrowserActivity.this);
-            p.width = metrics.widthPixels;
-            p.gravity = Gravity.BOTTOM;
-            window.setAttributes(p);
-            window.setContentView(v);
-        }
+    private void openCarema(String type) {
+        photoDialog = new AlertDialog.Builder(MyBrowserActivity.this).create();
         photoDialog.show();
+        View v = LayoutInflater.from(MyBrowserActivity.this).inflate(
+                R.layout.set_photo_dialog_layout, null);
+        Button button = v.findViewById(R.id.take_photo);
+        if ("image".equals(type)) {
+            button.setText("拍照");
+        } else if ("video".equals(type)) {
+            button.setText("拍摄");
+        }
+        v.findViewById(R.id.take_photo).setOnClickListener(
+                new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        // TODO Auto-generated method stub
+                        openFileChooseCamera(type);
+                        photoDialog.dismiss();
+                    }
+                });
+        v.findViewById(R.id.choose_photo).setOnClickListener(
+                new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        // TODO Auto-generated method stub
+                        openFileChooseProcess(type);
+                        photoDialog.dismiss();
+                    }
+                });
+        v.findViewById(R.id.cancel).setOnClickListener(
+                new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (uploadFile != null) {    //xie ：直接点击取消时，ValueCallback回调会被挂起，需要手动结束掉回调，否则再次点击选择照片无响应
+                            uploadFile.onReceiveValue(null);
+                            uploadFile = null;
+                        }
+                        if (uploadFiles != null) {    //xie ：直接点击取消时，ValueCallback回调会被挂起，需要手动结束掉回调，否则再次点击选择照片无响应
+                            uploadFiles.onReceiveValue(null);
+                            uploadFiles = null;
+                        }
+                        photoDialog.dismiss();
+                    }
+                });
+        photoDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                if (uploadFile != null) {    //xie ：直接点击取消时，ValueCallback回调会被挂起，需要手动结束掉回调，否则再次点击选择照片无响应
+                    uploadFile.onReceiveValue(null);
+                    uploadFile = null;
+                }
+                if (uploadFiles != null) {    //xie ：直接点击取消时，ValueCallback回调会被挂起，需要手动结束掉回调，否则再次点击选择照片无响应
+                    uploadFiles.onReceiveValue(null);
+                    uploadFiles = null;
+                }
+            }
+        });
+        Window window = photoDialog.getWindow();
+        WindowManager.LayoutParams p = window.getAttributes();
+        DisplayMetrics metrics = Tools.getDisplayMetrics(MyBrowserActivity.this);
+        p.width = metrics.widthPixels;
+        p.gravity = Gravity.BOTTOM;
+        window.setAttributes(p);
+        window.setContentView(v);
     }
 }

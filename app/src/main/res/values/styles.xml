@@ -24,6 +24,13 @@
         <item name="android:windowNoTitle">true</item>
     </style>
 
+    <style name="GridPasswordView.Divider">
+        <item name="android:layout_width">1dp</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_marginTop">1dp</item>
+        <item name="android:layout_marginBottom">1dp</item>
+    </style>
+
     <style name="hint_11">
         <item name="android:textSize">11sp</item>
         <item name="android:textColor">@color/text_color1</item>

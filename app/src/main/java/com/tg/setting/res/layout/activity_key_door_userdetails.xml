@@ -37,7 +37,7 @@
             android:layout_marginTop="15dp"
             android:layout_toRightOf="@id/door_user_photo"
             android:textColor="@color/color_333b46"
-            android:textSize="@dimen/sp_16" />
+            android:textSize="@dimen/font_16sp" />
 
         <TextView
             android:id="@+id/tv_door_identify"
@@ -251,7 +251,7 @@
         android:paddingBottom="10dp"
         android:text="进出记录"
         android:textColor="@color/color_333b46"
-        android:textSize="@dimen/sp_16" />
+        android:textSize="@dimen/font_16sp" />
 
 
     <com.jcodecraeer.xrecyclerview.XRecyclerView

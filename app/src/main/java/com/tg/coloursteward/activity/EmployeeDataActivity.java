@@ -17,9 +17,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
-import com.dashuview.library.keep.Cqb_PayUtil;
-import com.dashuview.library.keep.ListenerUtils;
-import com.dashuview.library.keep.MyListener;
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.adapter.EmployeePhoneAdapter;
 import com.tg.coloursteward.base.BaseActivity;
@@ -54,16 +51,13 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Date;
 
-import static com.tg.coloursteward.module.MainActivity.getEnvironment;
-import static com.tg.coloursteward.module.MainActivity.getPublicParams;
-
 /**
  * 员工名片
  *
  * @author Administrator
  */
 @Route(path = APath.EMPLOYEE_DATA_ACT)
-public class EmployeeDataActivity extends BaseActivity implements MyListener, HttpResponse {
+public class EmployeeDataActivity extends BaseActivity implements HttpResponse {
     public final static String CONTACTS_ID = "contacts_id";
     private String contactsID = "";
     private ManageMentLinearlayout magLinearLayout;
@@ -90,7 +84,6 @@ public class EmployeeDataActivity extends BaseActivity implements MyListener, Ht
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_employee_data);
         contactModel = new ContactModel(this);
-        ListenerUtils.setCallBack(this);
         Intent intent = getIntent();
         if (intent != null) {
             contactsID = intent.getStringExtra(CONTACTS_ID);
@@ -259,31 +252,6 @@ public class EmployeeDataActivity extends BaseActivity implements MyListener, Ht
     @Override
     public String getHeadTitle() {
         return null;
-    }
-
-    @Override
-    public void authenticationFeedback(String s, int i) {
-        switch (i) {
-            case 16://密码校验成功
-                break;
-            case 17://密码检验时主动中途退出
-                ToastFactory.showToast(EmployeeDataActivity.this, "已取消");
-                break;
-            case 18://没有设置支付密码
-                ToastFactory.showToast(EmployeeDataActivity.this, "未设置支付密码，即将跳转到彩钱包页面");
-                Cqb_PayUtil.getInstance(this).createPay(getPublicParams(), getEnvironment());
-                break;
-            case 19://绑定银行卡并设置密码成功
-                break;
-            case 20://名片赠送成功
-//                ToastFactory.showToast(EmployeeDataActivity.this,"转账成功");
-                break;
-        }
-    }
-
-    @Override
-    public void toCFRS(String s) {
-
     }
 
     @Override

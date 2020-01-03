@@ -4,18 +4,18 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.RelativeLayout;
 
-import com.dashuview.library.keep.Cqb_PayUtil;
-import com.dashuview.library.keep.ListenerUtils;
-import com.dashuview.library.keep.MyListener;
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.adapter.PublicAccountAdapter;
 import com.tg.coloursteward.base.BaseActivity;
+import com.tg.coloursteward.baseModel.HttpResponse;
 import com.tg.coloursteward.constant.Contants;
 import com.tg.coloursteward.info.AppsDetailInfo;
 import com.tg.coloursteward.info.PublicAccountInfo;
@@ -29,23 +29,33 @@ import com.tg.coloursteward.net.RequestConfig;
 import com.tg.coloursteward.net.RequestParams;
 import com.tg.coloursteward.net.ResponseData;
 import com.tg.coloursteward.serice.AuthAppService;
+import com.tg.coloursteward.util.GsonUtils;
 import com.tg.coloursteward.util.StringUtils;
+import com.tg.coloursteward.util.ToastUtil;
 import com.tg.coloursteward.util.Tools;
 import com.tg.coloursteward.view.PullRefreshListView;
+import com.tg.coloursteward.view.dialog.DialogFactory;
 import com.tg.coloursteward.view.dialog.ToastFactory;
+import com.tg.point.activity.ChangePawdTwoStepActivity;
+import com.tg.point.activity.PointPasswordDialog;
+import com.tg.point.entity.CheckPwdEntiy;
+import com.tg.point.entity.PointTransactionTokenEntity;
+import com.tg.point.model.PointModel;
+import com.youmai.hxsdk.utils.AppUtils;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-import static com.tg.coloursteward.module.MainActivity.getEnvironment;
-import static com.tg.coloursteward.module.MainActivity.getPublicParams;
+import static com.tg.coloursteward.constant.UserMessageConstant.POINT_INPUT_PAYPAWD;
 
 /**
  * 对公账户
  */
-public class PublicAccountActivity extends BaseActivity implements MyListener {
+public class PublicAccountActivity extends BaseActivity implements HttpResponse {
     public static final String ACTION_PUBLIC_ACCOUNT = "com.tg.coloursteward.ACTION_PUBLIC_ACCOUNT";
     private RelativeLayout rl_kong;
     private PullRefreshListView pullListView;
@@ -56,6 +66,8 @@ public class PublicAccountActivity extends BaseActivity implements MyListener {
     private AuthAppService authAppService;//2.0授权
     private int postion;
     private String isshow = "";
+    private PointModel pointModel;
+    private String state;//支付密码的状态
     private BroadcastReceiver freshReceiver = new BroadcastReceiver() {
 
         @Override
@@ -70,8 +82,11 @@ public class PublicAccountActivity extends BaseActivity implements MyListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        pointModel = new PointModel(this);
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this);
+        }
         getPopup(false);
-        ListenerUtils.setCallBack(this);
         initView();
     }
 
@@ -80,7 +95,6 @@ public class PublicAccountActivity extends BaseActivity implements MyListener {
      */
     private void initView() {
         accessToken = Tools.getStringValue(PublicAccountActivity.this, Contants.storage.APPAUTH);
-        //accessToken_1 = Tools.getStringValue(PublicAccountActivity.this,Contants.storage.APPAUTH_1);
         rl_kong = findViewById(R.id.rl_kong);
         pullListView = findViewById(R.id.lv_public_account);
         adapter = new PublicAccountAdapter(PublicAccountActivity.this, list);
@@ -89,16 +103,17 @@ public class PublicAccountActivity extends BaseActivity implements MyListener {
             @Override
             public void onclick(int position) {
                 isshow = "transfer";
-                Cqb_PayUtil.getInstance(PublicAccountActivity.this).PayPasswordDialog(getPublicParams(), getEnvironment(), "payDialog");
                 postion = position;
+                pointModel.getTransactionToken(3, PublicAccountActivity.this);
             }
         });
         adapter.setExchangeCallBack(new ExchangeCallBack() {//兑换
             @Override
             public void onclick(int position) {
                 isshow = "exchange";
-                Cqb_PayUtil.getInstance(PublicAccountActivity.this).PayPasswordDialog(getPublicParams(), getEnvironment(), "payDialog");
                 postion = position;
+                pointModel.getTransactionToken(3, PublicAccountActivity.this);
+
             }
         });
         pullListView.setDividerHeight(0);
@@ -191,23 +206,103 @@ public class PublicAccountActivity extends BaseActivity implements MyListener {
          * 获取tooken值
          */
         getAuthAppInfo();
-  /*  String expireTime = Tools.getStringValue(PublicAccountActivity.this,Contants.storage.APPAUTHTIME);
-    Date dt = new Date();
-    Long time = dt.getTime(); */
-        /**
-         * 获取对公账户数据
-         */
-   /*
-    if(StringUtils.isNotEmpty(expireTime)){
-        if(Long.parseLong(expireTime) <= time) {//token过期
-            getAuthAppInfo();
-        }else{
-           // getPublicAccount();
-            pullListView.performLoading();
+    }
+
+    @Override
+    public void OnHttpResponse(int what, String result) {
+        super.OnHttpResponse(what, result);
+        switch (what) {
+            case 3:
+                try {
+                    PointTransactionTokenEntity pointTransactionTokenEntity = GsonUtils.gsonToBean(result, PointTransactionTokenEntity.class);
+                    PointTransactionTokenEntity.ContentBean contentBean = pointTransactionTokenEntity.getContent();
+                    state = contentBean.getState();
+                    switch (state) {//1 已实名已设置支付密码2 已实名未设置支付密码3 未实名未设置支付密码4 未实名已设置支付密码
+                        case "2"://已实名未设置支付密码
+                            Intent intent = new Intent(PublicAccountActivity.this, ChangePawdTwoStepActivity.class);
+                            startActivity(intent);
+                            break;
+                        case "3"://未实名未设置支付密码
+                        case "4"://未实名已设置支付密码
+                            DialogFactory.getInstance().showDoorDialog(this, new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    if (AppUtils.isApkInstalled(PublicAccountActivity.this, "cn.net.cyberway")) {
+                                        Intent it = new Intent(Intent.ACTION_VIEW, Uri.parse("colourlifeauth://web?linkURL=colourlife://proto?type=Information"));
+                                        startActivity(it);
+                                    } else {
+                                        AppUtils.launchAppDetail(PublicAccountActivity.this, "cn.net.cyberway", "");
+                                    }
+                                }
+                            }, null, 1, "您的账号尚未实名，请前往彩之云APP进行实名认证", "去认证", null);
+                            break;
+                        default://1已实名已设置支付密码
+                            showPayDialog();
+                            break;
+                    }
+                } catch (Exception e) {
+
+                }
+                break;
+            case 7:
+                if (!TextUtils.isEmpty(result)) {
+                    CheckPwdEntiy entiy = new CheckPwdEntiy();
+                    entiy = GsonUtils.gsonToBean(result, CheckPwdEntiy.class);
+                    if (entiy.getContent().getRight_pwd().equals("1")) {
+                        if (isshow.equals("transfer")) {//转账
+                            PublicAccountInfo info = list.get(postion);
+                            Intent intent = new Intent(PublicAccountActivity.this, PublicAccountSearchActivity.class);
+                            intent.putExtra(Contants.PARAMETER.PUBLIC_ACCOUNT, info.money);
+                            intent.putExtra(Contants.PARAMETER.PAY_ATID, info.atid);
+                            intent.putExtra(Contants.PARAMETER.PAY_ANO, info.ano);
+                            intent.putExtra(Contants.PARAMETER.PAY_TYPE_NAME, info.typeName);
+                            intent.putExtra(Contants.PARAMETER.PAY_NAME, info.title);
+                            startActivity(intent);
+                        } else if (isshow.equals("exchange")) {//兑换
+                            PublicAccountInfo info = list.get(postion);
+                            Intent intent = new Intent(PublicAccountActivity.this, ExchangeMethodActivity.class);
+                            intent.putExtra(Contants.PARAMETER.PUBLIC_ACCOUNT, info.money);
+                            intent.putExtra(Contants.PARAMETER.PAY_ATID, info.atid);
+                            intent.putExtra(Contants.PARAMETER.PAY_ANO, info.ano);
+                            intent.putExtra(Contants.PARAMETER.PAY_TYPE_NAME, info.typeName);
+                            intent.putExtra(Contants.PARAMETER.PAY_NAME, info.title);
+                            startActivity(intent);
+                        }
+                    } else {
+                        String remain = entiy.getContent().getRemain();
+                        if (remain.equals("0")) {
+                            ToastUtil.showShortToast(this, "您已输入5次错误密码，账户被锁定，请明日再进行操作");
+                        } else {
+                            ToastUtil.showShortToast(this, "支付密码不正确，您还可以输入" + remain + "次");
+                        }
+                    }
+                }
+                break;
         }
-    }else{
-        getAuthAppInfo();
-    }*/
+    }
+
+    private void showPayDialog() {
+        PointPasswordDialog pointPasswordDialog = new PointPasswordDialog(this);
+        pointPasswordDialog.show();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (EventBus.getDefault().isRegistered(PublicAccountActivity.this)) {
+            EventBus.getDefault().unregister(PublicAccountActivity.this);
+        }
+    }
+
+    @Subscribe
+    public void onEvent(Object event) {
+        final Message message = (Message) event;
+        switch (message.what) {
+            case POINT_INPUT_PAYPAWD://密码框输入密码
+                String password = message.obj.toString();
+                pointModel.postCheckPwd(7, password, 2, this);
+                break;
+        }
     }
 
     /**
@@ -280,25 +375,6 @@ public class PublicAccountActivity extends BaseActivity implements MyListener {
     @Override
     protected void onResume() {
         super.onResume();
-       /* list.clear();
-        listAppsDetail.clear();
-        String expireTime = Tools.getStringValue(PublicAccountActivity.this,Contants.storage.APPAUTHTIME);
-        Date dt = new Date();
-        Long time = dt.getTime();
-        *//**
-         * 获取对公账户数据
-         *//*
-        if(StringUtils.isNotEmpty(expireTime)){
-            if(Long.parseLong(expireTime) <= time) {//token过期
-                getAuthAppInfo();
-            }else{
-                getPublicAccount();
-                getAppsDetail();
-            }
-        }else{
-            getAuthAppInfo();
-        }*/
-
     }
 
     /**
@@ -348,49 +424,5 @@ public class PublicAccountActivity extends BaseActivity implements MyListener {
     @Override
     public String getHeadTitle() {
         return "对公账户";
-    }
-
-    @Override
-    public void authenticationFeedback(String s, int i) {
-        switch (i) {
-            case 16://密码校验成功
-                if (isshow.equals("transfer")) {//转账
-                    PublicAccountInfo info = list.get(postion);
-                    Intent intent = new Intent(PublicAccountActivity.this, PublicAccountSearchActivity.class);
-                    intent.putExtra(Contants.PARAMETER.PUBLIC_ACCOUNT, info.money);
-                    intent.putExtra(Contants.PARAMETER.PAY_ATID, info.atid);
-                    intent.putExtra(Contants.PARAMETER.PAY_ANO, info.ano);
-                    intent.putExtra(Contants.PARAMETER.PAY_TYPE_NAME, info.typeName);
-                    intent.putExtra(Contants.PARAMETER.PAY_NAME, info.title);
-                    startActivity(intent);
-                } else if (isshow.equals("exchange")) {//兑换
-                    PublicAccountInfo info = list.get(postion);
-                    Intent intent = new Intent(PublicAccountActivity.this, ExchangeMethodActivity.class);
-                    intent.putExtra(Contants.PARAMETER.PUBLIC_ACCOUNT, info.money);
-                    intent.putExtra(Contants.PARAMETER.PAY_ATID, info.atid);
-                    intent.putExtra(Contants.PARAMETER.PAY_ANO, info.ano);
-                    intent.putExtra(Contants.PARAMETER.PAY_TYPE_NAME, info.typeName);
-                    intent.putExtra(Contants.PARAMETER.PAY_NAME, info.title);
-                    startActivity(intent);
-                }
-                break;
-            case 17://密码检验时主动中途退出
-//                ToastFactory.showToast(PublicAccountActivity.this, "已取消");
-                break;
-            case 18://没有设置支付密码
-                ToastFactory.showToast(PublicAccountActivity.this, "未设置支付密码，即将跳转到彩钱包页面");
-                Cqb_PayUtil.getInstance(this).createPay(getPublicParams(), getEnvironment());
-                break;
-            case 19://绑定银行卡并设置密码成功
-                break;
-            case 20://名片赠送成功
-//                ToastFactory.showToast(EmployeeDataActivity.this,"转账成功");
-                break;
-        }
-    }
-
-    @Override
-    public void toCFRS(String s) {
-
     }
 }

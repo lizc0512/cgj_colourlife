@@ -7,8 +7,6 @@ import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.dashuview.library.keep.ListenerUtils;
-import com.dashuview.library.keep.MyListener;
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.base.BaseActivity;
 import com.tg.coloursteward.baseModel.HttpResponse;
@@ -26,7 +24,6 @@ import com.tg.coloursteward.util.NumberUtils;
 import com.tg.coloursteward.util.StringUtils;
 import com.tg.coloursteward.util.Tools;
 import com.tg.coloursteward.view.RoundImageView;
-import com.tg.coloursteward.view.dialog.ToastFactory;
 import com.tg.money.activity.InstantDistributionActivity;
 
 import org.json.JSONException;
@@ -39,7 +36,7 @@ import java.util.List;
 /**
  * 即时分配
  */
-public class AccountActivity extends BaseActivity implements MyListener, HttpResponse {
+public class AccountActivity extends BaseActivity implements HttpResponse {
     private RoundImageView rivHead;
     private RelativeLayout rl_submit;
     private RelativeLayout rl_public;
@@ -58,7 +55,6 @@ public class AccountActivity extends BaseActivity implements MyListener, HttpRes
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ListenerUtils.setCallBack(this);
         mineModel = new MineModel(this);
         initView();
         initData();
@@ -183,20 +179,6 @@ public class AccountActivity extends BaseActivity implements MyListener, HttpRes
     @Override
     public String getHeadTitle() {
         return "即时分配";
-    }
-
-    @Override
-    public void authenticationFeedback(String s, int i) {
-        switch (i) {
-            case 21:
-                ToastFactory.showToast(AccountActivity.this, s);
-                break;
-        }
-    }
-
-    @Override
-    public void toCFRS(String s) {
-
     }
 
     @Override

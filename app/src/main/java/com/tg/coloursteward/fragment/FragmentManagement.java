@@ -122,7 +122,7 @@ public class FragmentManagement extends Fragment implements HttpResponse, View.O
         ll_micro_addView = mView.findViewById(R.id.ll_micro_addView);
         iv_miniservice_next = mView.findViewById(R.id.iv_miniservice_next);
         tv_miniservice_title = mView.findViewById(R.id.tv_miniservice_title);
-        sr_micro.setColorSchemeResources(R.color.alipay_bg_color);
+        sr_micro.setColorSchemeResources(R.color.blue_text_color);
         iv_miniservice_next.setOnClickListener(this);
         tv_miniservice_title.setOnClickListener(this);
         sr_micro.setOnRefreshListener(() ->

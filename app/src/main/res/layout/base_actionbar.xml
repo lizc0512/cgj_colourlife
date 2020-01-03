@@ -76,7 +76,7 @@
         android:layout_centerInParent="true"
         android:text=""
         android:textColor="@color/black"
-        android:textSize="@dimen/sp_16" />
+        android:textSize="@dimen/font_16sp" />
 
     <ImageView
         android:id="@+id/iv_base_next"

@@ -22,7 +22,7 @@
         android:paddingRight="10dp"
         android:singleLine="true"
         android:textColor="@color/color_999faa"
-        android:textSize="@dimen/sp_16" />
+        android:textSize="@dimen/font_16sp" />
 
 
     <com.jcodecraeer.xrecyclerview.XRecyclerView

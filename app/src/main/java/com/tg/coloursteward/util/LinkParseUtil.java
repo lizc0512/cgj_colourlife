@@ -41,8 +41,6 @@ public class LinkParseUtil {
                     String name = link.substring(24, link.length());
                     Intent it;
                     if (name.equals("redPacket")) {//我的饭票
-                        //Environment：true 正式环境 ||  false 测试环境
-//                        Cqb_PayUtil.getInstance(context).createPay(getPublicParams(), getEnvironment());
                         it = new Intent(context, MyPointActivity.class);
                         context.startActivity(it);
                         ((Activity) context).overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);

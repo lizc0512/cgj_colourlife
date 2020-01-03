@@ -10,7 +10,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.dashuview.library.keep.Cqb_PayUtil;
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.base.BaseActivity;
 import com.tg.coloursteward.baseModel.HttpResponse;
@@ -29,8 +28,6 @@ import java.util.List;
 
 import static com.tg.coloursteward.constant.SpConstants.storage.COLOUR_WALLET_ACCOUNT_LIST;
 import static com.tg.coloursteward.constant.SpConstants.storage.COLOUR_WALLET_KEYWORD_SIGN;
-import static com.tg.coloursteward.module.MainActivity.getEnvironment;
-import static com.tg.coloursteward.module.MainActivity.getPublicParams;
 import static com.tg.point.activity.GivenPointAmountActivity.GIVENMOBILE;
 
 
@@ -103,9 +100,6 @@ public class MyPointActivity extends BaseActivity implements View.OnClickListene
                     pointDescDialog = new PointDescDialog(MyPointActivity.this);
                 }
                 pointDescDialog.show();
-                break;
-            case R.id.tv_base_confirm:
-                Cqb_PayUtil.getInstance(MyPointActivity.this).createPay(getPublicParams(), getEnvironment());//彩钱包
                 break;
         }
     }

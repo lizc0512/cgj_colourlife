@@ -160,7 +160,7 @@ public class DeskTopActivity extends BaseActivity implements OnItemClickListener
         tv_desktop_all.setOnClickListener(this);
         tv_desktop_read.setOnClickListener(this);
         tv_desktop_delete.setOnClickListener(this);
-        sr_desktop.setColorSchemeResources(R.color.alipay_bg_color);
+        sr_desktop.setColorSchemeResources(R.color.blue_text_color);
         sr_desktop.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {

@@ -11,7 +11,6 @@ import android.util.Log;
 import com.baidu.trace.LBSTraceClient;
 import com.baidu.trace.Trace;
 import com.facebook.stetho.Stetho;
-import com.shell.SdkManager;
 import com.tencent.bugly.Bugly;
 import com.tencent.bugly.beta.Beta;
 import com.tencent.bugly.beta.interfaces.BetaPatchListener;
@@ -67,7 +66,6 @@ public class CityPropertyApplication extends Application {
         HuxinSdkManager.instance().init(this);
         HuxinSdkManager.instance().setHomeAct(MainActivity.class);
         Stetho.initializeWithDefaults(this);
-        SdkManager.initSdkManager(this);
         GDLocationUtil.init(this);
         JPushInterface.setDebugMode(false);    // 设置开启日志,发布时请关闭日志
         JPushInterface.init(this);            // 初始化 JPush

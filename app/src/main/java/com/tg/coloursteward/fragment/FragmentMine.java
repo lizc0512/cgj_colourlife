@@ -23,7 +23,6 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.signature.ObjectKey;
-import com.dashuview.library.keep.Cqb_PayUtil;
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.activity.MyBrowserActivity;
 import com.tg.coloursteward.adapter.FragmentMineAdapter;
@@ -123,7 +122,7 @@ public class FragmentMine extends Fragment implements OnClickListener, HttpRespo
                 String name = list_item.get(positon).getName();
                 if (url.contains("findPwd")) {
                     openType = 1;
-                    Cqb_PayUtil.getInstance(mActivity).createPay(getPublicParams(), getEnvironment());
+                    LinkParseUtil.parse(mActivity, "colourlife://proto?type=setting", "");
                 } else if (name.contains("工资")) {
                     openType = 2;
                     salary = url;

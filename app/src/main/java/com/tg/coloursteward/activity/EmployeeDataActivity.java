@@ -41,6 +41,8 @@ import com.tg.coloursteward.util.StringUtils;
 import com.tg.coloursteward.util.Tools;
 import com.tg.coloursteward.view.ManageMentLinearlayout;
 import com.tg.coloursteward.view.dialog.ToastFactory;
+import com.tg.point.activity.GivenPointAmountActivity;
+import com.tg.point.activity.MyPointActivity;
 import com.youmai.hxsdk.chatsingle.IMConnectionActivity;
 import com.youmai.hxsdk.db.bean.EmployeeBean;
 import com.youmai.hxsdk.db.helper.CacheEmployeeHelper;
@@ -225,9 +227,10 @@ public class EmployeeDataActivity extends BaseActivity implements MyListener, Ht
                 break;
             case R.id.ll_redpackets:// 转账
                 if (null != item && !TextUtils.isEmpty(item.getUsername())) {
-                    Cqb_PayUtil.getInstance(EmployeeDataActivity.this).VisitingCardTransfer(getPublicParams(),
-                            getEnvironment(), item.getUsername(), "");
-
+                    Intent intent = new Intent(this, MyPointActivity.class);
+                    intent.putExtra(GivenPointAmountActivity.TYPE, "cgj-cgj");
+                    intent.putExtra(GivenPointAmountActivity.GIVENMOBILE, item.getMobile());
+                    startActivity(intent);
                 }
                 break;
         }

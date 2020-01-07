@@ -29,6 +29,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.amap.api.location.AMapLocation;
+import com.appsafekb.safekeyboard.NKeyBoardTextField;
 import com.baidu.trace.LBSTraceClient;
 import com.baidu.trace.Trace;
 import com.baidu.trace.api.entity.AddEntityRequest;
@@ -211,6 +212,7 @@ public class MainActivity extends BaseActivity implements MessageHandler.Respons
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        String result = NKeyBoardTextField.setNlicenseKey(Contants.APP.LICENSE_KEY).getStatusDescribe();
         mContext = this;
         mHandler = new NormalHandler(this);
         settingModel = new SettingModel(this);

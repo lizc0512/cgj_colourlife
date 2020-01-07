@@ -2,6 +2,7 @@ package com.tg.point.gridpasswordview;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
 import android.graphics.drawable.ColorDrawable;
@@ -16,16 +17,16 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.text.method.PasswordTransformationMethod;
 import android.util.AttributeSet;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.appsafekb.safekeyboard.NKeyBoardTextField;
+import com.appsafekb.safekeyboard.interfaces.KeyBoardListener;
+import com.appsafekb.safekeyboard.values.ValueFactory;
 import com.tg.coloursteward.R;
-import com.tg.point.gridpasswordview.imebugfixer.ImeDelBugFixedEditText;
 
 
 /**
@@ -52,12 +53,11 @@ public class GridPasswordView extends LinearLayout implements PasswordView {
     private Drawable mOuterLineDrawable;
     private int mPasswordLength;
     private String mPasswordTransformation;
-    private int mPasswordType;
 
     private String[] mPasswordArr;
     private TextView[] mViewArr;
 
-    private ImeDelBugFixedEditText mInputView;
+    private NKeyBoardTextField mInputView;
     private OnPasswordChangedListener mListener;
     private PasswordTransformationMethod mTransformationMethod;
 
@@ -112,10 +112,6 @@ public class GridPasswordView extends LinearLayout implements PasswordView {
         mPasswordTransformation = ta.getString(R.styleable.gridPasswordView_gpvPasswordTransformation);
         if (TextUtils.isEmpty(mPasswordTransformation))
             mPasswordTransformation = DEFAULT_TRANSFORMATION;
-
-
-        mPasswordType = ta.getInt(R.styleable.gridPasswordView_gpvPasswordType, 0);
-
         ta.recycle();
 
         mPasswordArr = new String[mPasswordLength];
@@ -132,16 +128,53 @@ public class GridPasswordView extends LinearLayout implements PasswordView {
     }
 
     private void inflaterViews(Context context) {
-        LayoutInflater inflater = LayoutInflater.from(context);
-        inflater.inflate(R.layout.gridpasswordview, this);
-
-        mInputView = (ImeDelBugFixedEditText) findViewById(R.id.inputView);
-        mInputView.setMaxEms(mPasswordLength);
+        mInputView = new NKeyBoardTextField(context);
+        mInputView.setNkeyboardType(3);
+        mInputView.setNKeyboardRandom(ValueFactory.buildAllTrue());
+        mInputView.setEditClearIcon(false);
+        mInputView.setNKeyboardKeyEncryption(false);
+        mInputView.clearNkeyboard();
+        mInputView.setNKeyboardMaxInputLength(mPasswordLength);
         mInputView.addTextChangedListener(textWatcher);
-        mInputView.setDelKeyEventListener(onDelKeyEventListener);
-        setCustomAttr(mInputView);
-        mViewArr[0] = mInputView;
-        int index = 1;
+        mInputView.setKeyBoardListener(new KeyBoardListener() {
+            @Override
+            public void onKey(int j) {
+                if (j == 5) {
+                    for (int i = mPasswordArr.length - 1; i >= 0; i--) {
+                        if (mPasswordArr[i] != null) {
+                            mPasswordArr[i] = null;
+                            mViewArr[i].setText(null);
+                            notifyTextChanged();
+                            break;
+                        } else {
+                            mViewArr[i].setText(null);
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onDismiss(DialogInterface dialogInterface) {
+
+            }
+
+            @Override
+            public void onShow(DialogInterface dialogInterface) {
+
+            }
+
+            @Override
+            public void onConfigLoadSucc() {
+
+            }
+
+            @Override
+            public boolean onCompleteKeyboardKeepShow() {
+                return false;
+            }
+        });
+        LayoutInflater inflater = LayoutInflater.from(context);
+        int index = 0;
         while (index < mPasswordLength) {
             View dividerView = inflater.inflate(R.layout.divider, null);
             LayoutParams dividerParams = new LayoutParams(mLineWidth, LayoutParams.MATCH_PARENT, 1);
@@ -168,24 +201,19 @@ public class GridPasswordView extends LinearLayout implements PasswordView {
         if (mTextColor != null)
             view.setTextColor(mTextColor);
         view.setTextSize(mTextSize);
-
-        int inputType = InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_VARIATION_PASSWORD;
-        switch (mPasswordType) {
-
-            case 1:
-                inputType = InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD;
-                break;
-
-            case 2:
-                inputType = InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD;
-                break;
-
-            case 3:
-                inputType = InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_WEB_PASSWORD;
-                break;
-        }
-        view.setInputType(inputType);
         view.setTransformationMethod(mTransformationMethod);
+    }
+
+    public void showKeyWorld() {
+        if (!mInputView.keyboardIsShow()) {
+            mInputView.showNKeyboard();
+        }
+    }
+
+    public void hideKeyWorld() {
+        if (mInputView.keyboardIsShow()) {
+            mInputView.hideNKeyboard();
+        }
     }
 
     private OnClickListener mOnClickListener = new OnClickListener() {
@@ -203,29 +231,9 @@ public class GridPasswordView extends LinearLayout implements PasswordView {
     }
 
     private void forceInputViewGetFocus() {
-        mInputView.setFocusable(true);
-        mInputView.setFocusableInTouchMode(true);
-        mInputView.requestFocus();
-        InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.showSoftInput(mInputView, InputMethodManager.SHOW_IMPLICIT);
+        mInputView.showNKeyboard();
     }
 
-    private ImeDelBugFixedEditText.OnDelKeyEventListener onDelKeyEventListener = new ImeDelBugFixedEditText.OnDelKeyEventListener() {
-
-        @Override
-        public void onDeleteClick() {
-            for (int i = mPasswordArr.length - 1; i >= 0; i--) {
-                if (mPasswordArr[i] != null) {
-                    mPasswordArr[i] = null;
-                    mViewArr[i].setText(null);
-                    notifyTextChanged();
-                    break;
-                } else {
-                    mViewArr[i].setText(null);
-                }
-            }
-        }
-    };
 
     private TextWatcher textWatcher = new TextWatcher() {
         @Override
@@ -235,30 +243,15 @@ public class GridPasswordView extends LinearLayout implements PasswordView {
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
-            if (s == null) {
-                return;
-            }
-
-            String newStr = s.toString();
-            if (newStr.length() == 1) {
-                mPasswordArr[0] = newStr;
-                notifyTextChanged();
-            } else if (newStr.length() == 2) {
-                String newNum = newStr.substring(1);
-                for (int i = 0; i < mPasswordArr.length; i++) {
-                    if (mPasswordArr[i] == null) {
-                        mPasswordArr[i] = newNum;
-                        mViewArr[i].setText(newNum);
-                        notifyTextChanged();
-                        break;
-                    }
+            String newStr = mInputView.getNKeyboardText();
+            for (int i = 0; i < newStr.length(); i++) {
+                if (mPasswordArr[i] == null) {
+                    String newNum = newStr.substring(i, i + 1);
+                    mPasswordArr[i] = newNum;
+                    mViewArr[i].setText(newNum);
+                    notifyTextChanged();
+                    break;
                 }
-                mInputView.removeTextChangedListener(this);
-                mInputView.setText(mPasswordArr[0]);
-                if (mInputView.getText().length() >= 1) {
-                    mInputView.setSelection(1);
-                }
-                mInputView.addTextChangedListener(this);
             }
         }
 
@@ -268,27 +261,16 @@ public class GridPasswordView extends LinearLayout implements PasswordView {
         }
     };
 
-    @Deprecated
-    private OnKeyListener onKeyListener = new OnKeyListener() {
-        @Override
-        public boolean onKey(View v, int keyCode, KeyEvent event) {
-            if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DEL) {
-                onDelKeyEventListener.onDeleteClick();
-                return true;
-            }
-            return false;
-        }
-    };
 
     private void notifyTextChanged() {
         if (mListener == null)
             return;
-
         String currentPsw = getPassWord();
         mListener.onTextChanged(currentPsw);
-
-        if (currentPsw.length() == mPasswordLength)
+        if (currentPsw.length() == mPasswordLength) {
             mListener.onInputFinish(currentPsw);
+            hideKeyWorld();
+        }
     }
 
     @Override
@@ -403,21 +385,6 @@ public class GridPasswordView extends LinearLayout implements PasswordView {
     public void setPasswordType(PasswordType passwordType) {
         boolean visible = getPassWordVisibility();
         int inputType = InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_VARIATION_PASSWORD;
-        switch (passwordType) {
-
-            case TEXT:
-                inputType = InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD;
-                break;
-
-            case TEXTVISIBLE:
-                inputType = InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD;
-                break;
-
-            case TEXTWEB:
-                inputType = InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_WEB_PASSWORD;
-                break;
-        }
-
         for (TextView textView : mViewArr)
             textView.setInputType(inputType);
 

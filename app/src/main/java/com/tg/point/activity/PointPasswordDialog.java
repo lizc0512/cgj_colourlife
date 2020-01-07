@@ -58,6 +58,7 @@ public class PointPasswordDialog {
         if (null != mDialog && !mDialog.isShowing()) {
             mDialog.show();
             grid_pay_pawd.clearPassword();
+            grid_pay_pawd.showKeyWorld();
             new Handler().postDelayed(() -> {
                 grid_pay_pawd.performClick();
             }, 300);

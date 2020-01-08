@@ -25,6 +25,7 @@ public interface SpConstants {
         String ACCOUNT_UUID = "account_uuid";
         String VERSION_NAME = "version_name";
         String ISNAMEAUTH = "nameauth";
+        String ISUSERAJM = "userajm";
     }
 
     interface MicroContant {

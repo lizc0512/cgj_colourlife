@@ -212,7 +212,10 @@ public class MainActivity extends BaseActivity implements MessageHandler.Respons
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        String result = NKeyBoardTextField.setNlicenseKey(Contants.APP.LICENSE_KEY).getStatusDescribe();
+        int result = NKeyBoardTextField.setNlicenseKey(Contants.APP.LICENSE_KEY).getStatusCode();
+        if (1 == result) {
+            spUtils.saveBooleanData(SpConstants.UserModel.ISUSERAJM, true);
+        }
         mContext = this;
         mHandler = new NormalHandler(this);
         settingModel = new SettingModel(this);

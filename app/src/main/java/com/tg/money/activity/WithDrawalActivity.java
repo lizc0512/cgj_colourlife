@@ -172,17 +172,23 @@ public class WithDrawalActivity extends BaseActivity implements View.OnClickList
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (!TextUtils.isEmpty(s) && !s.toString().endsWith(".")) {
+                if (!TextUtils.isEmpty(s)) {
                     double money = Double.parseDouble(et_withdrawal_money.getText().toString().trim());
-                    if (money > 0) {
+                    if (money > 0 && !s.toString().endsWith(".")) {
                         realMoney = NumberUtils.sub(money, service_charge);
                         if (realMoney > 0) {
+                            tv_withdraw_btn.setEnabled(true);
                             String number = NumberUtils.format(String.valueOf(realMoney));
                             tv_withdraw_relmoney.setText("到账金额: " + number + "元");
+                        } else if (realMoney == 0) {
+                            tv_withdraw_btn.setEnabled(false);
+                            tv_withdraw_relmoney.setText("到账金额: 0.00元");
                         } else {
-                            ToastUtil.showShortToast(WithDrawalActivity.this, "到账金额不能为负值");
-                            et_withdrawal_money.getText().clear();
+                            ToastUtil.showShortToast(WithDrawalActivity.this, "到账金额要大于0元");
+                            tv_withdraw_btn.setEnabled(false);
                         }
+                    } else {
+                        tv_withdraw_relmoney.setText("到账金额: 0.00元");
                     }
                 } else if (s.length() > 0) {
 
@@ -240,13 +246,13 @@ public class WithDrawalActivity extends BaseActivity implements View.OnClickList
                             ToastUtil.showShortToast(this, "提现金额不能为0");
                         } else {
                             if (!isFpMoney) {//即时分配提现
-                                if (Double.valueOf(money) < Double.valueOf(tqMoney)) { //输入金额 < 可提现金额
+                                if (Double.valueOf(money) <= Double.valueOf(tqMoney)) { //输入金额 < 可提现金额
                                     showPayDialog();
                                 } else {
                                     ToastUtil.showShortToast(this, "输入金额不能超过可提取金额");
                                 }
                             } else {//饭票提现
-                                if (Double.valueOf(money) < Double.valueOf(fpMoney)) { //输入金额 < 可提现金额
+                                if (Double.valueOf(money) <= Double.valueOf(fpMoney)) { //输入金额 < 可提现金额
                                     showPayDialog();
                                 } else {
                                     ToastUtil.showShortToast(this, "输入金额不能超过可提取金额");

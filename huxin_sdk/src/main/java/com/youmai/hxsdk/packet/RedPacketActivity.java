@@ -2,10 +2,8 @@ package com.youmai.hxsdk.packet;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.AppCompatEditText;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -22,7 +20,6 @@ import com.bumptech.glide.request.RequestOptions;
 import com.youmai.hxsdk.HuxinSdkManager;
 import com.youmai.hxsdk.R;
 import com.youmai.hxsdk.activity.SdkBaseActivity;
-import com.youmai.hxsdk.dialog.HxPayPasswordDialog;
 import com.youmai.hxsdk.entity.red.RedPackageList;
 import com.youmai.hxsdk.entity.red.SendRedPacketResult;
 import com.youmai.hxsdk.entity.red.StandardRedPackage;
@@ -31,7 +28,7 @@ import com.youmai.hxsdk.utils.GlideRoundTransform;
 import com.youmai.hxsdk.utils.GsonUtil;
 import com.youmai.hxsdk.utils.ListUtils;
 import com.youmai.hxsdk.utils.ToastUtil;
-
+import com.youmai.pwddialog.PasswordDialogListener;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -276,64 +273,38 @@ public class RedPacketActivity extends SdkBaseActivity implements View.OnClickLi
                 Toast.makeText(mContext, "超过了您的利是余额，请重新设置", Toast.LENGTH_SHORT).show();
                 return;
             }
+            PasswordDialogListener dialogListener = new PasswordDialogListener(this, pwd -> {
+                String remark = et_msg.getText().toString().trim();
 
-            final HxPayPasswordDialog dialog = new HxPayPasswordDialog(this);
-            dialog.setOnFinishInput(new HxPayPasswordDialog.OnPasswordInputFinish() {
-                @Override
-                public void inputFinish() {
+                if (TextUtils.isEmpty(remark)) {
+                    remark = et_msg.getHint().toString().trim();
+                }
+                String password = pwd;
+                final String title = remark;
 
-                    String remark = et_msg.getText().toString().trim();
-
-                    if (TextUtils.isEmpty(remark)) {
-                        remark = et_msg.getHint().toString().trim();
-                    }
-
-                    String password = dialog.getStrPassword();
-                    final String title = remark;
-
-                    showProgressDialog();
-                    HuxinSdkManager.instance().reqSendSingleRedPackage(money, title, pano, password, new IGetListener() {
-                        @Override
-                        public void httpReqResult(String response) {
-                            SendRedPacketResult bean = GsonUtil.parse(response, SendRedPacketResult.class);
-                            if (bean != null) {
-                                if (bean.isSuccess()) {
-                                    dialog.dismiss();
-                                    String redUuid = bean.getContent().getLishiUuid();
-                                    Intent intent = new Intent();
-                                    intent.putExtra("value", String.valueOf(money));
-                                    intent.putExtra("redTitle", title);
-                                    intent.putExtra("redUuid", redUuid);
-                                    setResult(Activity.RESULT_OK, intent);
-                                    finish();
-                                } else if (bean.getCode() == 1002) {
-                                    dialog.pwError();
-                                } else {
-                                    Toast.makeText(mContext, bean.getMessage(), Toast.LENGTH_SHORT).show();
-                                }
+                showProgressDialog();
+                HuxinSdkManager.instance().reqSendSingleRedPackage(money, title, pano, password, new IGetListener() {
+                    @Override
+                    public void httpReqResult(String response) {
+                        SendRedPacketResult bean = GsonUtil.parse(response, SendRedPacketResult.class);
+                        if (bean != null) {
+                            if (bean.isSuccess()) {
+                                String redUuid = bean.getContent().getLishiUuid();
+                                Intent intent = new Intent();
+                                intent.putExtra("value", String.valueOf(money));
+                                intent.putExtra("redTitle", title);
+                                intent.putExtra("redUuid", redUuid);
+                                setResult(Activity.RESULT_OK, intent);
+                                finish();
+                            } else {
+                                Toast.makeText(mContext, bean.getMessage(), Toast.LENGTH_SHORT).show();
                             }
-                            dismissProgressDialog();
-
                         }
-                    });
-                }
-
-                @Override
-                public void forgetPassWord() {
-                    final AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-                    builder.setTitle("温馨提示");
-                    builder.setMessage("请前往我的页面找回支付密码");
-                    builder.setNegativeButton("我知道了", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-
-                        }
-                    });
-                    builder.create().show();
-                }
+                        dismissProgressDialog();
+                    }
+                });
             });
-            dialog.show();
-            dialog.setMoney(moneyStr);
+            dialogListener.show();
         } else if (id == R.id.tv_back) {
             onBackPressed();
         } else if (id == R.id.tv_right) {

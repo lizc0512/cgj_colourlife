@@ -95,6 +95,9 @@ public class ToastUtil {
         mToast.show();
     }
 
+    public static void showShortToast(Context context, String message) {
+        Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+    }
 
     public static void showMidToast(Context context, String message) {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);

@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.youmai.hxsdk.R;
 import com.youmai.pwddialog.gridpasswordview.GridPasswordView;
@@ -24,6 +25,7 @@ public class PasswordDialogListener {
     private GridPasswordView grid_pay_pawd;
     private NormalGridPasswordView nor_grid_pay_pawd;
     private ImageView iv_close_dialog;
+    private TextView tv_dialog_forget;
     public pwdDialogListener listener;
     private boolean isAjm;
     private String FILE_NAME = "wisdomPark_map";
@@ -35,6 +37,7 @@ public class PasswordDialogListener {
                 Context.MODE_PRIVATE);
         isAjm = sharedPreferences.getBoolean("userajm", false);
         View view = inflater.inflate(R.layout.hx_dialog_point_password, null);
+        tv_dialog_forget = view.findViewById(R.id.tv_dialog_forget);
         grid_pay_pawd = view.findViewById(R.id.grid_pay_pawd);
         nor_grid_pay_pawd = view.findViewById(R.id.nor_grid_pay_pawd);
         if (isAjm) {
@@ -80,6 +83,11 @@ public class PasswordDialogListener {
             dismiss();
             grid_pay_pawd.hideKeyWorld();
         });
+        tv_dialog_forget.setOnClickListener(v -> {
+            if (null != listener) {
+                listener.forgetPassWord();
+            }
+        });
         mDialog.setOnDismissListener(dialog -> hideSoftKeyboard(activity, iv_close_dialog));
     }
 
@@ -110,6 +118,9 @@ public class PasswordDialogListener {
 
     public interface pwdDialogListener {
         void result(String pwd);
+
+        default void forgetPassWord() {
+        }
     }
 
     private void hideSoftKeyboard(Activity activity, View view) {

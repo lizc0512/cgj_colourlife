@@ -1,7 +1,12 @@
 package com.youmai.hxsdk.utils;
 
+import android.text.TextUtils;
+
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -62,6 +67,64 @@ public class GsonUtil {
         return Arrays.asList(arr); //or return Arrays.asList(new Gson().fromJson(s, clazz)); for a one-liner
     }
 
+    /**
+     * 将gsonString转成泛型bean
+     *
+     * @param gsonString
+     * @param cls
+     * @return
+     */
+    public static <T> T gsonToBean(String gsonString, Class<T> cls) {
+        T t = null;
+        Gson gson = new Gson();
+        if (gson != null) {
+            t = gson.fromJson(gsonString, cls);
+        }
+        return t;
+    }
+
+    /**
+     * 获取code
+     *
+     * @param jsonString
+     * @return
+     */
+    public static int getCode(String jsonString) {
+        if (TextUtils.isEmpty(jsonString)) {
+            return -1;
+        }
+        JSONObject jsonObj = null;
+        try {
+            jsonObj = new JSONObject(jsonString);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return -1;
+        }
+        return jsonObj.optInt("code", -1);
+    }
+
+    /**
+     * 获取Message信息
+     *
+     * @param jsonString
+     * @return
+     */
+    public static String getMessageString(String jsonString) {
+        if (TextUtils.isEmpty(jsonString)) {
+            return null;
+        }
+        JSONObject jsonObj = null;
+        try {
+            jsonObj = new JSONObject(jsonString);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return null;
+        }
+        if (jsonObj.isNull("message")) {
+            return null;
+        }
+        return jsonObj.optString("message", null);
+    }
 
     /**
      * 将对象转成json字符串

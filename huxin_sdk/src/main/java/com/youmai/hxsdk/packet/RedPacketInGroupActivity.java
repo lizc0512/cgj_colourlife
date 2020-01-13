@@ -2,7 +2,6 @@ package com.youmai.hxsdk.packet;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -24,7 +23,6 @@ import com.youmai.hxsdk.activity.SdkBaseActivity;
 import com.youmai.hxsdk.chatgroup.IMGroupActivity;
 import com.youmai.hxsdk.config.ColorsConfig;
 import com.youmai.hxsdk.db.bean.GroupInfoBean;
-import com.youmai.hxsdk.dialog.HxPayPasswordDialog;
 import com.youmai.hxsdk.entity.red.RedPackageList;
 import com.youmai.hxsdk.entity.red.SendRedPacketResult;
 import com.youmai.hxsdk.entity.red.StandardRedPackage;
@@ -35,6 +33,7 @@ import com.youmai.hxsdk.socket.PduBase;
 import com.youmai.hxsdk.socket.ReceiveListener;
 import com.youmai.hxsdk.utils.GsonUtil;
 import com.youmai.hxsdk.utils.ListUtils;
+import com.youmai.pwddialog.PasswordDialogListener;
 
 import java.text.DecimalFormat;
 import java.util.List;
@@ -413,25 +412,22 @@ public class RedPacketInGroupActivity extends SdkBaseActivity implements View.On
                 Toast.makeText(mContext, "小于利是最小数目限制，请重新设置", Toast.LENGTH_SHORT).show();
                 return;
             }
-
-            final HxPayPasswordDialog dialog = new HxPayPasswordDialog(this);
-            dialog.setOnFinishInput(new HxPayPasswordDialog.OnPasswordInputFinish() {
+            PasswordDialogListener dialogListener = new PasswordDialogListener(this, new PasswordDialogListener.pwdDialogListener() {
                 @Override
-                public void inputFinish() {
+                public void result(String pwd) {
                     String remark = et_msg.getText().toString().trim();
                     if (TextUtils.isEmpty(remark)) {
                         remark = et_msg.getHint().toString().trim();
                     }
-
-                    String password = dialog.getStrPassword();
+                    String password = pwd;
                     final String title = remark;
-                    IGetListener listener = new IGetListener() {
-                        @Override
-                        public void httpReqResult(String response) {
-                            SendRedPacketResult bean = GsonUtil.parse(response, SendRedPacketResult.class);
+                    showProgressDialog();
+                    IGetListener listener = response -> {
+                        int code = GsonUtil.getCode(response);
+                        if (0 == code) {
+                            SendRedPacketResult bean = GsonUtil.gsonToBean(response, SendRedPacketResult.class);
                             if (bean != null) {
                                 if (bean.isSuccess()) {
-                                    dialog.dismiss();
                                     String redUuid = bean.getContent().getLishiUuid();
                                     Intent intent = new Intent();
                                     intent.putExtra("value", String.valueOf(money));
@@ -439,16 +435,14 @@ public class RedPacketInGroupActivity extends SdkBaseActivity implements View.On
                                     intent.putExtra("redUuid", redUuid);
                                     setResult(Activity.RESULT_OK, intent);
                                     finish();
-                                } else if (bean.getCode() == 1002) {
-                                    dialog.pwError();
-                                } else {
-                                    Toast.makeText(mContext, bean.getMessage(), Toast.LENGTH_SHORT).show();
                                 }
                             }
-                            dismissProgressDialog();
+                        } else {
+                            String message = GsonUtil.getMessageString(response);
+                            Toast.makeText(mContext, message, Toast.LENGTH_SHORT).show();
                         }
+                        dismissProgressDialog();
                     };
-                    showProgressDialog();
                     if (type == 2) {
                         HuxinSdkManager.instance().reqSendGroupRedPackageRandom(money, numberTotal,
                                 title, pano, password, listener);
@@ -456,27 +450,20 @@ public class RedPacketInGroupActivity extends SdkBaseActivity implements View.On
                         HuxinSdkManager.instance().reqSendGroupRedPackageFix(money, numberTotal,
                                 title, pano, password, listener);
                     }
-
                 }
-
 
                 @Override
                 public void forgetPassWord() {
-                    final AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+                    AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
                     builder.setTitle("温馨提示");
-                    builder.setMessage("请前往我的页面找回支付密码");
-                    builder.setNegativeButton("我知道了", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
+                    builder.setMessage("请前往我的-设置-支付密码页面找回支付密码");
+                    builder.setNegativeButton("我知道了", (dialog, which) -> {
 
-                        }
                     });
                     builder.create().show();
                 }
-
             });
-            dialog.show();
-            dialog.setMoney(moneyStr);
+            dialogListener.show();
         } else if (id == R.id.tv_back) {
             onBackPressed();
         } else if (id == R.id.tv_right) {

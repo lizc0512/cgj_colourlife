@@ -1199,15 +1199,15 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
      * 调用相册
      */
     private void openFileChooseProcess(String type) {
-        Intent i = new Intent(Intent.ACTION_PICK);
+        Intent intent = new Intent(Intent.ACTION_PICK);
         if ("image".equals(type)) {
-            i.setType("image/*");//选择图片
+            intent.setType("image/*");//选择图片
         } else if ("video".equals(type)) {
-            i.setType("video/*");//选择视频和
+            intent.setType("video/*");//选择视频
         } else {
-            i.setType("video/*;image/*");//同时选择视频和图片
+            intent.setType("*/*");
         }
-        startActivityForResult(Intent.createChooser(i, "文件"), 0);
+        startActivityForResult(Intent.createChooser(intent, "文件"), 0);
     }
 
     /**

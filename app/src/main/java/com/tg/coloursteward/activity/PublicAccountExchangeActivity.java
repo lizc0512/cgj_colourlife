@@ -34,12 +34,13 @@ import com.tg.coloursteward.view.RoundImageView;
 import com.tg.coloursteward.view.dialog.DialogFactory;
 import com.tg.coloursteward.view.dialog.ToastFactory;
 import com.tg.point.activity.ChangePawdTwoStepActivity;
-import com.tg.point.activity.PasswordDialogListener;
 import com.tg.point.entity.CheckPwdEntiy;
 import com.tg.point.entity.PointTransactionTokenEntity;
 import com.tg.point.model.PointModel;
+import com.tg.setting.activity.SettingActivity;
 import com.tg.user.model.UserModel;
 import com.youmai.hxsdk.utils.AppUtils;
+import com.youmai.pwddialog.PasswordDialogListener;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -404,10 +405,7 @@ public class PublicAccountExchangeActivity extends BaseActivity implements HttpR
                             }, null, 1, "您的账号尚未实名，请前往彩之云APP进行实名认证", "去认证", null);
                             break;
                         default://1已实名已设置支付密码
-                            PasswordDialogListener listener = new PasswordDialogListener(this, pwd -> {
-                                pointModel.postCheckPwd(7, pwd, 2, this);
-                            });
-                            listener.show();
+                            payPasswordDialog();
                             break;
                     }
                 } catch (Exception e) {
@@ -431,5 +429,21 @@ public class PublicAccountExchangeActivity extends BaseActivity implements HttpR
                 }
                 break;
         }
+    }
+
+    private void payPasswordDialog() {
+        PasswordDialogListener dialogListener = new PasswordDialogListener(this, new PasswordDialogListener.pwdDialogListener() {
+            @Override
+            public void result(String pwd) {
+                pointModel.postCheckPwd(7, pwd, 2, PublicAccountExchangeActivity.this);
+            }
+
+            @Override
+            public void forgetPassWord() {
+                Intent it = new Intent(PublicAccountExchangeActivity.this, SettingActivity.class);
+                startActivity(it);
+            }
+        });
+        dialogListener.show();
     }
 }

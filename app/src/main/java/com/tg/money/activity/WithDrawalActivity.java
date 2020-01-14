@@ -2,7 +2,6 @@ package com.tg.money.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Message;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextUtils;
@@ -27,19 +26,16 @@ import com.tg.money.entity.MyBankEntity;
 import com.tg.money.entity.WithDrawalEntity;
 import com.tg.money.model.MoneyModel;
 import com.tg.money.utils.DecimalDigitsInputFilter;
-import com.tg.point.activity.PointPasswordDialog;
 import com.tg.point.entity.CheckPwdEntiy;
 import com.tg.point.model.PointModel;
+import com.tg.setting.activity.SettingActivity;
+import com.youmai.pwddialog.PasswordDialogListener;
 
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.tg.coloursteward.constant.UserMessageConstant.POINT_INPUT_PAYPAWD;
 
 /**
  * @name ${lizc}
@@ -98,7 +94,6 @@ public class WithDrawalActivity extends BaseActivity implements View.OnClickList
     private boolean isFpMoney = false;
     private PointModel pointModel;
     private String pano;
-    private PointPasswordDialog pointPasswordDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,9 +106,6 @@ public class WithDrawalActivity extends BaseActivity implements View.OnClickList
     }
 
     private void initView() {
-        if (!EventBus.getDefault().isRegistered(WithDrawalActivity.this)) {
-            EventBus.getDefault().register(WithDrawalActivity.this);
-        }
         tv_base_title = findViewById(R.id.tv_base_title);
         iv_base_back = findViewById(R.id.iv_base_back);
         rl_withdrawal_card = findViewById(R.id.rl_withdrawal_card);
@@ -281,23 +273,19 @@ public class WithDrawalActivity extends BaseActivity implements View.OnClickList
     }
 
     private void showPayDialog() {
-        if (null == pointPasswordDialog) {
-            pointPasswordDialog = new PointPasswordDialog(this);
-            pointPasswordDialog.show();
-        } else {
-            pointPasswordDialog.show();
-        }
-    }
+        PasswordDialogListener dialogListener = new PasswordDialogListener(this, new PasswordDialogListener.pwdDialogListener() {
+            @Override
+            public void result(String pwd) {
+                pointModel.postCheckPwd(4, pwd, 3, WithDrawalActivity.this);
+            }
 
-    @Subscribe
-    public void onEvent(Object event) {
-        final Message message = (Message) event;
-        switch (message.what) {
-            case POINT_INPUT_PAYPAWD://密码框输入密码
-                String password = message.obj.toString();
-                pointModel.postCheckPwd(4, password, 3, this);
-                break;
-        }
+            @Override
+            public void forgetPassWord() {
+                Intent intent = new Intent(WithDrawalActivity.this, SettingActivity.class);
+                startActivity(intent);
+            }
+        });
+        dialogListener.show();
     }
 
     @Override
@@ -431,13 +419,5 @@ public class WithDrawalActivity extends BaseActivity implements View.OnClickList
         userName = dataBean.getName();
         GlideUtils.loadImageView(this, dataBean.getBank_logo(), iv_withdrawal_mycard);
         tv_withdrawal_mycard.setText(dataBean.getBank_name() + "(" + sn + ")");
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if (EventBus.getDefault().isRegistered(WithDrawalActivity.this)) {
-            EventBus.getDefault().unregister(WithDrawalActivity.this);
-        }
     }
 }

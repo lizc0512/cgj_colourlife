@@ -11,8 +11,8 @@ import android.widget.TextView;
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.base.BaseActivity;
 import com.tg.coloursteward.constant.UserMessageConstant;
-import com.tg.point.gridpasswordview.GridPasswordView;
-import com.tg.point.gridpasswordview.PasswordType;
+import com.youmai.pwddialog.gridpasswordview.GridPasswordView;
+import com.youmai.pwddialog.gridpasswordview.NormalGridPasswordView;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -28,7 +28,7 @@ public class ChangePawdTwoStepActivity extends BaseActivity implements View.OnCl
     private ImageView mBack;
     private TextView mTitle;
     private TextView tv_tips_content;
-    private GridPasswordView gridPasswordView_cqb;
+    private NormalGridPasswordView gridPasswordView_cqb;
     private int passwordType = 0;
     private String passordToken;
 
@@ -40,8 +40,7 @@ public class ChangePawdTwoStepActivity extends BaseActivity implements View.OnCl
         mBack = findViewById(R.id.iv_base_back);
         mTitle = findViewById(R.id.tv_base_title);
         tv_tips_content = findViewById(R.id.tv_tips_content);
-        gridPasswordView_cqb = findViewById(R.id.grid_pawd_view);
-        gridPasswordView_cqb.setPasswordType(PasswordType.NUMBER);
+        gridPasswordView_cqb = findViewById(R.id.nor_grid_pawd_view);
         Intent intent = getIntent();
         passwordType = intent.getIntExtra(PAWDTYPE, 0);
         passordToken = intent.getStringExtra(PAWDTOEKN);

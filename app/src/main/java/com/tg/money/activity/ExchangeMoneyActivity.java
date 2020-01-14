@@ -2,7 +2,6 @@ package com.tg.money.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Message;
 import android.text.InputFilter;
 import android.text.TextUtils;
 import android.view.View;
@@ -18,15 +17,10 @@ import com.tg.coloursteward.view.ClearEditText;
 import com.tg.money.entity.ExchangeMoneyEntity;
 import com.tg.money.model.MoneyModel;
 import com.tg.money.utils.DecimalDigitsInputFilter;
-import com.tg.point.activity.PointPasswordDialog;
 import com.tg.point.entity.CheckPwdEntiy;
 import com.tg.point.model.PointModel;
-
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-
-import static com.tg.coloursteward.constant.UserMessageConstant.POINT_INPUT_PAYPAWD;
-import static com.tg.coloursteward.constant.UserMessageConstant.POINT_SET_PAYPAWD;
+import com.tg.setting.activity.SettingActivity;
+import com.youmai.pwddialog.PasswordDialogListener;
 
 /**
  * @name ${lizc}
@@ -61,9 +55,6 @@ public class ExchangeMoneyActivity extends BaseActivity implements View.OnClickL
     }
 
     private void initView() {
-        if (!EventBus.getDefault().isRegistered(ExchangeMoneyActivity.this)) {
-            EventBus.getDefault().register(ExchangeMoneyActivity.this);
-        }
         tv_base_title = findViewById(R.id.tv_base_title);
         iv_base_back = findViewById(R.id.iv_base_back);
         et_exchange_money = findViewById(R.id.et_exchange_money);
@@ -136,29 +127,20 @@ public class ExchangeMoneyActivity extends BaseActivity implements View.OnClickL
     }
 
     private void showPayDialog() {
-        PointPasswordDialog pointPasswordDialog = new PointPasswordDialog(ExchangeMoneyActivity.this);
-        pointPasswordDialog.show();
-    }
+        PasswordDialogListener dialogListener = new PasswordDialogListener(this, new PasswordDialogListener.pwdDialogListener() {
+            @Override
+            public void result(String pwd) {
+                PointModel pointModel = new PointModel(ExchangeMoneyActivity.this);
+                pointModel.postCheckPwd(1, pwd, 3, ExchangeMoneyActivity.this);
+            }
 
-    @Subscribe
-    public void onEvent(Object event) {
-        final Message message = (Message) event;
-        switch (message.what) {
-            case POINT_INPUT_PAYPAWD://密码框输入密码
-            case POINT_SET_PAYPAWD: //设置支付密码成功 直接拿密码进行支付
-                String password = message.obj.toString();
-                PointModel pointModel = new PointModel(this);
-                pointModel.postCheckPwd(1, password, 3, this);
-                break;
-        }
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if (EventBus.getDefault().isRegistered(ExchangeMoneyActivity.this)) {
-            EventBus.getDefault().unregister(ExchangeMoneyActivity.this);
-        }
+            @Override
+            public void forgetPassWord() {
+                Intent it = new Intent(ExchangeMoneyActivity.this, SettingActivity.class);
+                startActivity(it);
+            }
+        });
+        dialogListener.show();
     }
 
     @Override
@@ -173,6 +155,7 @@ public class ExchangeMoneyActivity extends BaseActivity implements View.OnClickL
                             Intent intent = new Intent(this, ExchangeSuccessActivity.class);
                             intent.putExtra("money", content);
                             startActivity(intent);
+                            this.finish();
                         } else {
                             ToastUtil.showShortToast(this, entity.getContent().getResult().getResult());
                         }

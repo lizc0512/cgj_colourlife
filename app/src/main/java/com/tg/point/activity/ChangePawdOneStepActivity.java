@@ -16,10 +16,9 @@ import com.tg.coloursteward.util.GsonUtils;
 import com.tg.coloursteward.util.ToastUtil;
 import com.tg.point.entity.CheckPwdEntiy;
 import com.tg.point.entity.PayPwdCheckEntity;
-import com.tg.point.gridpasswordview.GridPasswordView;
-import com.tg.point.gridpasswordview.PasswordType;
-import com.tg.point.model.PayPasswordModel;
 import com.tg.point.model.PointModel;
+import com.youmai.pwddialog.gridpasswordview.GridPasswordView;
+import com.youmai.pwddialog.gridpasswordview.NormalGridPasswordView;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -34,8 +33,7 @@ import static com.tg.point.activity.ChangePawdThreeStepActivity.PAWDTYPE;
 public class ChangePawdOneStepActivity extends BaseActivity implements View.OnClickListener, HttpResponse {
     private ImageView mBack;
     private TextView mTitle;
-    private GridPasswordView gridPasswordView_cqb;
-    private PayPasswordModel payPasswordModel;
+    private NormalGridPasswordView nor_grid_pawd_view;
     private PointModel pointModel;
 
     @Override
@@ -45,9 +43,8 @@ public class ChangePawdOneStepActivity extends BaseActivity implements View.OnCl
         setContentView(R.layout.activity_password_change_layout);
         mBack = findViewById(R.id.iv_base_back);
         mTitle = findViewById(R.id.tv_base_title);
-        gridPasswordView_cqb = findViewById(R.id.grid_pawd_view);
-        gridPasswordView_cqb.setPasswordType(PasswordType.NUMBER);
-        gridPasswordView_cqb.setOnPasswordChangedListener(new GridPasswordView.OnPasswordChangedListener() {
+        nor_grid_pawd_view = findViewById(R.id.nor_grid_pawd_view);
+        nor_grid_pawd_view.setOnPasswordChangedListener(new GridPasswordView.OnPasswordChangedListener() {
             @Override
             public void onTextChanged(String psw) {
 
@@ -63,7 +60,6 @@ public class ChangePawdOneStepActivity extends BaseActivity implements View.OnCl
         if (!EventBus.getDefault().isRegistered(ChangePawdOneStepActivity.this)) {
             EventBus.getDefault().register(ChangePawdOneStepActivity.this);
         }
-        payPasswordModel = new PayPasswordModel(this);
         pointModel = new PointModel(this);
     }
 

@@ -32,14 +32,13 @@ import com.tg.point.entity.RealNameTokenEntity;
 import com.tg.point.model.NewUserModel;
 import com.tg.point.model.PointModel;
 import com.tg.point.view.CashierInputFilter;
+import com.tg.setting.activity.SettingActivity;
 import com.youmai.hxsdk.utils.AppUtils;
+import com.youmai.pwddialog.PasswordDialogListener;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.json.JSONObject;
-
-import static com.tg.coloursteward.constant.UserMessageConstant.POINT_INPUT_PAYPAWD;
-import static com.tg.coloursteward.constant.UserMessageConstant.POINT_SET_PAYPAWD;
 
 
 /***
@@ -172,11 +171,6 @@ public class GivenPointAmountActivity extends BaseActivity implements View.OnCli
             case UserMessageConstant.POINT_SUCCESS_RETURN:
             case UserMessageConstant.POINT_CONTINUE_GIVEN:
                 finish();
-                break;
-            case POINT_INPUT_PAYPAWD://密码框输入密码
-            case POINT_SET_PAYPAWD: //设置支付密码成功 直接拿密码进行支付
-                String password = message.obj.toString();
-                pointModel.postCheckPwd(7, password, 2, this);
                 break;
         }
     }
@@ -337,7 +331,18 @@ public class GivenPointAmountActivity extends BaseActivity implements View.OnCli
     }
 
     private void showPayDialog() {
-        PointPasswordDialog pointPasswordDialog = new PointPasswordDialog(GivenPointAmountActivity.this);
-        pointPasswordDialog.show();
+        PasswordDialogListener dialogListener = new PasswordDialogListener(this, new PasswordDialogListener.pwdDialogListener() {
+            @Override
+            public void result(String pwd) {
+                pointModel.postCheckPwd(7, pwd, 2, GivenPointAmountActivity.this);
+            }
+
+            @Override
+            public void forgetPassWord() {
+                Intent intent = new Intent(GivenPointAmountActivity.this, SettingActivity.class);
+                startActivity(intent);
+            }
+        });
+        dialogListener.show();
     }
 }

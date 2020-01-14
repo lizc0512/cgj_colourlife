@@ -37,20 +37,17 @@ import com.tg.coloursteward.view.PullRefreshListView;
 import com.tg.coloursteward.view.dialog.DialogFactory;
 import com.tg.coloursteward.view.dialog.ToastFactory;
 import com.tg.point.activity.ChangePawdTwoStepActivity;
-import com.tg.point.activity.PointPasswordDialog;
 import com.tg.point.entity.CheckPwdEntiy;
 import com.tg.point.entity.PointTransactionTokenEntity;
 import com.tg.point.model.PointModel;
+import com.tg.setting.activity.SettingActivity;
 import com.youmai.hxsdk.utils.AppUtils;
+import com.youmai.pwddialog.PasswordDialogListener;
 
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-
-import static com.tg.coloursteward.constant.UserMessageConstant.POINT_INPUT_PAYPAWD;
 
 /**
  * 对公账户
@@ -83,9 +80,6 @@ public class PublicAccountActivity extends BaseActivity implements HttpResponse 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         pointModel = new PointModel(this);
-        if (!EventBus.getDefault().isRegistered(this)) {
-            EventBus.getDefault().register(this);
-        }
         getPopup(false);
         initView();
     }
@@ -282,27 +276,19 @@ public class PublicAccountActivity extends BaseActivity implements HttpResponse 
     }
 
     private void showPayDialog() {
-        PointPasswordDialog pointPasswordDialog = new PointPasswordDialog(this);
-        pointPasswordDialog.show();
-    }
+        PasswordDialogListener dialogListener = new PasswordDialogListener(this, new PasswordDialogListener.pwdDialogListener() {
+            @Override
+            public void result(String pwd) {
+                pointModel.postCheckPwd(7, pwd, 2, PublicAccountActivity.this);
+            }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if (EventBus.getDefault().isRegistered(PublicAccountActivity.this)) {
-            EventBus.getDefault().unregister(PublicAccountActivity.this);
-        }
-    }
-
-    @Subscribe
-    public void onEvent(Object event) {
-        final Message message = (Message) event;
-        switch (message.what) {
-            case POINT_INPUT_PAYPAWD://密码框输入密码
-                String password = message.obj.toString();
-                pointModel.postCheckPwd(7, password, 2, this);
-                break;
-        }
+            @Override
+            public void forgetPassWord() {
+                Intent it = new Intent(PublicAccountActivity.this, SettingActivity.class);
+                startActivity(it);
+            }
+        });
+        dialogListener.show();
     }
 
     /**

@@ -13,9 +13,9 @@ import com.tg.coloursteward.R;
 import com.tg.coloursteward.base.BaseActivity;
 import com.tg.coloursteward.baseModel.HttpResponse;
 import com.tg.coloursteward.util.ToastUtil;
-import com.tg.point.gridpasswordview.GridPasswordView;
-import com.tg.point.gridpasswordview.PasswordType;
 import com.tg.point.model.PayPasswordModel;
+import com.youmai.pwddialog.gridpasswordview.GridPasswordView;
+import com.youmai.pwddialog.gridpasswordview.NormalGridPasswordView;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -33,7 +33,7 @@ public class ChangePawdThreeStepActivity extends BaseActivity implements View.On
     private TextView mTitle;
     private TextView tv_tips_content;
     private Button btn_define;
-    private GridPasswordView gridPasswordView_cqb;
+    private NormalGridPasswordView gridPasswordView_cqb;
     private String newPayPawd;
     private String definePayPawd;
     private String passordToken;
@@ -49,8 +49,7 @@ public class ChangePawdThreeStepActivity extends BaseActivity implements View.On
         mTitle = findViewById(R.id.tv_base_title);
         tv_tips_content = findViewById(R.id.tv_tips_content);
         btn_define = findViewById(R.id.btn_define);
-        gridPasswordView_cqb = findViewById(R.id.grid_pawd_view);
-        gridPasswordView_cqb.setPasswordType(PasswordType.NUMBER);
+        gridPasswordView_cqb = findViewById(R.id.nor_grid_pawd_view);
         mBack.setOnClickListener(this);
         btn_define.setVisibility(View.VISIBLE);
         btn_define.setEnabled(false);

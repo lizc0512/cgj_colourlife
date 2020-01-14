@@ -215,6 +215,8 @@ public class MainActivity extends BaseActivity implements MessageHandler.Respons
         int result = NKeyBoardTextField.setNlicenseKey(Contants.APP.LICENSE_KEY).getStatusCode();
         if (1 == result) {
             spUtils.saveBooleanData(SpConstants.UserModel.ISUSERAJM, true);
+        } else {
+            spUtils.saveBooleanData(SpConstants.UserModel.ISUSERAJM, false);
         }
         mContext = this;
         mHandler = new NormalHandler(this);

@@ -63,7 +63,7 @@ public class AuthAppService implements MessageHandler.ResponseListener, HttpResp
             }
         } else {
             if (listener != null) {
-                listener.onFailed("获取认证参数失败！");
+//                listener.onFailed("获取认证参数失败！");
             }
         }
     }

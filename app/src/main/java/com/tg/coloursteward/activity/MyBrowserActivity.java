@@ -757,6 +757,22 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
         }
     }
 
+    private void locationPermission() {
+        if (!XXPermissions.isHasPermission(MyBrowserActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION)) {
+            XXPermissions.with(MyBrowserActivity.this).permission(Manifest.permission.ACCESS_COARSE_LOCATION).request(new OnPermission() {
+                @Override
+                public void hasPermission(List<String> granted, boolean isAll) {
+                    webView.reload();
+                }
+
+                @Override
+                public void noPermission(List<String> denied, boolean quick) {
+                    ToastUtil.showShortToast(MyBrowserActivity.this, "请到设置-程序管理中打开彩管家定位权限");
+                }
+            });
+        }
+    }
+
     /**
      * H5调用原生
      * 并不是在主线程执行
@@ -767,19 +783,7 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
 
         @JavascriptInterface
         public void getLocationPermisstion() {
-            if (!XXPermissions.isHasPermission(MyBrowserActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION)) {
-                XXPermissions.with(MyBrowserActivity.this).permission(Manifest.permission.ACCESS_COARSE_LOCATION).request(new OnPermission() {
-                    @Override
-                    public void hasPermission(List<String> granted, boolean isAll) {
-
-                    }
-
-                    @Override
-                    public void noPermission(List<String> denied, boolean quick) {
-
-                    }
-                });
-            }
+            locationPermission();
         }
 
 
@@ -1581,26 +1585,6 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
         mlocationClient.stopLocation();
     }
 
-    /**
-     * 定位监听
-     */
-    /*AMapLocationListener locationListener = new AMapLocationListener() {
-        @Override
-		public void onLocationChanged(AMapLocation loc) {
-			if (null != loc) {
-				//解析定位结果
-				String result = Utils.getLocationStr(loc);
-				if(result != null){
-					//Log.d("print","result="+result);
-					stopLocation();
-					String url = "javascript:LatLngCallBack('" +result+ "')";
-					webView.loadUrl(url);
-				}
-			}else {
-
-			}
-		}
-	};*/
     @Override
     public void onLocationChanged(AMapLocation aMapLocation) {
         if (null != aMapLocation) {
@@ -1609,8 +1593,11 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
             if (result != null) {
                 String url = "javascript:LatLngCallBack('" + result + "')";
                 webView.loadUrl(url, headerMap);
+            } else {
+                locationPermission();
             }
         } else {
+            locationPermission();
             Log.d("TAG", "定位失败");
         }
     }

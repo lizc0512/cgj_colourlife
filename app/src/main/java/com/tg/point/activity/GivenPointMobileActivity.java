@@ -239,6 +239,9 @@ public class GivenPointMobileActivity extends BaseActivity implements View.OnCli
                     last_amount = contentBean.getLast_amount();
                     if (last_amount > 0 && last_times > 0) {
                         canGiven = true;
+                    } else if (last_amount == -1 || last_times == -1) {
+                        canGiven = true;
+                        tv_remain_notice.setVisibility(View.GONE);
                     } else {
                         canGiven = false;
                     }

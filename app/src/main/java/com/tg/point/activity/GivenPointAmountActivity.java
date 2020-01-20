@@ -110,6 +110,9 @@ public class GivenPointAmountActivity extends BaseActivity implements View.OnCli
         pano = intent.getStringExtra(PointTransactionListActivity.POINTTPANO);
         pointModel = new PointModel(GivenPointAmountActivity.this);
         pointModel.getAccountBalance(1, pano, GivenPointAmountActivity.this);
+        if (last_amount == -1 || last_time == -1) {
+            tv_remain_notice.setVisibility(View.GONE);
+        }
         tv_remain_notice.setText("今日可赠送" + last_time + "次，剩余额度" + last_amount + keyword_sign);
         if (!EventBus.getDefault().isRegistered(GivenPointAmountActivity.this)) {
             EventBus.getDefault().register(GivenPointAmountActivity.this);

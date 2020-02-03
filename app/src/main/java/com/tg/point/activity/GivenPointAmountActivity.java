@@ -156,7 +156,7 @@ public class GivenPointAmountActivity extends BaseActivity implements View.OnCli
                         ToastUtil.showShortToast(GivenPointAmountActivity.this, "赠送金额不能超过可用余额");
                         return;
                     }
-                    if (last_amount < 0) {
+                    if (last_amount < 0 && last_amount != -1) {
                         ToastUtil.showShortToast(GivenPointAmountActivity.this, "赠送金额不能超过剩余额度");
                         return;
                     }

@@ -1,18 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent" >
+    android:layout_height="fill_parent">
 
     <SurfaceView
         android:id="@+id/preview_view"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_gravity="center" />
- 
-           <com.tg.coloursteward.zxing.view.ViewfinderView
-          android:id="@+id/viewfinder_view"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content" />
-    
+
+    <com.tg.coloursteward.zxing.view.ViewfinderView
+        android:id="@+id/viewfinder_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="@dimen/size_60dp"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/iv_scan_light"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/size_5dp"
+            android:src="@drawable/b0_torch_off" />
+
+        <ImageView
+            android:id="@+id/iv_scan_picture"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="90dp"
+            android:padding="@dimen/size_5dp"
+            android:src="@drawable/b0_choice_pic" />
+
+    </LinearLayout>
 
 </RelativeLayout>

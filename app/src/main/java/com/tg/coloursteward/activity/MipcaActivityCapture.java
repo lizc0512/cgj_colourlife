@@ -6,15 +6,18 @@ import android.graphics.Bitmap;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Vibrator;
+import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.view.SurfaceHolder;
 import android.view.SurfaceHolder.Callback;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.ImageView;
 
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.Result;
@@ -24,6 +27,10 @@ import com.tg.coloursteward.baseModel.HttpResponse;
 import com.tg.coloursteward.baseModel.RequestEncryptionUtils;
 import com.tg.coloursteward.model.HomeModel;
 import com.tg.coloursteward.util.AuthTimeUtils;
+import com.tg.coloursteward.util.DecodeImage;
+import com.tg.coloursteward.util.ImageUtil;
+import com.tg.coloursteward.util.ToastUtil;
+import com.tg.coloursteward.util.Tools;
 import com.tg.coloursteward.view.dialog.ToastFactory;
 import com.tg.coloursteward.zxing.camera.CameraManager;
 import com.tg.coloursteward.zxing.decoding.CaptureActivityHandler;
@@ -44,8 +51,6 @@ import java.util.Vector;
 public class MipcaActivityCapture extends BaseActivity implements Callback, OnClickListener, HttpResponse {
     public static final String KEY_TEXT1 = "text1";
     public static final String KEY_TEXT2 = "text2";
-    public static final String TEXT_OPEN = "打开闪光灯";
-    public static final String TEXT_CLOSE = "关闭闪光灯";
     public final static String QRCODE_SOURCE = "qrcode_source";// 第三方调用彩之云的扫码功能 回调将值给它
     private CaptureActivityHandler handler;
     private ViewfinderView viewfinderView;
@@ -60,6 +65,8 @@ public class MipcaActivityCapture extends BaseActivity implements Callback, OnCl
     private AuthTimeUtils mAuthTimeUtils;
     private HomeModel homeModel;
     private String qrSource = "";
+    private ImageView iv_scan_light;
+    private ImageView iv_scan_picture;
 
     /**
      * Called when the activity is first created.
@@ -70,6 +77,10 @@ public class MipcaActivityCapture extends BaseActivity implements Callback, OnCl
         homeModel = new HomeModel(this);
         CameraManager.init(getApplication());
         viewfinderView = findViewById(R.id.viewfinder_view);
+        iv_scan_light = findViewById(R.id.iv_scan_light);
+        iv_scan_picture = findViewById(R.id.iv_scan_picture);
+        iv_scan_light.setOnClickListener(this);
+        iv_scan_picture.setOnClickListener(this);
         Intent data = getIntent();
         if (data != null) {
             String text1 = data.getStringExtra(KEY_TEXT1);
@@ -101,9 +112,9 @@ public class MipcaActivityCapture extends BaseActivity implements Callback, OnCl
             surfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
         }
         if (CameraManager.get().isFlashOpen()) {
-            headView.setRightText(TEXT_CLOSE);
+            iv_scan_light.setImageResource(R.drawable.b0_torch_on);
         } else {
-            headView.setRightText(TEXT_OPEN);
+            iv_scan_light.setImageResource(R.drawable.b0_torch_off);
         }
         decodeFormats = null;
         characterSet = null;
@@ -169,9 +180,9 @@ public class MipcaActivityCapture extends BaseActivity implements Callback, OnCl
         }
         CameraManager.get().closeDriver();
         if (CameraManager.get().isFlashOpen()) {
-            headView.setRightText(TEXT_CLOSE);
+            iv_scan_light.setImageResource(R.drawable.b0_torch_on);
         } else {
-            headView.setRightText(TEXT_OPEN);
+            iv_scan_light.setImageResource(R.drawable.b0_torch_off);
         }
     }
 
@@ -268,19 +279,43 @@ public class MipcaActivityCapture extends BaseActivity implements Callback, OnCl
 
     @Override
     public String getHeadTitle() {
-        headView.setRightText(TEXT_OPEN);
-        headView.setRightTextColor(getResources().getColor(R.color.white));
-        headView.setListenerRight(this);
         return "扫一扫";
     }
 
     @Override
     public void onClick(View v) {
-        CameraManager.get().openOrCloseFlash();
-        if (CameraManager.get().isFlashOpen()) {
-            headView.setRightText(TEXT_CLOSE);
-        } else {
-            headView.setRightText(TEXT_OPEN);
+        switch (v.getId()) {
+            case R.id.iv_scan_light:
+                CameraManager.get().openOrCloseFlash();
+                if (CameraManager.get().isFlashOpen()) {
+                    iv_scan_light.setImageResource(R.drawable.b0_torch_on);
+                } else {
+                    iv_scan_light.setImageResource(R.drawable.b0_torch_off);
+                }
+                break;
+            case R.id.iv_scan_picture:
+                Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                intent.setType("image/*");
+                startActivityForResult(intent, 100);
+                break;
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 100) {
+            if (resultCode == RESULT_OK && null != data) {
+                Uri uri = data.getData();
+                String path = Tools.getPathByUri(MipcaActivityCapture.this, uri);
+                Bitmap bitmap = ImageUtil.compressImageFromFile(path, 720f, 920f);
+                Result result = DecodeImage.handleQRCodeFormBitmap(bitmap);
+                if (result == null) {
+                    ToastUtil.showShortToast(MipcaActivityCapture.this, "请选择是二维码的图片");
+                } else {
+                    handleDecode(result, bitmap);
+                }
+            }
         }
     }
 

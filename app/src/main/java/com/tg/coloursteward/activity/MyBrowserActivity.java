@@ -914,6 +914,16 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
         }
 
         /**
+         * 关闭webview页面
+         *
+         * @return
+         */
+        @JavascriptInterface
+        public void cgjCloseHandler() {
+            MyBrowserActivity.this.finish();
+        }
+
+        /**
          * 获取经纬度
          *
          * @return
@@ -1119,6 +1129,29 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
          */
         @JavascriptInterface
         public void ColourlifeShareCallBack(String data) {
+            try {
+                if (!TextUtils.isEmpty(data)) {
+                    JSONObject jsonObject = new JSONObject(data);
+                    shareTitle = jsonObject.optString("title");
+                    if (!jsonObject.isNull("url")) {
+                        shareUrl = jsonObject.optString("url");
+                    }
+                    shareImg = jsonObject.optString("image");
+                    shareContent = jsonObject.optString("content");
+                    MyBrowserActivity.this.runOnUiThread(() -> webview_frame_share.setVisibility(View.VISIBLE));
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+        /**
+         * H5调原生分享页面
+         *
+         * @param data
+         */
+        @JavascriptInterface
+        public void cgjShareCallBack(String data) {
             try {
                 if (!TextUtils.isEmpty(data)) {
                     JSONObject jsonObject = new JSONObject(data);

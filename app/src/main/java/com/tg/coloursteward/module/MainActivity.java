@@ -67,8 +67,6 @@ import com.tg.coloursteward.model.HomeModel;
 import com.tg.coloursteward.net.GetTwoRecordListener;
 import com.tg.coloursteward.net.HttpTools;
 import com.tg.coloursteward.net.MessageHandler;
-import com.tg.coloursteward.net.RequestConfig;
-import com.tg.coloursteward.net.RequestParams;
 import com.tg.coloursteward.net.ResponseData;
 import com.tg.coloursteward.serice.AppAuthService;
 import com.tg.coloursteward.serice.AuthAppService;
@@ -188,9 +186,6 @@ public class MainActivity extends BaseActivity implements MessageHandler.Respons
             String action = intent.getAction();
             if (action.equals(ACTION_HOME_DELETEINFO)) {//首页删除消息
                 HomeDeskTopInfo info = (HomeDeskTopInfo) intent.getSerializableExtra("info");
-                String source_id = info.source_id;
-                String comefrom = info.comefrom;
-                postDeleteListItem(source_id, comefrom);
             } else if (action.equals(ACTION_READ_MESSAGEINFO)) {//首页列表消息设置为已读
                 String client_code = intent.getStringExtra("messageId");
                 getReadMessageInfo(client_code);
@@ -760,15 +755,6 @@ public class MainActivity extends BaseActivity implements MessageHandler.Respons
             MsgListFragment fragment = (MsgListFragment) mAdapter.instantiateItem(mViewPager, 0);
             fragment.reqPushMsg();
         }
-    }
-
-    private void postDeleteListItem(String source_id, String comefrom) {
-        RequestConfig config = new RequestConfig(this, HttpTools.POST_DELETE_INFO, null);
-        RequestParams params = new RequestParams();
-        params.put("usernames", UserInfo.employeeAccount);
-        params.put("source_id", source_id);
-        params.put("comefrom", comefrom);
-        HttpTools.httpDelete(Contants.URl.URL_ICETEST, "/homelist", config, params);
     }
 
     /**

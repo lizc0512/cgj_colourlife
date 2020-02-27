@@ -4,7 +4,6 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Message;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -19,11 +18,10 @@ import com.tg.coloursteward.baseModel.HttpResponse;
 import com.tg.coloursteward.constant.Contants;
 import com.tg.coloursteward.constant.SpConstants;
 import com.tg.coloursteward.info.UserInfo;
+import com.tg.coloursteward.model.BonusModel;
 import com.tg.coloursteward.net.GetTwoRecordListener;
 import com.tg.coloursteward.net.HttpTools;
 import com.tg.coloursteward.net.MD5;
-import com.tg.coloursteward.net.RequestConfig;
-import com.tg.coloursteward.net.RequestParams;
 import com.tg.coloursteward.serice.AppAuthService;
 import com.tg.coloursteward.util.GlideUtils;
 import com.tg.coloursteward.util.GsonUtils;
@@ -45,7 +43,6 @@ import com.youmai.pwddialog.PasswordDialogListener;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.Calendar;
 import java.util.Date;
 
 
@@ -81,6 +78,7 @@ public class PublicAccountExchangeActivity extends BaseActivity implements HttpR
     private UserModel userModel;
     private PointModel pointModel;
     private String state;//支付密码的状态
+    private BonusModel bonusModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,15 +87,13 @@ public class PublicAccountExchangeActivity extends BaseActivity implements HttpR
         userModel = new UserModel(this);
         userModel.getTs(0, this);
         pointModel = new PointModel(this);
+        bonusModel = new BonusModel(this);
         if (intent != null) {
             money = intent.getStringExtra(Contants.PARAMETER.PUBLIC_ACCOUNT);
             payAtid = intent.getIntExtra(Contants.PARAMETER.PAY_ATID, -1);
             payAno = intent.getStringExtra(Contants.PARAMETER.PAY_ANO);
         }
-        RequestParams params = new RequestParams();
-        params.put("oa_username", UserInfo.employeeAccount);
-        HttpTools.httpGet(Contants.URl.URL_ICETEST, "/newczy/employee/getFinanceByOa",
-                new RequestConfig(this, HttpTools.GET_USER_INFO), params);
+        bonusModel.getFinanceByOa(5, UserInfo.employeeAccount, this);
         initView();
         if (StringUtils.isNotEmpty(money)) {
             tvTicket.setText("可兑换余额：" + money);
@@ -207,89 +203,18 @@ public class PublicAccountExchangeActivity extends BaseActivity implements HttpR
      * 提交数据
      */
     private void submit() {
-        RequestConfig config = new RequestConfig(this, HttpTools.POST_FASTTRANSACTION);
-        RequestParams params = new RequestParams();
-        try {
-            String ts = HttpTools.getTime();
-            long time = System.currentTimeMillis();//获取当前时间戳
-            Calendar c = Calendar.getInstance();
-            String startTime = Tools.getDateToString(c.getTimeInMillis());
-            String orderno = MD5.getMd5Value(String.valueOf(time)).toLowerCase();
-            params.put("access_token", accessToken_1);
-            params.put("money", transferAmount);
-            params.put("orderno", orderno);
-            params.put("content", edtMessage.getEditableText().toString());
-            params.put("orgtype", payAtid);
-            params.put("detail", edtMessage.getEditableText().toString());
-            params.put("orgaccountno", payAno);
-            params.put("desttype", 6);
-            params.put("destaccountno", acceptAno);
-            params.put("starttime", ts);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        HttpTools.httpPost(Contants.URl.URL_ICETEST, "/jrpt/transaction/fasttransaction", config, params);
-        showProgressDialog();
-    }
+        String ts = HttpTools.getTime();
+        long time = System.currentTimeMillis();//获取当前时间戳
+        String orderno = MD5.getMd5Value(String.valueOf(time)).toLowerCase();
+        bonusModel.postFasttransaction(4, accessToken_1, transferAmount, orderno, edtMessage.getEditableText().toString(),
+                payAtid, edtMessage.getEditableText().toString(), payAno, acceptAno, ts, this);
 
-    public void showProgressDialog() {
-        if (mProgressDialog == null) {
-            mProgressDialog = new ProgressDialog(this);
-            mProgressDialog.setMessage("正在兑换");
-            mProgressDialog.setCanceledOnTouchOutside(false);
-        }
 
-        if (!mProgressDialog.isShowing()) {
-            mProgressDialog.show();
-        }
-
-    }
-
-    public void dismissProgressDialog() {
-        if (mProgressDialog != null && mProgressDialog.isShowing()) {
-            mProgressDialog.dismiss();
-        }
     }
 
     public void initData() {
         String str = Contants.Html5.HEAD_ICON_URL + "/avatar?uid=" + UserInfo.employeeAccount;
         GlideUtils.loadImageDefaultDisplay(this, str, imgHead, R.drawable.placeholder2, R.drawable.placeholder2);
-    }
-
-    @Override
-    public void onFail(Message msg, String hintString) {
-        super.onFail(msg, hintString);
-        dismissProgressDialog();
-    }
-
-    @Override
-    public void onSuccess(Message msg, String jsonString, String hintString) {
-        super.onSuccess(msg, jsonString, hintString);
-        dismissProgressDialog();
-        int code = HttpTools.getCode(jsonString);
-        String message = HttpTools.getMessageString(jsonString);
-        if (msg.arg1 == HttpTools.GET_USER_INFO) {
-            if (code == 0) {
-                JSONObject content = HttpTools.getContentJSONObject(jsonString);
-                try {
-                    if (content != null) {
-                        acceptAno = content.getString("cano");
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            } else {
-                ToastFactory.showToast(PublicAccountExchangeActivity.this, message);
-            }
-        } else if (msg.arg1 == HttpTools.POST_FASTTRANSACTION) {
-            if (code == 0) {
-                sendBroadcast(new Intent(PublicAccountActivity.ACTION_PUBLIC_ACCOUNT));
-                ToastFactory.showToast(PublicAccountExchangeActivity.this, "兑换成功");
-                finish();
-            } else {
-                ToastFactory.showToast(PublicAccountExchangeActivity.this, message);
-            }
-        }
     }
 
     /**
@@ -410,6 +335,25 @@ public class PublicAccountExchangeActivity extends BaseActivity implements HttpR
                     }
                 } catch (Exception e) {
 
+                }
+                break;
+            case 4:
+                if (!TextUtils.isEmpty(result)) {
+                    sendBroadcast(new Intent(PublicAccountActivity.ACTION_PUBLIC_ACCOUNT));
+                    ToastUtil.showShortToast(PublicAccountExchangeActivity.this, "兑换成功");
+                    finish();
+                }
+                break;
+            case 5:
+                if (!TextUtils.isEmpty(result)) {
+                    JSONObject content = HttpTools.getContentJSONObject(result);
+                    try {
+                        if (content != null) {
+                            acceptAno = content.getString("cano");
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                 }
                 break;
             case 7:

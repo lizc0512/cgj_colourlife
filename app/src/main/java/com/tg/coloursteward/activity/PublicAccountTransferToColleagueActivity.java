@@ -4,7 +4,6 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Message;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -19,11 +18,10 @@ import com.tg.coloursteward.base.BaseActivity;
 import com.tg.coloursteward.baseModel.HttpResponse;
 import com.tg.coloursteward.constant.Contants;
 import com.tg.coloursteward.constant.SpConstants;
+import com.tg.coloursteward.model.BonusModel;
 import com.tg.coloursteward.net.GetTwoRecordListener;
 import com.tg.coloursteward.net.HttpTools;
 import com.tg.coloursteward.net.MD5;
-import com.tg.coloursteward.net.RequestConfig;
-import com.tg.coloursteward.net.RequestParams;
 import com.tg.coloursteward.serice.AppAuthService;
 import com.tg.coloursteward.util.GlideUtils;
 import com.tg.coloursteward.util.GsonUtils;
@@ -45,7 +43,6 @@ import com.youmai.pwddialog.PasswordDialogListener;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -141,25 +138,6 @@ public class PublicAccountTransferToColleagueActivity extends BaseActivity imple
         return super.handClickEvent(v);
     }
 
-    public void showProgressDialog() {
-        if (mProgressDialog == null) {
-            mProgressDialog = new ProgressDialog(PublicAccountTransferToColleagueActivity.this);
-            mProgressDialog.setMessage("正在兑换");
-            mProgressDialog.setCanceledOnTouchOutside(false);
-        }
-
-        if (!mProgressDialog.isShowing()) {
-            mProgressDialog.show();
-        }
-
-    }
-
-    public void dismissProgressDialog() {
-        if (mProgressDialog != null && mProgressDialog.isShowing()) {
-            mProgressDialog.dismiss();
-        }
-    }
-
     private void initView() {
         accessToken_1 = Tools.getStringValue(PublicAccountTransferToColleagueActivity.this, Contants.storage.APPAUTH_1);
         imgHead = (RoundImageView) findViewById(R.id.rig_head);
@@ -237,61 +215,17 @@ public class PublicAccountTransferToColleagueActivity extends BaseActivity imple
      * 提交数据
      */
     private void submit() {
-
-
-        RequestConfig config = new RequestConfig(this, HttpTools.POST_FASTTRANSACTION);
-        RequestParams params = new RequestParams();
-        try {
-            String ts = HttpTools.getTime();
-            long time = System.currentTimeMillis();//获取当前时间戳
-            Calendar c = Calendar.getInstance();
-            String startTime = Tools.getDateToString(c.getTimeInMillis());
-            String orderno = MD5.getMd5Value(String.valueOf(time)).toLowerCase();
-            params.put("access_token", accessToken_1);
-            params.put("money", transferAmount);
-            params.put("orderno", orderno);
-            params.put("content", edtMessage.getEditableText().toString());
-            params.put("orgtype", payAtid);//支付账号类型
-            params.put("detail", edtMessage.getEditableText().toString());
-            params.put("orgaccountno", payAno);//支付账户
-            params.put("desttype", atid);
-            params.put("destaccountno", cano);
-            params.put("starttime", ts);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        HttpTools.httpPost(Contants.URl.URL_ICETEST, "/jrpt/transaction/fasttransaction", config, params);
-        showProgressDialog();
+        BonusModel bonusModel = new BonusModel(this);
+        String ts = HttpTools.getTime();
+        long time = System.currentTimeMillis();//获取当前时间戳
+        String orderno = MD5.getMd5Value(String.valueOf(time)).toLowerCase();
+        bonusModel.postCollegeFasttransaction(4, accessToken_1, transferAmount, orderno, edtMessage.getText().toString(),
+                payAtid, edtMessage.getText().toString(), payAno, atid, cano, ts, this);
     }
 
     public void initData() {
         String str = Contants.Html5.HEAD_ICON_URL + "/avatar?uid=" + OA;
         GlideUtils.loadImageDefaultDisplay(this, str, imgHead, R.drawable.placeholder2, R.drawable.placeholder2);
-    }
-
-    @Override
-    public void onSuccess(Message msg, String jsonString, String hintString) {
-        super.onSuccess(msg, jsonString, hintString);
-        dismissProgressDialog();
-        int code = HttpTools.getCode(jsonString);
-        String message = HttpTools.getMessageString(jsonString);
-        if (code == 0) {
-            /**
-             * 发送已更改的广播
-             */
-            sendBroadcast(new Intent(PublicAccountActivity.ACTION_PUBLIC_ACCOUNT));
-            ToastFactory.showToast(PublicAccountTransferToColleagueActivity.this, "兑换成功");
-            finish();
-        } else {
-            ToastFactory.showToast(PublicAccountTransferToColleagueActivity.this, message);
-        }
-    }
-
-    @Override
-    public void onFail(Message msg, String hintString) {
-        super.onFail(msg, hintString);
-        dismissProgressDialog();
     }
 
     /**
@@ -413,6 +347,13 @@ public class PublicAccountTransferToColleagueActivity extends BaseActivity imple
                     }
                 } catch (Exception e) {
 
+                }
+                break;
+            case 4:
+                if (!TextUtils.isEmpty(result)) {
+                    sendBroadcast(new Intent(PublicAccountActivity.ACTION_PUBLIC_ACCOUNT));
+                    ToastFactory.showToast(PublicAccountTransferToColleagueActivity.this, "兑换成功");
+                    finish();
                 }
                 break;
             case 7:

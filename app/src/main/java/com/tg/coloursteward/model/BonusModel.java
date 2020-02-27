@@ -31,6 +31,8 @@ public class BonusModel extends BaseModel {
     private String searchDgzhUrl = "/dgzh/account/search4web";
     private String searchDgzhWordUrl = "/org/page";
     private String utilityRuleUrl = "/app/home/utility/ruleDeatil";
+    private String fasttransactionUrl = "/jrpt/transaction/fasttransaction";
+    private String financeByOaUrl = "/newczy/employee/getFinanceByOa";
 
     public BonusModel(Context context) {
         super(context);
@@ -208,6 +210,200 @@ public class BonusModel extends BaseModel {
 
             @Override
             public void onFailed(int what, Response<String> response) {
+            }
+        }, true, false);
+    }
+
+    /**
+     * 对公账户 -兑换到彩管家账户接口
+     *
+     * @param what
+     * @param access_token
+     * @param transferAmount
+     * @param orderno
+     * @param content
+     * @param payAtid
+     * @param detail
+     * @param payAno
+     * @param acceptAno
+     * @param ts
+     * @param httpResponse
+     */
+    public void postFasttransaction(int what, String access_token, String transferAmount, String orderno,
+                                    String content, int payAtid, String detail, String payAno,
+                                    String acceptAno, String ts, HttpResponse httpResponse) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("access_token", access_token);
+        params.put("money", transferAmount);
+        params.put("orderno", orderno);
+        params.put("content", content);
+        params.put("orgtype", payAtid);
+        params.put("detail", detail);
+        params.put("orgaccountno", payAno);
+        params.put("desttype", 6);
+        params.put("destaccountno", acceptAno);
+        params.put("starttime", ts);
+        final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(
+                mContext, 4, fasttransactionUrl), RequestMethod.POST);
+        request(what, request, RequestEncryptionUtils.getIceMap(mContext, params), new HttpListener<String>() {
+            @Override
+            public void onSucceed(int what, Response<String> response) {
+                int responseCode = response.getHeaders().getResponseCode();
+                String result = response.get();
+                if (responseCode == RequestEncryptionUtils.responseSuccess) {
+                    int code = showSuccesResultMessage(result);
+                    if (code == 0) {
+                        httpResponse.OnHttpResponse(what, result);
+                    }
+                } else {
+                    showErrorCodeMessage(response);
+                }
+            }
+
+            @Override
+            public void onFailed(int what, Response<String> response) {
+                showExceptionMessage(what, response);
+            }
+        }, true, true);
+    }
+
+    /**
+     * 对公账户 -兑换给同事账户接口
+     *
+     * @param what
+     * @param access_token
+     * @param transferAmount
+     * @param orderno
+     * @param content
+     * @param payAtid
+     * @param detail
+     * @param payAno
+     * @param acceptAno
+     * @param atid
+     * @param ts
+     * @param httpResponse
+     */
+    public void postCollegeFasttransaction(int what, String access_token, String transferAmount, String orderno,
+                                           String content, int payAtid, String detail, String payAno,
+                                           int atid, String acceptAno, String ts, HttpResponse httpResponse) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("access_token", access_token);
+        params.put("money", transferAmount);
+        params.put("orderno", orderno);
+        params.put("content", content);
+        params.put("orgtype", payAtid);
+        params.put("detail", detail);
+        params.put("orgaccountno", payAno);
+        params.put("desttype", atid);
+        params.put("destaccountno", acceptAno);
+        params.put("starttime", ts);
+        final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(
+                mContext, 4, fasttransactionUrl), RequestMethod.POST);
+        request(what, request, RequestEncryptionUtils.getIceMap(mContext, params), new HttpListener<String>() {
+            @Override
+            public void onSucceed(int what, Response<String> response) {
+                int responseCode = response.getHeaders().getResponseCode();
+                String result = response.get();
+                if (responseCode == RequestEncryptionUtils.responseSuccess) {
+                    int code = showSuccesResultMessage(result);
+                    if (code == 0) {
+                        httpResponse.OnHttpResponse(what, result);
+                    }
+                } else {
+                    showErrorCodeMessage(response);
+                }
+            }
+
+            @Override
+            public void onFailed(int what, Response<String> response) {
+                showExceptionMessage(what, response);
+            }
+        }, true, true);
+    }
+
+    /**
+     * 对公账户 -转账给账户接口
+     *
+     * @param what
+     * @param access_token
+     * @param transferAmount
+     * @param orderno
+     * @param content
+     * @param payAtid
+     * @param detail
+     * @param payAno
+     * @param atid
+     * @param acceptAno
+     * @param ts
+     * @param httpResponse
+     */
+    public void postDgzhFasttransaction(int what, String access_token, String transferAmount, String orderno,
+                                        String content, int payAtid, String detail, String payAno,
+                                        int atid, String acceptAno, String ts, HttpResponse httpResponse) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("access_token", access_token);
+        params.put("money", transferAmount);
+        params.put("orderno", orderno);
+        params.put("content", content);
+        params.put("orgtype", payAtid);
+        params.put("detail", detail);
+        params.put("orgaccountno", payAno);
+        params.put("desttype", atid);
+        params.put("destaccountno", acceptAno);
+        params.put("starttime", ts);
+        final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(
+                mContext, 4, fasttransactionUrl), RequestMethod.POST);
+        request(what, request, RequestEncryptionUtils.getIceMap(mContext, params), new HttpListener<String>() {
+            @Override
+            public void onSucceed(int what, Response<String> response) {
+                int responseCode = response.getHeaders().getResponseCode();
+                String result = response.get();
+                if (responseCode == RequestEncryptionUtils.responseSuccess) {
+                    int code = showSuccesResultMessage(result);
+                    if (code == 0) {
+                        httpResponse.OnHttpResponse(what, result);
+                    }
+                } else {
+                    showErrorCodeMessage(response);
+                }
+            }
+
+            @Override
+            public void onFailed(int what, Response<String> response) {
+                showExceptionMessage(what, response);
+            }
+        }, true, true);
+    }
+
+    /**
+     * 获取员工金融信息
+     *
+     * @param what
+     * @param httpResponse
+     */
+    public void getFinanceByOa(int what, String oa, HttpResponse httpResponse) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("oa_username", oa);
+        final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(
+                mContext, 4, financeByOaUrl), RequestMethod.GET);
+        request(what, request, RequestEncryptionUtils.getIceMap(mContext, params), new HttpListener<String>() {
+            @Override
+            public void onSucceed(int what, Response<String> response) {
+                int responseCode = response.getHeaders().getResponseCode();
+                String result = response.get();
+                if (responseCode == RequestEncryptionUtils.responseSuccess) {
+                    int code = showSuccesResultMessage(result);
+                    if (code == 0) {
+                        httpResponse.OnHttpResponse(what, result);
+                    }
+                } else {
+                    showErrorCodeMessage(response);
+                }
+            }
+
+            @Override
+            public void onFailed(int what, Response<String> response) {
+                showExceptionMessage(what, response);
             }
         }, true, false);
     }

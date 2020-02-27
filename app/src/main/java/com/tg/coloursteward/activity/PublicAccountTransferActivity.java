@@ -3,7 +3,6 @@ package com.tg.coloursteward.activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Message;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -17,11 +16,10 @@ import com.tg.coloursteward.base.BaseActivity;
 import com.tg.coloursteward.baseModel.HttpResponse;
 import com.tg.coloursteward.constant.Contants;
 import com.tg.coloursteward.constant.SpConstants;
+import com.tg.coloursteward.model.BonusModel;
 import com.tg.coloursteward.net.GetTwoRecordListener;
 import com.tg.coloursteward.net.HttpTools;
 import com.tg.coloursteward.net.MD5;
-import com.tg.coloursteward.net.RequestConfig;
-import com.tg.coloursteward.net.RequestParams;
 import com.tg.coloursteward.serice.AppAuthService;
 import com.tg.coloursteward.util.GsonUtils;
 import com.tg.coloursteward.util.StringUtils;
@@ -39,8 +37,6 @@ import com.youmai.pwddialog.PasswordDialogListener;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.Calendar;
 
 /**
  * 对公账户转账
@@ -96,6 +92,7 @@ public class PublicAccountTransferActivity extends BaseActivity implements HttpR
             acceptAno = intent.getStringExtra(Contants.PARAMETER.ACCEPT_ANO);
             acceptTypeName = intent.getStringExtra(Contants.PARAMETER.ACCEPT_TYPE_NAME);
         }
+        getAppAuthInfo();
         initView();
         if (StringUtils.isNotEmpty(money)) {
             tvTicket.setText("可用余额：" + money);
@@ -117,7 +114,6 @@ public class PublicAccountTransferActivity extends BaseActivity implements HttpR
     }
 
     private void initView() {
-        accessToken_1 = Tools.getStringValue(PublicAccountTransferActivity.this, Contants.storage.APPAUTH_1);
         tvTicket = (TextView) findViewById(R.id.tv_ticket);
         tvTypeName = (TextView) findViewById(R.id.tv_typeName);
         tvAno = (TextView) findViewById(R.id.tv_ano);
@@ -184,48 +180,17 @@ public class PublicAccountTransferActivity extends BaseActivity implements HttpR
         });
     }
 
-    @Override
-    public void onSuccess(Message msg, String jsonString, String hintString) {
-        super.onSuccess(msg, jsonString, hintString);
-        int code = HttpTools.getCode(jsonString);
-        String message = HttpTools.getMessageString(jsonString);
-        if (msg.arg1 == HttpTools.POST_FASTTRANSACTION) {
-            if (code == 0) {
-                sendBroadcast(new Intent(PublicAccountActivity.ACTION_PUBLIC_ACCOUNT));
-                ToastFactory.showToast(PublicAccountTransferActivity.this, "转账成功");
-                finish();
-            } else {
-                ToastFactory.showToast(PublicAccountTransferActivity.this, message);
-            }
-        }
-    }
-
     /**
      * 提交数据
      */
     private void submit() {
-        RequestConfig config = new RequestConfig(this, HttpTools.POST_FASTTRANSACTION);
-        RequestParams params = new RequestParams();
-        try {
-            String ts = HttpTools.getTime();
-            long time = System.currentTimeMillis();//获取当前时间戳
-            Calendar c = Calendar.getInstance();
-            String startTime = Tools.getDateToString(c.getTimeInMillis());
-            String orderno = MD5.getMd5Value(String.valueOf(time)).toLowerCase();
-            params.put("access_token", accessToken_1);
-            params.put("money", transferAmount);
-            params.put("orderno", orderno);
-            params.put("content", edtMessage.getEditableText().toString());
-            params.put("orgtype", payAtid);
-            params.put("detail", edtMessage.getEditableText().toString());
-            params.put("orgaccountno", payAno);
-            params.put("desttype", acceptAtid);
-            params.put("destaccountno", acceptAno);
-            params.put("starttime", ts);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        HttpTools.httpPost(Contants.URl.URL_ICETEST, "/jrpt/transaction/fasttransaction", config, params);
+        accessToken_1 = Tools.getStringValue(PublicAccountTransferActivity.this, Contants.storage.APPAUTH_1);
+        BonusModel bonusModel = new BonusModel(this);
+        String ts = HttpTools.getTime();
+        long time = System.currentTimeMillis();//获取当前时间戳
+        String orderno = MD5.getMd5Value(String.valueOf(time)).toLowerCase();
+        bonusModel.postDgzhFasttransaction(4, accessToken_1, transferAmount, orderno, edtMessage.getText().toString(), payAtid,
+                edtMessage.getText().toString(), payAno, acceptAtid, acceptAno, ts, this);
     }
 
     /**
@@ -281,13 +246,10 @@ public class PublicAccountTransferActivity extends BaseActivity implements HttpR
                             String expireTime = content.getString("expire");
                             Tools.saveStringValue(PublicAccountTransferActivity.this, Contants.storage.APPAUTH_1, accessToken);
                             Tools.saveStringValue(PublicAccountTransferActivity.this, Contants.storage.APPAUTHTIME_1, expireTime);
-                            submit();
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-
                     }
-
                 }
             }
 
@@ -349,6 +311,13 @@ public class PublicAccountTransferActivity extends BaseActivity implements HttpR
                     }
                 } catch (Exception e) {
 
+                }
+                break;
+            case 4:
+                if (!TextUtils.isEmpty(result)) {
+                    sendBroadcast(new Intent(PublicAccountActivity.ACTION_PUBLIC_ACCOUNT));
+                    ToastUtil.showShortToast(PublicAccountTransferActivity.this, "转账成功");
+                    finish();
                 }
                 break;
             case 7:

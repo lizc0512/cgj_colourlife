@@ -2,11 +2,9 @@ package com.tg.coloursteward.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Message;
-import android.util.Log;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -16,11 +14,10 @@ import com.tg.coloursteward.R;
 import com.tg.coloursteward.base.BaseActivity;
 import com.tg.coloursteward.constant.Contants;
 import com.tg.coloursteward.info.RedpacketsInfo;
+import com.tg.coloursteward.model.BonusModel;
 import com.tg.coloursteward.net.HttpTools;
-import com.tg.coloursteward.net.RequestConfig;
-import com.tg.coloursteward.net.RequestParams;
+import com.tg.coloursteward.util.ToastUtil;
 import com.tg.coloursteward.view.ChoiceView;
-import com.tg.coloursteward.view.dialog.ToastFactory;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -31,7 +28,6 @@ import java.util.ArrayList;
  * 账号选择（根据手机号查询oa账号类别页面）
  */
 public class RedpacketsDGZHAccountListActivity extends BaseActivity {
-    private static final String TAG = "RedpacketsDGZHAccountLi";
     public static final String REDPACKETS_LIST = "redpackets_list";
     private ListView mListView;
     private ListAdapter adapter;
@@ -40,7 +36,6 @@ public class RedpacketsDGZHAccountListActivity extends BaseActivity {
      */
     private Double balance;
     private ArrayList<RedpacketsInfo> list = new ArrayList<RedpacketsInfo>();
-    private Intent intent;
     private int electPosition = -1;
 
 
@@ -60,15 +55,10 @@ public class RedpacketsDGZHAccountListActivity extends BaseActivity {
             money = getIntent().getStringExtra(Contants.PARAMETER.PUBLIC_ACCOUNT);
             pay_ano = getIntent().getStringExtra(Contants.PARAMETER.PAY_ANO);
             pay_atid = getIntent().getIntExtra(Contants.PARAMETER.PAY_ATID, -1);
-
             balance = intent.getDoubleExtra(Contants.PARAMETER.BALANCE, 0.00);
             Bundle bundleObject = getIntent().getExtras();
             list = (ArrayList<RedpacketsInfo>) bundleObject.getSerializable(REDPACKETS_LIST);
 
-        }
-        if (list.size() == 0) {
-            ToastFactory.showToast(this, "参数错误");
-            return;
         }
         initView();
     }
@@ -80,21 +70,16 @@ public class RedpacketsDGZHAccountListActivity extends BaseActivity {
             transferMobile = info.receiverMobile;
             transferName = info.receiverName;
             transferNameOA = info.receiverOA;
-            RequestConfig config = new RequestConfig(this, HttpTools.GET_FINACE_BYOA_MULTI, "查询");
-            RequestParams params = new RequestParams();
-            params.put("oa_username", info.receiverOA);
-            HttpTools.httpGet(Contants.URl.URL_ICETEST, "/czyprovide/employee/getFinanceByOa", config, params);
-
-
-
+            BonusModel bonusModel = new BonusModel(this);
+            bonusModel.getEmployeeOa(0, info.receiverOA, this);
         } else {
-            ToastFactory.showToast(RedpacketsDGZHAccountListActivity.this, "请先选择账号！");
+            ToastUtil.showShortToast(RedpacketsDGZHAccountListActivity.this, "请先选择账号");
         }
         return super.handClickEvent(v);
     }
 
     private void initView() {
-        mListView = (ListView) findViewById(R.id.list_view);
+        mListView = findViewById(R.id.list_view);
         mListView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
         adapter = new ArrayAdapter<RedpacketsInfo>(this, R.layout.item_pay_choice, list) {
             @Override
@@ -119,16 +104,8 @@ public class RedpacketsDGZHAccountListActivity extends BaseActivity {
             }
         };
         mListView.setAdapter(adapter);
-        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view,
-                                    int position, long id) {
-                electPosition = position;
-            }
-        });
+        mListView.setOnItemClickListener((parent, view, position, id) -> electPosition = position);
     }
-
 
     @Override
     public View getContentView() {
@@ -144,39 +121,35 @@ public class RedpacketsDGZHAccountListActivity extends BaseActivity {
     }
 
     @Override
-    public void onSuccess(Message msg, String jsonString, String hintString) {
-        super.onSuccess(msg, jsonString, hintString);
-        int code = HttpTools.getCode(jsonString);
-        String message = HttpTools.getMessageString(jsonString);
-        if (msg.arg1 == HttpTools.GET_FINACE_BYOA_MULTI) {
-            if (code == 0) {
-
-                JSONObject contentJSONObject = HttpTools.getContentJSONObject(jsonString);
-                if (contentJSONObject != null) {
-                    try {
-                        JSONObject content = contentJSONObject.getJSONObject("content");
-                        if (content != null) {
-                            String cano = content.getString("cano");
-                            String atid = content.getString("atid");
-                            Log.e(TAG, "onSuccess:对公账户详情多个之一 " + cano + "\n" + atid);
-                            Intent intent = new Intent(this, PublicAccountTransferToColleagueActivity.class);
-                            intent.putExtra("cano", cano);
-                            intent.putExtra("atid", atid);
-                            intent.putExtra(Contants.PARAMETER.PUBLIC_ACCOUNT, money);
-                            intent.putExtra(Contants.PARAMETER.MOBILE, transferMobile);
-                            intent.putExtra(Contants.PARAMETER.PAY_NAME, transferName);
-                            intent.putExtra(Contants.PARAMETER.OA, transferNameOA);
-                            intent.putExtra(Contants.PARAMETER.PAY_ANO, pay_ano);
-                            intent.putExtra(Contants.PARAMETER.PAY_ATID, pay_atid);
-
-                            startActivity(intent);
-                            finish();
+    public void OnHttpResponse(int what, String result) {
+        switch (what) {
+            case 0:
+                if (!TextUtils.isEmpty(result)) {
+                    JSONObject contentJSONObject = HttpTools.getContentJSONObject(result);
+                    if (contentJSONObject != null) {
+                        try {
+                            JSONObject content = contentJSONObject.getJSONObject("content");
+                            if (content != null) {
+                                String cano = content.getString("cano");
+                                String atid = content.getString("atid");
+                                Intent intent = new Intent(this, PublicAccountTransferToColleagueActivity.class);
+                                intent.putExtra("cano", cano);
+                                intent.putExtra("atid", atid);
+                                intent.putExtra(Contants.PARAMETER.PUBLIC_ACCOUNT, money);
+                                intent.putExtra(Contants.PARAMETER.MOBILE, transferMobile);
+                                intent.putExtra(Contants.PARAMETER.PAY_NAME, transferName);
+                                intent.putExtra(Contants.PARAMETER.OA, transferNameOA);
+                                intent.putExtra(Contants.PARAMETER.PAY_ANO, pay_ano);
+                                intent.putExtra(Contants.PARAMETER.PAY_ATID, pay_atid);
+                                startActivity(intent);
+                                finish();
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
                         }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
                     }
                 }
-            }
+                break;
         }
     }
 }

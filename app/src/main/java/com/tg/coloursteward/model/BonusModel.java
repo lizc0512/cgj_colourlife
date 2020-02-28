@@ -33,6 +33,8 @@ public class BonusModel extends BaseModel {
     private String utilityRuleUrl = "/app/home/utility/ruleDeatil";
     private String fasttransactionUrl = "/jrpt/transaction/fasttransaction";
     private String financeByOaUrl = "/newczy/employee/getFinanceByOa";
+    private String contactSearchUrl = "/txl2/contacts/search";
+    private String employeeUrl = "/czyprovide/employee/getFinanceByOa";
 
     public BonusModel(Context context) {
         super(context);
@@ -406,5 +408,75 @@ public class BonusModel extends BaseModel {
                 showExceptionMessage(what, response);
             }
         }, true, false);
+    }
+
+    /**
+     * 兑换给同事查询接口
+     *
+     * @param what
+     * @param username
+     * @param pageSize
+     * @param httpResponse
+     */
+    public void getContactSearch(int what, String username, int pageSize, HttpResponse httpResponse) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("keyword", username);
+        params.put("pagesize", pageSize);
+        final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(
+                mContext, 4, contactSearchUrl), RequestMethod.GET);
+        request(what, request, RequestEncryptionUtils.getIceMap(mContext, params), new HttpListener<String>() {
+            @Override
+            public void onSucceed(int what, Response<String> response) {
+                int responseCode = response.getHeaders().getResponseCode();
+                String result = response.get();
+                if (responseCode == RequestEncryptionUtils.responseSuccess) {
+                    int code = showSuccesResultMessage(result);
+                    if (code == 0) {
+                        httpResponse.OnHttpResponse(what, result);
+                    }
+                } else {
+                    showErrorCodeMessage(response);
+                }
+            }
+
+            @Override
+            public void onFailed(int what, Response<String> response) {
+                showExceptionMessage(what, response);
+            }
+        }, true, true);
+    }
+
+    /**
+     * 对公账户，兑换给同事，查询同事金融账号
+     *
+     * @param what
+     * @param username
+     * @param httpResponse
+     */
+    public void getEmployeeOa(int what, String username, HttpResponse httpResponse) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("oa_username", username);
+        final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(
+                mContext, 4, employeeUrl), RequestMethod.GET);
+        request(what, request, RequestEncryptionUtils.getIceMap(mContext, params), new HttpListener<String>() {
+            @Override
+            public void onSucceed(int what, Response<String> response) {
+                int responseCode = response.getHeaders().getResponseCode();
+                String result = response.get();
+                if (responseCode == RequestEncryptionUtils.responseSuccess) {
+                    int code = showSuccesResultMessage(result);
+                    if (code == 0) {
+                        httpResponse.OnHttpResponse(what, result);
+                    }
+                } else {
+                    showErrorCodeMessage(response);
+                }
+            }
+
+            @Override
+            public void onFailed(int what, Response<String> response) {
+                showExceptionMessage(what, response);
+            }
+        }, true, true);
     }
 }

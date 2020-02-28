@@ -107,11 +107,7 @@ public class RequestEncryptionUtils {
     public static Map<String, Object> getIceMap(Context context, Map<String, Object> paramsMap) {
         String sign = "";
         String ts = getTime();
-        try {
-            sign = getSign(ts);
-        } catch (Exception e1) {
-            e1.printStackTrace();
-        }
+        sign = getSign(ts);
         HashMap<String, Object> map = new HashMap<String, Object>();
         map.put("appID", DES.APP_ID);
         map.put("sign", sign);
@@ -120,6 +116,25 @@ public class RequestEncryptionUtils {
         mapsum.putAll(map);
         mapsum.putAll(paramsMap);
         return getNewSaftyMap(context, mapsum);
+    }
+
+    /**
+     * @param context
+     * @param paramsMap
+     * @return 适配特殊ICE接口的数据拼接，该接口有signature参数，与彩管家的重复
+     */
+    public static Map<String, Object> getIceNoSignatureMap(Context context, Map<String, Object> paramsMap) {
+        String sign = "";
+        String ts = getTime();
+        sign = getSign(ts);
+        HashMap<String, Object> map = new HashMap<String, Object>();
+        map.put("appID", DES.APP_ID);
+        map.put("sign", sign);
+        map.put("ts", ts);
+        HashMap<String, Object> mapsum = new HashMap<String, Object>();
+        mapsum.putAll(map);
+        mapsum.putAll(paramsMap);
+        return mapsum;
     }
 
     /**
@@ -134,10 +149,8 @@ public class RequestEncryptionUtils {
 
     /**
      * @return
-     * @throws Exception
      */
-    private static String getSign(String lastTime)
-            throws Exception {
+    private static String getSign(String lastTime) {
         return MD5.getMd5Value(DES.APP_ID + lastTime + DES.TOKEN + "false").toLowerCase();
     }
 

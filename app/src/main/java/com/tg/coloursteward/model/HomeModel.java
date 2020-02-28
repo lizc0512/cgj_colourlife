@@ -40,6 +40,7 @@ public class HomeModel extends BaseModel {
     private String homeYingYanUrl = "/app/home/utility/getEagleJuge";
     private String authUrl = "/auth";
     private String auth2Url = "/app/auth2";
+    private String appAuthUrl = "/jqfw/app/auth";
 
     public HomeModel(Context context) {
         super(context);
@@ -498,6 +499,41 @@ public class HomeModel extends BaseModel {
         final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(
                 mContext, 4, authUrl), RequestMethod.GET);
         request(what, request, RequestEncryptionUtils.getIceMap(mContext, params), new HttpListener<String>() {
+            @Override
+            public void onSucceed(int what, Response<String> response) {
+                int responseCode = response.getHeaders().getResponseCode();
+                String result = response.get();
+                if (responseCode == RequestEncryptionUtils.responseSuccess) {
+                    int code = showSuccesResultMessageTheme(result);
+                    if (code == 0) {
+                        httpResponse.OnHttpResponse(what, result);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailed(int what, Response<String> response) {
+            }
+        }, true, false);
+    }
+
+    /**
+     * 获取用户应用权限
+     *
+     * @param what
+     * @param appkey
+     * @param signature
+     * @param timestamp
+     * @param httpResponse
+     */
+    public void postAppAuth(int what, String appkey, String signature, String timestamp, HttpResponse httpResponse) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("appkey", appkey);
+        params.put("signature", signature);
+        params.put("timestamp", timestamp);
+        final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(
+                mContext, 4, appAuthUrl), RequestMethod.POST);
+        request(what, request, RequestEncryptionUtils.getIceNoSignatureMap(mContext, params), new HttpListener<String>() {
             @Override
             public void onSucceed(int what, Response<String> response) {
                 int responseCode = response.getHeaders().getResponseCode();

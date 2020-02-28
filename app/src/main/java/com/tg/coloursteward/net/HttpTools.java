@@ -718,30 +718,6 @@ public class HttpTools {
     }
 
     /**
-     * Delete请求
-     *
-     * @param URL
-     * @param apiName
-     * @param rqtConfig
-     */
-    public static void httpDelete(final String URL, String apiName, final RequestConfig rqtConfig, RequestParams params) {
-        String url = null;
-        HashMap<String, Object> paramsStr = null;
-        if (params == null) {
-            paramsStr = null;
-        } else {
-            paramsStr = params.toHashMap();
-        }
-        try {
-            url = URL + GetUrl(URL, apiName, paramsStr);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return;
-        }
-        get(url, Method.DELETE, rqtConfig);
-    }
-
-    /**
      * Post请求
      *
      * @param URL

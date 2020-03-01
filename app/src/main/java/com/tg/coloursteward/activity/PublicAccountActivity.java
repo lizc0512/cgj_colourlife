@@ -8,21 +8,24 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.RelativeLayout;
 
+import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.adapter.PublicAccountAdapter;
+import com.tg.coloursteward.adapter.PublicAccountRvAdapter;
 import com.tg.coloursteward.base.BaseActivity;
 import com.tg.coloursteward.baseModel.HttpResponse;
 import com.tg.coloursteward.constant.Contants;
 import com.tg.coloursteward.info.AppsDetailInfo;
 import com.tg.coloursteward.info.PublicAccountInfo;
 import com.tg.coloursteward.info.UserInfo;
-import com.tg.coloursteward.inter.ExchangeCallBack;
 import com.tg.coloursteward.inter.OnLoadingListener;
-import com.tg.coloursteward.inter.TransferCallBack;
+import com.tg.coloursteward.model.BonusModel;
 import com.tg.coloursteward.net.GetTwoRecordListener;
 import com.tg.coloursteward.net.HttpTools;
 import com.tg.coloursteward.net.RequestConfig;
@@ -57,6 +60,7 @@ public class PublicAccountActivity extends BaseActivity implements HttpResponse 
     private RelativeLayout rl_kong;
     private PullRefreshListView pullListView;
     private PublicAccountAdapter adapter;
+    private PublicAccountRvAdapter rvAdapter;
     private String accessToken;
     private ArrayList<PublicAccountInfo> list = new ArrayList<PublicAccountInfo>();
     private ArrayList<AppsDetailInfo> listAppsDetail = new ArrayList<AppsDetailInfo>();
@@ -65,6 +69,10 @@ public class PublicAccountActivity extends BaseActivity implements HttpResponse 
     private String isshow = "";
     private PointModel pointModel;
     private String state;//支付密码的状态
+    private BonusModel bonusModel;
+    private SmartRefreshLayout sr_public_account;
+    private RecyclerView rv_public_account;
+    private int mPage = 1;
     private BroadcastReceiver freshReceiver = new BroadcastReceiver() {
 
         @Override
@@ -80,7 +88,7 @@ public class PublicAccountActivity extends BaseActivity implements HttpResponse 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         pointModel = new PointModel(this);
-        getPopup(false);
+        bonusModel = new BonusModel(this);
         initView();
     }
 
@@ -90,25 +98,25 @@ public class PublicAccountActivity extends BaseActivity implements HttpResponse 
     private void initView() {
         accessToken = Tools.getStringValue(PublicAccountActivity.this, Contants.storage.APPAUTH);
         rl_kong = findViewById(R.id.rl_kong);
+        sr_public_account = findViewById(R.id.sr_public_account);
+        rv_public_account = findViewById(R.id.rv_public_account);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+        rv_public_account.setLayoutManager(layoutManager);
         pullListView = findViewById(R.id.lv_public_account);
         adapter = new PublicAccountAdapter(PublicAccountActivity.this, list);
-        pullListView.setAdapter(adapter);
-        adapter.setTransferCallBack(new TransferCallBack() {//转账
-            @Override
-            public void onclick(int position) {
-                isshow = "transfer";
-                postion = position;
-                pointModel.getTransactionToken(3, PublicAccountActivity.this);
-            }
+        rvAdapter = new PublicAccountRvAdapter(PublicAccountActivity.this, list);
+//        pullListView.setAdapter(adapter);
+        rv_public_account.setAdapter(rvAdapter);
+        adapter.setTransferCallBack(position -> { //转账
+            isshow = "transfer";
+            postion = position;
+            pointModel.getTransactionToken(3, PublicAccountActivity.this);
         });
-        adapter.setExchangeCallBack(new ExchangeCallBack() {//兑换
-            @Override
-            public void onclick(int position) {
-                isshow = "exchange";
-                postion = position;
-                pointModel.getTransactionToken(3, PublicAccountActivity.this);
 
-            }
+        adapter.setExchangeCallBack(position -> {//兑换
+            isshow = "exchange";
+            postion = position;
+            pointModel.getTransactionToken(3, PublicAccountActivity.this);
         });
         pullListView.setDividerHeight(0);
         pullListView.setOnLoadingListener(new OnLoadingListener<PullRefreshListView>() {
@@ -163,7 +171,7 @@ public class PublicAccountActivity extends BaseActivity implements HttpResponse 
                 params.put("token", accessToken);
                 params.put("skip", (pagerIndex - 1) * 8);
                 params.put("limit", PullRefreshListView.PAGER_SIZE);
-                HttpTools.httpPost(Contants.URl.URL_ICETEST, "/dgzh/account/search4web", config, params);
+//                HttpTools.httpPost(Contants.URl.URL_ICETEST, "/dgzh/account/search4web", config, params);
             }
 
             @Override
@@ -180,7 +188,7 @@ public class PublicAccountActivity extends BaseActivity implements HttpResponse 
                 params.put("limit", PullRefreshListView.PAGER_SIZE);
 //                新增  roleid传参
                 params.put("roleId", 1);
-                HttpTools.httpPost(Contants.URl.URL_ICETEST, "/dgzh/account/search4web", config, params);
+//                HttpTools.httpPost(Contants.URl.URL_ICETEST, "/dgzh/account/search4web", config, params);
             }
         });
         // pullListView.performLoading();
@@ -196,16 +204,63 @@ public class PublicAccountActivity extends BaseActivity implements HttpResponse 
     private void getdata() {
         list.clear();
         listAppsDetail.clear();
-        /**
-         * 获取tooken值
-         */
         getAuthAppInfo();
+    }
+
+    private void initData(int page, boolean loading) {
+        bonusModel.postSearchDgzhListDetail(1, UserInfo.uid, accessToken, page, loading, this);
     }
 
     @Override
     public void OnHttpResponse(int what, String result) {
-        super.OnHttpResponse(what, result);
         switch (what) {
+            case 0:
+                if (!TextUtils.isEmpty(result)) {
+                    String content = HttpTools.getContentString(result);
+                    if (StringUtils.isNotEmpty(content)) {
+                        ResponseData data = HttpTools.getResponseKey(content, "result");
+                        if (data.length > 0) {
+                            AppsDetailInfo info;
+                            for (int i = 0; i < data.length; i++) {
+                                info = new AppsDetailInfo();
+                                info.name = data.getString(i, "general_name");
+                                info.pano = data.getString(i, "pano");
+                                listAppsDetail.add(info);
+                            }
+                        }
+                    }
+                    setData();
+                }
+                break;
+            case 1:
+                if (!TextUtils.isEmpty(result)) {
+                    String contentString = HttpTools.getContentString(result);
+                    if (contentString != null) {
+                        ResponseData data = HttpTools.getResponseKey(contentString, "list");
+                        if (data.length > 0) {
+                            PublicAccountInfo info;
+                            for (int i = 0; i < data.length; i++) {
+                                if (data.getInt(i, "adminLevel") == 0) {
+
+                                } else {
+                                    info = new PublicAccountInfo();
+                                    info.title = data.getString(i, "name");
+                                    info.typeName = data.getString(i, "typeName");
+                                    info.ano = data.getString(i, "ano");
+                                    info.bno = data.getString(i, "bno");
+                                    info.pano = data.getString(i, "pano");
+                                    info.money = data.getString(i, "money");
+                                    info.pid = data.getString(i, "pid");
+                                    info.adminLevel = data.getInt(i, "adminLevel");
+                                    info.atid = data.getInt(i, "atid");
+                                    list.add(info);
+                                }
+                            }
+                        }
+                        getAppsDetail();
+                    }
+                }
+                break;
             case 3:
                 try {
                     PointTransactionTokenEntity pointTransactionTokenEntity = GsonUtils.gsonToBean(result, PointTransactionTokenEntity.class);
@@ -291,42 +346,9 @@ public class PublicAccountActivity extends BaseActivity implements HttpResponse 
         dialogListener.show();
     }
 
-    /**
-     * 获取对公账户来源
-     */
     private void getAppsDetail() {
         listAppsDetail.clear();
-        RequestConfig config = new RequestConfig(this, HttpTools.GET_APPS_DETAIL);
-        RequestParams params = new RequestParams();
-        params.put("access_token", accessToken);
-        HttpTools.httpGet(Contants.URl.URL_ICETEST, "/split/api/appdetail", config, params);
-    }
-
-    @Override
-    public void onSuccess(Message msg, String jsonString, String hintString) {
-        super.onSuccess(msg, jsonString, hintString);
-        int code = HttpTools.getCode(jsonString);
-        String message = HttpTools.getMessageString(jsonString);
-        if (msg.arg1 == HttpTools.GET_APPS_DETAIL) {//获取来源
-            if (code == 0) {
-                String content = HttpTools.getContentString(jsonString);
-                if (StringUtils.isNotEmpty(content)) {
-                    ResponseData data = HttpTools.getResponseKey(content, "result");
-                    if (data.length > 0) {
-                        AppsDetailInfo info;
-                        for (int i = 0; i < data.length; i++) {
-                            info = new AppsDetailInfo();
-                            info.name = data.getString(i, "general_name");
-                            info.pano = data.getString(i, "pano");
-                            listAppsDetail.add(info);
-                        }
-                    }
-                }
-                setData();
-            } else {
-                ToastFactory.showToast(PublicAccountActivity.this, message);
-            }
-        }
+        bonusModel.getAppdetail(0, accessToken, this);
     }
 
     /**
@@ -344,8 +366,7 @@ public class PublicAccountActivity extends BaseActivity implements HttpResponse 
                     }
                 }
             }
-            //Tools.savePublicAccountEntity(PublicAccountActivity.this,list);
-            adapter.notifyDataSetChanged();
+            rvAdapter.notifyDataSetChanged();
         } else if (list.size() > 0 && listAppsDetail.size() == 0) {
             rl_kong.setVisibility(View.GONE);
             pullListView.setVisibility(View.GONE);
@@ -383,13 +404,10 @@ public class PublicAccountActivity extends BaseActivity implements HttpResponse 
                             String expireTime = content.getString("expireTime");
                             Tools.saveStringValue(PublicAccountActivity.this, Contants.storage.APPAUTH, accessToken);
                             Tools.saveStringValue(PublicAccountActivity.this, Contants.storage.APPAUTHTIME, expireTime);
-                            // getPublicAccount();
-                            //getAppsDetail();
-                            pullListView.performLoading();
+                            initData(mPage, true);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-
                     }
 
                 }

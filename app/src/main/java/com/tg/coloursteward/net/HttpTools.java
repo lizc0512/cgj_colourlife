@@ -669,37 +669,6 @@ public class HttpTools {
      * @param rqtConfig
      * @param params
      */
-    public static void httpGet_Map(final String URL, String apiName, final RequestConfig rqtConfig, Map<String, Object> params) {
-        String url = null;
-        if (null == params) {
-            params = new HashMap<>();
-        } else {
-            try {
-                if (URL.startsWith(Contants.URl.URL_NEW)) {
-                    url = URL + GetNormalUrl(URL, apiName, (HashMap) params);
-                } else if (apiName.contains("getWaitingBalanceCount")) {
-                    url = URL + GetNormalUrl(URL, apiName, (HashMap) params);
-                } else if (URL.startsWith(Contants.URl.URL_ICESTAFF)) {
-                    url = URL + GetNormalUrl(URL, apiName, (HashMap) params);
-                } else {
-                    url = URL + GetUrl(URL, apiName, (HashMap) params);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-                return;
-            }
-        }
-        get(url, Method.GET, rqtConfig);
-    }
-
-    /**
-     * get请求
-     *
-     * @param URL
-     * @param apiName
-     * @param rqtConfig
-     * @param params
-     */
     public static void httpGet(final String URL, String apiName, final RequestConfig rqtConfig, RequestParams params) {
         String url = null;
         HashMap<String, Object> paramsStr = null;

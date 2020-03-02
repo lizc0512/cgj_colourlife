@@ -526,15 +526,15 @@ public class BonusModel extends BaseModel {
      * @param loading
      * @param httpResponse
      */
-    public void postSearchDgzhListDetail(int what, String oa, String accessToken, int pagerIndex, boolean loading, HttpResponse httpResponse) {
+    public void postSearchDgzhListDetail(int what, String oa, String accessToken, int pagerIndex, int pageSize, boolean loading, HttpResponse httpResponse) {
         Map<String, Object> params = new HashMap<>();
         params.put("showmoney", 1);
         params.put("userId", UserInfo.uid);
         params.put("userType", 1);
         params.put("status", 1);
         params.put("token", accessToken);
-        params.put("skip", (pagerIndex - 1) * 8);
-        params.put("limit", 20);
+        params.put("skip", (pagerIndex - 1) * pageSize);
+        params.put("limit", pageSize);
         params.put("roleId", 1);// 新增roleid传参
         final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(
                 mContext, 4, searchDgzhListUrl), RequestMethod.POST);

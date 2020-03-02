@@ -6,17 +6,20 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.RelativeLayout;
 
+import com.scwang.smartrefresh.header.MaterialHeader;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.footer.ClassicsFooter;
+import com.scwang.smartrefresh.layout.header.ClassicsHeader;
+import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener;
 import com.tg.coloursteward.R;
-import com.tg.coloursteward.adapter.PublicAccountAdapter;
 import com.tg.coloursteward.adapter.PublicAccountRvAdapter;
 import com.tg.coloursteward.base.BaseActivity;
 import com.tg.coloursteward.baseModel.HttpResponse;
@@ -24,21 +27,16 @@ import com.tg.coloursteward.constant.Contants;
 import com.tg.coloursteward.info.AppsDetailInfo;
 import com.tg.coloursteward.info.PublicAccountInfo;
 import com.tg.coloursteward.info.UserInfo;
-import com.tg.coloursteward.inter.OnLoadingListener;
 import com.tg.coloursteward.model.BonusModel;
 import com.tg.coloursteward.net.GetTwoRecordListener;
 import com.tg.coloursteward.net.HttpTools;
-import com.tg.coloursteward.net.RequestConfig;
-import com.tg.coloursteward.net.RequestParams;
 import com.tg.coloursteward.net.ResponseData;
 import com.tg.coloursteward.serice.AuthAppService;
 import com.tg.coloursteward.util.GsonUtils;
 import com.tg.coloursteward.util.StringUtils;
 import com.tg.coloursteward.util.ToastUtil;
 import com.tg.coloursteward.util.Tools;
-import com.tg.coloursteward.view.PullRefreshListView;
 import com.tg.coloursteward.view.dialog.DialogFactory;
-import com.tg.coloursteward.view.dialog.ToastFactory;
 import com.tg.point.activity.ChangePawdTwoStepActivity;
 import com.tg.point.entity.CheckPwdEntiy;
 import com.tg.point.entity.PointTransactionTokenEntity;
@@ -58,8 +56,6 @@ import java.util.ArrayList;
 public class PublicAccountActivity extends BaseActivity implements HttpResponse {
     public static final String ACTION_PUBLIC_ACCOUNT = "com.tg.coloursteward.ACTION_PUBLIC_ACCOUNT";
     private RelativeLayout rl_kong;
-    private PullRefreshListView pullListView;
-    private PublicAccountAdapter adapter;
     private PublicAccountRvAdapter rvAdapter;
     private String accessToken;
     private ArrayList<PublicAccountInfo> list = new ArrayList<PublicAccountInfo>();
@@ -73,6 +69,8 @@ public class PublicAccountActivity extends BaseActivity implements HttpResponse 
     private SmartRefreshLayout sr_public_account;
     private RecyclerView rv_public_account;
     private int mPage = 1;
+    private int pageSize = 10;
+    private int itemListNumber = 0;//单次list.size
     private BroadcastReceiver freshReceiver = new BroadcastReceiver() {
 
         @Override
@@ -102,96 +100,41 @@ public class PublicAccountActivity extends BaseActivity implements HttpResponse 
         rv_public_account = findViewById(R.id.rv_public_account);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         rv_public_account.setLayoutManager(layoutManager);
-        pullListView = findViewById(R.id.lv_public_account);
-        adapter = new PublicAccountAdapter(PublicAccountActivity.this, list);
         rvAdapter = new PublicAccountRvAdapter(PublicAccountActivity.this, list);
-//        pullListView.setAdapter(adapter);
         rv_public_account.setAdapter(rvAdapter);
-        adapter.setTransferCallBack(position -> { //转账
+        sr_public_account.setRefreshFooter(new ClassicsFooter(this));
+        sr_public_account.setRefreshHeader(new ClassicsHeader(this));
+        sr_public_account.setRefreshHeader(new MaterialHeader(this).setColorSchemeColors(getResources().getColor(R.color.color_27a2f0)));
+        sr_public_account.setOnRefreshLoadMoreListener(new OnRefreshLoadMoreListener() {
+            @Override
+            public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
+                if (itemListNumber < pageSize) {
+                    sr_public_account.finishLoadMoreWithNoMoreData();
+                } else {
+                    mPage++;
+                    initData(mPage, false);
+                    sr_public_account.finishLoadMore();
+                }
+            }
+
+            @Override
+            public void onRefresh(@NonNull RefreshLayout refreshLayout) {
+                mPage = 1;
+                initData(mPage, true);
+                sr_public_account.finishRefresh();
+            }
+        });
+        rvAdapter.setTransferCallBack(position -> { //转账
             isshow = "transfer";
             postion = position;
             pointModel.getTransactionToken(3, PublicAccountActivity.this);
         });
 
-        adapter.setExchangeCallBack(position -> {//兑换
+        rvAdapter.setExchangeCallBack(position -> {//兑换
             isshow = "exchange";
             postion = position;
             pointModel.getTransactionToken(3, PublicAccountActivity.this);
         });
-        pullListView.setDividerHeight(0);
-        pullListView.setOnLoadingListener(new OnLoadingListener<PullRefreshListView>() {
-
-            @Override
-            public void refreshData(PullRefreshListView t,
-                                    boolean isLoadMore, Message msg, String response) {
-                int code = HttpTools.getCode(response);
-                String message = HttpTools.getMessageString(response);
-                if (code == 0) {
-                    String contentString = HttpTools.getContentString(response);
-                    if (contentString != null) {
-                        ResponseData data = HttpTools.getResponseKey(contentString, "list");
-                        if (data.length > 0) {
-                            PublicAccountInfo info;
-                            for (int i = 0; i < data.length; i++) {
-                                if (data.getInt(i, "adminLevel") == 0) {
-
-                                } else {
-                                    info = new PublicAccountInfo();
-                                    info.title = data.getString(i, "name");
-                                    info.typeName = data.getString(i, "typeName");
-                                    info.ano = data.getString(i, "ano");
-                                    info.bno = data.getString(i, "bno");
-                                    info.pano = data.getString(i, "pano");
-                                    info.money = data.getString(i, "money");
-                                    info.pid = data.getString(i, "pid");
-                                    info.adminLevel = data.getInt(i, "adminLevel");
-                                    info.atid = data.getInt(i, "atid");
-                                    list.add(info);
-                                }
-                            }
-                        }
-                        getAppsDetail();
-                    } else {
-
-                    }
-                } else {
-                    ToastFactory.showBottomToast(PublicAccountActivity.this, message);
-                }
-            }
-
-            @Override
-            public void onLoadingMore(PullRefreshListView t, Handler hand, int pagerIndex) {
-                RequestConfig config = new RequestConfig(PublicAccountActivity.this, PullRefreshListView.HTTP_MORE_CODE);
-                config.handler = hand;
-                RequestParams params = new RequestParams();
-                params.put("showmoney", 1);
-                params.put("userId", UserInfo.uid);
-                params.put("userType", 1);
-                params.put("status", 1);
-                params.put("token", accessToken);
-                params.put("skip", (pagerIndex - 1) * 8);
-                params.put("limit", PullRefreshListView.PAGER_SIZE);
-//                HttpTools.httpPost(Contants.URl.URL_ICETEST, "/dgzh/account/search4web", config, params);
-            }
-
-            @Override
-            public void onLoading(PullRefreshListView t, Handler hand) {
-                RequestConfig config = new RequestConfig(PublicAccountActivity.this, PullRefreshListView.HTTP_FRESH_CODE);
-                config.handler = hand;
-                RequestParams params = new RequestParams();
-                params.put("showmoney", 1);
-                params.put("userId", UserInfo.uid);
-                params.put("userType", 1);
-                params.put("status", 1);
-                params.put("token", accessToken);
-                params.put("skip", 0);
-                params.put("limit", PullRefreshListView.PAGER_SIZE);
-//                新增  roleid传参
-                params.put("roleId", 1);
-//                HttpTools.httpPost(Contants.URl.URL_ICETEST, "/dgzh/account/search4web", config, params);
-            }
-        });
-        // pullListView.performLoading();
         getdata();
         IntentFilter filter = new IntentFilter();
         filter.addAction(ACTION_PUBLIC_ACCOUNT);
@@ -208,7 +151,7 @@ public class PublicAccountActivity extends BaseActivity implements HttpResponse 
     }
 
     private void initData(int page, boolean loading) {
-        bonusModel.postSearchDgzhListDetail(1, UserInfo.uid, accessToken, page, loading, this);
+        bonusModel.postSearchDgzhListDetail(1, UserInfo.uid, accessToken, page, pageSize, loading, this);
     }
 
     @Override
@@ -238,7 +181,11 @@ public class PublicAccountActivity extends BaseActivity implements HttpResponse 
                     if (contentString != null) {
                         ResponseData data = HttpTools.getResponseKey(contentString, "list");
                         if (data.length > 0) {
+                            itemListNumber = data.length;
                             PublicAccountInfo info;
+                            if (mPage == 1) {
+                                list.clear();
+                            }
                             for (int i = 0; i < data.length; i++) {
                                 if (data.getInt(i, "adminLevel") == 0) {
 
@@ -357,7 +304,7 @@ public class PublicAccountActivity extends BaseActivity implements HttpResponse 
     private void setData() {
         if (list.size() > 0 && listAppsDetail.size() > 0) {
             rl_kong.setVisibility(View.GONE);
-            pullListView.setVisibility(View.VISIBLE);
+            rv_public_account.setVisibility(View.VISIBLE);
             for (int i = 0; i < list.size(); i++) { //外循环是循环的次数
                 for (int j = 0; j < listAppsDetail.size(); j++)  //内循环是 外循环一次比较的次数
                 {
@@ -369,13 +316,13 @@ public class PublicAccountActivity extends BaseActivity implements HttpResponse 
             rvAdapter.notifyDataSetChanged();
         } else if (list.size() > 0 && listAppsDetail.size() == 0) {
             rl_kong.setVisibility(View.GONE);
-            pullListView.setVisibility(View.GONE);
+            rv_public_account.setVisibility(View.GONE);
         } else if (list.size() == 0 && listAppsDetail.size() > 0) {
             rl_kong.setVisibility(View.VISIBLE);
-            pullListView.setVisibility(View.GONE);
+            rv_public_account.setVisibility(View.GONE);
         } else {
             rl_kong.setVisibility(View.VISIBLE);
-            pullListView.setVisibility(View.GONE);
+            rv_public_account.setVisibility(View.GONE);
         }
     }
 

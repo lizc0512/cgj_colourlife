@@ -5,13 +5,6 @@
     android:layout_height="match_parent"
     tools:context="com.tg.coloursteward.activity.PublicAccountActivity">
 
-    <com.tg.coloursteward.view.PullRefreshListView
-        android:id="@+id/lv_public_account"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:listSelector="@android:color/transparent"
-        android:visibility="gone" />
-
     <com.scwang.smartrefresh.layout.SmartRefreshLayout
         android:id="@+id/sr_public_account"
         android:layout_width="match_parent"

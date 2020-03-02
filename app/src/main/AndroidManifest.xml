@@ -284,7 +284,6 @@
             android:name=".activity.DataShowActivity"
             android:label="@string/app_name" /> <!-- 即时分配 -->
         <activity android:name=".activity.AccountActivity" /> <!-- 即时分配明细 -->
-        <activity android:name=".activity.AccountDetailActivity" />
         <activity
             android:name=".wxapi.WXEntryActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"

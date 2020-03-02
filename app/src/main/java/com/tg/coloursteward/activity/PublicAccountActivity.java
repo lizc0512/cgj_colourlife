@@ -17,7 +17,6 @@ import com.scwang.smartrefresh.header.MaterialHeader;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.footer.ClassicsFooter;
-import com.scwang.smartrefresh.layout.header.ClassicsHeader;
 import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener;
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.adapter.PublicAccountRvAdapter;
@@ -33,7 +32,6 @@ import com.tg.coloursteward.net.HttpTools;
 import com.tg.coloursteward.net.ResponseData;
 import com.tg.coloursteward.serice.AuthAppService;
 import com.tg.coloursteward.util.GsonUtils;
-import com.tg.coloursteward.util.StringUtils;
 import com.tg.coloursteward.util.ToastUtil;
 import com.tg.coloursteward.util.Tools;
 import com.tg.coloursteward.view.dialog.DialogFactory;
@@ -103,7 +101,6 @@ public class PublicAccountActivity extends BaseActivity implements HttpResponse 
         rvAdapter = new PublicAccountRvAdapter(PublicAccountActivity.this, list);
         rv_public_account.setAdapter(rvAdapter);
         sr_public_account.setRefreshFooter(new ClassicsFooter(this));
-        sr_public_account.setRefreshHeader(new ClassicsHeader(this));
         sr_public_account.setRefreshHeader(new MaterialHeader(this).setColorSchemeColors(getResources().getColor(R.color.color_27a2f0)));
         sr_public_account.setOnRefreshLoadMoreListener(new OnRefreshLoadMoreListener() {
             @Override
@@ -160,7 +157,7 @@ public class PublicAccountActivity extends BaseActivity implements HttpResponse 
             case 0:
                 if (!TextUtils.isEmpty(result)) {
                     String content = HttpTools.getContentString(result);
-                    if (StringUtils.isNotEmpty(content)) {
+                    if (!TextUtils.isEmpty(content)) {
                         ResponseData data = HttpTools.getResponseKey(content, "result");
                         if (data.length > 0) {
                             AppsDetailInfo info;

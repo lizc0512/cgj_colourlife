@@ -37,6 +37,7 @@ public class BonusModel extends BaseModel {
     private String employeeUrl = "/czyprovide/employee/getFinanceByOa";
     private String appdetailUrl = "/split/api/appdetail";//获取商户类目名称
     private String searchDgzhListUrl = "/dgzh/account/search4web";//查询账户
+    private String dgzhListDetailUrl = "/jrpt/transaction/list";//对公账户明细
 
     public BonusModel(Context context) {
         super(context);
@@ -529,7 +530,7 @@ public class BonusModel extends BaseModel {
     public void postSearchDgzhListDetail(int what, String oa, String accessToken, int pagerIndex, int pageSize, boolean loading, HttpResponse httpResponse) {
         Map<String, Object> params = new HashMap<>();
         params.put("showmoney", 1);
-        params.put("userId", UserInfo.uid);
+        params.put("userId", oa);
         params.put("userType", 1);
         params.put("status", 1);
         params.put("token", accessToken);
@@ -538,6 +539,58 @@ public class BonusModel extends BaseModel {
         params.put("roleId", 1);// 新增roleid传参
         final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(
                 mContext, 4, searchDgzhListUrl), RequestMethod.POST);
+        request(what, request, RequestEncryptionUtils.getIceMap(mContext, params), new HttpListener<String>() {
+            @Override
+            public void onSucceed(int what, Response<String> response) {
+                int responseCode = response.getHeaders().getResponseCode();
+                String result = response.get();
+                if (responseCode == RequestEncryptionUtils.responseSuccess) {
+                    int code = showSuccesResultMessage(result);
+                    if (code == 0) {
+                        httpResponse.OnHttpResponse(what, result);
+                    }
+                } else {
+                    showErrorCodeMessage(response);
+                }
+            }
+
+            @Override
+            public void onFailed(int what, Response<String> response) {
+                showExceptionMessage(what, response);
+            }
+        }, true, loading);
+    }
+
+    /**
+     * 对公账户页面，item明细接口
+     *
+     * @param what
+     * @param accessToken
+     * @param uno
+     * @param atid
+     * @param ano
+     * @param pano
+     * @param ispay
+     * @param pagerIndex
+     * @param pageSize
+     * @param loading
+     * @param httpResponse
+     */
+    public void postDgzhListDetail(int what, String accessToken, String uno, int atid, String ano, String pano, int ispay, int pagerIndex,
+                                   int pageSize, boolean loading, HttpResponse httpResponse) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("access_token", accessToken);
+        params.put("utype", 2);
+        params.put("starttime", 0);
+        params.put("uno", uno);
+        params.put("atid", atid);
+        params.put("ano", ano);
+        params.put("pano", pano);
+        params.put("ispay", ispay);
+        params.put("skip", (pagerIndex - 1) * 10);
+        params.put("limit", pageSize);
+        final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(
+                mContext, 4, dgzhListDetailUrl), RequestMethod.POST);
         request(what, request, RequestEncryptionUtils.getIceMap(mContext, params), new HttpListener<String>() {
             @Override
             public void onSucceed(int what, Response<String> response) {

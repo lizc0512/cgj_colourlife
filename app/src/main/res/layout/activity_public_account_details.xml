@@ -9,15 +9,16 @@
         android:id="@+id/pull_listview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:visibility="gone"
         android:listSelector="@android:color/transparent" />
 
     <com.scwang.smartrefresh.layout.SmartRefreshLayout
-        android:id="@+id/smart_layout_"
+        android:id="@+id/sr_public_detail"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <android.support.v7.widget.RecyclerView
-            android:id="@+id/rv_group_account"
+            android:id="@+id/rv_public_detail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
     </com.scwang.smartrefresh.layout.SmartRefreshLayout>

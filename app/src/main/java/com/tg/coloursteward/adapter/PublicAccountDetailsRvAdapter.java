@@ -13,12 +13,12 @@ import com.tg.coloursteward.util.StringUtils;
 
 import java.util.ArrayList;
 
-public class PublicAccountDetailsAdapter extends MyBaseAdapter<PublicAccountDetailsInfo> {
+public class PublicAccountDetailsRvAdapter extends MyBaseAdapter<PublicAccountDetailsInfo> {
     private LayoutInflater inflater;
     private PublicAccountDetailsInfo item;
     private Context context;
 
-    public PublicAccountDetailsAdapter(Context con, ArrayList<PublicAccountDetailsInfo> list) {
+    public PublicAccountDetailsRvAdapter(Context con, ArrayList<PublicAccountDetailsInfo> list) {
         super(list);
         this.list = list;
         this.context = con;

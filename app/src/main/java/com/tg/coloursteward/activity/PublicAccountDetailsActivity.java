@@ -3,8 +3,6 @@ package com.tg.coloursteward.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -21,26 +19,18 @@ import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.footer.ClassicsFooter;
 import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener;
 import com.tg.coloursteward.R;
-import com.tg.coloursteward.adapter.PublicAccountDetailsAdapter;
+import com.tg.coloursteward.adapter.PublicAccountDetailsRvAdapter;
 import com.tg.coloursteward.base.BaseActivity;
 import com.tg.coloursteward.constant.Contants;
 import com.tg.coloursteward.info.PublicAccountDetailsInfo;
 import com.tg.coloursteward.info.PublicAccountInfo;
-import com.tg.coloursteward.inter.OnLoadingListener;
 import com.tg.coloursteward.model.BonusModel;
 import com.tg.coloursteward.net.GetTwoRecordListener;
 import com.tg.coloursteward.net.HttpTools;
-import com.tg.coloursteward.net.RequestConfig;
-import com.tg.coloursteward.net.RequestParams;
 import com.tg.coloursteward.net.ResponseData;
 import com.tg.coloursteward.serice.AppAuthService;
-import com.tg.coloursteward.util.StringUtils;
-import com.tg.coloursteward.util.Tools;
 import com.tg.coloursteward.view.PublicAccountPopWindowView;
-import com.tg.coloursteward.view.PullRefreshListView;
 
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -53,8 +43,7 @@ import java.util.Date;
 public class PublicAccountDetailsActivity extends BaseActivity {
     public final static String PUBLICACCOUNT_INFO = "info";
     private PublicAccountInfo item;
-    private PullRefreshListView pullListView;
-    private PublicAccountDetailsAdapter adapter;
+    private PublicAccountDetailsRvAdapter rvAdapter;
     private ArrayList<PublicAccountDetailsInfo> list = new ArrayList<PublicAccountDetailsInfo>();
     private String accessToken_1;
     private AppAuthService appAuthService;//1.0授权
@@ -81,21 +70,8 @@ public class PublicAccountDetailsActivity extends BaseActivity {
         initView();
     }
 
-    @Override
-    protected boolean handClickEvent(View v) {
-        /**
-         * 弹出框
-         */
-        popWindowView = new PublicAccountPopWindowView(PublicAccountDetailsActivity.this);
-        popWindowView.setOnDismissListener(new poponDismissListener());
-        popWindowView.showPopupWindow(findViewById(R.id.right_layout));
-        lightoff();
-        return super.handClickEvent(v);
-    }
-
     private void initView() {
-        accessToken_1 = Tools.getStringValue(PublicAccountDetailsActivity.this, Contants.storage.APPAUTH_1);
-        pullListView = findViewById(R.id.pull_listview);
+        accessToken_1 = spUtils.getStringData(Contants.storage.APPAUTH_1, "");
         sr_public_detail = findViewById(R.id.sr_public_detail);
         rv_public_detail = findViewById(R.id.rv_public_detail);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
@@ -121,114 +97,10 @@ public class PublicAccountDetailsActivity extends BaseActivity {
                 sr_public_detail.finishRefresh();
             }
         });
-        adapter = new PublicAccountDetailsAdapter(this, list);
-        /**
-         * 添加头部
-         */
+        rvAdapter = new PublicAccountDetailsRvAdapter(R.layout.public_account_details_item, list);
+        rv_public_detail.setAdapter(rvAdapter);
         addHead();
-        pullListView.setAdapter(adapter);
-        pullListView.setDividerHeight(0);
-        pullListView.setOnLoadingListener(new OnLoadingListener<PullRefreshListView>() {
-
-            @Override
-            public void refreshData(PullRefreshListView t,
-                                    boolean isLoadMore, Message msg, String response) {
-                int code = HttpTools.getCode(response);
-                if (code == 0) {
-                    String content = HttpTools.getContentString(response);
-                    if (StringUtils.isNotEmpty(content)) {
-                        ResponseData data = HttpTools.getResponseKey(content, "list");
-                        if (data.length > 0) {
-                            PublicAccountDetailsInfo info;
-                            for (int i = 0; i < data.length; i++) {
-                                if (!data.getString(i, "orgcccount").equals(data.getString(i, "destcccount"))) {
-                                    info = new PublicAccountDetailsInfo();
-                                    info.tno = data.getString(i, "tno");
-                                    info.transtype = data.getString(i, "transtype");
-                                    info.typeid = data.getString(i, "typeid");
-                                    info.thirdno = data.getString(i, "thirdno");
-                                    info.orderno = data.getString(i, "orderno");
-                                    info.orgmoney = data.getString(i, "orgmoney");
-                                    info.destmoney = data.getString(i, "destmoney");
-                                    info.creationtime = data.getString(i, "creationtime");
-                                    info.status = data.getString(i, "status");
-                                    info.detail = data.getString(i, "detail");
-                                    info.content = data.getString(i, "content");
-                                    info.orgplatform = data.getString(i, "orgplatform");
-                                    info.destplatform = data.getString(i, "destplatform");
-                                    info.orgbiz = data.getString(i, "orgbiz");
-                                    info.destbiz = data.getString(i, "destbiz");
-                                    info.orgclient = data.getString(i, "orgclient");
-                                    info.destclient = data.getString(i, "destclient");
-                                    info.orgcccount = data.getString(i, "orgcccount");
-                                    info.destcccount = data.getString(i, "destcccount");
-                                    if (info.destcccount.equals(item.ano)) {
-                                        info.type = "0";
-                                    } else {
-                                        info.type = "1";
-                                    }
-                                    list.add(info);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
-            @Override
-            public void onLoadingMore(PullRefreshListView t, Handler hand, int pagerIndex) {
-                RequestConfig config = new RequestConfig(PublicAccountDetailsActivity.this, PullRefreshListView.HTTP_MORE_CODE);
-                config.handler = hand;
-                RequestParams params = new RequestParams();
-                params.put("access_token", accessToken_1);
-                params.put("utype", 2);
-                params.put("starttime", 0);
-                params.put("uno", item.bno);
-                params.put("atid", item.atid);
-                params.put("ano", item.ano);
-                params.put("pano", item.pano);
-                params.put("ispay", ispay);
-                params.put("skip", (pagerIndex - 1) * 8);
-                params.put("limit", PullRefreshListView.PAGER_SIZE);
-                HttpTools.httpPost(Contants.URl.URL_ICETEST, "/jrpt/transaction/list", config, params);
-            }
-
-            @Override
-            public void onLoading(PullRefreshListView t, Handler hand) {
-                // TODO Auto-generated method stub
-                RequestConfig config = new RequestConfig(PublicAccountDetailsActivity.this, PullRefreshListView.HTTP_FRESH_CODE);
-                config.handler = hand;
-                RequestParams params = new RequestParams();
-                params.put("access_token", accessToken_1);
-                params.put("utype", 2);
-                params.put("starttime", 0);
-                params.put("uno", item.bno);
-                params.put("atid", item.atid);
-                params.put("ano", item.ano);
-                params.put("pano", item.pano);
-                params.put("ispay", ispay);
-                params.put("skip", 0);
-                params.put("limit", PullRefreshListView.PAGER_SIZE);
-                HttpTools.httpPost(Contants.URl.URL_ICETEST, "/jrpt/transaction/list", config, params);
-            }
-        });
-        String expireTime = Tools.getStringValue(PublicAccountDetailsActivity.this, Contants.storage.APPAUTHTIME_1);
-        Date dt = new Date();
-        Long time = dt.getTime();
-        /**
-         * 获取对公账户数据
-         */
-        if (StringUtils.isNotEmpty(expireTime)) {
-            if (Long.parseLong(expireTime) <= time) {//token过期
-                getAppAuthInfo();
-            } else {
-//                pullListView.performLoading();
-                initData(accessToken_1, item.bno, item.atid, item.ano, item.pano, ispay, mPage, pageSize, true);
-            }
-        } else {
-            getAppAuthInfo();
-        }
-
+        initRequestAuth();
     }
 
     private void initData(String accessToken, String uno, int atid, String ano, String pano, int ispay, int pagerIndex,
@@ -239,7 +111,7 @@ public class PublicAccountDetailsActivity extends BaseActivity {
     private void addHead() {
         LayoutInflater inflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View headView = inflater.inflate(R.layout.public_account_details_head, null);
-        pullListView.addHeaderView(headView);
+        rvAdapter.addHeaderView(headView);
         tvTitle = headView.findViewById(R.id.tv_title);
         tvAccount = headView.findViewById(R.id.tv_account);
         tvSource = headView.findViewById(R.id.tv_source);
@@ -304,6 +176,7 @@ public class PublicAccountDetailsActivity extends BaseActivity {
                                     list.add(info);
                                 }
                             }
+                            rvAdapter.setNewData(list);
                         }
                     }
                 }
@@ -312,34 +185,27 @@ public class PublicAccountDetailsActivity extends BaseActivity {
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        if (!EventBus.getDefault().isRegistered(this)) {
-            EventBus.getDefault().register(this);
-        }
+    protected boolean handClickEvent(View v) {
+        popWindowView = new PublicAccountPopWindowView(PublicAccountDetailsActivity.this);
+        popWindowView.setOnDismissListener(new poponDismissListener());
+        popWindowView.showPopupWindow(findViewById(R.id.right_layout));
+        lightoff();
+        popWindowView.setOnclickCallBack(isPay -> {
+            ispay = isPay;
+            mPage = 1;
+            initRequestAuth();
+        });
+        return super.handClickEvent(v);
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        EventBus.getDefault().unregister(this);
-    }
-
-    @Subscribe
-    public void onEvent(Object event) {
-        final Message message = (Message) event;
-        ispay = message.what;
-        String expireTime = Tools.getStringValue(PublicAccountDetailsActivity.this, Contants.storage.APPAUTHTIME_1);
+    private void initRequestAuth() {
+        String expireTime = spUtils.getStringData(Contants.storage.APPAUTHTIME_1, "");
         Date dt = new Date();
-        Long time = dt.getTime();
-        /**
-         * 获取对公账户数据
-         */
-        if (StringUtils.isNotEmpty(expireTime)) {
-            if (Long.parseLong(expireTime) <= time) {//token过期
+        long time = dt.getTime() / 1000;
+        if (!TextUtils.isEmpty(expireTime)) {
+            if (Long.parseLong(expireTime) <= time || TextUtils.isEmpty(accessToken_1)) {//有效时间<=当前时间 || token为空,则token过期
                 getAppAuthInfo();
             } else {
-//                pullListView.performLoading();
                 initData(accessToken_1, item.bno, item.atid, item.ano, item.pano, ispay, mPage, pageSize, true);
             }
         } else {
@@ -347,10 +213,6 @@ public class PublicAccountDetailsActivity extends BaseActivity {
         }
     }
 
-    /**
-     * 获取token（1.0）
-     * sectet
-     */
     private void getAppAuthInfo() {
         if (appAuthService == null) {
             appAuthService = new AppAuthService(PublicAccountDetailsActivity.this);
@@ -365,10 +227,10 @@ public class PublicAccountDetailsActivity extends BaseActivity {
                         try {
                             String accessToken = content.getString("access_token");
                             String expireTime = content.getString("expire");
-                            Tools.saveStringValue(PublicAccountDetailsActivity.this, Contants.storage.APPAUTH_1, accessToken);
-                            Tools.saveStringValue(PublicAccountDetailsActivity.this, Contants.storage.APPAUTHTIME_1, expireTime);
-//                            pullListView.performLoading();
-                            initData(accessToken_1, item.bno, item.atid, item.ano, item.pano, ispay, mPage, pageSize, true);
+                            accessToken_1 = accessToken;
+                            spUtils.saveStringData(Contants.storage.APPAUTH_1, accessToken);
+                            spUtils.saveStringData(Contants.storage.APPAUTHTIME_1, expireTime);
+                            initData(accessToken, item.bno, item.atid, item.ano, item.pano, ispay, mPage, pageSize, true);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -382,13 +244,8 @@ public class PublicAccountDetailsActivity extends BaseActivity {
         });
     }
 
-    /**
-     * 添加新笔记时弹出的popWin关闭的事件，主要是为了将背景透明度改回来
-     *
-     * @author cg
-     */
     class poponDismissListener implements PopupWindow.OnDismissListener {
-
+        //添加新背景时弹出的popWin关闭的事件，主要是为了将背景透明度改回来
         @Override
         public void onDismiss() {
             WindowManager.LayoutParams lp = PublicAccountDetailsActivity.this.getWindow().getAttributes();

@@ -7,7 +7,6 @@ import android.widget.ImageView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.tg.coloursteward.R;
-import com.tg.coloursteward.util.GlideUtils;
 import com.tg.money.entity.MyBankEntity;
 
 import java.util.List;

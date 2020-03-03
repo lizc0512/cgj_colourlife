@@ -3,19 +3,16 @@ package com.tg.coloursteward.view;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
-import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.PopupWindow;
 
 import com.tg.coloursteward.R;
 
-import org.greenrobot.eventbus.EventBus;
-
 public class PublicAccountPopWindowView extends PopupWindow {
     private View conentView;
+    private onClickCallBack clickListener;
 
     public PublicAccountPopWindowView(final Activity context) {
         LayoutInflater inflater = (LayoutInflater) context
@@ -38,36 +35,35 @@ public class PublicAccountPopWindowView extends PopupWindow {
         this.setBackgroundDrawable(dw);
         // 设置SelectPicPopupWindow弹出窗体动画效果  
         this.setAnimationStyle(R.style.AnimationPreview);
-        conentView.findViewById(R.id.rl_all).setOnClickListener(new OnClickListener() {//所有
-
-            @Override
-            public void onClick(View arg0) {
-                Message msg = new Message();
-                msg.what = 0;
-                EventBus.getDefault().post(msg);
-                PublicAccountPopWindowView.this.dismiss();
+        //所有
+        conentView.findViewById(R.id.rl_all).setOnClickListener(arg0 -> {
+            if (null != clickListener) {
+                clickListener.callBack(0);
             }
+            PublicAccountPopWindowView.this.dismiss();
         });
-        conentView.findViewById(R.id.rl_in).setOnClickListener(new OnClickListener() {//转入
-
-            @Override
-            public void onClick(View arg0) {
-                Message msg = new Message();
-                msg.what = 2;
-                EventBus.getDefault().post(msg);
-                PublicAccountPopWindowView.this.dismiss();
+        //转入
+        conentView.findViewById(R.id.rl_in).setOnClickListener(arg0 -> {
+            if (null != clickListener) {
+                clickListener.callBack(2);
             }
+            PublicAccountPopWindowView.this.dismiss();
         });
-        conentView.findViewById(R.id.rl_out).setOnClickListener(new OnClickListener() {//转出
-
-            @Override
-            public void onClick(View arg0) {
-                Message msg = new Message();
-                msg.what = 1;
-                EventBus.getDefault().post(msg);
-                PublicAccountPopWindowView.this.dismiss();
+        //转出
+        conentView.findViewById(R.id.rl_out).setOnClickListener(arg0 -> {
+            if (null != clickListener) {
+                clickListener.callBack(1);
             }
+            PublicAccountPopWindowView.this.dismiss();
         });
+    }
+
+    public void setOnclickCallBack(onClickCallBack callBack) {
+        this.clickListener = callBack;
+    }
+
+    public interface onClickCallBack {
+        void callBack(int ispay);
     }
 
     /**

@@ -5,13 +5,6 @@
     android:layout_height="match_parent"
     tools:context="com.tg.coloursteward.activity.PublicAccountActivity">
 
-    <com.tg.coloursteward.view.PullRefreshListView
-        android:id="@+id/pull_listview"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone"
-        android:listSelector="@android:color/transparent" />
-
     <com.scwang.smartrefresh.layout.SmartRefreshLayout
         android:id="@+id/sr_public_detail"
         android:layout_width="match_parent"
@@ -20,7 +13,8 @@
         <android.support.v7.widget.RecyclerView
             android:id="@+id/rv_public_detail"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            tools:listitem="@layout/public_account_details_item" />
     </com.scwang.smartrefresh.layout.SmartRefreshLayout>
 
     <RelativeLayout

@@ -62,7 +62,7 @@ public class PasswordDialogListener {
                 if (null != listener) {
                     listener.result(psw);
                 }
-                dismiss();
+                dismiss(activity);
             }
         });
         nor_grid_pay_pawd.setOnPasswordChangedListener(new GridPasswordView.OnPasswordChangedListener() {
@@ -76,19 +76,22 @@ public class PasswordDialogListener {
                 if (null != listener) {
                     listener.result(psw);
                 }
-                dismiss();
+                dismiss(activity);
             }
         });
         iv_close_dialog.setOnClickListener(v -> {
-            dismiss();
-            grid_pay_pawd.hideKeyWorld();
+            dismiss(activity);
         });
         tv_dialog_forget.setOnClickListener(v -> {
             if (null != listener) {
                 listener.forgetPassWord();
             }
         });
-        mDialog.setOnDismissListener(dialog -> hideSoftKeyboard(activity, iv_close_dialog));
+        mDialog.setOnDismissListener(dialog -> {
+                    dismiss(activity);
+                }
+        );
+
     }
 
     public void show() {
@@ -110,10 +113,12 @@ public class PasswordDialogListener {
 
     }
 
-    public void dismiss() {
+    public void dismiss(Activity activity) {
         if (mDialog != null) {
             mDialog.dismiss();
         }
+        grid_pay_pawd.hideKeyWorld();
+        hideSoftKeyboard(activity, iv_close_dialog);
     }
 
     public interface pwdDialogListener {

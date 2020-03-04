@@ -41,6 +41,7 @@ public class HomeModel extends BaseModel {
     private String authUrl = "/auth";
     private String auth2Url = "/app/auth2";
     private String appAuthUrl = "/jqfw/app/auth";
+    private String contactSearchUrl = "/txl2/contacts/childDatas";
 
     public HomeModel(Context context) {
         super(context);
@@ -550,5 +551,44 @@ public class HomeModel extends BaseModel {
             public void onFailed(int what, Response<String> response) {
             }
         }, true, false);
+    }
+
+    /**
+     * 组织架构-通讯录页面
+     *
+     * @param what
+     * @param id
+     * @param corp_id
+     * @param loading
+     * @param httpResponse
+     */
+    public void getConatctSearch(int what, String id, String corp_id, boolean loading, HttpResponse httpResponse) {
+        Map<String, Object> params = new HashMap<>();
+        if (!id.equals("-1")) {
+            params.put("orgID", id);
+        }
+        params.put("corpId", corp_id);
+        final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(
+                mContext, 4, contactSearchUrl), RequestMethod.GET);
+        request(what, request, RequestEncryptionUtils.getIceMap(mContext, params), new HttpListener<String>() {
+            @Override
+            public void onSucceed(int what, Response<String> response) {
+                int responseCode = response.getHeaders().getResponseCode();
+                String result = response.get();
+                if (responseCode == RequestEncryptionUtils.responseSuccess) {
+                    int code = showSuccesResultMessage(result);
+                    if (code == 0) {
+                        httpResponse.OnHttpResponse(what, result);
+                    }
+                } else {
+                    showErrorCodeMessage(what, response);
+                }
+            }
+
+            @Override
+            public void onFailed(int what, Response<String> response) {
+                showExceptionMessage(what, response);
+            }
+        }, true, loading);
     }
 }

@@ -1,31 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/ll_home_contact"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <TextView
+    <View
         android:id="@+id/catalog"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/selected_bg"
-        android:paddingLeft="15dip"
-        android:paddingTop="5dp"
-        android:textColor="@color/text_3"
-        android:textSize="8sp" />
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/size_20dp"
+        android:background="@color/base_color" />
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="@dimen/size_60dp"
+        android:background="@color/white">
 
         <com.tg.coloursteward.view.RoundImageView
             android:id="@+id/iv_image"
-            android:layout_width="@dimen/margin_30"
-            android:layout_height="@dimen/margin_30"
+            android:layout_width="@dimen/size_30dp"
+            android:layout_height="@dimen/size_30dp"
             android:layout_centerVertical="true"
-            android:layout_marginBottom="@dimen/margin_20"
-            android:layout_marginLeft="@dimen/margin_10"
-            android:layout_marginTop="@dimen/margin_20"
+            android:layout_marginLeft="@dimen/size_15dp"
             android:src="@drawable/guishu" />
 
         <RelativeLayout
@@ -33,21 +30,18 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_toRightOf="@id/iv_image"
-            android:layout_marginLeft="@dimen/margin_10"
-            android:layout_marginBottom="@dimen/margin_20"
-            android:layout_marginTop="@dimen/margin_20"
-            android:layout_marginRight="@dimen/margin_18">
+            android:layout_marginLeft="@dimen/size_15dp"
+            android:layout_marginRight="@dimen/size_18dp"
+            android:layout_toRightOf="@id/iv_image">
 
             <TextView
                 android:id="@+id/tv_family"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-
-                android:text="东部物业"
                 android:textColor="@color/text_9"
-                android:textSize="16sp" />
+                android:textSize="@dimen/font_16sp"
+                tools:text="东部物业" />
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -59,11 +53,9 @@
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="1dp"
+            android:layout_height="@dimen/size_1px"
             android:layout_alignLeft="@id/rl_title"
             android:layout_alignParentBottom="true"
             android:background="@color/base_color" />
-
     </RelativeLayout>
-
 </LinearLayout>

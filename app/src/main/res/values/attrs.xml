@@ -11,11 +11,6 @@
         <attr name="progress_color_rotate" format="reference" />
         <attr name="size" format="dimension" />
     </declare-styleable>
-    <declare-styleable name="PullRefreshListView">
-        <attr name="divider" format="reference" />
-        <attr name="dividerHeight" format="dimension" />
-        <attr name="background_color_pull" format="reference" />
-    </declare-styleable>
     <declare-styleable name="CustomStar">
         <attr name="level" format="float" />
     </declare-styleable>

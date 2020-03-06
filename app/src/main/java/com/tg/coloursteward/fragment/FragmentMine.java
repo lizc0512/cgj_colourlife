@@ -19,15 +19,12 @@ import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.request.RequestOptions;
-import com.bumptech.glide.signature.ObjectKey;
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.activity.MyBrowserActivity;
 import com.tg.coloursteward.adapter.FragmentMineAdapter;
 import com.tg.coloursteward.baseModel.HttpResponse;
 import com.tg.coloursteward.constant.Contants;
+import com.tg.coloursteward.constant.SpConstants;
 import com.tg.coloursteward.entity.FragmentMineEntity;
 import com.tg.coloursteward.info.UserInfo;
 import com.tg.coloursteward.inter.FragmentMineCallBack;
@@ -36,6 +33,7 @@ import com.tg.coloursteward.net.GetTwoRecordListener;
 import com.tg.coloursteward.net.HttpTools;
 import com.tg.coloursteward.net.MD5;
 import com.tg.coloursteward.serice.HomeService;
+import com.tg.coloursteward.util.GlideUtils;
 import com.tg.coloursteward.util.GsonUtils;
 import com.tg.coloursteward.util.LinkParseUtil;
 import com.tg.coloursteward.util.SharedPreferencesUtils;
@@ -43,13 +41,9 @@ import com.tg.coloursteward.util.Tools;
 import com.tg.coloursteward.view.CircleImageView;
 import com.tg.coloursteward.view.dialog.ToastFactory;
 import com.tg.user.activity.UserInfoActivity;
-import com.youmai.hxsdk.utils.GlideRoundTransform;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.tg.coloursteward.module.MainActivity.getEnvironment;
-import static com.tg.coloursteward.module.MainActivity.getPublicParams;
 
 /**
  * 个人中心
@@ -72,14 +66,18 @@ public class FragmentMine extends Fragment implements OnClickListener, HttpRespo
     private TextView tv_mine_job;
     private CircleImageView iv_mine_head;
     private MineModel mineModel;
+    private String updateTime;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.fragment_mine_layout, container, false);
+        updateTime = SharedPreferencesUtils.getInstance().getStringData(SpConstants.UserModel.UPDATETIME_IMG, "");
+        if (TextUtils.isEmpty(updateTime)) {
+            SharedPreferencesUtils.getInstance().saveStringData(SpConstants.UserModel.UPDATETIME_IMG, UserInfo.employeeAccount);
+        }
         mineModel = new MineModel(mActivity);
         initView();
-        Tools.saveStringValue(mActivity, "updatetime_img", UserInfo.userinfoImg);
         getHeadImg();
         initData();
         return mView;
@@ -217,14 +215,8 @@ public class FragmentMine extends Fragment implements OnClickListener, HttpRespo
 
     public void getHeadImg() {
         String str = Contants.Html5.HEAD_ICON_URL + "/avatar?uid=" + UserInfo.employeeAccount;
-        Glide.with(this)
-                .load(str)
-                .apply(new RequestOptions()
-                        .signature(new ObjectKey(Tools.getStringValue(mActivity, "updatetime_img")))
-                        .diskCacheStrategy(DiskCacheStrategy.ALL)
-                        .centerCrop()
-                        .transform(new GlideRoundTransform()))
-                .into(iv_mine_head);
+        updateTime = SharedPreferencesUtils.getInstance().getStringData(SpConstants.UserModel.UPDATETIME_IMG, "");
+        GlideUtils.loadSignatureImageView(mActivity, str, updateTime, iv_mine_head);
 
     }
 

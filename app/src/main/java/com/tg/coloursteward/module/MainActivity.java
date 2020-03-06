@@ -129,7 +129,6 @@ public class MainActivity extends BaseActivity implements MessageHandler.Respons
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
-    public static final String ACTION_FRESH_USERINFO = "com.tg.coloursteward.ACTION_FRESH_USERINFO";
     public static final String ACTION_TICKET_INFO = "com.tg.coloursteward.ACTION_TICKET_INFO";
     public static final String ACTION_HOME_DELETEINFO = "com.tg.coloursteward.ACTION_HOME_DELETEINFO";
     public static final String ACTION_READ_MESSAGEINFO = "com.tg.coloursteward.ACTION_READ_MESSAGEINFO";
@@ -704,7 +703,6 @@ public class MainActivity extends BaseActivity implements MessageHandler.Respons
         getVersion();
         initView();
         IntentFilter filter = new IntentFilter();
-        filter.addAction(ACTION_FRESH_USERINFO);
         filter.addAction(ACTION_TICKET_INFO);
         filter.addAction(ACTION_HOME_DELETEINFO);
         filter.addAction(ACTION_READ_MESSAGEINFO);

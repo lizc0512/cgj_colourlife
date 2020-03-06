@@ -10,38 +10,31 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Message;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ImageView.ScaleType;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.request.RequestOptions;
-import com.bumptech.glide.signature.ObjectKey;
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.base.BaseActivity;
 import com.tg.coloursteward.baseModel.HttpResponse;
 import com.tg.coloursteward.baseModel.RequestEncryptionUtils;
 import com.tg.coloursteward.constant.Contants;
+import com.tg.coloursteward.constant.SpConstants;
 import com.tg.coloursteward.info.UserInfo;
-import com.tg.coloursteward.module.MainActivity;
-import com.tg.coloursteward.net.HttpTools;
 import com.tg.coloursteward.object.ImageParams;
 import com.tg.coloursteward.object.SlideItemObj;
-import com.tg.coloursteward.util.GlideCacheUtil;
+import com.tg.coloursteward.util.GlideUtils;
+import com.tg.coloursteward.util.ToastUtil;
 import com.tg.coloursteward.util.Tools;
 import com.tg.coloursteward.view.CameraView;
 import com.tg.coloursteward.view.CameraView.STATE;
 import com.tg.coloursteward.view.dialog.DialogFactory;
-import com.tg.coloursteward.view.dialog.ToastFactory;
 import com.tg.coloursteward.view.spinnerwheel.SlideSelectorView.OnCompleteListener;
 import com.tg.user.model.UserModel;
 import com.youmai.hxsdk.router.APath;
@@ -95,13 +88,9 @@ public class UserInfoActivity extends BaseActivity implements OnClickListener, H
     private void initView() {
         sex = UserInfo.sex;
         email = UserInfo.email;
-        int size = (int) (50 * Tools.getDisplayMetrics(this).density);
         rlIcon = findViewById(R.id.rl_icon);
         ivIcon = findViewById(R.id.iv_icon);
         rlIcon.setOnClickListener(this);
-        ivIcon.getLayoutParams().width = size;
-        ivIcon.getLayoutParams().height = size;
-        ivIcon.setScaleType(ScaleType.CENTER_CROP);
         tv_user_name = findViewById(R.id.tv_user_name);
         tv_user_sex = findViewById(R.id.tv_user_sex);
         tv_user_part = findViewById(R.id.tv_user_part);
@@ -127,18 +116,13 @@ public class UserInfoActivity extends BaseActivity implements OnClickListener, H
         } else {
             et_user_email.setHint("< 未绑定 >");
         }
-        updatetime = UserInfo.userinfoImg;
-        Tools.saveStringValue(UserInfoActivity.this, "updatetime_img", UserInfo.userinfoImg);
         freshImg();
     }
 
     private void freshImg() {
         String url = Contants.Html5.HEAD_ICON_URL + "/avatar?uid=" + UserInfo.employeeAccount;
-        Glide.with(this).load(url)
-                .apply(new RequestOptions()
-                        .signature(new ObjectKey(Tools.getStringValue(UserInfoActivity.this, "updatetime_img")))
-                        .diskCacheStrategy(DiskCacheStrategy.ALL))
-                .into(ivIcon);
+        updatetime = spUtils.getStringData(SpConstants.UserModel.UPDATETIME_IMG, "");
+        GlideUtils.loadSignatureImageView(this, url, updatetime, ivIcon);
     }
 
     /**
@@ -147,23 +131,6 @@ public class UserInfoActivity extends BaseActivity implements OnClickListener, H
     private void updateView() {
         tv_user_sex.setText(UserInfo.sex);
         et_user_email.setText(UserInfo.email);
-    }
-
-    @Override
-    public void onSuccess(Message msg, String jsonString, String hintString) {
-        super.onSuccess(msg, jsonString, hintString);
-        if (msg.arg1 == HttpTools.POST_IMAG) {
-            DialogFactory.getInstance().hideTransitionDialog();
-            needPostImage = false;
-            sendBroadcast(new Intent(MainActivity.ACTION_FRESH_USERINFO));
-            ToastFactory.showToast(this, hintString);
-            updatetime = String.valueOf(System.currentTimeMillis());
-            UserInfo.userinfoImg = updatetime;
-            Tools.saveStringValue(UserInfoActivity.this, "updatetime_img", updatetime);
-            isSaveHeadImg = true;
-            submitUserInfo();
-            freshImg();
-        }
     }
 
     private void setUserInfo() {
@@ -183,8 +150,7 @@ public class UserInfoActivity extends BaseActivity implements OnClickListener, H
         if (needPostImage) {
             ImageParams imgParams = new ImageParams();
             imgParams.fileName = imageName;
-            HttpTools.postAnImage(Contants.Html5.HEAD_ICON_URL, mHand, imgParams);
-//            userModel.postUploadImg(1,imageName,this);
+            userModel.postUploadImg(1, imageName, this);
         } else {
             submitUserInfo();
         }
@@ -247,7 +213,7 @@ public class UserInfoActivity extends BaseActivity implements OnClickListener, H
      * @param data
      */
     private void getImageToView(Intent data) {
-        final Bitmap bitmap = BitmapFactory.decodeFile(crop_path
+        Bitmap bitmap = BitmapFactory.decodeFile(crop_path
                 + imageName);
         needPostImage = true;
         ivIcon.setImageBitmap(bitmap);
@@ -255,8 +221,7 @@ public class UserInfoActivity extends BaseActivity implements OnClickListener, H
             ImageParams imgParams = new ImageParams();
             imgParams.fileName = imageName;
             imgParams.path = crop_path + imageName;
-            HttpTools.postAnImage(Contants.Html5.HEAD_ICON_URL, mHand, imgParams);
-//            userModel.postUploadImg(1,crop_path + imageName,this);
+            userModel.postUploadImg(1, crop_path + imageName, this);
         } else {
             submitUserInfo();
         }
@@ -316,9 +281,7 @@ public class UserInfoActivity extends BaseActivity implements OnClickListener, H
     private void submitUserInfo() {
         if (!hasChanged()) {
             if (isSaveHeadImg == true) {
-                ToastFactory.showToast(UserInfoActivity.this, "头像已保存");
-                GlideCacheUtil.getInstance().clearImageDiskCache(UserInfoActivity.this);
-                GlideCacheUtil.getInstance().clearImageMemoryCache(UserInfoActivity.this);
+                ToastUtil.showShortToast(UserInfoActivity.this, "头像已保存");
             }
             return;
         }
@@ -383,9 +346,19 @@ public class UserInfoActivity extends BaseActivity implements OnClickListener, H
                     if (content.equals("1")) {
                         setUserInfo();
                         updateView();
-                        ToastFactory.showToast(this, "保存成功");
-                        sendBroadcast(new Intent(MainActivity.ACTION_FRESH_USERINFO));
+                        ToastUtil.showShortToast(this, "保存成功");
                     }
+                }
+                break;
+            case 1:
+                if (!TextUtils.isEmpty(result)) {
+                    needPostImage = false;
+                    updatetime = String.valueOf(System.currentTimeMillis());
+                    spUtils.saveStringData(SpConstants.UserModel.UPDATETIME_IMG, updatetime);
+                    ToastUtil.showShortToast(this, "图片上传成功");
+                    isSaveHeadImg = true;
+                    submitUserInfo();
+                    freshImg();
                 }
                 break;
         }

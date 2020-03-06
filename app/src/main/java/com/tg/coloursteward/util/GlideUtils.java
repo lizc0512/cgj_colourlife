@@ -9,6 +9,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.signature.ObjectKey;
 
 import java.io.File;
 
@@ -84,6 +85,25 @@ public class GlideUtils {
         } catch (Exception e) {
 
         }
+    }
+
+    /**
+     * 加载带时间戳图片
+     *
+     * @param mContext
+     * @param path
+     * @param mImageView
+     */
+    public static void loadSignatureImageView(Context mContext, String path, String updateTime, ImageView mImageView) {
+        try {
+            if (null != mContext) {
+                Glide.with(mContext).load(path).apply((new RequestOptions()).diskCacheStrategy(DiskCacheStrategy.ALL).
+                        signature(new ObjectKey(updateTime))).into(mImageView);
+            }
+        } catch (Exception var4) {
+            var4.toString();
+        }
+
     }
 
     public static void loadHeadPhoto(Context mContext, String path, ImageView mImageView) {

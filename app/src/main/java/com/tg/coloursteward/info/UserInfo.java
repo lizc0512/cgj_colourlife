@@ -17,7 +17,6 @@ public class UserInfo {
     public static String familyName = "";
     public static String orgId = "";//组织架构ID
     public static String infoorgId = "";//组织架构ID
-    public static String userinfoImg = "userinfoimg";//
 
 
     public static String corp_id = "";
@@ -42,7 +41,6 @@ public class UserInfo {
         UserInfo.familyName = "";
         UserInfo.orgId = "";//组织架构ID
         UserInfo.infoorgId = "";//组织架构ID
-        UserInfo.userinfoImg = "";//
         UserInfo.corp_id = "";
         UserInfo.salary_level = "";
         UserInfo.is_deleted = 0;

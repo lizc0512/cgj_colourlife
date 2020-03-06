@@ -22,7 +22,6 @@ import com.yanzhenjie.nohttp.RequestMethod;
 import com.yanzhenjie.nohttp.rest.Request;
 import com.yanzhenjie.nohttp.rest.Response;
 
-import org.apache.http.entity.mime.content.FileBody;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -704,15 +703,19 @@ public class UserModel extends BaseModel {
         }, true, true);
     }
 
+    /**
+     * 上传头像
+     *
+     * @param what
+     * @param imgUrl
+     * @param httpResponse
+     */
     public void postUploadImg(int what, String imgUrl, final HttpResponse httpResponse) {
-        Map<String, Object> params = new HashMap<>();
-        BasicBinary binary = new FileBinary(new File(imgUrl));
-        params.put("uid", UserInfo.employeeAccount);
-        File file = new File(imgUrl);
-        params.put("fileName", new FileBody(file));
         final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 8, uploadImgUrl), RequestMethod.POST);
+        BasicBinary binary = new FileBinary(new File(imgUrl));
+        request.add("uid", UserInfo.employeeAccount);
         request.add("fileName", binary);
-        request(what, request, RequestEncryptionUtils.getNewSaftyMap(mContext, params), new HttpListener<String>() {
+        request(what, request, null, new HttpListener<String>() {
             @Override
             public void onSucceed(int what, Response<String> response) {
                 int responseCode = response.getHeaders().getResponseCode();
@@ -721,8 +724,6 @@ public class UserModel extends BaseModel {
                     int code = showSuccesResultMessage(result);
                     if (code == 0) {
                         httpResponse.OnHttpResponse(what, result);
-                    } else {
-                        showErrorCodeMessage(response);
                     }
                 } else {
                     showErrorCodeMessage(response);

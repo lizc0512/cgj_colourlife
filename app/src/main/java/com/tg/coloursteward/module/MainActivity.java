@@ -125,7 +125,7 @@ import static com.tg.coloursteward.constant.Contants.URl.environment;
  * Created by colin on 2018/3/15.
  */
 
-public class MainActivity extends BaseActivity implements MessageHandler.ResponseListener, HttpResponse {
+public class MainActivity extends BaseActivity implements HttpResponse {
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
@@ -237,8 +237,6 @@ public class MainActivity extends BaseActivity implements MessageHandler.Respons
                 authTimeUtils.IsAuthTime(MainActivity.this, urlAd, urlauth_type, "");
             }
         }
-        msgHand = new MessageHandler(this);
-        msgHand.setResponseListener(this);
         initView();
         initPush();
 
@@ -543,11 +541,6 @@ public class MainActivity extends BaseActivity implements MessageHandler.Respons
         }
     }
 
-    @Override
-    public void onRequestStart(Message msg, String hintString) {
-
-    }
-
     // 保存图片到手机
     public void download(final String url) {
         new AsyncTask<Void, Integer, File>() {
@@ -599,10 +592,6 @@ public class MainActivity extends BaseActivity implements MessageHandler.Respons
     private void initInfoSync(String alias) {
         homeModel.postUserSync(5, UserInfo.uid, UserInfo.employeeAccount, UserInfo.mobile, UserInfo.orgId,
                 UserInfo.familyName, alias, this);
-    }
-
-    @Override
-    public void onFail(Message msg, String hintString) {
     }
 
     private void initView() {

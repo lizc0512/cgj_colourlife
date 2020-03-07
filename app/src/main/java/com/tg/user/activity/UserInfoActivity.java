@@ -5,8 +5,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -32,8 +30,6 @@ import com.tg.coloursteward.object.SlideItemObj;
 import com.tg.coloursteward.util.GlideUtils;
 import com.tg.coloursteward.util.ToastUtil;
 import com.tg.coloursteward.util.Tools;
-import com.tg.coloursteward.view.CameraView;
-import com.tg.coloursteward.view.CameraView.STATE;
 import com.tg.coloursteward.view.dialog.DialogFactory;
 import com.tg.coloursteward.view.spinnerwheel.SlideSelectorView.OnCompleteListener;
 import com.tg.user.model.UserModel;
@@ -137,23 +133,6 @@ public class UserInfoActivity extends BaseActivity implements OnClickListener, H
         UserInfo.sex = sex;
         UserInfo.email = email;
         Tools.saveUserInfo(this);
-    }
-
-    @Override
-    public void returnData(CameraView cv, STATE state, int groupPosition,
-                           int childPosition, int position, Bitmap bitmap, String path) {
-        super.returnData(cv, state, groupPosition, childPosition, position, bitmap,
-                path);
-        needPostImage = true;
-        Drawable rightDrawable = new BitmapDrawable(bitmap);
-        ivIcon.setImageDrawable(rightDrawable);
-        if (needPostImage) {
-            ImageParams imgParams = new ImageParams();
-            imgParams.fileName = imageName;
-            userModel.postUploadImg(1, imageName, this);
-        } else {
-            submitUserInfo();
-        }
     }
 
     @Override

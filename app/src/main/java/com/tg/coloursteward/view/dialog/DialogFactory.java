@@ -2,13 +2,8 @@ package com.tg.coloursteward.view.dialog;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnCancelListener;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.net.Uri;
-import android.provider.MediaStore;
 import android.support.constraint.ConstraintLayout;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
@@ -25,8 +20,6 @@ import android.widget.TextView;
 
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.base.BaseActivity;
-import com.tg.coloursteward.inter.ResultCallBack;
-import com.tg.coloursteward.net.HttpTools;
 import com.tg.coloursteward.object.SlideItemObj;
 import com.tg.coloursteward.util.ToastUtil;
 import com.tg.coloursteward.util.Tools;
@@ -35,18 +28,12 @@ import com.tg.coloursteward.view.RotateProgress;
 import com.tg.coloursteward.view.spinnerwheel.SlideSelectorView;
 import com.tg.user.callback.CreateDialgCallBack;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 
 /**
  * Dialog工具类
  */
-public class DialogFactory implements ResultCallBack {
-    public static final int PIC_PHOTO_BY_ALBUM = Integer.MAX_VALUE;
-    public static final int PIC_PHOTO_BY_CAMERA = PIC_PHOTO_BY_ALBUM - 1;
+public class DialogFactory {
     private String PHOTO_NAME = "wisdomPark.jpg";
     private String TAKE_PHOTO_PATH = "";
     private static DialogFactory factory = null;
@@ -99,50 +86,6 @@ public class DialogFactory implements ResultCallBack {
             factory = new DialogFactory();
         }
         return factory;
-    }
-
-    public void showTransitionDialog(final Activity activity, String text, final Object tag, final int requestCode) {
-        if (transitionDialog == null || transitionDialogActivity != activity) {
-            transitionDialogActivity = activity;
-            DisplayMetrics metrics = Tools.getDisplayMetrics(activity);
-            transitionDialog = new AlertDialog.Builder(activity).create();
-            transitionDialog.setCanceledOnTouchOutside(false);
-            transitionDialog.setCancelable(true);
-            transitionDialog.setOnCancelListener(new OnCancelListener() {
-                @Override
-                public void onCancel(DialogInterface dialog) {
-                    if (requestCode == HttpTools.POST_IMAG) {//上传照片
-                        HttpTools.cancelPost();
-                    } else {
-                        if (tag != null) {
-                            HttpTools.cancelRequest(tag);
-                        }
-                    }
-                    if (activity instanceof BaseActivity) {
-                        ((BaseActivity) activity).onCancel(tag, requestCode);
-                    }
-                }
-            });
-            transitionDialog.show();
-            Window window = transitionDialog.getWindow();
-            LinearLayout layout = (LinearLayout) LayoutInflater.from(activity)
-                    .inflate(R.layout.transition_dialog_layout, null);
-            tvMsg = (TextView) layout.findViewById(R.id.dialog_hint);
-            progressBar = (RotateProgress) layout.findViewById(R.id.progressBar);
-            window.setContentView(layout);
-            WindowManager.LayoutParams p = window.getAttributes();
-            p.width = ((int) (metrics.widthPixels - 80 * metrics.density));
-            p.height = (int) (120 * metrics.density);
-            window.setAttributes(p);
-        }
-        if (TextUtils.isEmpty(text)) {
-            tvMsg.setVisibility(View.GONE);
-        } else {
-            tvMsg.setText(text);
-            tvMsg.setVisibility(View.VISIBLE);
-        }
-        progressBar.setVisibility(View.VISIBLE);
-        transitionDialog.show();
     }
 
     /**
@@ -367,125 +310,6 @@ public class DialogFactory implements ResultCallBack {
                 });
     }
 
-    protected void getImageFromAlbum() {
-        Intent intent = new Intent(Intent.ACTION_PICK);
-        intent.setType("image/*");// 相片类型
-        photoDialogActivity.startActivityForResult(intent, PIC_PHOTO_BY_ALBUM);
-    }
-
-    protected void getImageFromCamera() {
-        int maxMemory = (int) Runtime.getRuntime().maxMemory();
-        //M兆
-        int maxMemorySize = maxMemory / (1024 * 1024);
-        if (android.os.Build.VERSION.SDK_INT <= 10 || maxMemorySize <= 32) {
-            isStorageMemory = true;
-            Intent cameraintent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            photoDialogActivity.startActivityForResult(cameraintent,
-                    PIC_PHOTO_BY_CAMERA);
-        } else {
-            isStorageMemory = false;
-            FileOutputStream out = null;
-            try {
-                out = photoDialogActivity.openFileOutput(PHOTO_NAME, Context.MODE_WORLD_WRITEABLE);
-            } catch (FileNotFoundException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-            try {
-                if (out != null) {
-                    out.close();
-                }
-            } catch (IOException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-            TAKE_PHOTO_PATH = photoDialogActivity.getFilesDir().getAbsolutePath() + File.separator + PHOTO_NAME;
-            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            // 指定调用相机拍照后照片的储存路径
-            //intent.putExtra(MediaStore.Images.Media.ORIENTATION, 0);
-            intent.putExtra(MediaStore.EXTRA_OUTPUT,
-                    Uri.fromFile(new File(TAKE_PHOTO_PATH)));
-            photoDialogActivity.startActivityForResult(intent,
-                    PIC_PHOTO_BY_CAMERA);
-        }
-    }
-
-
-    @Override
-    public void onResult(int requestCode, int resultCode, Intent data) {
-        switch (requestCode) {
-            case PIC_PHOTO_BY_ALBUM:
-                if (resultCode != Activity.RESULT_OK) {
-                    return;
-                }
-                Uri uri = data.getData();
-                if (uri != null) {
-                    String filePath = Tools.getPathByUri(photoDialogActivity, uri);
-                    if (filePath == null) {
-                        if (data != null && data.getExtras() != null) {
-                            Bitmap btm = data.getExtras().getParcelable("data");
-                            Tools.compressImage(photoDialogActivity, btm, cropPath);
-                        }
-                    } else {
-                        recycleBitmap(data);
-                        // startCropPhoto(uri);
-                        Tools.saveImageToPath(photoDialogActivity, filePath,
-                                cropPath);
-                    }
-                    if (photoDialogActivity != null) {
-                        photoDialogActivity.returnData(cameraView,
-                                cameraView != null ? cameraView.getState() : null,
-                                groupPosition, childPosition, position,
-                                Tools.getSmallBitmap(cropPath), cropPath);
-                    }
-                } else {
-                    if (data != null && data.getExtras() != null) {
-                        Bitmap btm = data.getExtras().getParcelable("data");
-                        Tools.compressImage(photoDialogActivity, btm, cropPath);
-                        if (photoDialogActivity != null) {
-                            photoDialogActivity.returnData(cameraView,
-                                    cameraView != null ? cameraView.getState()
-                                            : null, groupPosition, childPosition,
-                                    position, Tools.getSmallBitmap(cropPath),
-                                    cropPath);
-                        }
-                    }
-                }
-                break;
-            case PIC_PHOTO_BY_CAMERA:
-                if (resultCode != Activity.RESULT_OK) {
-                    return;
-                }
-                if (isStorageMemory) {
-                    Bitmap btm = data.getExtras().getParcelable("data");
-                    Tools.compressImage(photoDialogActivity, btm, cropPath);
-                } else {
-                    Tools.saveImageToPath(photoDialogActivity, TAKE_PHOTO_PATH,
-                            cropPath);
-                }
-                if (photoDialogActivity != null) {
-                    photoDialogActivity.returnData(cameraView,
-                            cameraView != null ? cameraView.getState()
-                                    : null, groupPosition, childPosition,
-                            position, Tools.getSmallBitmap(cropPath),
-                            cropPath);
-                }
-                // startCropPhoto(Uri.fromFile(new File(takePhotoPath)));
-                break;
-		/*case GET_PHOTO_BY_CROP:
-			if (resultCode != Activity.RESULT_OK) {
-				return;
-			}
-			if (photoDialogActivity != null) {
-				photoDialogActivity.returnData(cameraView,
-						cameraView != null ? cameraView.getState() : null,
-						groupPosition, childPosition, position,
-						Tools.getSmallBitmap(cropPath), cropPath);
-			}
-			break;*/
-        }
-    }
-
     public void recycleBitmap(Bitmap btm) {
         if (btm != null && !btm.isRecycled()) {
             btm.recycle();
@@ -608,7 +432,7 @@ public class DialogFactory implements ResultCallBack {
      * @param activity
      * @param content
      */
-    public void showSingleDialog(Activity activity,String title, String content) {
+    public void showSingleDialog(Activity activity, String title, String content) {
         if (dialog == null || dialogActivity != activity) {
             dialogActivity = activity;
             DisplayMetrics metrics = Tools.getDisplayMetrics(activity);

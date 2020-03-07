@@ -7,10 +7,6 @@
         <attr name="titleTextColor1" format="reference" />
         <attr name="hideBackButton" format="boolean" />
     </declare-styleable>
-    <declare-styleable name="RotateProgress">
-        <attr name="progress_color_rotate" format="reference" />
-        <attr name="size" format="dimension" />
-    </declare-styleable>
     <declare-styleable name="CustomStar">
         <attr name="level" format="float" />
     </declare-styleable>

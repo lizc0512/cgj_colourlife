@@ -28,7 +28,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1" />
 
-        <com.youmai.hxsdk.view.pickerview.WheelView
+        <com.youmai.hxsdk.view.pickerview.lib.WheelView
             android:id="@+id/options3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

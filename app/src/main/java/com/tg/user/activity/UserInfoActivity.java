@@ -25,20 +25,18 @@ import com.tg.coloursteward.baseModel.RequestEncryptionUtils;
 import com.tg.coloursteward.constant.Contants;
 import com.tg.coloursteward.constant.SpConstants;
 import com.tg.coloursteward.info.UserInfo;
-import com.tg.coloursteward.object.ImageParams;
-import com.tg.coloursteward.object.SlideItemObj;
 import com.tg.coloursteward.util.GlideUtils;
 import com.tg.coloursteward.util.ToastUtil;
 import com.tg.coloursteward.util.Tools;
-import com.tg.coloursteward.view.dialog.DialogFactory;
-import com.tg.coloursteward.view.spinnerwheel.SlideSelectorView.OnCompleteListener;
 import com.tg.user.model.UserModel;
 import com.youmai.hxsdk.router.APath;
+import com.youmai.hxsdk.view.pickerview.OptionsPickerView;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import static com.tg.user.activity.BindMobileActivity.ISFROMUSER;
 
@@ -49,7 +47,6 @@ import static com.tg.user.activity.BindMobileActivity.ISFROMUSER;
 public class UserInfoActivity extends BaseActivity implements OnClickListener, HttpResponse {
     private static final int IMAGE_REQUEST_CODE = 0;
     private static final int RESULT_REQUEST_CODE = 2;
-    private ArrayList<SlideItemObj> genderList;
     private boolean needPostImage = false;
     private String email = "";
     private String sex = "";
@@ -197,9 +194,6 @@ public class UserInfoActivity extends BaseActivity implements OnClickListener, H
         needPostImage = true;
         ivIcon.setImageBitmap(bitmap);
         if (needPostImage) {
-            ImageParams imgParams = new ImageParams();
-            imgParams.fileName = imageName;
-            imgParams.path = crop_path + imageName;
             userModel.postUploadImg(1, crop_path + imageName, this);
         } else {
             submitUserInfo();
@@ -222,22 +216,24 @@ public class UserInfoActivity extends BaseActivity implements OnClickListener, H
                 submitUserInfo();
                 break;
             case R.id.rl_usersex_change:
-                if (genderList == null) {
-                    genderList = new ArrayList<SlideItemObj>();
-                    genderList.add(new SlideItemObj("男", "0"));
-                    genderList.add(new SlideItemObj("女", "1"));
-                }
-                DialogFactory.getInstance().showSelectorDialog(this,
-                        "选择性别", genderList, null, new OnCompleteListener() {
-                            @Override
-                            public void onComplete(SlideItemObj item1, SlideItemObj item2) {
-                                if (item1 != null) {
-                                    sex = item1.name;
-                                    tv_user_sex.setText(sex);
-                                    submitUserInfo();
-                                }
-                            }
-                        }, false);
+                List<String> itemList = new ArrayList<>();
+                itemList.add("男");
+                itemList.add("女");
+                OptionsPickerView pickerView;
+                pickerView = new OptionsPickerView.Builder(this, new OptionsPickerView.OnOptionsSelectListener() {
+                    @Override
+                    public void onOptionsSelect(int options1, int options2, int options3, View v) {
+                        if (options1 == 0) {
+                            sex = "男";
+                        } else {
+                            sex = "女";
+                        }
+                        tv_user_sex.setText(sex);
+                        submitUserInfo();
+                    }
+                }).build();
+                pickerView.setPicker(itemList);
+                pickerView.show();
                 break;
             case R.id.rl_usermobile_change:
                 Intent intent = new Intent(this, BindMobileActivity.class);

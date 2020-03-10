@@ -24,7 +24,6 @@ import com.tg.coloursteward.base.BaseActivity;
 import com.tg.coloursteward.baseModel.HttpResponse;
 import com.tg.coloursteward.constant.Contants;
 import com.tg.coloursteward.constant.SpConstants;
-import com.tg.coloursteward.net.HttpTools;
 import com.tg.coloursteward.serice.UpdateService;
 import com.tg.coloursteward.util.GsonUtils;
 import com.tg.coloursteward.util.ToastUtil;
@@ -49,8 +48,6 @@ import java.net.InetSocketAddress;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.tg.coloursteward.application.CityPropertyApplication.lbsTraceClient;
-
 /**
  * 更多设置
  *
@@ -69,7 +66,6 @@ public class SettingActivity extends BaseActivity implements OnClickListener, Ht
     private TextView tv_setting_imstatus;
     private View tv_setting_point;
     private SettingModel settingModel;
-    private UserModel userModel;
     private List<String> updateList = new ArrayList<>();
     private String downUrl;
     private int result_up;
@@ -83,7 +79,6 @@ public class SettingActivity extends BaseActivity implements OnClickListener, Ht
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         settingModel = new SettingModel(this);
-        userModel = new UserModel(this);
         pointModel = new PointModel(this);
         initView();
         getVersion(false);
@@ -153,23 +148,9 @@ public class SettingActivity extends BaseActivity implements OnClickListener, Ht
 
     }
 
-    private void StopYingYan() {
-        if (null != lbsTraceClient) {
-            lbsTraceClient.stopGather(null);
-        }
-    }
-
     // 检测版本更新
     private void getVersion(Boolean isloading) {
         settingModel.getUpdate(0, "1", isloading, this);
-    }
-
-    /**
-     * 单设备退出
-     */
-    private void singleDevicelogout() {
-        String device_code = spUtils.getStringData(SpConstants.storage.DEVICE_TOKEN, "");
-        userModel.postSingleExit(1, device_code, this);
     }
 
     @Override
@@ -254,15 +235,6 @@ public class SettingActivity extends BaseActivity implements OnClickListener, Ht
                         }
                     } catch (Exception e) {
                     }
-                }
-                break;
-            case 1:
-                if (!TextUtils.isEmpty(result)) {
-                    String message = HttpTools.getMessageString(result);
-                    ToastUtil.showShortToast(this, message);
-                    Message msghome = new Message();
-                    msghome.what = Contants.LOGO.CLEAR_HOMELIST;
-                    EventBus.getDefault().post(msghome);
                 }
                 break;
             case 2:

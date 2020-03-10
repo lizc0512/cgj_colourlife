@@ -88,17 +88,7 @@ public class SupportCardActivity extends BaseActivity implements View.OnClickLis
                             InputMethodManager.HIDE_NOT_ALWAYS);
                     searchContent = et_support_serach.getText().toString().trim();
                     mListItem.clear();
-                    if (!TextUtils.isEmpty(searchContent)) {
-                        for (int i = 0; i < mList.size(); i++) {
-                            if (mList.get(i).getBank_name().contains(searchContent)) {
-                                mListItem.add(mList.get(i));
-                            }
-                        }
-                        if (null != adapter) {
-                            adapter.setNewData(mListItem);
-                            isShowData = true;
-                        }
-                    }
+                    moneyModel.getBankList(1, searchContent, 1, pageSize, true, SupportCardActivity.this);
                 }
                 return false;
             }
@@ -191,6 +181,17 @@ public class SupportCardActivity extends BaseActivity implements View.OnClickLis
                             finish();
                         }
                     });
+                }
+                break;
+            case 1:
+                if (!TextUtils.isEmpty(result)) {
+                    BankListEntity entity = new BankListEntity();
+                    entity = GsonUtils.gsonToBean(result, BankListEntity.class);
+                    mListItem.addAll(entity.getContent().getData());
+                    if (null != adapter) {
+                        adapter.setNewData(mListItem);
+                        isShowData = true;
+                    }
                 }
                 break;
         }

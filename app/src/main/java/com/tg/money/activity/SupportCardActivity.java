@@ -17,13 +17,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.footer.ClassicsFooter;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.base.BaseActivity;
 import com.tg.coloursteward.baseModel.HttpResponse;
 import com.tg.coloursteward.util.GsonUtils;
-import com.tg.coloursteward.util.ToastUtil;
 import com.tg.coloursteward.view.ClearEditText;
 import com.tg.money.adapter.BankListAdapter;
 import com.tg.money.entity.BankListEntity;
@@ -45,11 +46,13 @@ import java.util.List;
 public class SupportCardActivity extends BaseActivity implements View.OnClickListener, HttpResponse {
     private TextView tv_base_title;
     private ImageView iv_base_back;
-    private RefreshLayout sr_support_card;
+    private SmartRefreshLayout sr_support_card;
     private MoneyModel moneyModel;
     private int pageSize = 10;
+    private int numSearchTotal;
     private int numTotal;
     private int mPage = 1;
+    private int mSearchPage = 1;
     private List<BankListEntity.ContentBean.DataBean> mList = new ArrayList<>();
     private List<BankListEntity.ContentBean.DataBean> mListItem = new ArrayList<>();
     private BankListAdapter adapter;
@@ -76,6 +79,8 @@ public class SupportCardActivity extends BaseActivity implements View.OnClickLis
         rv_supportcard.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         tv_base_title.setText("银行卡");
         iv_base_back.setOnClickListener(this);
+        sr_support_card.setRefreshFooter(new ClassicsFooter(this));
+        sr_support_card.setEnableRefresh(false);
         et_support_serach.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -88,7 +93,10 @@ public class SupportCardActivity extends BaseActivity implements View.OnClickLis
                             InputMethodManager.HIDE_NOT_ALWAYS);
                     searchContent = et_support_serach.getText().toString().trim();
                     mListItem.clear();
-                    moneyModel.getBankList(1, searchContent, 1, pageSize, true, SupportCardActivity.this);
+                    if (!TextUtils.isEmpty(searchContent)) {
+                        mSearchPage = 1;
+                        initSearchData(searchContent, mSearchPage, true);
+                    }
                 }
                 return false;
             }
@@ -108,6 +116,8 @@ public class SupportCardActivity extends BaseActivity implements View.OnClickLis
                     if (null != adapter) {
                         adapter.setNewData(mList);
                         isShowData = false;
+                        sr_support_card.setEnableLoadMore(true);
+                        sr_support_card.setNoMoreData(false);//回复原始状态
                     }
                 }
             }
@@ -116,12 +126,20 @@ public class SupportCardActivity extends BaseActivity implements View.OnClickLis
         sr_support_card.setOnLoadMoreListener(new OnLoadMoreListener() {
             @Override
             public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
-                if (mList.size() >= numTotal) {
-                    sr_support_card.setEnableLoadMore(false);
-                    ToastUtil.showShortToast(SupportCardActivity.this, "没有数据了...");
+                if (isShowData) {
+                    if (mListItem.size() >= numSearchTotal) {
+                        sr_support_card.finishLoadMoreWithNoMoreData();
+                    } else {
+                        mSearchPage++;
+                        initSearchData(searchContent, mSearchPage, false);
+                    }
                 } else {
-                    mPage++;
-                    initData("", mPage, false);
+                    if (mList.size() >= numTotal) {
+                        sr_support_card.finishLoadMoreWithNoMoreData();
+                    } else {
+                        mPage++;
+                        initData("", mPage, false);
+                    }
                 }
                 sr_support_card.finishLoadMore();
             }
@@ -130,6 +148,10 @@ public class SupportCardActivity extends BaseActivity implements View.OnClickLis
 
     private void initData(String name, int page, boolean loading) {
         moneyModel.getBankList(0, name, page, pageSize, loading, this);
+    }
+
+    private void initSearchData(String name, int page, boolean loading) {
+        moneyModel.getBankList(1, name, page, pageSize, loading, SupportCardActivity.this);
     }
 
     @Override
@@ -187,6 +209,7 @@ public class SupportCardActivity extends BaseActivity implements View.OnClickLis
                 if (!TextUtils.isEmpty(result)) {
                     BankListEntity entity = new BankListEntity();
                     entity = GsonUtils.gsonToBean(result, BankListEntity.class);
+                    numSearchTotal = entity.getContent().getTotal();
                     mListItem.addAll(entity.getContent().getData());
                     if (null != adapter) {
                         adapter.setNewData(mListItem);

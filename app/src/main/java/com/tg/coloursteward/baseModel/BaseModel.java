@@ -47,7 +47,6 @@ public class BaseModel {
     public SharedPreferences shared;
     public SharedPreferences.Editor editor;
 
-
     public BaseModel() {
 
     }
@@ -60,12 +59,15 @@ public class BaseModel {
 
 
     private boolean againGetToken() {
+        String color_token = SharedPreferencesUtils.getKey(mContext, SpConstants.accessToken.accssToken);
         long lastSaveTime = SharedPreferencesUtils.getRefresh_token2Time(mContext);
         long nowTime = System.currentTimeMillis();
         long distance = (nowTime - lastSaveTime) / 1000;
         long expires_in = SharedPreferencesUtils.getExpires_in(mContext);
-        if (distance >= expires_in - 60 * 10) {
+        if (distance >= expires_in - 60 * 20) {//提前20分钟刷新
             return true; //需要刷新
+        } else if (TextUtils.isEmpty(color_token)) {//为空则刷新
+            return true;
         } else {
             return false;
         }
@@ -101,8 +103,11 @@ public class BaseModel {
                     }
                     CallServer.getInstance().request(what, request, new HttpResponseListener<T>(mContext, request, callback, canCancel, isLoading));
                 } else {
-                    RefreshTokenModel refreshTokenModel = new RefreshTokenModel(mContext);
-                    refreshTokenModel.refreshAuthToken(what, request, paramsMap, callback, canCancel, isLoading);
+                    RefreshTokenModel refreshTokenModel = RefreshTokenModel.getInstance(mContext);
+                    refreshTokenModel.refreshAuthToken(what, request, paramsMap, callback, canCancel, isLoading, access_token -> {
+                        request.addHeader("color-token", access_token);
+                        CallServer.getInstance().request(what, request, new HttpResponseListener<T>(mContext, request, callback, canCancel, isLoading));
+                    });
                 }
             } else {  //请求access_token
                 CallServer.getInstance().request(what, request, new HttpResponseListener<T>(mContext, request, callback, canCancel, isLoading));

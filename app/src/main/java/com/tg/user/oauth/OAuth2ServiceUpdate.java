@@ -77,7 +77,7 @@ public class OAuth2ServiceUpdate implements HttpResponse {
                             }
                         } else if (jsonObject.has("token_type")) {
                             Oauth2Entity oauth2Entity = GsonUtils.gsonToBean(result, Oauth2Entity.class);
-                            access_token = saveAccessToken(oauth2Entity);
+                            access_token = saveAccessToken(context, oauth2Entity);
                             if (null != oauth2CallBack) {
                                 oauth2CallBack.onData(access_token);
                             }
@@ -90,7 +90,7 @@ public class OAuth2ServiceUpdate implements HttpResponse {
                 if (!TextUtils.isEmpty(result)) {
                     try {
                         Oauth2Entity oauth2Entity = GsonUtils.gsonToBean(result, Oauth2Entity.class);
-                        access_token = saveAccessToken(oauth2Entity);
+                        access_token = saveAccessToken(context, oauth2Entity);
                         if (null != oauth2CallBack) {
                             oauth2CallBack.onData(access_token);
                         }
@@ -101,12 +101,12 @@ public class OAuth2ServiceUpdate implements HttpResponse {
         }
     }
 
-    private String saveAccessToken(Oauth2Entity oauth2Entity) {
-        SharedPreferencesUtils.saveRefresh_token2Time(context, System.currentTimeMillis());
-        SharedPreferencesUtils.saveKey(context, SpConstants.accessToken.tokenType, oauth2Entity.getToken_type());
-        SharedPreferencesUtils.saveExpires_in(context, Long.valueOf(oauth2Entity.getExpires_in()));
-        SharedPreferencesUtils.saveKey(context, SpConstants.accessToken.accssToken, oauth2Entity.getAccess_token());
-        SharedPreferencesUtils.saveKey(context, SpConstants.accessToken.refreshAccssToken, oauth2Entity.getRefresh_token());
+    public static String saveAccessToken(Context mContext, Oauth2Entity oauth2Entity) {
+        SharedPreferencesUtils.saveRefresh_token2Time(mContext, System.currentTimeMillis());
+        SharedPreferencesUtils.saveKey(mContext, SpConstants.accessToken.tokenType, oauth2Entity.getToken_type());
+        SharedPreferencesUtils.saveExpires_in(mContext, Long.valueOf(oauth2Entity.getExpires_in()));
+        SharedPreferencesUtils.saveKey(mContext, SpConstants.accessToken.accssToken, oauth2Entity.getAccess_token());
+        SharedPreferencesUtils.saveKey(mContext, SpConstants.accessToken.refreshAccssToken, oauth2Entity.getRefresh_token());
         return oauth2Entity.getAccess_token();
     }
 

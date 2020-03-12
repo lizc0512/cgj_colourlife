@@ -76,6 +76,7 @@ public class FragmentManagement extends Fragment implements HttpResponse, View.O
     private boolean showFirstData = false;
     private HomeService homeService;
     private SwipeRefreshLayout sr_micro;
+    private boolean TryAgain = true;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -376,6 +377,9 @@ public class FragmentManagement extends Fragment implements HttpResponse, View.O
                 if (!TextUtils.isEmpty(result)) {
                     SharedPreferencesUtils.getInstance().saveStringData(SpConstants.UserModel.MICRODATA, result);
                     initInitialize(result);
+                } else if (TryAgain) {//失败了重试一次，还不行就用缓存
+                    initLayout(cropUuid);
+                    TryAgain = false;
                 } else {
                     String localCache = Contants.storage.MICRODATA;
                     initInitialize(localCache);

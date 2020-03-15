@@ -27,6 +27,7 @@ public interface SpConstants {
         String ISNAMEAUTH = "nameauth";
         String ISUSERAJM = "userajm";
         String UPDATETIME_IMG = "updatetime_img";
+        String SCANCODEOFFDATA = "scancodeoffdata";
     }
 
     interface MicroContant {

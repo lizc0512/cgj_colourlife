@@ -137,10 +137,13 @@ public class HomeModel extends BaseModel {
      * @param resultString
      * @param httpResponse 扫描二维码接口
      */
-    public void postScan(int what, String resultString, HttpResponse httpResponse) {
+    public void postScan(int what, String resultString, String appid, long time, String isLine, HttpResponse httpResponse) {
         Map<String, Object> params = new HashMap<>();
         params.put("url", resultString);
         params.put("app_type", "cgj");
+        params.put("appid", appid);
+        params.put("time", time);
+        params.put("isLine", isLine);
         final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 9, scanUrl), RequestMethod.POST);
         request(what, request, RequestEncryptionUtils.getNewSaftyMap(mContext, params), new HttpListener<String>() {
             @Override

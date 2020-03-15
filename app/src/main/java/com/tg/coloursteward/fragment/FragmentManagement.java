@@ -374,12 +374,15 @@ public class FragmentManagement extends Fragment implements HttpResponse, View.O
                 }
                 break;
             case 1:
+                String cacheData = SharedPreferencesUtils.getInstance().getStringData(SpConstants.UserModel.MICRODATA, "");
                 if (!TextUtils.isEmpty(result)) {
                     SharedPreferencesUtils.getInstance().saveStringData(SpConstants.UserModel.MICRODATA, result);
                     initInitialize(result);
                 } else if (TryAgain) {//失败了重试一次，还不行就用缓存
                     initLayout(cropUuid);
                     TryAgain = false;
+                } else if (!TextUtils.isEmpty(cacheData)) {
+                    initInitialize(cacheData);
                 } else {
                     String localCache = Contants.storage.MICRODATA;
                     initInitialize(localCache);

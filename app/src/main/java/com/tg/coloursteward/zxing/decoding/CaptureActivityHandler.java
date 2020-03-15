@@ -27,8 +27,8 @@ import android.util.Log;
 
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.Result;
-import com.tg.coloursteward.activity.MipcaActivityCapture;
 import com.tg.coloursteward.R;
+import com.tg.coloursteward.activity.MipcaActivityCapture;
 import com.tg.coloursteward.zxing.camera.CameraManager;
 import com.tg.coloursteward.zxing.view.ViewfinderResultPointCallback;
 
@@ -125,7 +125,7 @@ public final class CaptureActivityHandler extends Handler {
         removeMessages(R.id.decode_failed);
     }
 
-    private void restartPreviewAndDecode() {
+    public void restartPreviewAndDecode() {
         if (state == State.SUCCESS) {
             state = State.PREVIEW;
             CameraManager.get().requestPreviewFrame(decodeThread.getHandler(), R.id.decode);

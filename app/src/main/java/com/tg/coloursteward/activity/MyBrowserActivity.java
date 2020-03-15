@@ -997,22 +997,11 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
             try {
                 jsonObject = new JSONObject(valueStr);
                 if (!jsonObject.isNull("value") && "cgj".equals(jsonObject.optString("value"))) {
-                    XXPermissions.with(MyBrowserActivity.this)
-                            .constantRequest()
-                            .permission(Manifest.permission.CAMERA)
-                            .request(new OnPermission() {
-                                @Override
-                                public void hasPermission(List<String> granted, boolean isAll) {
-                                    Intent intent = new Intent(MyBrowserActivity.this, MipcaActivityCapture.class);
-                                    intent.putExtra(MipcaActivityCapture.QRCODE_SOURCE, "cgj");
-                                    startActivityForResult(intent, YUN_SHANG_SCANNERCODE);
-                                }
-
-                                @Override
-                                public void noPermission(List<String> denied, boolean quick) {
-                                    ToastUtil.showShortToast(MyBrowserActivity.this, "拍照权限被拒绝，请到设置中打开");
-                                }
-                            });
+                    setJumpScan("value", "", "");
+                } else {
+                    String appId = jsonObject.getString("appid");//应用类型appid
+                    String isCallBack = jsonObject.getString("isCallback");//0：直接回调扫码结果；1：调用二维码接口处理
+                    setJumpScan("", appId, isCallBack);
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -1168,6 +1157,27 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
             }
         }
 
+    }
+
+    private void setJumpScan(String value, String appid, String isCallBack) {
+        XXPermissions.with(MyBrowserActivity.this)
+                .constantRequest()
+                .permission(Manifest.permission.CAMERA)
+                .request(new OnPermission() {
+                    @Override
+                    public void hasPermission(List<String> granted, boolean isAll) {
+                        Intent intent = new Intent(MyBrowserActivity.this, MipcaActivityCapture.class);
+                        intent.putExtra(MipcaActivityCapture.QRCODE_SOURCE, value);
+                        intent.putExtra(MipcaActivityCapture.QRCODE_APPID, appid);
+                        intent.putExtra(MipcaActivityCapture.QRCODE_ISCALLBACK, isCallBack);
+                        startActivityForResult(intent, YUN_SHANG_SCANNERCODE);
+                    }
+
+                    @Override
+                    public void noPermission(List<String> denied, boolean quick) {
+                        ToastUtil.showShortToast(MyBrowserActivity.this, "拍照权限被拒绝，请到设置中打开");
+                    }
+                });
     }
 
     //判断app是否安装

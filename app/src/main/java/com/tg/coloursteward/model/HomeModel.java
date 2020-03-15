@@ -137,13 +137,13 @@ public class HomeModel extends BaseModel {
      * @param resultString
      * @param httpResponse 扫描二维码接口
      */
-    public void postScan(int what, String resultString, String appid, long time, String isLine, HttpResponse httpResponse) {
+    public void postScan(int what, String resultString, String appid, long time, String isLine, boolean isLoading, HttpResponse httpResponse) {
         Map<String, Object> params = new HashMap<>();
         params.put("url", resultString);
         params.put("app_type", "cgj");
         params.put("appid", appid);
         params.put("time", time);
-        params.put("isLine", isLine);
+        params.put("isLine", isLine);//0，在线扫码；1，离线扫码
         final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 9, scanUrl), RequestMethod.POST);
         request(what, request, RequestEncryptionUtils.getNewSaftyMap(mContext, params), new HttpListener<String>() {
             @Override
@@ -151,11 +151,9 @@ public class HomeModel extends BaseModel {
                 int responseCode = response.getHeaders().getResponseCode();
                 String result = response.get();
                 if (responseCode == RequestEncryptionUtils.responseSuccess) {
-                    int code = showSuccesResultMessageTheme(result);
+                    int code = showSuccesResultMessage(result);
                     if (code == 0) {
                         httpResponse.OnHttpResponse(what, result);
-                    } else {
-                        showErrorCodeMessage(response);
                     }
                 } else {
                     showErrorCodeMessage(response);
@@ -166,7 +164,36 @@ public class HomeModel extends BaseModel {
             public void onFailed(int what, Response<String> response) {
                 showErrorCodeMessage(response);
             }
-        }, true, true);
+        }, true, isLoading);
+    }
+
+    /**
+     * @param what
+     * @param resultString
+     * @param httpResponse 扫描二维码接口
+     */
+    public void postOfflineScan(int what, String resultString, String appid, long time, String isLine, boolean isLoading, HttpResponse httpResponse) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("url", resultString);
+        params.put("app_type", "cgj");
+        params.put("appid", appid);
+        params.put("time", time);
+        params.put("isLine", isLine);//0，在线扫码；1，离线扫码
+        final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 9, scanUrl), RequestMethod.POST);
+        request(what, request, RequestEncryptionUtils.getNewSaftyMap(mContext, params), new HttpListener<String>() {
+            @Override
+            public void onSucceed(int what, Response<String> response) {
+                int responseCode = response.getHeaders().getResponseCode();
+                String result = response.get();
+                if (responseCode == RequestEncryptionUtils.responseSuccess) {
+                    httpResponse.OnHttpResponse(what, resultString);
+                }
+            }
+
+            @Override
+            public void onFailed(int what, Response<String> response) {
+            }
+        }, true, isLoading);
     }
 
     /**

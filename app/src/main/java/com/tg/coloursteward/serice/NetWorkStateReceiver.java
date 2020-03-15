@@ -4,7 +4,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
-import com.tg.coloursteward.fragment.MsgListFragment;
 import com.tg.coloursteward.inter.NetStatusListener;
 import com.tg.coloursteward.util.NetworkUtil;
 
@@ -20,7 +19,11 @@ import com.tg.coloursteward.util.NetworkUtil;
  * @class describe
  */
 public class NetWorkStateReceiver extends BroadcastReceiver {
-    private NetStatusListener mNetStatusListener = MsgListFragment.netStatusListener;
+    private NetStatusListener mNetStatusListener;
+
+    public void setmNetStatusListener(NetStatusListener listener) {
+        this.mNetStatusListener = listener;
+    }
 
     @Override
     public void onReceive(Context context, Intent intent) {

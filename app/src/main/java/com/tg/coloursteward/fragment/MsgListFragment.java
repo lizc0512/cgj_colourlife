@@ -35,16 +35,17 @@ import com.jcodecraeer.xrecyclerview.progressindicator.AVLoadingIndicatorView;
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.adapter.HomeDialogAdapter;
 import com.tg.coloursteward.baseModel.HttpResponse;
+import com.tg.coloursteward.constant.SpConstants;
 import com.tg.coloursteward.entity.HomeDialogEntitiy;
 import com.tg.coloursteward.entity.HomeMsgEntity;
+import com.tg.coloursteward.entity.ScanCodeTimeEntity;
 import com.tg.coloursteward.inter.FragmentMineCallBack;
-import com.tg.coloursteward.inter.NetStatusListener;
 import com.tg.coloursteward.model.HomeModel;
 import com.tg.coloursteward.module.MainActivity;
-import com.tg.coloursteward.net.MessageHandler;
 import com.tg.coloursteward.serice.NetWorkStateReceiver;
 import com.tg.coloursteward.util.AuthTimeUtils;
 import com.tg.coloursteward.util.GsonUtils;
+import com.tg.coloursteward.util.SharedPreferencesUtils;
 import com.tg.coloursteward.util.Tools;
 import com.tg.coloursteward.view.PopWindowView;
 import com.tg.im.activity.DeskTopActivity;
@@ -62,6 +63,8 @@ import com.youmai.hxsdk.im.IMMsgCallback;
 import com.youmai.hxsdk.im.IMMsgManager;
 import com.youmai.hxsdk.search.GlobalSearchActivity;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.lang.ref.WeakReference;
@@ -74,9 +77,7 @@ import java.util.List;
  */
 public class MsgListFragment extends Fragment implements IMMsgCallback, View.OnClickListener, HttpResponse {
 
-    private final String TAG = MsgListFragment.class.getSimpleName();
     private Activity mActivity;
-    private MessageHandler msgHandler;
     //重新登录或重新连接
     private static final int RELOGIN_HUXIN_SERVER = 100;
 
@@ -104,8 +105,8 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, View.OnC
     private HomeModel homeModel;
     private String dialogUuid;
     private RelativeLayout rl_home_internet;
-    public NetWorkStateReceiver netWorkStateReceiver;
-    public static NetStatusListener netStatusListener;
+    private NetWorkStateReceiver netWorkStateReceiver;
+    private List<ScanCodeTimeEntity.ScandataBean> scanOffList = new ArrayList<>();
 
     @Override
     public void onClick(View v) {
@@ -197,6 +198,43 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, View.OnC
                 if (!TextUtils.isEmpty(result)) {
 
                 }
+                break;
+            case 3:
+                if (!TextUtils.isEmpty(result)) {
+                    for (int i = 0; i < scanOffList.size(); i++) {
+                        if (result.equals(scanOffList.get(i).getUrl())) {
+                            scanOffList.remove(i);
+                        }
+                    }
+                    if (scanOffList.size() == 0) {
+                        SharedPreferencesUtils.getInstance().saveStringData(SpConstants.UserModel.SCANCODEOFFDATA, "");
+                        return;
+                    }
+                    JSONArray jsonArray = new JSONArray();
+                    JSONObject jsonObject = null;
+                    for (int i = 0; i < scanOffList.size(); i++) {
+                        jsonObject = new JSONObject();
+                        try {
+                            jsonObject.put("url", scanOffList.get(i).getUrl());
+                            jsonObject.put("time", scanOffList.get(i).getTime());
+                            jsonArray.put(jsonObject);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    if (jsonArray.length() > 0) {
+                        JSONObject js = new JSONObject();
+                        try {
+                            js.put("scandata", jsonArray);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        SharedPreferencesUtils.getInstance().saveStringData(SpConstants.UserModel.SCANCODEOFFDATA, js.toString());
+                    } else {
+                        SharedPreferencesUtils.getInstance().saveStringData(SpConstants.UserModel.SCANCODEOFFDATA, "");
+                    }
+                }
+                break;
         }
     }
 
@@ -278,16 +316,31 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, View.OnC
     }
 
     private void initNet() {
-        netStatusListener = new NetStatusListener() {
-            @Override
-            public void netChangeStatus(int status) {
-                if (-1 == status) {
-                    rl_home_internet.setVisibility(View.VISIBLE);
-                } else {
-                    rl_home_internet.setVisibility(View.GONE);
-                }
+        if (null == netWorkStateReceiver) {
+            netWorkStateReceiver = new NetWorkStateReceiver();
+        }
+        netWorkStateReceiver.setmNetStatusListener(status -> {
+            if (-1 == status) {
+                rl_home_internet.setVisibility(View.VISIBLE);
+            } else {
+                rl_home_internet.setVisibility(View.GONE);
+                initRequestScanData();
             }
-        };
+        });
+    }
+
+    private void initRequestScanData() {
+        String scanData = SharedPreferencesUtils.getInstance().getStringData(SpConstants.UserModel.SCANCODEOFFDATA, "");
+        if (!TextUtils.isEmpty(scanData)) {
+            ScanCodeTimeEntity timeEntity = new ScanCodeTimeEntity();
+            timeEntity = GsonUtils.gsonToBean(scanData, ScanCodeTimeEntity.class);
+            scanOffList.clear();
+            scanOffList.addAll(timeEntity.getScandata());
+            for (int i = 0; i < scanOffList.size(); i++) {
+                homeModel.postOfflineScan(3, scanOffList.get(i).getUrl(), "", scanOffList.get(i).getTime(),
+                        "1", false, this);
+            }
+        }
     }
 
     private void initDialog() {
@@ -453,9 +506,6 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, View.OnC
     public void onResume() {
         super.onResume();
         HuxinSdkManager.instance().setImMsgCallback(this);
-        if (null == netWorkStateReceiver) {
-            netWorkStateReceiver = new NetWorkStateReceiver();
-        }
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
         mContext.registerReceiver(netWorkStateReceiver, intentFilter);

@@ -40,7 +40,6 @@ import com.tg.coloursteward.constant.SpConstants;
 import com.tg.coloursteward.entity.ScanCodeEntity;
 import com.tg.coloursteward.entity.ScanCodeTimeEntity;
 import com.tg.coloursteward.inter.FragmentMineCallBack;
-import com.tg.coloursteward.inter.NetStatusListener;
 import com.tg.coloursteward.model.HomeModel;
 import com.tg.coloursteward.serice.NetWorkStateReceiver;
 import com.tg.coloursteward.util.AuthTimeUtils;
@@ -94,11 +93,11 @@ public class MipcaActivityCapture extends BaseActivity implements Callback, OnCl
     private String appId = "";
     private String isCallback = "";
     private long scanTime = 0l;
-    public NetWorkStateReceiver netWorkStateReceiver;
-    public static NetStatusListener netStatusListener;
+    private NetWorkStateReceiver netWorkStateReceiver;
     private boolean isNetClient = true;
     private AlertDialog dialog;
     private String isLine;
+    private AuthTimeUtils authTimeUtils;
 
     /**
      * Called when the activity is first created.
@@ -106,6 +105,7 @@ public class MipcaActivityCapture extends BaseActivity implements Callback, OnCl
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        isCheckNet();
         homeModel = new HomeModel(this);
         CameraManager.init(getApplication());
         viewfinderView = findViewById(R.id.viewfinder_view);
@@ -129,20 +129,19 @@ public class MipcaActivityCapture extends BaseActivity implements Callback, OnCl
         }
         hasSurface = false;
         inactivityTimer = new InactivityTimer(this);
-        isCheckNet();
     }
 
     private void isCheckNet() {
-        netStatusListener = new NetStatusListener() {
-            @Override
-            public void netChangeStatus(int status) {
-                if (-1 == status) {
-                    isNetClient = true;
-                } else {
-                    isNetClient = false;
-                }
+        if (null == netWorkStateReceiver) {
+            netWorkStateReceiver = new NetWorkStateReceiver();
+        }
+        netWorkStateReceiver.setmNetStatusListener(status -> {
+            if (-1 == status) {
+                isNetClient = false;
+            } else {
+                isNetClient = true;
             }
-        };
+        });
     }
 
     @Override
@@ -174,9 +173,6 @@ public class MipcaActivityCapture extends BaseActivity implements Callback, OnCl
         }
         initBeepSound();
         vibrate = true;
-        if (null == netWorkStateReceiver) {
-            netWorkStateReceiver = new NetWorkStateReceiver();
-        }
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
         this.registerReceiver(netWorkStateReceiver, intentFilter);
@@ -210,7 +206,7 @@ public class MipcaActivityCapture extends BaseActivity implements Callback, OnCl
         if (TextUtils.isEmpty(resultString)) {
             showFailMessage("Scan failed!");
         } else {
-            if (false) {//有网正常请求
+            if (isNetClient) {//有网正常请求
                 isLine = "0";
                 if (!TextUtils.isEmpty(isCallback)) {//H5调用扫一扫，传值过来
                     if (isCallback.equals("0")) {
@@ -219,11 +215,11 @@ public class MipcaActivityCapture extends BaseActivity implements Callback, OnCl
                         setResult(200, intent);
                         finish();
                     } else {
-                        homeModel.postScan(0, resultString, appId, scanTime, isLine, this);
+                        homeModel.postScan(0, resultString, appId, scanTime, isLine, true, this);
                     }
                 } else {
                     if (!"cgj".equals(qrSource)) {
-                        homeModel.postScan(0, resultString, "", scanTime, isLine, this);
+                        homeModel.postScan(0, resultString, "", scanTime, isLine, true, this);
                     } else {
                         Intent intent = new Intent();
                         intent.putExtra("qrcodeValue", resultString);
@@ -501,13 +497,19 @@ public class MipcaActivityCapture extends BaseActivity implements Callback, OnCl
                 public void getData(String result, int positon) {
                     String url = bean.getButtons().get(positon).getUrl();
                     String auth_type = bean.getButtons().get(positon).getAuth_type();
-                    if (!TextUtils.isEmpty(url)) {
-                        AuthTimeUtils authTimeUtils = new AuthTimeUtils();
+                    if ("scanStar".equals(url)) {
+                        handler.restartPreviewAndDecode();
+                    } else if ("scanStop".equals(url)) {
+                        MipcaActivityCapture.this.finish();
+                    } else {
+                        if (null == authTimeUtils) {
+                            authTimeUtils = new AuthTimeUtils();
+                        }
                         authTimeUtils.IsAuthTime(MipcaActivityCapture.this, url,
                                 auth_type, "");
+                        MipcaActivityCapture.this.finish();
                     }
                     dialog.dismiss();
-                    handler.restartPreviewAndDecode();
                 }
             });
             window.setContentView(layout);

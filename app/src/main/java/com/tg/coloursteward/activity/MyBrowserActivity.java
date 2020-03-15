@@ -997,7 +997,7 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
             try {
                 jsonObject = new JSONObject(valueStr);
                 if (!jsonObject.isNull("value") && "cgj".equals(jsonObject.optString("value"))) {
-                    setJumpScan("value", "", "");
+                    setJumpScan("cgj", "", "");
                 } else {
                     String appId = jsonObject.getString("appid");//应用类型appid
                     String isCallBack = jsonObject.getString("isCallback");//0：直接回调扫码结果；1：调用二维码接口处理

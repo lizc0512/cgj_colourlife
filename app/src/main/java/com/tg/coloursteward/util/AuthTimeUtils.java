@@ -34,7 +34,9 @@ public class AuthTimeUtils {
         if (homeService == null) {
             homeService = new HomeService(mActivity);
         }
-        if (!TextUtils.isEmpty(oauthType)) {
+        if (url.startsWith("colourlife://proto")) {
+            LinkParseUtil.parse(mActivity, url, "");
+        } else if (!TextUtils.isEmpty(oauthType)) {
             if ("0".equals(oauthType)) {//oauth1认证
                 homeService.getAuth(new GetTwoRecordListener<String, String>() {
 

@@ -3,11 +3,9 @@ package com.tg.coloursteward.activity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.res.AssetFileDescriptor;
 import android.graphics.Bitmap;
-import android.media.AudioManager;
-import android.media.MediaPlayer;
-import android.media.MediaPlayer.OnCompletionListener;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
 import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Bundle;
@@ -48,7 +46,6 @@ import com.tg.coloursteward.util.GsonUtils;
 import com.tg.coloursteward.util.ImageUtil;
 import com.tg.coloursteward.util.ToastUtil;
 import com.tg.coloursteward.util.Tools;
-import com.tg.coloursteward.view.dialog.ToastFactory;
 import com.tg.coloursteward.zxing.camera.CameraManager;
 import com.tg.coloursteward.zxing.decoding.CaptureActivityHandler;
 import com.tg.coloursteward.zxing.decoding.InactivityTimer;
@@ -81,10 +78,6 @@ public class MipcaActivityCapture extends BaseActivity implements Callback, OnCl
     private Vector<BarcodeFormat> decodeFormats;
     private String characterSet;
     private InactivityTimer inactivityTimer;
-    private MediaPlayer mediaPlayer;
-    private boolean playBeep;
-    private static final float BEEP_VOLUME = 0.50f;
-    private boolean vibrate;
     private AuthTimeUtils mAuthTimeUtils;
     private HomeModel homeModel;
     private String qrSource = "";
@@ -98,10 +91,8 @@ public class MipcaActivityCapture extends BaseActivity implements Callback, OnCl
     private AlertDialog dialog;
     private String isLine;
     private AuthTimeUtils authTimeUtils;
+    private static final long VIBRATE_DURATION = 200L;
 
-    /**
-     * Called when the activity is first created.
-     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -165,14 +156,6 @@ public class MipcaActivityCapture extends BaseActivity implements Callback, OnCl
         }
         decodeFormats = null;
         characterSet = null;
-
-        playBeep = true;
-        AudioManager audioService = (AudioManager) getSystemService(AUDIO_SERVICE);
-        if (audioService.getRingerMode() != AudioManager.RINGER_MODE_NORMAL) {
-            playBeep = false;
-        }
-        initBeepSound();
-        vibrate = true;
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
         this.registerReceiver(netWorkStateReceiver, intentFilter);
@@ -204,7 +187,7 @@ public class MipcaActivityCapture extends BaseActivity implements Callback, OnCl
         String resultString = result.getText();
         scanTime = System.currentTimeMillis();
         if (TextUtils.isEmpty(resultString)) {
-            showFailMessage("Scan failed!");
+            reStarScan();
         } else {
             if (isNetClient) {//有网正常请求
                 isLine = "0";
@@ -285,11 +268,6 @@ public class MipcaActivityCapture extends BaseActivity implements Callback, OnCl
         }
     }
 
-    private void showFailMessage(String msg) {
-        ToastFactory.showToast(this, msg);
-        finish();
-    }
-
     private void pause() {
         if (viewfinderView != null) {
             viewfinderView.setPause(true);
@@ -348,48 +326,14 @@ public class MipcaActivityCapture extends BaseActivity implements Callback, OnCl
 
     }
 
-    private void initBeepSound() {
-        if (playBeep && mediaPlayer == null) {
-            setVolumeControlStream(AudioManager.STREAM_MUSIC);
-            mediaPlayer = new MediaPlayer();
-            mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-            mediaPlayer.setOnCompletionListener(beepListener);
-
-            AssetFileDescriptor file = getResources().openRawResourceFd(
-                    R.raw.beep);
-            try {
-                mediaPlayer.setDataSource(file.getFileDescriptor(),
-                        file.getStartOffset(), file.getLength());
-                file.close();
-                mediaPlayer.setVolume(BEEP_VOLUME, BEEP_VOLUME);
-                mediaPlayer.prepare();
-            } catch (IOException e) {
-                mediaPlayer = null;
-            }
-        }
-    }
-
-    private static final long VIBRATE_DURATION = 200L;
-
     private void playBeepSoundAndVibrate() {
-        if (playBeep && mediaPlayer != null) {
-            mediaPlayer.start();
-        }
-        if (vibrate) {
-            Vibrator vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
-            vibrator.vibrate(VIBRATE_DURATION);
-        }
-    }
+        Vibrator vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
+        vibrator.vibrate(VIBRATE_DURATION);
 
-    /**
-     * When the beep has finished playing, rewind to queue up another one.
-     */
-    private final OnCompletionListener beepListener = new OnCompletionListener() {
-        @Override
-        public void onCompletion(MediaPlayer mediaPlayer) {
-            mediaPlayer.seekTo(0);
-        }
-    };
+        Uri uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        Ringtone rt = RingtoneManager.getRingtone(this, uri);
+        rt.play();
+    }
 
     @Override
     public View getContentView() {
@@ -452,7 +396,7 @@ public class MipcaActivityCapture extends BaseActivity implements Callback, OnCl
                     String tipMessage = entity.getContent().getTipMessage();
                     if (type.equals("1")) {//tip提示,继续扫码
                         ToastUtil.showShortToast(this, tipMessage);
-                        handler.restartPreviewAndDecode();
+                        reStarScan();
                     } else if (type.equals("2")) {//弹窗提示
                         initDialog(entity.getContent().getTipButtons());
                     } else {//直接跳转
@@ -465,6 +409,14 @@ public class MipcaActivityCapture extends BaseActivity implements Callback, OnCl
                 }
                 break;
         }
+    }
+
+    private void reStarScan() {//延迟1秒后 继续扫码，防止过快，数据被覆盖
+        new Handler().postDelayed(() -> {
+            if (null != handler) {
+                handler.restartPreviewAndDecode();
+            }
+        }, 1000);
     }
 
     private void initDialog(ScanCodeEntity.ContentBean.TipButtonsBean bean) {
@@ -498,7 +450,7 @@ public class MipcaActivityCapture extends BaseActivity implements Callback, OnCl
                     String url = bean.getButtons().get(positon).getUrl();
                     String auth_type = bean.getButtons().get(positon).getAuth_type();
                     if ("scanStar".equals(url)) {
-                        handler.restartPreviewAndDecode();
+                        reStarScan();
                     } else if ("scanStop".equals(url)) {
                         MipcaActivityCapture.this.finish();
                     } else {

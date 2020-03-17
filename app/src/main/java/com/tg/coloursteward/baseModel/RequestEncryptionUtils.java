@@ -290,4 +290,31 @@ public class RequestEncryptionUtils {
         }
         return jsonObj.optString(FIELD_CONTENT);
     }
+
+    public static String getMapToString(Map<String, Object> paramsMap) {
+        if (null == paramsMap) {
+            return "";
+        } else {
+            Iterator<String> it = paramsMap.keySet().iterator();
+            StringBuffer sb = null;
+            while (it.hasNext()) {
+                String key = it.next();
+                String value = String.valueOf(paramsMap.get(key));
+                if (sb == null) {
+                    sb = new StringBuffer();
+                    sb.append("?");
+                } else {
+                    sb.append("&");
+                }
+                sb.append(key);
+                sb.append("=");
+                sb.append(value);
+            }
+            if (null == sb) {
+                return "";
+            } else {
+                return sb.toString();
+            }
+        }
+    }
 }

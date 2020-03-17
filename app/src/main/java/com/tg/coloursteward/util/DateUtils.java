@@ -24,13 +24,6 @@ public class DateUtils {
     public static String DATE_FORMAT_DB = "yyyyMMddHHmmss";
 
     /**
-     * 格式化日期，格式为：yyyy-MM-dd HH:mm:ss
-     */
-    public static String getStringDate(Date date) {
-        return getStringDate(date, null);
-    }
-
-    /**
      * 格式化日期
      *
      * @param date
@@ -45,31 +38,15 @@ public class DateUtils {
         return dateFormat.format(date);
     }
 
-    /**
-     * 格式化日期，格式为：yyyy-MM-dd HH:mm:ss
-     */
-    public static Date getDateString(String value) {
-        return getDateString(value, null);
+    public static String getTime() {
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
+        return df.format(new Date());
     }
 
-    /**
-     * 格式化日期，默认格式为yyyy-MM-dd HH:mm:ss
-     *
-     * @param value  被格式化日期
-     * @param format 格式化格式
-     */
-    public static Date getDateString(String value, String format) {
-        if (StringUtils.isEmpty(format)) {
-            format = DATE_FORMAT_TIME;
-        }
-        DateFormat dateFormate = new SimpleDateFormat(format);
-        Date date = null;
-        try {
-            date = dateFormate.parse(value);
-        } catch (ParseException e) {
-            Log.e(TAG, e.getMessage());
-        }
-        return date;
+    public static String getToday() {
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy年MM月dd日");
+        String dateString = formatter.format(new Date());
+        return dateString;
     }
 
     /**

@@ -7,7 +7,6 @@ import com.tg.coloursteward.baseModel.HttpListener;
 import com.tg.coloursteward.baseModel.HttpResponse;
 import com.tg.coloursteward.baseModel.RequestEncryptionUtils;
 import com.tg.coloursteward.info.UserInfo;
-import com.tg.coloursteward.util.GsonUtils;
 import com.yanzhenjie.nohttp.BasicBinary;
 import com.yanzhenjie.nohttp.FileBinary;
 import com.yanzhenjie.nohttp.NoHttp;
@@ -250,10 +249,8 @@ public class MicroModel extends BaseModel {
         params.put("fileUploadAppName", "cgj");
         params.put("auth_ver", "2.0");
         final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 4, uploadUrl), RequestMethod.POST);
-        String jsonBody = GsonUtils.gsonString(RequestEncryptionUtils.getIceMap(mContext, params));
         request.add("file", binary);
-        request.setDefineRequestBodyForJson(jsonBody);
-        request(what, request, null, new HttpListener<String>() {
+        request(what, request, RequestEncryptionUtils.getIceMap(mContext, params), new HttpListener<String>() {
             @Override
             public void onSucceed(int what, Response<String> response) {
                 int responseCode = response.getHeaders().getResponseCode();

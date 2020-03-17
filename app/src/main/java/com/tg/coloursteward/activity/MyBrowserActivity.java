@@ -8,6 +8,7 @@ import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
+import android.content.ContentUris;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnDismissListener;
@@ -17,6 +18,7 @@ import android.content.pm.ActivityInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
+import android.database.Cursor;
 import android.net.Uri;
 import android.net.http.SslError;
 import android.os.AsyncTask;
@@ -25,7 +27,9 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.provider.DocumentsContract;
 import android.provider.MediaStore;
+import android.provider.OpenableColumns;
 import android.support.v4.content.FileProvider;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
@@ -47,6 +51,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -84,6 +89,7 @@ import com.tg.coloursteward.baseModel.HttpResponse;
 import com.tg.coloursteward.constant.Contants;
 import com.tg.coloursteward.constant.SpConstants;
 import com.tg.coloursteward.entity.H5OauthEntity;
+import com.tg.coloursteward.entity.WebviewRightEntity;
 import com.tg.coloursteward.info.UserInfo;
 import com.tg.coloursteward.inter.Oauth2CallBack;
 import com.tg.coloursteward.model.H5OauthModel;
@@ -98,10 +104,12 @@ import com.tg.coloursteward.util.GlideUtils;
 import com.tg.coloursteward.util.GsonUtils;
 import com.tg.coloursteward.util.Helper;
 import com.tg.coloursteward.util.LinkParseUtil;
+import com.tg.coloursteward.util.StringUtils;
 import com.tg.coloursteward.util.ToastUtil;
 import com.tg.coloursteward.util.TokenUtils;
 import com.tg.coloursteward.util.Tools;
 import com.tg.coloursteward.util.Utils;
+import com.tg.coloursteward.view.WebviewRightPopWindowView;
 import com.tg.coloursteward.view.X5WebView;
 import com.tg.coloursteward.view.dialog.ToastFactory;
 
@@ -119,6 +127,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -201,6 +210,11 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
     private Uri videoUrl;
     private boolean isWebUpload = false;
     private MicroModel microModel;
+    private RelativeLayout rl_web_more;
+    private AuthAppService authAppService;
+    private String authms2Token;
+    private String webRightJson;
+
     protected static final FrameLayout.LayoutParams COVER_SCREEN_PARAMS = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
     private BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
@@ -215,8 +229,6 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
             }
         }
     };
-    private AuthAppService authAppService;
-    private String authms2Token;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -286,12 +298,14 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
         rlRollback = (RelativeLayout) findViewById(R.id.rl_rollback);
         rlRefresh = (RelativeLayout) findViewById(R.id.rl_refresh);
         rlClose = (RelativeLayout) findViewById(R.id.rl_close);
+        rl_web_more = findViewById(R.id.rl_web_more);
         rlRollback.setOnClickListener(this);
         rlRefresh.setOnClickListener(this);
         rlClose.setOnClickListener(this);
         rl_pyq.setOnClickListener(this);
         rl_wechat.setOnClickListener(this);
         tv_web_cancel.setOnClickListener(this);
+        rl_web_more.setOnClickListener(this);
         if (hideTitle) {
             rlHeadContent.setVisibility(View.GONE);
         } else {
@@ -429,8 +443,11 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
                     try {
                         JSONObject jsonObject = new JSONObject(result);
                         String fileId = jsonObject.getString("content");
+                        Map<String, Object> map = new HashMap<>();
+                        map.put("file_id", fileId);
+                        String json = GsonUtils.gsonString(map);
                         if (null != webView) {
-                            webView.loadUrl("javascript:cgjUploadCallback('" + fileId + "')");
+                            webView.loadUrl("javascript:cgjUploadCallback('" + json + "')");
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -1194,6 +1211,54 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
             showPhotoSelector(false, "");
         }
 
+        /**
+         * web导航栏右上角
+         *
+         * @param json
+         */
+        @JavascriptInterface
+        public void cgjWebviewRightFunction(String json) {
+            if (!TextUtils.isEmpty(json)) {
+                webRightJson = json;
+                rl_web_more.setVisibility(View.VISIBLE);
+                rlRefresh.setVisibility(View.GONE);
+                rlClose.setVisibility(View.GONE);
+            } else {
+                rl_web_more.setVisibility(View.GONE);
+                rlRefresh.setVisibility(View.VISIBLE);
+                rlClose.setVisibility(View.VISIBLE);
+            }
+        }
+
+    }
+
+    private void initFunction(String json) {
+        WebviewRightEntity rightEntity = new WebviewRightEntity();
+        rightEntity = GsonUtils.gsonToBean(json, WebviewRightEntity.class);
+        List<WebviewRightEntity.DataBean> list = new ArrayList<>();
+        list.addAll(rightEntity.getData());
+        if (list.size() > 0) {
+            WebviewRightPopWindowView popWindowView = new WebviewRightPopWindowView(this, list);
+            popWindowView.setOnDismissListener(new PopupDismissListener());
+            popWindowView.showPopupWindow(rl_web_more);
+            lightoff();
+        }
+    }
+
+    class PopupDismissListener implements PopupWindow.OnDismissListener {
+
+        @Override
+        public void onDismiss() {
+            WindowManager.LayoutParams lp = getWindow().getAttributes();
+            lp.alpha = 1.0f;
+            getWindow().setAttributes(lp);
+        }
+    }
+
+    private void lightoff() {
+        WindowManager.LayoutParams lp = getWindow().getAttributes();
+        lp.alpha = 0.3f;
+        this.getWindow().setAttributes(lp);
     }
 
     private void setJumpScan(String value, String appid, String isCallBack) {
@@ -1455,7 +1520,7 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
         } else if (requestCode == PIC_File_UPLOAD && resultCode == Activity.RESULT_OK) {
             String corp_id = Tools.getStringValue(this, Contants.storage.CORPID);
             microModel = new MicroModel(this);
-            microModel.postUploadFile(2, authms2Token, corp_id, uri.getPath(), true, this);
+            microModel.postUploadFile(2, authms2Token, corp_id, getPath(this, uri), true, this);
         } else if (requestCode == PIC_PHOTO_BY_VIDEO && resultCode == Activity.RESULT_OK) {
             if (null != uploadFiles) {
                 if (data != null) {
@@ -1491,6 +1556,148 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
         }
     }
 
+    /**
+     * android7.0以上处理方法
+     */
+    private String getFilePathForN(Context context, Uri uri) {
+        try {
+            Cursor returnCursor = context.getContentResolver().query(uri, null, null, null, null);
+            int nameIndex = returnCursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
+            returnCursor.moveToFirst();
+            String name = (returnCursor.getString(nameIndex));
+            File file = new File(context.getFilesDir(), name);
+            InputStream inputStream = context.getContentResolver().openInputStream(uri);
+            FileOutputStream outputStream = new FileOutputStream(file);
+            int read = 0;
+            int maxBufferSize = 1 * 1024 * 1024;
+            int bytesAvailable = inputStream.available();
+
+            int bufferSize = Math.min(bytesAvailable, maxBufferSize);
+
+            final byte[] buffers = new byte[bufferSize];
+            while ((read = inputStream.read(buffers)) != -1) {
+                outputStream.write(buffers, 0, read);
+            }
+            returnCursor.close();
+            inputStream.close();
+            outputStream.close();
+            return file.getPath();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    /**
+     * 全平台处理方法
+     */
+    @SuppressLint("NewApi")
+    public String getPath(final Context context, final Uri uri) {
+
+        final boolean isKitKat = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
+        final boolean isN = Build.VERSION.SDK_INT >= Build.VERSION_CODES.N;
+
+        if (isN) {
+            return getFilePathForN(context, uri);
+        }
+
+        // DocumentProvider
+        if (isKitKat && DocumentsContract.isDocumentUri(context, uri)) {
+            // ExternalStorageProvider
+            if (isExternalStorageDocument(uri)) {
+                final String docId = DocumentsContract.getDocumentId(uri);
+                final String[] split = docId.split(":");
+                final String type = split[0];
+
+                if ("primary".equalsIgnoreCase(type)) {
+                    return Environment.getExternalStorageDirectory() + "/" + split[1];
+                }
+
+            }
+            // DownloadsProvider
+            else if (isDownloadsDocument(uri)) {
+
+                final String id = DocumentsContract.getDocumentId(uri);
+                final Uri contentUri = ContentUris.withAppendedId(
+                        Uri.parse("content://downloads/public_downloads"), StringUtils.toLong(id));
+
+                return getDataColumn(context, contentUri, null, null);
+            }
+            // MediaProvider
+            else if (isMediaDocument(uri)) {
+                final String docId = DocumentsContract.getDocumentId(uri);
+                final String[] split = docId.split(":");
+                final String type = split[0];
+
+                Uri contentUri = null;
+                if ("image".equals(type)) {
+                    contentUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+                } else if ("video".equals(type)) {
+                    contentUri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
+                } else if ("audio".equals(type)) {
+                    contentUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+                }
+
+                final String selection = "_id=?";
+                final String[] selectionArgs = new String[]{
+                        split[1]
+                };
+
+                return getDataColumn(context, contentUri, selection, selectionArgs);
+            }
+        }
+        // MediaStore (and general)
+        else if ("content".equalsIgnoreCase(uri.getScheme())) {
+            return getDataColumn(context, uri, null, null);
+        }
+        // File
+        else if ("file".equalsIgnoreCase(uri.getScheme())) {
+            return uri.getPath();
+        }
+
+        return null;
+    }
+
+    /**
+     * 获取此Uri的数据列的值。这对于MediaStore uri和其他基于文件的内容提供程序非常有用。
+     */
+    public String getDataColumn(Context context, Uri uri, String selection,
+                                String[] selectionArgs) {
+
+        Cursor cursor = null;
+        final String column = "_data";
+        final String[] projection = {
+                column
+        };
+
+        try {
+            cursor = context.getContentResolver().query(uri, projection, selection, selectionArgs,
+                    null);
+            if (cursor != null && cursor.moveToFirst()) {
+                final int column_index = cursor.getColumnIndexOrThrow(column);
+                return cursor.getString(column_index);
+            }
+        } catch (IllegalArgumentException e) {
+            //do nothing
+        } finally {
+            if (cursor != null)
+                cursor.close();
+        }
+        return null;
+    }
+
+    public boolean isExternalStorageDocument(Uri uri) {
+        return "com.android.externalstorage.documents".equals(uri.getAuthority());
+    }
+
+    public boolean isDownloadsDocument(Uri uri) {
+        return "com.android.providers.downloads.documents".equals(uri.getAuthority());
+    }
+
+    public boolean isMediaDocument(Uri uri) {
+        return "com.android.providers.media.documents".equals(uri.getAuthority());
+    }
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -1509,7 +1716,19 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
                 webView.reload();
                 break;
             case R.id.rl_close:// 关闭
-                MyBrowserActivity.this.finish();
+//                MyBrowserActivity.this.finish();
+                webRightJson = "{\"data\":[{\n" +
+                        "\"title\":\"跳转\",\n" +
+                        "\"url\":\"https://www.baidu.com\",\n" +
+                        "\"auth_type\":\"5\",\n" +
+                        "\"img\":\"https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=3193986866,1923894899&fm=26&gp=0.jpg\"},{\"title\":\"分享\",\n" +
+                        "\"url\":\"xxx\",\n" +
+                        "\"img\":\"https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=3193986866,1923894899&fm=26&gp=0.jpg\"},{\"title\":\"xxx\",\n" +
+                        "\"url\":\"xxx\",\n" +
+                        "\"img\":\"https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1584467662833&di=fd77b81441e00dc751fe4951d88195c5&imgtype=0&src=http%3A%2F%2Fb.hiphotos.baidu.com%2Fzhidao%2Fpic%2Fitem%2Ffcfaaf51f3deb48ff5148cd3f11f3a292df578b9.jpg\"}]}";
+                rl_web_more.setVisibility(View.VISIBLE);
+                rlRefresh.setVisibility(View.GONE);
+                rlClose.setVisibility(View.GONE);
                 break;
             case R.id.rl_wechat:
                 showShare(Wechat.NAME);
@@ -1521,6 +1740,9 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
                 break;
             case R.id.tv_web_cancel:
                 closeShareLayout();
+                break;
+            case R.id.rl_web_more:
+                initFunction(webRightJson);
                 break;
         }
     }

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rl_web_pop"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/size_55dp"
+    android:background="@color/red"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/tv_web_pop"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text="xx"
+        android:textColor="@color/hx_color_white"
+        android:textSize="@dimen/font_16sp" />
+
+    <ImageView
+        android:id="@+id/iv_web_pop"
+        android:layout_width="@dimen/size_35dp"
+        android:layout_height="@dimen/size_35dp"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="@dimen/size_10dp"
+        android:layout_toLeftOf="@id/tv_web_pop"
+        android:src="@drawable/home_popup_icon_approval" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/size_1px"
+        android:layout_alignParentBottom="true"
+        android:background="@color/white" />
+</RelativeLayout>

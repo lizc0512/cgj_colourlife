@@ -49,6 +49,28 @@
         </RelativeLayout>
 
         <RelativeLayout
+            android:id="@+id/rl_web_more"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:paddingLeft="@dimen/margin_5"
+            android:visibility="gone"
+            android:paddingTop="@dimen/margin_10"
+            android:paddingRight="@dimen/margin_10"
+            android:paddingBottom="@dimen/margin_10">
+
+            <ImageView
+                android:id="@+id/iv_web_more"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:paddingLeft="0dp"
+                android:src="@drawable/duanxin" />
+        </RelativeLayout>
+
+        <RelativeLayout
             android:id="@+id/rl_refresh"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

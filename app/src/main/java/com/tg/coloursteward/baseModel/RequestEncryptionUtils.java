@@ -150,7 +150,7 @@ public class RequestEncryptionUtils {
     /**
      * @return
      */
-    private static String getSign(String lastTime) {
+    public static String getSign(String lastTime) {
         return MD5.getMd5Value(DES.APP_ID + lastTime + DES.TOKEN + "false").toLowerCase();
     }
 

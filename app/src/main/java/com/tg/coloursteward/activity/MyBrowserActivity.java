@@ -82,11 +82,16 @@ import com.tg.coloursteward.R;
 import com.tg.coloursteward.base.BaseActivity;
 import com.tg.coloursteward.baseModel.HttpResponse;
 import com.tg.coloursteward.constant.Contants;
+import com.tg.coloursteward.constant.SpConstants;
 import com.tg.coloursteward.entity.H5OauthEntity;
 import com.tg.coloursteward.info.UserInfo;
 import com.tg.coloursteward.inter.Oauth2CallBack;
 import com.tg.coloursteward.model.H5OauthModel;
+import com.tg.coloursteward.model.MicroModel;
+import com.tg.coloursteward.net.GetTwoRecordListener;
+import com.tg.coloursteward.net.HttpTools;
 import com.tg.coloursteward.net.MD5;
+import com.tg.coloursteward.serice.AuthAppService;
 import com.tg.coloursteward.serice.OAuth2ServiceUpdate;
 import com.tg.coloursteward.util.FileSizeUtil;
 import com.tg.coloursteward.util.GlideUtils;
@@ -134,6 +139,7 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
     public static final String PAY_STATE = "pay_state";
     public static final int PIC_PHOTO_BY_CAMERA = 1010;
     public static final int PIC_PHOTO_BY_VIDEO = 1011;
+    public static final int PIC_File_UPLOAD = 1012;
     private final String TAG = "MyBrowserActivity";
     public static final String KEY_HIDE_TITLE = "hide";
     public static final String KEY_TITLE = "title";
@@ -192,6 +198,9 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
     private String shareImg;
     private String shareContent;
     private String Failed_MESSAGE = "failed_message";
+    private Uri videoUrl;
+    private boolean isWebUpload = false;
+    private MicroModel microModel;
     protected static final FrameLayout.LayoutParams COVER_SCREEN_PARAMS = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
     private BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
@@ -206,7 +215,8 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
             }
         }
     };
-    private Uri videoUrl;
+    private AuthAppService authAppService;
+    private String authms2Token;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -216,6 +226,7 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
         h5OauthModel = new H5OauthModel(this);
         registScanResultReceiver();
         registGetDeviceIDReceiver();
+        getAuthAppInfo();
         data = getIntent();
         if (data != null) {
             hideTitle = data.getBooleanExtra(KEY_HIDE_TITLE, false);
@@ -411,6 +422,20 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
+                }
+                break;
+            case 2:
+                if (!TextUtils.isEmpty(result)) {
+                    try {
+                        JSONObject jsonObject = new JSONObject(result);
+                        String fileId = jsonObject.getString("content");
+                        if (null != webView) {
+                            webView.loadUrl("javascript:cgjUploadCallback('" + fileId + "')");
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
                 }
                 break;
         }
@@ -1157,6 +1182,18 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
             }
         }
 
+        /**
+         * H5调原生上传页面
+         *
+         * @param data
+         */
+        @JavascriptInterface
+        public void cgjUploadHandler(String data) {
+            microModel = new MicroModel(MyBrowserActivity.this);
+            isWebUpload = true;
+            showPhotoSelector(false, "");
+        }
+
     }
 
     private void setJumpScan(String value, String appid, String isCallBack) {
@@ -1309,7 +1346,11 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
                     }
                 }
                 intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
-                startActivityForResult(intent, PIC_PHOTO_BY_CAMERA);
+                if (true) {
+                    startActivityForResult(intent, PIC_File_UPLOAD);
+                } else {
+                    startActivityForResult(intent, PIC_PHOTO_BY_CAMERA);
+                }
             }
         }
     }
@@ -1411,6 +1452,10 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
 
 
             }
+        } else if (requestCode == PIC_File_UPLOAD && resultCode == Activity.RESULT_OK) {
+            String corp_id = Tools.getStringValue(this, Contants.storage.CORPID);
+            microModel = new MicroModel(this);
+            microModel.postUploadFile(2, authms2Token, corp_id, uri.getPath(), true, this);
         } else if (requestCode == PIC_PHOTO_BY_VIDEO && resultCode == Activity.RESULT_OK) {
             if (null != uploadFiles) {
                 if (data != null) {
@@ -1987,7 +2032,7 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
 
                     @Override
                     public void noPermission(List<String> denied, boolean quick) {
-                        ToastUtil.showShortToast(MyBrowserActivity.this, "请到程序设置中打开彩管家拍照权限");
+                        ToastUtil.showShortToast(MyBrowserActivity.this, "请到程序设置中打开彩管家拍照和存储权限");
                     }
                 });
 
@@ -2005,37 +2050,26 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
             button.setText("拍摄");
         }
         v.findViewById(R.id.take_photo).setOnClickListener(
-                new OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        // TODO Auto-generated method stub
-                        openFileChooseCamera(type);
-                        photoDialog.dismiss();
-                    }
+                v1 -> {
+                    openFileChooseCamera(type);
+                    photoDialog.dismiss();
                 });
         v.findViewById(R.id.choose_photo).setOnClickListener(
-                new OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        // TODO Auto-generated method stub
-                        openFileChooseProcess(type);
-                        photoDialog.dismiss();
-                    }
+                v12 -> {
+                    openFileChooseProcess(type);
+                    photoDialog.dismiss();
                 });
         v.findViewById(R.id.cancel).setOnClickListener(
-                new OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (uploadFile != null) {    //xie ：直接点击取消时，ValueCallback回调会被挂起，需要手动结束掉回调，否则再次点击选择照片无响应
-                            uploadFile.onReceiveValue(null);
-                            uploadFile = null;
-                        }
-                        if (uploadFiles != null) {    //xie ：直接点击取消时，ValueCallback回调会被挂起，需要手动结束掉回调，否则再次点击选择照片无响应
-                            uploadFiles.onReceiveValue(null);
-                            uploadFiles = null;
-                        }
-                        photoDialog.dismiss();
+                v13 -> {
+                    if (uploadFile != null) {    //xie ：直接点击取消时，ValueCallback回调会被挂起，需要手动结束掉回调，否则再次点击选择照片无响应
+                        uploadFile.onReceiveValue(null);
+                        uploadFile = null;
                     }
+                    if (uploadFiles != null) {    //xie ：直接点击取消时，ValueCallback回调会被挂起，需要手动结束掉回调，否则再次点击选择照片无响应
+                        uploadFiles.onReceiveValue(null);
+                        uploadFiles = null;
+                    }
+                    photoDialog.dismiss();
                 });
         photoDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
             @Override
@@ -2057,5 +2091,38 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
         p.gravity = Gravity.BOTTOM;
         window.setAttributes(p);
         window.setContentView(v);
+    }
+
+    private void getAuthAppInfo() {
+        if (authAppService == null) {
+            authAppService = new AuthAppService(this);
+        }
+        authAppService.getAppAuth(new GetTwoRecordListener<String, String>() {
+            @Override
+            public void onFinish(String jsonString, String data2, String data3) {
+                int code = HttpTools.getCode(jsonString);
+                if (code == 0) {
+                    JSONObject content = HttpTools.getContentJSONObject(jsonString);
+                    if (content.length() > 0) {
+                        try {
+                            authms2Token = content.getString("accessToken");
+                            String expireTime = content.getString("expireTime");
+                            spUtils.saveStringData(SpConstants.accessToken.authms2Token, authms2Token);
+                            Tools.saveStringValue(MyBrowserActivity.this, Contants.storage.APPAUTH, authms2Token);
+                            Tools.saveStringValue(MyBrowserActivity.this, Contants.storage.APPAUTHTIME, expireTime);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+
+                }
+            }
+
+            @Override
+            public void onFailed(String Message) {
+
+            }
+        });
     }
 }

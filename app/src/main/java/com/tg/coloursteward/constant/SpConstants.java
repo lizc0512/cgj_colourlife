@@ -46,6 +46,7 @@ public interface SpConstants {
         String authOpenId = "authopenid";
         String authCurrentTime = "authcurrenttime";
         String authExpires_in = "authexpires_in";
+        String authms2Token = "authmstoken";//应用鉴权2.0
     }
 
     interface storage {

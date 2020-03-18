@@ -2,31 +2,32 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/rl_web_pop"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/size_55dp"
-    android:background="@color/red"
-    android:orientation="vertical">
+    android:layout_height="@dimen/size_44dp">
+
+    <ImageView
+        android:id="@+id/iv_web_pop"
+        android:layout_width="@dimen/size_30dp"
+        android:layout_height="@dimen/size_30dp"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="@dimen/size_15dp"
+        android:scaleType="fitXY"
+        android:src="@drawable/home_popup_icon_approval" />
 
     <TextView
         android:id="@+id/tv_web_pop"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:text="xx"
-        android:textColor="@color/hx_color_white"
-        android:textSize="@dimen/font_16sp" />
-
-    <ImageView
-        android:id="@+id/iv_web_pop"
-        android:layout_width="@dimen/size_35dp"
-        android:layout_height="@dimen/size_35dp"
         android:layout_centerVertical="true"
-        android:layout_marginRight="@dimen/size_10dp"
-        android:layout_toLeftOf="@id/tv_web_pop"
-        android:src="@drawable/home_popup_icon_approval" />
+        android:layout_marginLeft="@dimen/size_15dp"
+        android:layout_toRightOf="@id/iv_web_pop"
+        android:text="xx"
+        android:textColor="@color/color_333b46"
+        android:textSize="@dimen/font_13sp" />
 
     <View
+        android:id="@+id/view_line"
         android:layout_width="match_parent"
         android:layout_height="@dimen/size_1px"
         android:layout_alignParentBottom="true"
-        android:background="@color/white" />
+        android:background="@color/color_bbbbbb" />
 </RelativeLayout>

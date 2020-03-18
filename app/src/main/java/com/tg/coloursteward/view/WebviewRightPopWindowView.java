@@ -10,24 +10,23 @@ import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.PopupWindow;
 
+import com.tencent.smtt.sdk.WebView;
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.adapter.WebviewPopAdapter;
 import com.tg.coloursteward.entity.WebviewRightEntity;
 import com.tg.coloursteward.inter.FragmentMineCallBack;
 import com.tg.coloursteward.util.MicroAuthTimeUtils;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class WebviewRightPopWindowView extends PopupWindow {
     private View conentView;
     private MicroAuthTimeUtils microAuthTimeUtils;
-    List<WebviewRightEntity.DataBean> list = new ArrayList<>();
     private RecyclerView rv_web_pop;
     private WebviewPopAdapter adapter;
     private Activity mContext;
 
-    public WebviewRightPopWindowView(final Activity context, List<WebviewRightEntity.DataBean> list) {
+    public WebviewRightPopWindowView(final Activity context, List<WebviewRightEntity.DataBean> list, WebView webView) {
         this.mContext = context;
         LayoutInflater inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -62,7 +61,14 @@ public class WebviewRightPopWindowView extends PopupWindow {
         adapter.setFragmentMineCallBack(new FragmentMineCallBack() {
             @Override
             public void getData(String result, int positon) {
-                microAuthTimeUtils.IsAuthTime(mContext, result, list.get(positon).getAuth_type(), "");
+                if ("refresh_web".equals(result)) {
+                    webView.reload();
+                } else if ("close_web".equals(result)) {
+                    context.finish();
+                } else {
+                    microAuthTimeUtils.IsAuthTime(mContext, result, list.get(positon).getAuth_type(), "");
+                }
+                WebviewRightPopWindowView.this.dismiss();
             }
         });
     }

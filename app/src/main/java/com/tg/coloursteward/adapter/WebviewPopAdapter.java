@@ -56,7 +56,13 @@ public class WebviewPopAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         String img = list.get(position).getImg();
         String url = list.get(position).getUrl();
         ((HomeDialogViewHolder) holder).tv_web_pop.setText(name);
-        GlideUtils.loadImageView(mContext, img, ((HomeDialogViewHolder) holder).iv_web_pop);
+        if ("refresh_web".equals(url)) {
+            GlideUtils.loadImageView(mContext, R.drawable.nav_refresh_normal, ((HomeDialogViewHolder) holder).iv_web_pop);
+        } else if ("close_web".equals(url)) {
+            GlideUtils.loadImageView(mContext, R.drawable.nav_shut_normal, ((HomeDialogViewHolder) holder).iv_web_pop);
+        } else {
+            GlideUtils.loadImageView(mContext, img, ((HomeDialogViewHolder) holder).iv_web_pop);
+        }
         ((HomeDialogViewHolder) holder).rl_web_pop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -65,6 +71,9 @@ public class WebviewPopAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 }
             }
         });
+        if (position == (list.size() - 1)) {
+            ((HomeDialogViewHolder) holder).view_line.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -76,12 +85,14 @@ public class WebviewPopAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         private TextView tv_web_pop;
         private ImageView iv_web_pop;
+        private View view_line;
         private RelativeLayout rl_web_pop;
 
         public HomeDialogViewHolder(View itemView) {
             super(itemView);
             tv_web_pop = itemView.findViewById(R.id.tv_web_pop);
             iv_web_pop = itemView.findViewById(R.id.iv_web_pop);
+            view_line = itemView.findViewById(R.id.view_line);
             rl_web_pop = itemView.findViewById(R.id.rl_web_pop);
         }
     }

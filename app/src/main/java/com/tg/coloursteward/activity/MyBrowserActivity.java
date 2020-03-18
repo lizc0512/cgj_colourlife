@@ -112,6 +112,7 @@ import com.tg.coloursteward.util.Utils;
 import com.tg.coloursteward.view.WebviewRightPopWindowView;
 import com.tg.coloursteward.view.X5WebView;
 import com.tg.coloursteward.view.dialog.ToastFactory;
+import com.youmai.hxsdk.group.AddContactsCreateGroupActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -148,8 +149,9 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
     public static final String PAY_STATE = "pay_state";
     public static final int PIC_PHOTO_BY_CAMERA = 1010;
     public static final int PIC_PHOTO_BY_VIDEO = 1011;
-    public static final int PIC_File_UPLOAD = 1012;
-    private final String TAG = "MyBrowserActivity";
+    public static final int PIC_File_UPLOAD_IMG = 1012;
+    public static final int PIC_File_UPLOAD_FILE = 1013;
+    public static final int SELECT_ADDRESS_BOOK = 1014;
     public static final String KEY_HIDE_TITLE = "hide";
     public static final String KEY_TITLE = "title";
     public static final String KEY_HTML_TEXT = "text";
@@ -185,7 +187,6 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
     private static final int OLD_FILE_SELECT_CODE = 6;
     private static final int FILE_SELECT_CODE = 4;
     private String imeis;
-    private String urlFromA;
     private Map<String, String> headerMap;
     private File updateFile;
     private String color_token;
@@ -206,7 +207,6 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
     private String shareUrl;
     private String shareImg;
     private String shareContent;
-    private String Failed_MESSAGE = "failed_message";
     private Uri videoUrl;
     private boolean isWebUpload = false;
     private MicroModel microModel;
@@ -214,7 +214,7 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
     private AuthAppService authAppService;
     private String authms2Token;
     private String webRightJson;
-
+    private String appName = "cgj";
     protected static final FrameLayout.LayoutParams COVER_SCREEN_PARAMS = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
     private BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
@@ -244,7 +244,6 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
             hideTitle = data.getBooleanExtra(KEY_HIDE_TITLE, false);
             htmlText = data.getStringExtra(KEY_HTML_TEXT);
             url = data.getStringExtra(KEY_URL);
-            urlFromA = data.getStringExtra(Failed_MESSAGE);//未支付成功的返回信息
             domainName = data.getStringExtra(WEBDOMAIN);
             oauth2_0 = data.getStringExtra(OAUTH2_0);
         }
@@ -394,7 +393,7 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
             webView.addJavascriptInterface(new JsInteration(), "js");
             webView.addJavascriptInterface(new JsInteration(), "myjava");
             webView.loadUrl(url, headerMap);
-        } else if (!TextUtils.isEmpty(urlFromA)) {//信息不为空做处理
+//            webView.loadUrl("file:///android_asset/js.html");
         }
     }
 
@@ -448,6 +447,7 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
                         String json = GsonUtils.gsonString(map);
                         if (null != webView) {
                             webView.loadUrl("javascript:cgjUploadCallback('" + json + "')");
+                            ToastUtil.showShortToast(this, "上传成功");
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -1206,7 +1206,12 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
          */
         @JavascriptInterface
         public void cgjUploadHandler(String data) {
-            microModel = new MicroModel(MyBrowserActivity.this);
+            try {
+                JSONObject jsonObject = new JSONObject(data);
+                appName = jsonObject.getString("appName");
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
             isWebUpload = true;
             showPhotoSelector(false, "");
         }
@@ -1217,19 +1222,31 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
          * @param json
          */
         @JavascriptInterface
-        public void cgjWebviewRightFunction(String json) {
-            if (!TextUtils.isEmpty(json)) {
-                webRightJson = json;
-                rl_web_more.setVisibility(View.VISIBLE);
-                rlRefresh.setVisibility(View.GONE);
-                rlClose.setVisibility(View.GONE);
-            } else {
-                rl_web_more.setVisibility(View.GONE);
-                rlRefresh.setVisibility(View.VISIBLE);
-                rlClose.setVisibility(View.VISIBLE);
-            }
+        public void cgjWebviewNavFunction(String json) {
+            runOnUiThread(() -> {
+                if (!TextUtils.isEmpty(json)) {
+                    webRightJson = json;
+                    rl_web_more.setVisibility(View.VISIBLE);
+                    rlRefresh.setVisibility(View.GONE);
+                    rlClose.setVisibility(View.GONE);
+                } else {
+                    rl_web_more.setVisibility(View.GONE);
+                    rlRefresh.setVisibility(View.VISIBLE);
+                    rlClose.setVisibility(View.VISIBLE);
+                }
+            });
         }
 
+        /**
+         * @param data
+         */
+        @JavascriptInterface
+        public void cgjAddressBookInfo(String data) {
+            Intent intent = new Intent(MyBrowserActivity.this, AddContactsCreateGroupActivity.class);
+            intent.putExtra(AddContactsCreateGroupActivity.DETAIL_TYPE, 2);
+            intent.putExtra(AddContactsCreateGroupActivity.ISFORM_WEB, true);
+            startActivityForResult(intent, SELECT_ADDRESS_BOOK);
+        }
     }
 
     private void initFunction(String json) {
@@ -1238,7 +1255,15 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
         List<WebviewRightEntity.DataBean> list = new ArrayList<>();
         list.addAll(rightEntity.getData());
         if (list.size() > 0) {
-            WebviewRightPopWindowView popWindowView = new WebviewRightPopWindowView(this, list);
+            WebviewRightEntity.DataBean entity = new WebviewRightEntity.DataBean();
+            entity.setTitle("刷新");
+            entity.setUrl("refresh_web");
+            WebviewRightEntity.DataBean en = new WebviewRightEntity.DataBean();
+            en.setTitle("关闭");
+            en.setUrl("close_web");
+            list.add(entity);
+            list.add(en);
+            WebviewRightPopWindowView popWindowView = new WebviewRightPopWindowView(this, list, webView);
             popWindowView.setOnDismissListener(new PopupDismissListener());
             popWindowView.showPopupWindow(rl_web_more);
             lightoff();
@@ -1356,7 +1381,11 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
         } else {
             intent.setType("*/*");
         }
-        startActivityForResult(Intent.createChooser(intent, "文件"), 0);
+        if (isWebUpload) {
+            startActivityForResult(Intent.createChooser(intent, "文件"), PIC_File_UPLOAD_FILE);
+        } else {
+            startActivityForResult(Intent.createChooser(intent, "文件"), 0);
+        }
     }
 
     /**
@@ -1411,8 +1440,8 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
                     }
                 }
                 intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
-                if (true) {
-                    startActivityForResult(intent, PIC_File_UPLOAD);
+                if (isWebUpload) {
+                    startActivityForResult(intent, PIC_File_UPLOAD_IMG);
                 } else {
                     startActivityForResult(intent, PIC_PHOTO_BY_CAMERA);
                 }
@@ -1492,6 +1521,10 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
                 uploadFiles.onReceiveValue(new Uri[]{result});
                 uploadFiles = null;
             }
+        } else if (requestCode == PIC_File_UPLOAD_FILE
+                && resultCode == Activity.RESULT_OK) {
+            String corp_id = Tools.getStringValue(this, Contants.storage.CORPID);
+            initUploadFile(authms2Token, corp_id, appName);
         } else if (requestCode == PIC_PHOTO_BY_CAMERA && resultCode == Activity.RESULT_OK) {
             if (null != uploadFile) {
                 if (data != null) {
@@ -1517,10 +1550,9 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
 
 
             }
-        } else if (requestCode == PIC_File_UPLOAD && resultCode == Activity.RESULT_OK) {
+        } else if (requestCode == PIC_File_UPLOAD_IMG && resultCode == Activity.RESULT_OK) {
             String corp_id = Tools.getStringValue(this, Contants.storage.CORPID);
-            microModel = new MicroModel(this);
-            microModel.postUploadFile(2, authms2Token, corp_id, getPath(this, uri), true, this);
+            initUploadFile(authms2Token, corp_id, appName);
         } else if (requestCode == PIC_PHOTO_BY_VIDEO && resultCode == Activity.RESULT_OK) {
             if (null != uploadFiles) {
                 if (data != null) {
@@ -1544,6 +1576,11 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
                 }
                 webView.loadUrl("javascript:colourlifeScanCodeHandler('" + jsonObject.toString() + "')");
             }
+        } else if (requestCode == SELECT_ADDRESS_BOOK) {
+            if (resultCode == 1001) {
+                String json = data.getStringExtra("address_book");
+                webView.loadUrl("javascript:cgjPostAddressBookInfo('" + json + "')");
+            }
         } else {
             if (uploadFile != null) {    //xie ：直接点击取消时，ValueCallback回调会被挂起，需要手动结束掉回调，否则再次点击选择照片无响应
                 uploadFile.onReceiveValue(null);
@@ -1554,6 +1591,11 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
                 uploadFiles = null;
             }
         }
+    }
+
+    private void initUploadFile(String token, String cropId, String appName) {
+        microModel = new MicroModel(this);
+        microModel.postUploadFile(2, token, cropId, getPath(this, uri), appName, true, this);
     }
 
     /**
@@ -1716,19 +1758,7 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
                 webView.reload();
                 break;
             case R.id.rl_close:// 关闭
-//                MyBrowserActivity.this.finish();
-                webRightJson = "{\"data\":[{\n" +
-                        "\"title\":\"跳转\",\n" +
-                        "\"url\":\"https://www.baidu.com\",\n" +
-                        "\"auth_type\":\"5\",\n" +
-                        "\"img\":\"https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=3193986866,1923894899&fm=26&gp=0.jpg\"},{\"title\":\"分享\",\n" +
-                        "\"url\":\"xxx\",\n" +
-                        "\"img\":\"https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=3193986866,1923894899&fm=26&gp=0.jpg\"},{\"title\":\"xxx\",\n" +
-                        "\"url\":\"xxx\",\n" +
-                        "\"img\":\"https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1584467662833&di=fd77b81441e00dc751fe4951d88195c5&imgtype=0&src=http%3A%2F%2Fb.hiphotos.baidu.com%2Fzhidao%2Fpic%2Fitem%2Ffcfaaf51f3deb48ff5148cd3f11f3a292df578b9.jpg\"}]}";
-                rl_web_more.setVisibility(View.VISIBLE);
-                rlRefresh.setVisibility(View.GONE);
-                rlClose.setVisibility(View.GONE);
+                MyBrowserActivity.this.finish();
                 break;
             case R.id.rl_wechat:
                 showShare(Wechat.NAME);

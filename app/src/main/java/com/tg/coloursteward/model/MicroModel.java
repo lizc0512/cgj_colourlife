@@ -7,6 +7,7 @@ import com.tg.coloursteward.baseModel.HttpListener;
 import com.tg.coloursteward.baseModel.HttpResponse;
 import com.tg.coloursteward.baseModel.RequestEncryptionUtils;
 import com.tg.coloursteward.info.UserInfo;
+import com.tg.coloursteward.net.DES;
 import com.yanzhenjie.nohttp.BasicBinary;
 import com.yanzhenjie.nohttp.FileBinary;
 import com.yanzhenjie.nohttp.NoHttp;
@@ -35,7 +36,7 @@ public class MicroModel extends BaseModel {
     private String microListUrl = "/app/home/microservices/config";
     private String microItemUrl = "/app/home/microservices/data/item";
     private String dataShowUrl = "/app/home/utility/managerMsg";
-    private String uploadUrl = "/newfileup/pcUploadFile";
+    private String uploadUrl = "/newfileup/pcUploadFile?appID=" + DES.APP_ID;
     private Context mContext;
 
     public MicroModel(Context context) {
@@ -238,7 +239,7 @@ public class MicroModel extends BaseModel {
      * @param path
      * @param httpResponse
      */
-    public void postUploadFile(int what, String access_token, String corpid, String path, boolean isLoading, final HttpResponse httpResponse) {
+    public void postUploadFile(int what, String access_token, String corpid, String path, String appName,boolean isLoading, final HttpResponse httpResponse) {
         Map<String, Object> params = new HashMap<>();
         BasicBinary binary = new FileBinary(new File(path));
         params.put("access_token", access_token);
@@ -246,7 +247,7 @@ public class MicroModel extends BaseModel {
         params.put("fileLength", binary.getLength());
         params.put("fileName", binary.getFileName());
         params.put("fileUploadAccount", UserInfo.employeeAccount);
-        params.put("fileUploadAppName", "cgj");
+        params.put("fileUploadAppName", appName);
         params.put("auth_ver", "2.0");
         final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 4, uploadUrl), RequestMethod.POST);
         request.add("file", binary);

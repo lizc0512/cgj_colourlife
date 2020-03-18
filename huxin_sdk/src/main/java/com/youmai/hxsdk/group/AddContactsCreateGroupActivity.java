@@ -13,42 +13,45 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.protobuf.InvalidProtocolBufferException;
+import com.youmai.hxsdk.HuxinSdkManager;
 import com.youmai.hxsdk.R;
+import com.youmai.hxsdk.activity.SdkBaseActivity;
+import com.youmai.hxsdk.chatgroup.IMGroupActivity;
+import com.youmai.hxsdk.chatsingle.IMConnectionActivity;
+import com.youmai.hxsdk.config.ColorsConfig;
+import com.youmai.hxsdk.db.bean.ContactBean;
+import com.youmai.hxsdk.db.bean.GroupInfoBean;
 import com.youmai.hxsdk.entity.ModifyContactsBean;
+import com.youmai.hxsdk.entity.cn.CNPinyin;
+import com.youmai.hxsdk.entity.cn.CNPinyinFactory;
 import com.youmai.hxsdk.group.adapter.SearchContactAdapter;
-import com.youmai.hxsdk.group.data.GroupMembers;
 import com.youmai.hxsdk.group.data.ContactBeanData;
+import com.youmai.hxsdk.group.data.GroupMembers;
 import com.youmai.hxsdk.group.fragment.AddContactByDepartmentFragment;
 import com.youmai.hxsdk.group.fragment.AddContactsSearchFragment;
 import com.youmai.hxsdk.http.IGetListener;
 import com.youmai.hxsdk.http.OkHttpConnector;
-import com.youmai.hxsdk.stickyheader.StickyHeaderDecoration;
-import com.youmai.hxsdk.utils.AppUtils;
-import com.youmai.hxsdk.utils.GsonUtil;
-import com.youmai.hxsdk.widget.CharIndexView;
-import com.youmai.hxsdk.HuxinSdkManager;
-import com.youmai.hxsdk.chatsingle.IMConnectionActivity;
-import com.youmai.hxsdk.chatgroup.IMGroupActivity;
-import com.youmai.hxsdk.activity.SdkBaseActivity;
-import com.youmai.hxsdk.config.ColorsConfig;
-import com.youmai.hxsdk.db.bean.ContactBean;
-import com.youmai.hxsdk.db.bean.GroupInfoBean;
-import com.youmai.hxsdk.entity.cn.CNPinyin;
-import com.youmai.hxsdk.entity.cn.CNPinyinFactory;
 import com.youmai.hxsdk.module.groupchat.ChatDetailsActivity;
 import com.youmai.hxsdk.proto.YouMaiBasic;
 import com.youmai.hxsdk.proto.YouMaiGroup;
 import com.youmai.hxsdk.socket.PduBase;
 import com.youmai.hxsdk.socket.ReceiveListener;
+import com.youmai.hxsdk.stickyheader.StickyHeaderDecoration;
+import com.youmai.hxsdk.utils.AppUtils;
+import com.youmai.hxsdk.utils.GsonUtil;
 import com.youmai.hxsdk.utils.ListUtils;
+import com.youmai.hxsdk.widget.CharIndexView;
 import com.youmai.hxsdk.widget.SearchEditText;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -73,6 +76,7 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
     public static final String GROUP_LIST = "GROUP_LIST";
     public static final String DETAIL_TYPE = "DETAIL_TYPE";
     public static final String GROUP_ID = "GROUP_ID";
+    public static final String ISFORM_WEB = "isfrom_web";
 
     //fragment
     private static final String TAG_SEARCH_CONTACT_FRAGMENT = "search_contact_fragment";
@@ -106,7 +110,7 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
 
     private int mDetailType; //详情的类型 1：单聊  2：群聊
     private int mGroupId; //群Id
-
+    private boolean isFromWeb;
     private AddContactsSearchFragment searchGroupFragment;
     private AddContactByDepartmentFragment departmentFragment;
 
@@ -138,7 +142,6 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
         }
 
         int count = mTotalMap.size();
-        Log.d("YW", "map size: " + count);
 
         if (count > 0) {
             tv_Sure.setEnabled(true);
@@ -180,6 +183,7 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
 
         mDetailType = getIntent().getIntExtra(DETAIL_TYPE, -1);
         mGroupId = getIntent().getIntExtra(GROUP_ID, -1);
+        isFromWeb = getIntent().getBooleanExtra(ISFORM_WEB, false);
 
         ArrayList<ContactBean> list = GroupMembers.instance().getGroupList();
 
@@ -304,11 +308,30 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
 
     public void done() {
         showProgressDialog();
-
-        if (mDetailType == 1) {
-            createGroup();
-        } else if (mDetailType == 2) {
-            updateGroup();
+        if (isFromWeb) {
+            JSONArray jsonArray = new JSONArray();
+            for (Map.Entry<String, ContactBean> entry : mTotalMap.entrySet()) {
+                ContactBean item = entry.getValue();
+                JSONObject jsonObject = new JSONObject();
+                try {
+                    jsonObject.put("uid", item.getUuid());
+                    jsonObject.put("realname", item.getRealname());
+                    jsonObject.put("username", item.getUsername());
+                    jsonArray.put(jsonObject);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+            Intent intent = new Intent();
+            intent.putExtra("address_book", jsonArray.toString());
+            setResult(1001, intent);
+            finish();
+        } else {
+            if (mDetailType == 1) {
+                createGroup();
+            } else if (mDetailType == 2) {
+                updateGroup();
+            }
         }
     }
 
@@ -566,7 +589,7 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
         params.put("page", "1");
         params.put("pagesize", "100");
         ColorsConfig.commonParams(params);
-        OkHttpConnector.httpGet(AddContactsCreateGroupActivity.this,url, params, new IGetListener() {
+        OkHttpConnector.httpGet(AddContactsCreateGroupActivity.this, url, params, new IGetListener() {
             @Override
             public void httpReqResult(String response) {
                 ModifyContactsBean bean = GsonUtil.parse(response, ModifyContactsBean.class);

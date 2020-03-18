@@ -1,0 +1,60 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+    <!-- viewport的宽度等于设备宽度，viewport会根据屏幕宽度自动适应，并且对图片和文字进行缩放显示 -->
+    <meta name="viewport" content="initial-scale=1.0"/>
+
+    <title>Web页面</title>
+
+    <script type="text/javascript">
+
+            function call(){
+              
+				 try {
+                    window.myjava.cgjUploadHandler(
+                        '{"appName":"cgj",path:"","isCallback":"1","appid":"00"}'
+                        )
+                } catch (e) {
+                    show_message('请升级最新版本！')
+                }
+            }
+
+            function call2(){
+
+				 try {
+                    window.myjava.cgjWebviewNavFunction(
+                        '{"data":[{"title":"跳转baidu","url":"https://www.baidu.com","img":"https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=3193986866,1923894899&fm=26&gp=0.jpg"},{"title":"分享","url":"xxx","img":"https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=3193986866,1923894899&fm=26&gp=0.jpg"},{"title":"xxx","url":"xxx","img":"https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=3193986866,1923894899&fm=26&gp=0.jpg"}]}'
+                        )
+                } catch (e) {
+                    show_message('请升级最新版本！')
+                }
+            }
+
+            function call3(){
+
+				 try {
+                    window.myjava.cgjAddressBookInfo(
+                    'data '
+                        )
+                } catch (e) {
+                    show_message('请升级最新版本！')
+                }
+            }
+
+
+    </script>
+
+</head>
+
+<body>
+
+
+<button onclick="call()">H5调用本地上传工具</button>
+<button onclick="call2()">H5传导航栏数据</button>
+<button onclick="call3()">H5调用通讯录</button>
+</body>
+
+</html>

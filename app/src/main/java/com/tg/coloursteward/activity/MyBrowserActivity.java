@@ -1072,85 +1072,32 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
          * 跳转到第三方页面
          */
         @JavascriptInterface
-        public String cgjWebHandler(String packgeInfo) {
-            JSONObject result = null;
-            String name = "";
+        public void cgjWebHandler(String result) {
+            String appurl = "";
+            String download_url = "";
+            String package_url = "";
             try {
-                result = new JSONObject();
-                if (isJSONValid(packgeInfo)) {
-                    JSONObject jsonObject = new JSONObject(packgeInfo);
-                    String packgeName = jsonObject.optString("identity");
-                    String parameter = "";
-                    String accessToken = jsonObject.optString("access_token");
-                    String refresh_token = jsonObject.optString("refresh_token");
-                    String expires_in = jsonObject.optString("expires_in");
-                    String className = jsonObject.optString("view");
-                    name = jsonObject.optString("name");
-                    String supportVersion = "";
-                    if (!jsonObject.isNull("support_version")) {
-                        supportVersion = jsonObject.optString("support_version");
-                    }
-                    if (!jsonObject.isNull("parameter")) {
-                        parameter = jsonObject.optString("parameter");
-                    }
-                    if (checkApkExist(packgeName)) {
-                        int installVersionCode = getApplicationContext().getPackageManager().getPackageInfo(packgeName, 0).versionCode;
-                        if (!TextUtils.isEmpty(supportVersion)) {
-                            int compareResult = installVersionCode - Integer.valueOf(supportVersion);
-                            if (compareResult >= 0) {
-                                result.put("result", true);
-                                Intent intent = new Intent();
-                                //知道要跳转应用的包名、类名
-                                ComponentName componentName = new ComponentName(packgeName, className);
-                                intent.setComponent(componentName);
-                                Bundle bundle = new Bundle();
-                                bundle.putString("access_token", accessToken);
-                                bundle.putString("refresh_token", refresh_token);
-                                bundle.putString("parameter", parameter);
-                                bundle.putString("expires_in", expires_in);
-                                intent.putExtras(bundle);
-                                startActivity(intent);
-                            } else {
-                                result.put("result", false);
-                            }
-                        } else {
-                            result.put("result", true);
-                            Intent intent = new Intent();
-                            //知道要跳转应用的包名、类名
-                            ComponentName componentName = new ComponentName(packgeName, className);
-                            intent.setComponent(componentName);
-                            Bundle bundle = new Bundle();
-                            bundle.putString("access_token", accessToken);
-                            bundle.putString("refresh_token", refresh_token);
-                            bundle.putString("parameter", parameter);
-                            bundle.putString("expires_in", expires_in);
-                            intent.putExtras(bundle);
-                            startActivity(intent);
-                        }
-                    } else {
-                        result.put("result", false);
-                    }
+                JSONObject jsonObject = new JSONObject(result);
+                appurl = jsonObject.optString("appurl");
+                download_url = jsonObject.optString("download_url");
+                package_url = jsonObject.optString("package_url");
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            Intent intent = null;
+            try {
+                if (checkApkExist(appurl)) {
+                    intent = new Intent();
+                    ComponentName componentName = new ComponentName(appurl, package_url);
+                    intent.setComponent(componentName);
+                    startActivity(intent);
                 } else {
-                    if (!packgeInfo.startsWith("http") || !packgeInfo.startsWith("https") || !packgeInfo.startsWith("ftp")) {
-                        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-                        if (isInstall(intent)) {
-                            result.put("result", true);
-                            getApplicationContext().startActivity(intent);
-                        } else {
-                            result.put("result", false);
-                        }
-                    } else {
-                        result.put("result", false);
-                    }
+                    Uri uri = Uri.parse(download_url);
+                    intent = new Intent(Intent.ACTION_VIEW, uri);
+                    startActivity(intent);
                 }
             } catch (Exception e) {
-                try {
-                    result.put("result", false);
-                } catch (JSONException e1) {
-                    e1.printStackTrace();
-                }
             }
-            return result.toString();
         }
 
         /**
@@ -1238,10 +1185,12 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
         }
 
         /**
-         * @param data
+         * web调用通讯录页面
+         *
+         * @param
          */
         @JavascriptInterface
-        public void cgjAddressBookInfo(String data) {
+        public void cgjAddressBookInfo() {
             Intent intent = new Intent(MyBrowserActivity.this, AddContactsCreateGroupActivity.class);
             intent.putExtra(AddContactsCreateGroupActivity.DETAIL_TYPE, 2);
             intent.putExtra(AddContactsCreateGroupActivity.ISFORM_WEB, true);
@@ -1524,7 +1473,7 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
         } else if (requestCode == PIC_File_UPLOAD_FILE
                 && resultCode == Activity.RESULT_OK) {
             String corp_id = Tools.getStringValue(this, Contants.storage.CORPID);
-            initUploadFile(authms2Token, corp_id, appName);
+            initUploadFile(data.getData(), authms2Token, corp_id, appName);
         } else if (requestCode == PIC_PHOTO_BY_CAMERA && resultCode == Activity.RESULT_OK) {
             if (null != uploadFile) {
                 if (data != null) {
@@ -1552,7 +1501,7 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
             }
         } else if (requestCode == PIC_File_UPLOAD_IMG && resultCode == Activity.RESULT_OK) {
             String corp_id = Tools.getStringValue(this, Contants.storage.CORPID);
-            initUploadFile(authms2Token, corp_id, appName);
+            initUploadFile(uri, authms2Token, corp_id, appName);
         } else if (requestCode == PIC_PHOTO_BY_VIDEO && resultCode == Activity.RESULT_OK) {
             if (null != uploadFiles) {
                 if (data != null) {
@@ -1593,9 +1542,9 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
         }
     }
 
-    private void initUploadFile(String token, String cropId, String appName) {
+    private void initUploadFile(Uri uriPath, String token, String cropId, String appName) {
         microModel = new MicroModel(this);
-        microModel.postUploadFile(2, token, cropId, getPath(this, uri), appName, true, this);
+        microModel.postUploadFile(2, token, cropId, getPath(this, uriPath), appName, true, this);
     }
 
     /**

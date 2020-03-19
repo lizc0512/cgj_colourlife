@@ -1,0 +1,165 @@
+<!DOCTYPE  html>
+
+<html>
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <title></title>
+
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no"/>
+
+    <link href="../css/mui.min.css" rel="stylesheet"/>
+
+    <link href="../css/common.css" rel="stylesheet"/>
+
+    <script src="../js/mui.min.js"></script>
+
+    <script type="text/javascript">
+        mui.init()
+
+    </script>
+
+</head>
+
+<body>
+<header class="mui-bar mui-bar-nav" id="header">
+    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+    <h3 class="mui-title">Android与H5交互方法列表</h3>
+</header>
+<div class="mui-content">
+
+    <button onclick="s()">H5调用本地上传工具</button>
+
+    <p id="p" style="padding: 10px;">显示结果</p>
+
+    <script type="text/javascript">
+    //Android调用：上传文件返回参数方法
+    function cgjUploadCallback(message){
+        document.getElementById("p").innerHTML=message;
+        alert(message);
+    }
+     //Android调用：无参无返回值的方法
+    function show(){
+        document.getElementById("p").innerHTML="hello world";
+    }
+      //H5 JS调用原生方法
+    function s() {
+         //android为约定的别名(别名也可以自己定义，保持一致就好)；
+        //back()为原生的方法，方法名自己定保持一致就好
+         window.myjava.cgjUploadHandler(
+                        '{"appName":"cgj",path:"","isCallback":"1","appid":"00"}'
+                        )
+    }
+
+    </script>
+</div>
+<div class="mui-content">
+
+    <button onclick="ss()">H5传导航栏数据</button>
+
+    <p id="pp" style="padding: 10px;">显示结果</p>
+
+    <script type="text/javascript">
+
+     //Android调用：无参无返回值的方法
+    function show(){
+        document.getElementById("pp").innerHTML="hello world";
+    }
+      //H5 JS调用源生方法
+    function ss() {
+         //android为约定的别名(别名也可以自己定义，保持一致就好)；
+        //back()为原生的方法，方法名自己定保持一致就好
+         window.myjava.cgjWebviewNavFunction(
+                       '{"data":[{"title":"跳转百度","url":"https://www.baidu.com","img":"https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=3193986866,1923894899&fm=26&gp=0.jpg"},{"title":"跳转到设置页面","url":"colourlife://proto?type=setting","img":"https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=3193986866,1923894899&fm=26&gp=0.jpg"},{"title":"xxx","url":"xxx","img":"https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=3193986866,1923894899&fm=26&gp=0.jpg"}]}'
+                        )
+    }
+
+    </script>
+</div>
+<div class="mui-content">
+
+    <button onclick="sss()">H5调用通讯录</button>
+
+    <p id="ppp" style="padding: 10px;">显示结果</p>
+
+    <script type="text/javascript">
+
+    //Android调用：
+    function cgjPostAddressBookInfo(message){
+        document.getElementById("ppp").innerHTML=message;
+        alert(message);
+    }
+     //Android调用：无参无返回值的方法
+    function show(){
+        document.getElementById("ppp").innerHTML="hello world";
+    }
+      //H5 JS调用源生方法
+    function sss() {
+         //android为约定的别名(别名也可以自己定义，保持一致就好)；
+        //back()为原生的方法，方法名自己定保持一致就好
+         window.myjava.cgjAddressBookInfo()
+    }
+
+    </script>
+</div>
+<div class="mui-content">
+
+    <button onclick="ssss()">H5调用扫一扫,回调JS扫码结果</button>
+
+    <p id="pppp" style="padding: 10px;">显示结果</p>
+
+    <script type="text/javascript">
+
+    //Android调用：
+    function colourlifeScanCodeHandler(message){
+        document.getElementById("pppp").innerHTML=message;
+        alert(message);
+    }
+     //Android调用：无参无返回值的方法
+    function show(){
+        document.getElementById("pppp").innerHTML="hello world";
+    }
+      //H5 JS调用源生方法
+    function ssss() {
+         //android为约定的别名(别名也可以自己定义，保持一致就好)；
+        //back()为原生的方法，方法名自己定保持一致就好
+         window.myjava.cgjScanHandler(
+         '{"appid":"cgj","isCallback":"0"}'
+         )
+    }
+
+    </script>
+</div>
+<div class="mui-content">
+
+    <button onclick="sssss()">H5调用扫一扫,直接调用扫码接口处理</button>
+
+    <p id="ppppp" style="padding: 10px;">显示结果</p>
+
+    <script type="text/javascript">
+
+    //Android调用：
+<!--    function colourlifeScanCodeHandler(message){-->
+<!--        document.getElementById("ppppp").innerHTML=message;-->
+<!--        alert(message);-->
+<!--    }-->
+     //Android调用：无参无返回值的方法
+    function show(){
+        document.getElementById("ppppp").innerHTML="hello world";
+    }
+      //H5 JS调用源生方法
+    function sssss() {
+         //android为约定的别名(别名也可以自己定义，保持一致就好)；
+        //back()为原生的方法，方法名自己定保持一致就好
+         window.myjava.cgjScanHandler(
+         '{"appid":"cgj","isCallback":"1"}'
+         )
+    }
+
+    </script>
+</div>
+</body>
+</html>

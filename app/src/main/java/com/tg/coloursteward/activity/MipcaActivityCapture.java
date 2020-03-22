@@ -394,10 +394,10 @@ public class MipcaActivityCapture extends BaseActivity implements Callback, OnCl
                     String url = entity.getContent().getUrl();
                     String auth_type = entity.getContent().getAuth_type();
                     String tipMessage = entity.getContent().getTipMessage();
-                    if (type.equals("1")) {//tip提示,继续扫码
+                    if ("1".equals(type)) {//tip提示,继续扫码
                         ToastUtil.showShortToast(this, tipMessage);
                         reStarScan();
-                    } else if (type.equals("2")) {//弹窗提示
+                    } else if ("2".equals(type)) {//弹窗提示
                         initDialog(entity.getContent().getTipButtons());
                     } else {//直接跳转
                         if (null == mAuthTimeUtils) {

@@ -230,7 +230,7 @@ public class SdkBaseActivity extends AppCompatActivity {
         if (mProgressDialog == null) {
             mProgressDialog = new ProgressDialog(this);
             mProgressDialog.setMessage("正在请求，请稍后...");
-            mProgressDialog.setCanceledOnTouchOutside(false);
+            mProgressDialog.setCanceledOnTouchOutside(true);
         }
 
         if (!mProgressDialog.isShowing()) {

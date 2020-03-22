@@ -569,7 +569,7 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
         String json = AppUtils.getStringSharedPreferences(mContext, "contents", "");
         if (TextUtils.isEmpty(json)) {
             modifyContactsList();
-        } else {
+        } else {//展示最近联系人列表
             ModifyContactsBean parse = GsonUtil.parse(json, ModifyContactsBean.class);
             if (parse.getCode() == 0) {
                 List<ModifyContactsBean.ContentBean.DataBean> data = parse.getContent().getData();
@@ -581,6 +581,7 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
     }
 
     private void modifyContactsList() {
+        showProgressDialog();
         String url = ColorsConfig.CONTACTS_MAIN_DATAS;
         String userName = HuxinSdkManager.instance().getUserName();
 
@@ -592,6 +593,7 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
         OkHttpConnector.httpGet(AddContactsCreateGroupActivity.this, url, params, new IGetListener() {
             @Override
             public void httpReqResult(String response) {
+                dismissProgressDialog();
                 ModifyContactsBean bean = GsonUtil.parse(response, ModifyContactsBean.class);
                 if (bean != null && bean.isSuccess()) {
                     List<ModifyContactsBean.ContentBean.DataBean> data = bean.getContent().getData();

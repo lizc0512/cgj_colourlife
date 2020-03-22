@@ -1,5 +1,6 @@
 package com.youmai.hxsdk.group.fragment;
 
+import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -36,6 +37,7 @@ public class AddContactByDepartmentFragment extends Fragment {
 
     private RecyclerView recyclerView;
     private DepartAdapter mAdapter;
+    private ProgressDialog mProgressDialog;
 
 
     @Override
@@ -74,16 +76,34 @@ public class AddContactByDepartmentFragment extends Fragment {
 
     }
 
+    private void showProgressDialog() {
+        if (mProgressDialog == null) {
+            mProgressDialog = new ProgressDialog(getContext());
+            mProgressDialog.setMessage("正在请求，请稍后...");
+            mProgressDialog.setCanceledOnTouchOutside(true);
+        }
+        if (!mProgressDialog.isShowing()) {
+            mProgressDialog.show();
+        }
+    }
+
+    private void dismissProgressDialog() {
+        if (mProgressDialog != null && mProgressDialog.isShowing()) {
+            mProgressDialog.dismiss();
+        }
+    }
 
     private void loadDataForNet(String orgId) {
         String url = ColorsConfig.CONTACTS_CHILD_DATAS;
         ContentValues params = new ContentValues();
         params.put("orgID", orgId);
         ColorsConfig.commonParams(params);
-        OkHttpConnector.httpGet(getContext(),url, params, new IGetListener() {
+        showProgressDialog();
+        OkHttpConnector.httpGet(getContext(), url, params, new IGetListener() {
             @Override
             public void httpReqResult(String response) {
                 try {
+                    dismissProgressDialog();
                     JSONObject json = new JSONObject(response);
                     int code = json.optInt("code");
                     if (code == 0) {
@@ -121,8 +141,6 @@ public class AddContactByDepartmentFragment extends Fragment {
 
         loadDataForNet(orgId);
     }
-
-
 
 
     @Override

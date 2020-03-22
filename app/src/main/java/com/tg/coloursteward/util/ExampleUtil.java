@@ -32,7 +32,7 @@ public class ExampleUtil {
             return true;
         return s.trim().length() == 0;
     }
-    
+
     // 校验Tag Alias 只能是数字,英文字母和中文
     public static boolean isValidTagAndAlias(String s) {
         Pattern p = Pattern.compile("^[\u4E00-\u9FA50-9a-zA-Z_!@#$&*+=.|]+$");
@@ -60,7 +60,7 @@ public class ExampleUtil {
         }
         return appKey;
     }
-    
+
     // 取得版本号
     public static String GetVersion(Context context) {
 		try {
@@ -77,11 +77,11 @@ public class ExampleUtil {
 
         return deviceId;
     }
-	
+
     public static void showToast(final String toast, final Context context)
     {
     	new Thread(new Runnable() {
-			
+
 			@Override
 			public void run() {
 				Looper.prepare();
@@ -90,20 +90,10 @@ public class ExampleUtil {
 			}
 		}).start();
     }
-    
+
     public static boolean isConnected(Context context) {
         ConnectivityManager conn = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo info = conn.getActiveNetworkInfo();
         return (info != null && info.isConnected());
     }
-    
-	public static String getImei(Context context, String imei) {
-		try {
-			TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
-			imei = telephonyManager.getDeviceId();
-		} catch (Exception e) {
-			Log.e(ExampleUtil.class.getSimpleName(), e.getMessage());
-		}
-		return imei;
-	}
 }

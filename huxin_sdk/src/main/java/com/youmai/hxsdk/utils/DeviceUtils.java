@@ -1,10 +1,14 @@
 package com.youmai.hxsdk.utils;
 
+import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.provider.Settings.Secure;
+import android.support.v4.app.ActivityCompat;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 
@@ -86,26 +90,20 @@ public class DeviceUtils {
      * @return
      */
     public static String getIMEI(Context context) {
-        String imei = null;
-        try {
-            TelephonyManager phoneManager = (TelephonyManager) context
-                    .getSystemService(Context.TELEPHONY_SERVICE);
-            imei = phoneManager.getDeviceId();
-        } catch (SecurityException e) {
-            Log.e(TAG, "getIMEI error!");
-            imei = "";
-        } catch (Exception e) {
-            Log.e(TAG, "getIMEI error!");
-            imei = "";
+        TelephonyManager tm = (TelephonyManager) context
+                .getSystemService(Context.TELEPHONY_SERVICE);
+        String imei = "";
+        if (tm != null) {
+            if (ActivityCompat.checkSelfPermission(context, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions((Activity) context, new String[]{Manifest.permission.READ_PHONE_STATE}, 1);
+            } else {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    imei = tm.getImei();
+                } else {
+                    imei = tm.getDeviceId();
+                }
+            }
         }
-        if (imei == null) {
-            imei = "";
-        }
-
-        if (StringUtils.isEmpty(imei)) {
-            imei = getSerialNumber();
-        }
-
         return imei;
     }
 

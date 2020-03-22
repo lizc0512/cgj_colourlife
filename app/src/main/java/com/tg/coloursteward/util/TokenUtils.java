@@ -12,6 +12,7 @@ import android.net.NetworkInfo;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Build;
+import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
@@ -24,8 +25,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.FileReader;
-import java.io.InputStreamReader;
-import java.io.LineNumberReader;
 import java.io.Reader;
 import java.net.Inet4Address;
 import java.net.InetAddress;
@@ -180,12 +179,7 @@ public class TokenUtils {
 
     /****获取AndroidId***/
     public static String getAndroirdId(Context context) {
-        String androidId = android.provider.Settings.Secure.getString(
-                context.getContentResolver(),
-                android.provider.Settings.Secure.ANDROID_ID);
-        if (TextUtils.isEmpty(androidId)) {
-            androidId = "";
-        }
+        String androidId = Settings.System.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
         return androidId;
     }
 
@@ -198,7 +192,11 @@ public class TokenUtils {
             if (ActivityCompat.checkSelfPermission(context, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions((Activity) context, new String[]{Manifest.permission.READ_PHONE_STATE}, 1);
             } else {
-                imei = tm.getDeviceId();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    imei = tm.getImei();
+                } else {
+                    imei = tm.getDeviceId();
+                }
             }
         }
         return imei;
@@ -225,33 +223,29 @@ public class TokenUtils {
      * @return
      */
     public static String getMac() {
-        String str = "";
-        String macSerial = "";
         try {
-            Process pp = Runtime.getRuntime().exec(
-                    "cat /sys/class/net/wlan0/address ");
-            InputStreamReader ir = new InputStreamReader(pp.getInputStream());
-            LineNumberReader input = new LineNumberReader(ir);
-            for (; null != str; ) {
-                str = input.readLine();
-                if (str != null) {
-                    macSerial = str.trim();// 去空格
-                    break;
+            List<NetworkInterface> all = Collections.list(NetworkInterface.getNetworkInterfaces());
+            for (NetworkInterface nif : all) {
+                if (!nif.getName().equalsIgnoreCase("wlan0")) {
+                    continue;
                 }
+                byte[] macBytes = nif.getHardwareAddress();
+                if (macBytes == null) {
+                    return "";
+                }
+                StringBuilder res1 = new StringBuilder();
+                for (byte b : macBytes) {
+                    res1.append(String.format("%02X:", b));
+                }
+                if (res1.length() > 0) {
+                    res1.deleteCharAt(res1.length() - 1);
+                }
+                return res1.toString();
             }
-        } catch (Exception ex) {
-            ex.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        if (macSerial == null || "".equals(macSerial)) {
-            try {
-                return loadFileAsString("/sys/class/net/eth0/address")
-                        .toLowerCase().substring(0, 17);
-            } catch (Exception e) {
-                e.printStackTrace();
-
-            }
-        }
-        return macSerial;
+        return null;
     }
 
     public static String loadFileAsString(String fileName) throws Exception {
@@ -322,23 +316,6 @@ public class TokenUtils {
             m_szUniqueID = shared.getString("UniqueID", UUID.randomUUID().toString().replace("-", ""));
         }
         return m_szUniqueID;
-    }
-
-    /***移动设备信息**/
-    public static String getPhoneInfo(Context context) {
-        String phoneModel = android.os.Build.MODEL;
-        String makeVendor = getDeviceName().toLowerCase();
-        String providername = getProvidersName(context);
-        JSONObject json = new JSONObject();
-        try {
-            json.put("phoneModel", phoneModel);
-            json.put("makeVendor", makeVendor);
-            json.put("providername", providername);
-        } catch (JSONException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        return json.toString();
     }
 
     /**

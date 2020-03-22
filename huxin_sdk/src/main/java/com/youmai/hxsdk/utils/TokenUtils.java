@@ -147,48 +147,6 @@ public class TokenUtils {
         return strNetworkType;
     }
 
-
-    /****获取AndroidId***/
-    public static String getAndroirdId(Context context) {
-        String androidId = android.provider.Settings.Secure.getString(
-                context.getContentResolver(),
-                android.provider.Settings.Secure.ANDROID_ID);
-        if (TextUtils.isEmpty(androidId)) {
-            androidId = "";
-        }
-        return androidId;
-    }
-
-
-    public static String getImeiId(Context context) {
-        TelephonyManager tm = (TelephonyManager) context
-                .getSystemService(Context.TELEPHONY_SERVICE);
-        String imei = "";
-        if (tm != null) {
-            if (ActivityCompat.checkSelfPermission(context, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions((Activity) context, new String[]{Manifest.permission.READ_PHONE_STATE}, 1);
-            } else {
-                imei = tm.getDeviceId();
-            }
-        }
-        return imei;
-    }
-
-
-    public static String getSimNum(Context context) {
-        TelephonyManager tm = (TelephonyManager) context
-                .getSystemService(Context.TELEPHONY_SERVICE);
-        String sn = "";
-        if (tm != null) {
-            if (ActivityCompat.checkSelfPermission(context, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions((Activity) context, new String[]{Manifest.permission.READ_PHONE_STATE}, 1);
-            } else {
-                sn = tm.getSimSerialNumber();
-            }
-        }
-        return sn;
-    }
-
     /**
      * 获取手机的MAC地址
      *
@@ -212,7 +170,7 @@ public class TokenUtils {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-        if (macSerial == null || "".equals(macSerial)) {
+        if (TextUtils.isEmpty(macSerial)) {
             try {
                 return loadFileAsString("/sys/class/net/eth0/address")
                         .toLowerCase().substring(0, 17);

@@ -267,3 +267,5 @@ public static java.lang.String TABLENAME;
   public protected *;
 }
 
+#-keep class * implements java.io.Serializable {*;}
+

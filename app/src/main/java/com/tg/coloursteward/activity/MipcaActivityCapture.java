@@ -406,6 +406,8 @@ public class MipcaActivityCapture extends BaseActivity implements Callback, OnCl
                         mAuthTimeUtils.IsAuthTime(MipcaActivityCapture.this, url, auth_type, "");
                         this.finish();
                     }
+                } else {
+                    reStarScan();
                 }
                 break;
         }

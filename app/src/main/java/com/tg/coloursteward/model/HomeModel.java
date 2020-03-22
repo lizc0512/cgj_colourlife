@@ -154,15 +154,19 @@ public class HomeModel extends BaseModel {
                     int code = showSuccesResultMessage(result);
                     if (code == 0) {
                         httpResponse.OnHttpResponse(what, result);
+                    } else {
+                        httpResponse.OnHttpResponse(what, "");
                     }
                 } else {
                     showErrorCodeMessage(response);
+                    httpResponse.OnHttpResponse(what, "");
                 }
             }
 
             @Override
             public void onFailed(int what, Response<String> response) {
                 showErrorCodeMessage(response);
+                httpResponse.OnHttpResponse(what, "");
             }
         }, true, isLoading);
     }

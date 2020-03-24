@@ -177,7 +177,9 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" /> <!-- 弹出提现新消息页面 -->
         <activity android:name="com.tg.im.activity.DeskTopActivity" /> <!-- 消息页面 -->
-        <activity android:name=".activity.MipcaActivityCapture" /> <!-- 个人中心 -->
+        <activity
+            android:name=".activity.CaptureActivity"
+            android:screenOrientation="portrait" /> <!-- 扫一扫 -->
         <activity android:name="com.tg.user.activity.UserInfoActivity" /> <!-- 更多设置 -->
         <activity android:name="com.tg.setting.activity.SettingActivity" /> <!-- 关于app -->
         <activity android:name="com.tg.setting.activity.AboutUsAvtivity" /> <!-- 修改密码 -->

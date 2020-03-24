@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 ZXing authors
+ * Copyright (C) 2008 ZXing authorsdecodeFormats
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,11 +14,7 @@
  * limitations under the License.
  */
 
-package com.tg.coloursteward.zxing.decoding;
-
-import java.util.Hashtable;
-import java.util.Vector;
-import java.util.concurrent.CountDownLatch;
+package com.tg.coloursteward.zxing;
 
 import android.os.Handler;
 import android.os.Looper;
@@ -26,45 +22,61 @@ import android.os.Looper;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.DecodeHintType;
 import com.google.zxing.ResultPointCallback;
-import com.tg.coloursteward.activity.MipcaActivityCapture;
+import com.tg.coloursteward.activity.CaptureActivity;
 
-/** 
+import java.util.Collection;
+import java.util.EnumMap;
+import java.util.EnumSet;
+import java.util.Map;
+import java.util.concurrent.CountDownLatch;
+
+;
+
+
+/**
  * This thread does all the heavy lifting of decoding the images.
- * �����߳�
+ *
+ * @author dswitkin@google.com (Daniel Switkin)
  */
 final class DecodeThread extends Thread {
 
   public static final String BARCODE_BITMAP = "barcode_bitmap";
-  private final MipcaActivityCapture activity;
-  private final Hashtable<DecodeHintType, Object> hints;
-  private Handler handler; 
+
+private static final String TAG = DecodeThread.class.getSimpleName();
+
+  private final CaptureActivity activity;
+  private final Map<DecodeHintType,Object> hints;
+  private Handler handler;
   private final CountDownLatch handlerInitLatch;
 
-  DecodeThread(MipcaActivityCapture activity,
-               Vector<BarcodeFormat> decodeFormats,
+  DecodeThread(CaptureActivity activity,
+               Collection<BarcodeFormat> decodeFormats,
                String characterSet,
                ResultPointCallback resultPointCallback) {
 
     this.activity = activity;
     handlerInitLatch = new CountDownLatch(1);
 
-    hints = new Hashtable<DecodeHintType, Object>(3);
+    hints = new EnumMap<DecodeHintType,Object>(DecodeHintType.class);
 
+    // The prefs can't change while the thread is running, so pick them up once here.
     if (decodeFormats == null || decodeFormats.isEmpty()) {
-    	 decodeFormats = new Vector<BarcodeFormat>();
-    	 decodeFormats.addAll(DecodeFormatManager.ONE_D_FORMATS);
-    	 decodeFormats.addAll(DecodeFormatManager.QR_CODE_FORMATS);
-    	 decodeFormats.addAll(DecodeFormatManager.DATA_MATRIX_FORMATS);
-    	 //decodeFormats.addAll(DecodeFormatManager.OTHER_FORMATS);
+      decodeFormats = EnumSet.noneOf(BarcodeFormat.class);
+      if (PreferenceConfig.KEY_DECODE_1D_ENABLE) {
+        decodeFormats.addAll(DecodeFormatManager.ONE_D_FORMATS); //一维码
+      }
+      if (PreferenceConfig.KEY_DECODE_QR_ENABLE) {
+        decodeFormats.addAll(DecodeFormatManager.QR_CODE_FORMATS);//QR码
+      }
+      if (PreferenceConfig.KEY_DECODE_DATA_MATRIX_ENABLE) {
+        decodeFormats.addAll(DecodeFormatManager.DATA_MATRIX_FORMATS);//DM码
+      }
     }
-    
     hints.put(DecodeHintType.POSSIBLE_FORMATS, decodeFormats);
 
     if (characterSet != null) {
       hints.put(DecodeHintType.CHARACTER_SET, characterSet);
     }
-
-    
     hints.put(DecodeHintType.NEED_RESULT_POINT_CALLBACK, resultPointCallback);
   }
 

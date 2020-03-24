@@ -14,7 +14,8 @@
  * limitations under the License.
  */
 
-package com.tg.coloursteward.zxing.camera;
+package com.tg.coloursteward.zxing;
+
 
 import android.graphics.Bitmap;
 
@@ -24,13 +25,14 @@ import com.google.zxing.LuminanceSource;
  * This object extends LuminanceSource around an array of YUV data returned from the camera driver,
  * with the option to crop to a rectangle within the full data. This can be used to exclude
  * superfluous pixels around the perimeter and speed up decoding.
- * 
+ *
  * It works for any pixel format where the Y channel is planar and appears first, including
  * YCbCr_420_SP and YCbCr_422_SP.
  *
  * @author dswitkin@google.com (Daniel Switkin)
  */
 public final class PlanarYUVLuminanceSource extends LuminanceSource {
+
   private final byte[] yuvData;
   private final int dataWidth;
   private final int dataHeight;
@@ -38,7 +40,7 @@ public final class PlanarYUVLuminanceSource extends LuminanceSource {
   private final int top;
 
   public PlanarYUVLuminanceSource(byte[] yuvData, int dataWidth, int dataHeight, int left, int top,
-      int width, int height) {
+      int width, int height, boolean reverseHorizontal) {
     super(width, height);
 
     if (left + width > dataWidth || top + height > dataHeight) {
@@ -49,7 +51,10 @@ public final class PlanarYUVLuminanceSource extends LuminanceSource {
     this.dataWidth = dataWidth;
     this.dataHeight = dataHeight;
     this.left = left;
-    this.top = top; 
+    this.top = top;
+    if (reverseHorizontal) {
+      reverseHorizontal(width, height);
+    }
   }
 
   @Override
@@ -102,14 +107,6 @@ public final class PlanarYUVLuminanceSource extends LuminanceSource {
     return true;
   }
 
-  public int getDataWidth() {
-    return dataWidth;
-  }
-
-  public int getDataHeight() {
-    return dataHeight;
-  }
-
   public Bitmap renderCroppedGreyscaleBitmap() {
     int width = getWidth();
     int height = getHeight();
@@ -130,4 +127,17 @@ public final class PlanarYUVLuminanceSource extends LuminanceSource {
     bitmap.setPixels(pixels, 0, width, 0, 0, width, height);
     return bitmap;
   }
+
+  private void reverseHorizontal(int width, int height) {
+    byte[] yuvData = this.yuvData;
+    for (int y = 0, rowStart = top * dataWidth + left; y < height; y++, rowStart += dataWidth) {
+      int middle = rowStart + width / 2;
+      for (int x1 = rowStart, x2 = rowStart + width - 1; x1 < middle; x1++, x2--) {
+        byte temp = yuvData[x1];
+        yuvData[x1] = yuvData[x2];
+        yuvData[x2] = temp;
+      }
+    }
+  }
+
 }

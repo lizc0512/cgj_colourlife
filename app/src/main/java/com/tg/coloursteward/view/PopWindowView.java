@@ -15,7 +15,7 @@ import android.widget.PopupWindow;
 import com.hjq.permissions.OnPermission;
 import com.hjq.permissions.XXPermissions;
 import com.tg.coloursteward.R;
-import com.tg.coloursteward.activity.MipcaActivityCapture;
+import com.tg.coloursteward.activity.CaptureActivity;
 import com.tg.coloursteward.constant.Contants;
 import com.tg.coloursteward.info.GridViewInfo;
 import com.tg.coloursteward.util.MicroAuthTimeUtils;
@@ -110,7 +110,7 @@ public class PopWindowView extends PopupWindow {
                         .request(new OnPermission() {
                             @Override
                             public void hasPermission(List<String> granted, boolean isAll) {
-                                context.startActivity(new Intent(context, MipcaActivityCapture.class));
+                                context.startActivity(new Intent(context, CaptureActivity.class));
                                 PopWindowView.this.dismiss();
                             }
 

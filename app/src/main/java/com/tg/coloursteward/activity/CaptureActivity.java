@@ -10,6 +10,7 @@ import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.os.Vibrator;
 import android.provider.MediaStore;
 import android.support.v7.widget.LinearLayoutManager;
@@ -46,10 +47,9 @@ import com.tg.coloursteward.util.GsonUtils;
 import com.tg.coloursteward.util.ImageUtil;
 import com.tg.coloursteward.util.ToastUtil;
 import com.tg.coloursteward.util.Tools;
+import com.tg.coloursteward.zxing.CaptureActivityHandler;
+import com.tg.coloursteward.zxing.ViewfinderView;
 import com.tg.coloursteward.zxing.camera.CameraManager;
-import com.tg.coloursteward.zxing.decoding.CaptureActivityHandler;
-import com.tg.coloursteward.zxing.decoding.InactivityTimer;
-import com.tg.coloursteward.zxing.view.ViewfinderView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -65,19 +65,18 @@ import java.util.Vector;
  *
  * @author Administrator
  */
-public class MipcaActivityCapture extends BaseActivity implements Callback, OnClickListener, HttpResponse {
-    public static final String KEY_TEXT1 = "text1";
-    public static final String KEY_TEXT2 = "text2";
+public class CaptureActivity extends BaseActivity implements Callback, OnClickListener, HttpResponse {
     public final static String QRCODE_SOURCE = "qrcode_source";// 第三方调用彩管家的扫码功能 回调将值给它
     public final static String QRCODE_APPID = "qrcode_appid";//
     public final static String QRCODE_ISCALLBACK = "qrcode_iscallback";//
     public final static String QRCODE_TIME = "qrcode_time";//
+    public static final int LIGHT_ON = 0;
+    public static final int LIGHT_OFF = 1;
     private CaptureActivityHandler handler;
     private ViewfinderView viewfinderView;
     private boolean hasSurface;
     private Vector<BarcodeFormat> decodeFormats;
     private String characterSet;
-    private InactivityTimer inactivityTimer;
     private AuthTimeUtils mAuthTimeUtils;
     private HomeModel homeModel;
     private String qrSource = "";
@@ -92,6 +91,10 @@ public class MipcaActivityCapture extends BaseActivity implements Callback, OnCl
     private String isLine;
     private AuthTimeUtils authTimeUtils;
     private static final long VIBRATE_DURATION = 200L;
+    private CameraManager cameraManager;
+    private Result savedResultToShow;
+    private SurfaceHolder surfaceHolder;
+    private int currentFlashState = LIGHT_ON;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -106,20 +109,11 @@ public class MipcaActivityCapture extends BaseActivity implements Callback, OnCl
         iv_scan_picture.setOnClickListener(this);
         Intent data = getIntent();
         if (data != null) {
-            String text1 = data.getStringExtra(KEY_TEXT1);
-            String text2 = data.getStringExtra(KEY_TEXT2);
             qrSource = data.getStringExtra(QRCODE_SOURCE);
             appId = data.getStringExtra(QRCODE_APPID);
             isCallback = data.getStringExtra(QRCODE_ISCALLBACK);
-            if (!TextUtils.isEmpty(text1)) {
-                viewfinderView.setText1(text1);
-            }
-            if (!TextUtils.isEmpty(text2)) {
-                viewfinderView.setText2(text2);
-            }
         }
         hasSurface = false;
-        inactivityTimer = new InactivityTimer(this);
     }
 
     private void isCheckNet() {
@@ -135,27 +129,19 @@ public class MipcaActivityCapture extends BaseActivity implements Callback, OnCl
         });
     }
 
+    public CameraManager getCameraManager() {
+        return cameraManager;
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
-        if (viewfinderView != null) {
-            viewfinderView.setPause(false);
-        }
-        SurfaceView surfaceView = findViewById(R.id.preview_view);
-        SurfaceHolder surfaceHolder = surfaceView.getHolder();
-        if (hasSurface) {
-            initCamera(surfaceHolder);
-        } else {
-            surfaceHolder.addCallback(this);
-            surfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
-        }
+        initCamera();
         if (CameraManager.get().isFlashOpen()) {
             iv_scan_light.setImageResource(R.drawable.b0_torch_on);
         } else {
             iv_scan_light.setImageResource(R.drawable.b0_torch_off);
         }
-        decodeFormats = null;
-        characterSet = null;
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
         this.registerReceiver(netWorkStateReceiver, intentFilter);
@@ -164,14 +150,29 @@ public class MipcaActivityCapture extends BaseActivity implements Callback, OnCl
 
     @Override
     protected void onPause() {
-        super.onPause();
-        pause();
+        if (handler != null) {
+            handler.quitSynchronously();
+            handler = null;
+        }
+        if (null != cameraManager) {
+            cameraManager.closeDriver();
+        }
+        if (!hasSurface) {
+            SurfaceView surfaceView = (SurfaceView) findViewById(R.id.preview_view);
+            SurfaceHolder surfaceHolder = surfaceView.getHolder();
+            surfaceHolder.removeCallback(this);
+        }
+//        if (CameraManager.get().isFlashOpen()) {
+//            iv_scan_light.setImageResource(R.drawable.b0_torch_on);
+//        } else {
+//            iv_scan_light.setImageResource(R.drawable.b0_torch_off);
+//        }
         this.unregisterReceiver(netWorkStateReceiver);
+        super.onPause();
     }
 
     @Override
     protected void onDestroy() {
-        inactivityTimer.shutdown();
         super.onDestroy();
     }
 
@@ -182,7 +183,6 @@ public class MipcaActivityCapture extends BaseActivity implements Callback, OnCl
      * @param barcode
      */
     public void handleDecode(Result result, Bitmap barcode) {
-        inactivityTimer.onActivity();
         playBeepSoundAndVibrate();
         String resultString = result.getText();
         scanTime = System.currentTimeMillis();
@@ -268,30 +268,68 @@ public class MipcaActivityCapture extends BaseActivity implements Callback, OnCl
         }
     }
 
-    private void pause() {
-        if (viewfinderView != null) {
-            viewfinderView.setPause(true);
-        }
-        if (handler != null) {
-            handler.quitSynchronously();
-            handler = null;
-        }
-        CameraManager.get().closeDriver();
-        if (CameraManager.get().isFlashOpen()) {
-            iv_scan_light.setImageResource(R.drawable.b0_torch_on);
+    private void initCamera() {
+        cameraManager = new CameraManager(getApplication());
+
+        viewfinderView.setCameraManager(cameraManager);
+
+        handler = null;
+
+        resetStatusView();
+
+        SurfaceView surfaceView = (SurfaceView) findViewById(R.id.preview_view);
+        surfaceHolder = surfaceView.getHolder();
+        if (hasSurface) {
+            // The activity was paused but not stopped, so the surface still
+            // exists. Therefore
+            // surfaceCreated() won't be called, so init the camera here.
+            initCamera(surfaceHolder);
         } else {
-            iv_scan_light.setImageResource(R.drawable.b0_torch_off);
+            // Install the callback and wait for surfaceCreated() to init the
+            // camera.
+            surfaceHolder.addCallback(this);
+            surfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
         }
+
+        decodeFormats = null;
+        characterSet = null;
     }
 
     private void initCamera(SurfaceHolder surfaceHolder) {
         try {
-            CameraManager.get().openDriver(surfaceHolder);
-        } catch (IOException e) {
-            e.printStackTrace();
+            cameraManager.openDriver(surfaceHolder);
+            // Creating the handler starts the preview, which can also throw a
+            // RuntimeException.
+            if (handler == null) {
+                handler = new CaptureActivityHandler(this, decodeFormats,
+                        characterSet, cameraManager);
+            }
+            decodeOrStoreSavedBitmap(null, null);
+        } catch (IOException ioe) {
+            // displayFrameworkBugMessageAndExit();
+        } catch (RuntimeException e) {
+            ToastUtil.showShortToast(getApplicationContext(), getResources().getString(R.string.user_camerapermission_notice));
         }
+    }
+
+    private void resetStatusView() {
+        viewfinderView.setVisibility(View.VISIBLE);
+    }
+
+    private void decodeOrStoreSavedBitmap(Bitmap bitmap, Result result) {
+        // Bitmap isn't used yet -- will be used soon
         if (handler == null) {
-            handler = new CaptureActivityHandler(this, decodeFormats, characterSet);
+            savedResultToShow = result;
+        } else {
+            if (result != null) {
+                savedResultToShow = result;
+            }
+            if (savedResultToShow != null) {
+                Message message = Message.obtain(handler,
+                        R.id.decode_succeeded, savedResultToShow);
+                handler.sendMessage(message);
+            }
+            savedResultToShow = null;
         }
     }
 
@@ -350,11 +388,18 @@ public class MipcaActivityCapture extends BaseActivity implements Callback, OnCl
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.iv_scan_light:
-                CameraManager.get().openOrCloseFlash();
-                if (CameraManager.get().isFlashOpen()) {
-                    iv_scan_light.setImageResource(R.drawable.b0_torch_on);
+                if (currentFlashState == LIGHT_ON) {
+                    if (cameraManager != null) {
+                        cameraManager.openLight();
+                        currentFlashState = LIGHT_OFF;
+                        iv_scan_light.setImageResource(R.drawable.b0_torch_on);
+                    }
                 } else {
-                    iv_scan_light.setImageResource(R.drawable.b0_torch_off);
+                    if (cameraManager != null) {
+                        cameraManager.offLight();
+                        currentFlashState = LIGHT_ON;
+                        iv_scan_light.setImageResource(R.drawable.b0_torch_off);
+                    }
                 }
                 break;
             case R.id.iv_scan_picture:
@@ -371,11 +416,11 @@ public class MipcaActivityCapture extends BaseActivity implements Callback, OnCl
         if (requestCode == 100) {
             if (resultCode == RESULT_OK && null != data) {
                 Uri uri = data.getData();
-                String path = Tools.getPathByUri(MipcaActivityCapture.this, uri);
+                String path = Tools.getPathByUri(CaptureActivity.this, uri);
                 Bitmap bitmap = ImageUtil.compressImageFromFile(path, 720f, 920f);
                 Result result = DecodeImage.handleQRCodeFormBitmap(bitmap);
                 if (result == null) {
-                    ToastUtil.showShortToast(MipcaActivityCapture.this, "请选择是二维码的图片");
+                    ToastUtil.showShortToast(CaptureActivity.this, "请选择是二维码的图片");
                 } else {
                     handleDecode(result, bitmap);
                 }
@@ -403,7 +448,7 @@ public class MipcaActivityCapture extends BaseActivity implements Callback, OnCl
                         if (null == mAuthTimeUtils) {
                             mAuthTimeUtils = new AuthTimeUtils();
                         }
-                        mAuthTimeUtils.IsAuthTime(MipcaActivityCapture.this, url, auth_type, "");
+                        mAuthTimeUtils.IsAuthTime(CaptureActivity.this, url, auth_type, "");
                         this.finish();
                     }
                 } else {
@@ -454,14 +499,14 @@ public class MipcaActivityCapture extends BaseActivity implements Callback, OnCl
                     if ("scanStar".equals(url)) {
                         reStarScan();
                     } else if ("scanStop".equals(url)) {
-                        MipcaActivityCapture.this.finish();
+                        CaptureActivity.this.finish();
                     } else {
                         if (null == authTimeUtils) {
                             authTimeUtils = new AuthTimeUtils();
                         }
-                        authTimeUtils.IsAuthTime(MipcaActivityCapture.this, url,
+                        authTimeUtils.IsAuthTime(CaptureActivity.this, url,
                                 auth_type, "");
-                        MipcaActivityCapture.this.finish();
+                        CaptureActivity.this.finish();
                     }
                     dialog.dismiss();
                 }

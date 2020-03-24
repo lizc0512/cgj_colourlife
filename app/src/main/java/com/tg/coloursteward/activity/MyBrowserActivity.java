@@ -393,7 +393,7 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
             webView.addJavascriptInterface(new JsInteration(), "js");
             webView.addJavascriptInterface(new JsInteration(), "myjava");
             webView.loadUrl(url, headerMap);
-//            webView.loadUrl("file:///android_asset/js.html");
+
         }
     }
 
@@ -1018,7 +1018,7 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
                     .request(new OnPermission() {
                         @Override
                         public void hasPermission(List<String> granted, boolean isAll) {
-                            MyBrowserActivity.this.startActivity(new Intent(MyBrowserActivity.this, MipcaActivityCapture.class));
+                            MyBrowserActivity.this.startActivity(new Intent(MyBrowserActivity.this, CaptureActivity.class));
                         }
 
                         @Override
@@ -1242,10 +1242,10 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
                 .request(new OnPermission() {
                     @Override
                     public void hasPermission(List<String> granted, boolean isAll) {
-                        Intent intent = new Intent(MyBrowserActivity.this, MipcaActivityCapture.class);
-                        intent.putExtra(MipcaActivityCapture.QRCODE_SOURCE, value);
-                        intent.putExtra(MipcaActivityCapture.QRCODE_APPID, appid);
-                        intent.putExtra(MipcaActivityCapture.QRCODE_ISCALLBACK, isCallBack);
+                        Intent intent = new Intent(MyBrowserActivity.this, CaptureActivity.class);
+                        intent.putExtra(CaptureActivity.QRCODE_SOURCE, value);
+                        intent.putExtra(CaptureActivity.QRCODE_APPID, appid);
+                        intent.putExtra(CaptureActivity.QRCODE_ISCALLBACK, isCallBack);
                         startActivityForResult(intent, YUN_SHANG_SCANNERCODE);
                     }
 

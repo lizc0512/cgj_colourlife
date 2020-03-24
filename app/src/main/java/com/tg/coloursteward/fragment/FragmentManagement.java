@@ -90,7 +90,13 @@ public class FragmentManagement extends Fragment implements HttpResponse, View.O
     }
 
     private void showCache() {
-
+        String cacheData = SharedPreferencesUtils.getInstance().getStringData(SpConstants.UserModel.MICRODATA, "");
+        if (!TextUtils.isEmpty(cacheData)) {
+            initInitialize(cacheData);
+        } else {
+            String localCache = Contants.storage.MICRODATA;
+            initInitialize(localCache);
+        }
     }
 
     private void initLayout(String corpUuid) {
@@ -128,10 +134,6 @@ public class FragmentManagement extends Fragment implements HttpResponse, View.O
         tv_miniservice_title.setOnClickListener(this);
         sr_micro.setOnRefreshListener(() ->
                 initLayout(cropUuid));
-        String cacheData = SharedPreferencesUtils.getInstance().getStringData(SpConstants.UserModel.MICRODATA, "");
-        if (!TextUtils.isEmpty(cacheData)) {
-            initInitialize(cacheData);
-        }
     }
 
     /**
@@ -378,6 +380,7 @@ public class FragmentManagement extends Fragment implements HttpResponse, View.O
                 if (!TextUtils.isEmpty(result)) {
                     SharedPreferencesUtils.getInstance().saveStringData(SpConstants.UserModel.MICRODATA, result);
                     initInitialize(result);
+                    TryAgain = true;//请求成功状态改为True;
                 } else if (TryAgain) {//失败了重试一次，还不行就用缓存
                     initLayout(cropUuid);
                     TryAgain = false;

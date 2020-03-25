@@ -185,11 +185,4 @@
     <color name="color_cdcfd1">#cdcfd1</color>
     <color name="color_27a2f0">#27a2f0</color>
 
-    <color name="viewfinder_frame">#ff000000</color>
-    <color name="viewfinder_role">#ff00aa00</color>
-    <color name="viewfinder_laser">#ffff0000</color>
-    <color name="result_image_border">#ffffffff</color>
-    <color name="result_minor_text">#ffc0c0c0</color>
-    <color name="result_points">#c000ff00</color>
-
 </resources>

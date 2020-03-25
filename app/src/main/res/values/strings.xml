@@ -62,7 +62,6 @@
     <string name="user_again_getcode">重新获取</string>
     <string name="user_already_send">已发送</string>
     <string name="user_withdraw_title">提示</string>
-    <string name="user_camerapermission_notice">相机权限被禁止，请去开启该权限</string>
 
 
 </resources>

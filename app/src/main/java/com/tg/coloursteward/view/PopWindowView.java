@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
+import android.view.WindowManager;
 import android.widget.PopupWindow;
 
 import com.hjq.permissions.OnPermission;
@@ -17,7 +18,6 @@ import com.hjq.permissions.XXPermissions;
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.activity.CaptureActivity;
 import com.tg.coloursteward.constant.Contants;
-import com.tg.coloursteward.info.GridViewInfo;
 import com.tg.coloursteward.util.MicroAuthTimeUtils;
 import com.tg.coloursteward.util.ToastUtil;
 import com.youmai.hxsdk.HuxinSdkManager;
@@ -28,15 +28,28 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PopWindowView extends PopupWindow {
+
+    private static PopWindowView instance;
     private View conentView;
     private MicroAuthTimeUtils microAuthTimeUtils;
+    private Activity mActivity;
 
-    public PopWindowView(final Activity context, final ArrayList<GridViewInfo> list) {
+    public static PopWindowView getInstance(Activity activity, View parent) {
+        if (null == instance) {
+            synchronized (PopWindowView.class) {
+                if (null == instance) {
+                    instance = new PopWindowView(activity, parent);
+                }
+            }
+        }
+        return instance;
+    }
+
+    public PopWindowView(final Activity context, View parent) {
+        this.mActivity = context;
         LayoutInflater inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         conentView = inflater.inflate(R.layout.popup_window, null);
-        int h = context.getWindowManager().getDefaultDisplay().getHeight();
-        int w = context.getWindowManager().getDefaultDisplay().getWidth();
         // 设置SelectPicPopupWindow的View
         this.setContentView(conentView);
         // 设置SelectPicPopupWindow弹出窗体的宽  
@@ -54,6 +67,11 @@ public class PopWindowView extends PopupWindow {
         this.setBackgroundDrawable(dw);
         // 设置SelectPicPopupWindow弹出窗体动画效果  
         this.setAnimationStyle(R.style.AnimationPreview);
+        this.setOnDismissListener(() -> {
+            WindowManager.LayoutParams lp = mActivity.getWindow().getAttributes();
+            lp.alpha = 1.0f;
+            mActivity.getWindow().setAttributes(lp);
+        });
         microAuthTimeUtils = new MicroAuthTimeUtils();
         conentView.findViewById(R.id.rl_add_group).setOnClickListener(new OnClickListener() {
             @Override
@@ -125,6 +143,12 @@ public class PopWindowView extends PopupWindow {
         });
     }
 
+    private void lightoff() {
+        WindowManager.LayoutParams lp = mActivity.getWindow().getAttributes();
+        lp.alpha = 0.3f;
+        mActivity.getWindow().setAttributes(lp);
+    }
+
     /**
      * 显示popupWindow
      *
@@ -134,6 +158,7 @@ public class PopWindowView extends PopupWindow {
         if (!this.isShowing()) {
             // 以下拉方式显示popupwindow  
             this.showAsDropDown(parent, 0, 0);
+            lightoff();
         } else {
             this.dismiss();
         }

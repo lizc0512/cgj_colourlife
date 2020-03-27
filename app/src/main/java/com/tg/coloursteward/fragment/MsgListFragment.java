@@ -115,10 +115,8 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, View.OnC
                 startActivity(new Intent(mContext, InviteRegisterActivity.class));
                 break;
             case R.id.iv_contactfragment_scan:
-                PopWindowView popWindowView = new PopWindowView((Activity) mContext, null);
-                popWindowView.setOnDismissListener(new PopupDismissListener());
+                PopWindowView popWindowView = PopWindowView.getInstance(mActivity, iv_contactfragment_scan);
                 popWindowView.showPopupWindow(iv_contactfragment_scan);
-                lightoff();
                 break;
             case R.id.rl_home_internet:
                 Intent intent = new Intent(Settings.ACTION_SETTINGS);

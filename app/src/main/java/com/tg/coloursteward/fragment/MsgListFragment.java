@@ -95,10 +95,6 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, View.OnC
     private List<Integer> unReadListPosition = new ArrayList<>();
     private int curPostion;
 
-    // 空页面 start
-    private LinearLayout mEmptyView;
-    private EmptyRecyclerViewDataObserver mEmpty = new EmptyRecyclerViewDataObserver();
-    // 空页面 end
     private ImageView iv_contactfragment_qrcode;
     private ImageView iv_contactfragment_scan;
     private AlertDialog dialog;
@@ -125,12 +121,6 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, View.OnC
         }
     }
 
-    private void lightoff() {
-        WindowManager.LayoutParams lp = getActivity().getWindow().getAttributes();
-        lp.alpha = 0.3f;
-        getActivity().getWindow().setAttributes(lp);
-    }
-
     @Override
     public void OnHttpResponse(int what, String result) {
         switch (what) {
@@ -150,46 +140,8 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, View.OnC
                 break;
             case 1:
                 if (!TextUtils.isEmpty(result)) {
-                    List<MsgConfig.ContentBean.DataBean> list = new ArrayList<>();
-                    try {
-                        JSONObject jsonObject = new JSONObject(result);
-                        String content = jsonObject.getString("content");
-                        if (TextUtils.isEmpty(content)) {
-                            return;
-                        }
-                        HomeMsgEntity homeMsgEntity = new HomeMsgEntity();
-                        homeMsgEntity = GsonUtils.gsonToBean(result, HomeMsgEntity.class);
-                        for (int i = 0; i < homeMsgEntity.getContent().getData().size(); i++) {
-                            MsgConfig.ContentBean.DataBean dataBean = new MsgConfig.ContentBean.DataBean();
-                            dataBean.setICON(homeMsgEntity.getContent().getData().get(i).getApp_logo());
-                            dataBean.setComefrom(homeMsgEntity.getContent().getData().get(i).getApp_name());
-                            dataBean.setOwner_name(homeMsgEntity.getContent().getData().get(i).getOwner_name());
-                            dataBean.setTitle(homeMsgEntity.getContent().getData().get(i).getTitle());
-                            dataBean.setClient_code(homeMsgEntity.getContent().getData().get(i).getClient_code());
-                            dataBean.setApp_id(homeMsgEntity.getContent().getData().get(i).getApp_id());
-                            dataBean.setHomePushTime(homeMsgEntity.getContent().getData().get(i).getHomePushTime());
-                            dataBean.setUrl(homeMsgEntity.getContent().getData().get(i).getUrl());
-                            if (homeMsgEntity.getContent().getData().get(i).getIsread() > 0) {
-                                dataBean.setNotread(0);
-                            } else {
-                                dataBean.setNotread(1);
-                            }
-                            dataBean.setApp_uuid(homeMsgEntity.getContent().getData().get(i).getApp_uuid());
-                            list.add(dataBean);
-                            dataBean = null;
-
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        return;
-                    }
-                    if (list != null && list.size() > 0) {
-                        for (MsgConfig.ContentBean.DataBean item : list) {
-                            ExCacheMsgBean bean = new ExCacheMsgBean(item);
-                            mMessageAdapter.addPushMsgItem(bean);
-                        }
-                        initUnreadList();
-                    }
+                    SharedPreferencesUtils.getInstance().saveStringData(SpConstants.UserModel.HOMEDATA, result);
+                    initSetData(result);
                 }
                 break;
             case 2:
@@ -236,15 +188,47 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, View.OnC
         }
     }
 
-    class PopupDismissListener implements PopupWindow.OnDismissListener {
+    private void initSetData(String result) {
+        List<MsgConfig.ContentBean.DataBean> list = new ArrayList<>();
+        try {
+            JSONObject jsonObject = new JSONObject(result);
+            String content = jsonObject.getString("content");
+            if (TextUtils.isEmpty(content)) {
+                return;
+            }
+            HomeMsgEntity homeMsgEntity = new HomeMsgEntity();
+            homeMsgEntity = GsonUtils.gsonToBean(result, HomeMsgEntity.class);
+            for (int i = 0; i < homeMsgEntity.getContent().getData().size(); i++) {
+                MsgConfig.ContentBean.DataBean dataBean = new MsgConfig.ContentBean.DataBean();
+                dataBean.setICON(homeMsgEntity.getContent().getData().get(i).getApp_logo());
+                dataBean.setComefrom(homeMsgEntity.getContent().getData().get(i).getApp_name());
+                dataBean.setOwner_name(homeMsgEntity.getContent().getData().get(i).getOwner_name());
+                dataBean.setTitle(homeMsgEntity.getContent().getData().get(i).getTitle());
+                dataBean.setClient_code(homeMsgEntity.getContent().getData().get(i).getClient_code());
+                dataBean.setApp_id(homeMsgEntity.getContent().getData().get(i).getApp_id());
+                dataBean.setHomePushTime(homeMsgEntity.getContent().getData().get(i).getHomePushTime());
+                dataBean.setUrl(homeMsgEntity.getContent().getData().get(i).getUrl());
+                if (homeMsgEntity.getContent().getData().get(i).getIsread() > 0) {
+                    dataBean.setNotread(0);
+                } else {
+                    dataBean.setNotread(1);
+                }
+                dataBean.setApp_uuid(homeMsgEntity.getContent().getData().get(i).getApp_uuid());
+                list.add(dataBean);
+                dataBean = null;
 
-        @Override
-        public void onDismiss() {
-            WindowManager.LayoutParams lp = getActivity().getWindow().getAttributes();
-            lp.alpha = 1.0f;
-            getActivity().getWindow().setAttributes(lp);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return;
         }
-
+        if (null != list && list.size() > 0) {
+            for (MsgConfig.ContentBean.DataBean item : list) {
+                ExCacheMsgBean bean = new ExCacheMsgBean(item);
+                mMessageAdapter.addPushMsgItem(bean);
+            }
+            initUnreadList();
+        }
     }
 
     private static class MsgHandler extends Handler {
@@ -311,6 +295,10 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, View.OnC
         reqPushMsg();
         initDialog();
         initNet();
+        String cacheData = SharedPreferencesUtils.getInstance().getStringData(SpConstants.UserModel.HOMEDATA, "");
+        if (!TextUtils.isEmpty(cacheData)) {
+            initSetData(cacheData);
+        }
     }
 
     private void initNet() {
@@ -426,7 +414,6 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, View.OnC
         mLinearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(mLinearLayoutManager);
         mMessageAdapter = new MessageAdapter(getActivity());
-        mEmptyView = (LinearLayout) rootView.findViewById(R.id.message_empty_view);
         recyclerView.setRefreshProgressStyle(AVLoadingIndicatorView.BallPulse);
         recyclerView.setAdapter(mMessageAdapter);
         recyclerView.setLoadingMoreEnabled(false);
@@ -442,8 +429,6 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, View.OnC
             public void onLoadMore() {
             }
         });
-        mMessageAdapter.registerAdapterDataObserver(mEmpty);
-
         mMessageAdapter.setOnItemClickListener(new MessageAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(ExCacheMsgBean bean, int position) {
@@ -521,9 +506,6 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, View.OnC
     @Override
     public void onDetach() {
         super.onDetach();
-        if (mMessageAdapter != null) {
-            mMessageAdapter.unregisterAdapterDataObserver(mEmpty);
-        }
     }
 
 
@@ -647,38 +629,6 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, View.OnC
             initUnreadList();
         }
     }
-
-
-    private class EmptyRecyclerViewDataObserver extends RecyclerView.AdapterDataObserver {
-        @Override
-        public void onChanged() {
-            checkIfEmpty();
-        }
-
-        @Override
-        public void onItemRangeInserted(int positionStart, int itemCount) {
-            checkIfEmpty();
-        }
-
-        @Override
-        public void onItemRangeRemoved(int positionStart, int itemCount) {
-            checkIfEmpty();
-        }
-    }
-
-    private void checkIfEmpty() {
-        /*Log.e(TAG, "onSaveInstanceState--showGuide");
-        if (mMessageAdapter != null) {
-            int count = mMessageAdapter.getItemCount();
-            //正常状态
-            if (count == 1) {
-                mEmptyView.setVisibility(View.VISIBLE);
-            } else {
-                mEmptyView.setVisibility(View.GONE);
-            }
-        }*/
-    }
-
 
     private void initUnreadList() {
         List<ExCacheMsgBean> list = mMessageAdapter.getMsgList();

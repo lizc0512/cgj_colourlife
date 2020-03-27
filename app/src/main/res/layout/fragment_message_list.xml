@@ -68,40 +68,10 @@
             android:textSize="@dimen/font_15sp" />
     </RelativeLayout>
 
-    <RelativeLayout
+    <com.jcodecraeer.xrecyclerview.XRecyclerView
+        android:id="@+id/message_refresh_recycler"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <LinearLayout
-            android:id="@+id/message_empty_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:orientation="vertical"
-            android:visibility="gone">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/hx_message_empty_bg" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:text="@string/hxm_no_record_yet"
-                android:textColor="@color/hxs_color_gray"
-                android:textSize="16sp" />
-
-        </LinearLayout>
-
-        <com.jcodecraeer.xrecyclerview.XRecyclerView
-            android:id="@+id/message_refresh_recycler"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="1px" />
-
-    </RelativeLayout>
-
+        android:layout_height="wrap_content"
+        android:layout_marginTop="1px" />
 
 </LinearLayout>

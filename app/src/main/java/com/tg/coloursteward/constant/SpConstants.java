@@ -28,6 +28,7 @@ public interface SpConstants {
         String ISUSERAJM = "userajm";
         String UPDATETIME_IMG = "updatetime_img";
         String SCANCODEOFFDATA = "scancodeoffdata";
+        String HOMEDATA = "homedata";
     }
 
     interface MicroContant {

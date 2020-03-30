@@ -89,6 +89,7 @@ import com.tg.coloursteward.baseModel.HttpResponse;
 import com.tg.coloursteward.constant.Contants;
 import com.tg.coloursteward.constant.SpConstants;
 import com.tg.coloursteward.entity.H5OauthEntity;
+import com.tg.coloursteward.entity.ObtainDownloadEntity;
 import com.tg.coloursteward.entity.WebviewRightEntity;
 import com.tg.coloursteward.info.UserInfo;
 import com.tg.coloursteward.inter.Oauth2CallBack;
@@ -112,6 +113,8 @@ import com.tg.coloursteward.util.Utils;
 import com.tg.coloursteward.view.WebviewRightPopWindowView;
 import com.tg.coloursteward.view.X5WebView;
 import com.tg.coloursteward.view.dialog.ToastFactory;
+import com.yanzhenjie.nohttp.BasicBinary;
+import com.yanzhenjie.nohttp.FileBinary;
 import com.youmai.hxsdk.group.AddContactsCreateGroupActivity;
 
 import org.json.JSONException;
@@ -215,6 +218,7 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
     private String authms2Token;
     private String webRightJson;
     private String appName = "cgj";
+    private String fileName;
     protected static final FrameLayout.LayoutParams COVER_SCREEN_PARAMS = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
     private BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
@@ -393,7 +397,6 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
             webView.addJavascriptInterface(new JsInteration(), "js");
             webView.addJavascriptInterface(new JsInteration(), "myjava");
             webView.loadUrl(url, headerMap);
-
         }
     }
 
@@ -442,17 +445,34 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
                     try {
                         JSONObject jsonObject = new JSONObject(result);
                         String fileId = jsonObject.getString("content");
-                        Map<String, Object> map = new HashMap<>();
-                        map.put("file_id", fileId);
-                        String json = GsonUtils.gsonString(map);
-                        if (null != webView) {
-                            webView.loadUrl("javascript:cgjUploadCallback('" + json + "')");
-                            ToastUtil.showShortToast(this, "上传成功");
+                        if (!TextUtils.isEmpty(fileId)) {
+                            String corp_id = Tools.getStringValue(this, Contants.storage.CORPID);
+                            microModel.getObtainDownloadFileInfo(3, authms2Token, corp_id, fileId, true, this);
+                        } else {
+                            ToastUtil.showShortToast(MyBrowserActivity.this, "未获取到文件id，请重新上传");
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
 
+                }
+                break;
+            case 3:
+                if (!TextUtils.isEmpty(result)) {
+                    ObtainDownloadEntity entity = new ObtainDownloadEntity();
+                    entity = GsonUtils.gsonToBean(result, ObtainDownloadEntity.class);
+                    if (null != entity.getContent() && entity.getContent().size() > 0) {
+                        Map<String, Object> map = new HashMap<>();
+                        map.put("file_id", entity.getContent().get(0).getId());
+                        map.put("file_url", entity.getContent().get(0).getDp());
+                        map.put("file_preview", entity.getContent().get(0).getPp());
+                        map.put("file_name", fileName);
+                        String json = GsonUtils.gsonString(map);
+                        if (null != webView) {
+                            webView.loadUrl("javascript:cgjUploadCallback('" + json + "')");
+                            ToastUtil.showShortToast(this, "上传成功");
+                        }
+                    }
                 }
                 break;
         }
@@ -1544,7 +1564,10 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
 
     private void initUploadFile(Uri uriPath, String token, String cropId, String appName) {
         microModel = new MicroModel(this);
-        microModel.postUploadFile(2, token, cropId, getPath(this, uriPath), appName, true, this);
+        String urlPath = getPath(this, uriPath);
+        BasicBinary binary = new FileBinary(new File(urlPath));
+        fileName = binary.getFileName();
+        microModel.postUploadFile(2, token, cropId, urlPath, appName, true, this);
     }
 
     /**

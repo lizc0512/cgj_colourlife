@@ -37,6 +37,7 @@ public class MicroModel extends BaseModel {
     private String microItemUrl = "/app/home/microservices/data/item";
     private String dataShowUrl = "/app/home/utility/managerMsg";
     private String uploadUrl = "/newfileup/pcUploadFile?appID=" + DES.APP_ID;
+    private String obtainDownloadUrl = "/newfileup/obtainDownloadPaths";
     private Context mContext;
 
     public MicroModel(Context context) {
@@ -239,7 +240,7 @@ public class MicroModel extends BaseModel {
      * @param path
      * @param httpResponse
      */
-    public void postUploadFile(int what, String access_token, String corpid, String path, String appName,boolean isLoading, final HttpResponse httpResponse) {
+    public void postUploadFile(int what, String access_token, String corpid, String path, String appName, boolean isLoading, final HttpResponse httpResponse) {
         Map<String, Object> params = new HashMap<>();
         BasicBinary binary = new FileBinary(new File(path));
         params.put("access_token", access_token);
@@ -251,6 +252,48 @@ public class MicroModel extends BaseModel {
         params.put("auth_ver", "2.0");
         final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 4, uploadUrl), RequestMethod.POST);
         request.add("file", binary);
+        request(what, request, RequestEncryptionUtils.getIceMap(mContext, params), new HttpListener<String>() {
+            @Override
+            public void onSucceed(int what, Response<String> response) {
+                int responseCode = response.getHeaders().getResponseCode();
+                String result = response.get();
+                if (responseCode == RequestEncryptionUtils.responseSuccess) {
+                    int code = showSuccesResultMessage(result);
+                    if (code == 0) {
+                        httpResponse.OnHttpResponse(what, result);
+                    }
+                } else {
+                    showErrorCodeMessage(response);
+                }
+            }
+
+            @Override
+            public void onFailed(int what, Response<String> response) {
+                showExceptionMessage(what, response);
+            }
+        }, true, isLoading);
+    }
+
+    /**
+     * 获取预览图、下载地址接口
+     *
+     * @param what
+     * @param access_token
+     * @param corpid
+     * @param id
+     * @param isLoading
+     * @param httpResponse
+     */
+    public void getObtainDownloadFileInfo(int what, String access_token, String corpid, String id, boolean isLoading, final HttpResponse httpResponse) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("access_token", access_token);
+        params.put("corpid", corpid);
+        params.put("auth_ver", "2.0");
+        params.put("url_type", "https");
+        params.put("ids", id);
+        params.put("width", 300);
+        params.put("height", 300);
+        final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 4, obtainDownloadUrl), RequestMethod.GET);
         request(what, request, RequestEncryptionUtils.getIceMap(mContext, params), new HttpListener<String>() {
             @Override
             public void onSucceed(int what, Response<String> response) {

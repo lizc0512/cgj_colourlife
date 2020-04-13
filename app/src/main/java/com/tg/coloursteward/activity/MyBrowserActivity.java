@@ -343,10 +343,6 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
                 return true;
             }
 
-            @Override
-            public void onPageFinished(WebView view, String url) {
-                tvTitle.setText(view.getTitle());
-            }
         });
 
         WebSettings settings = webView.getSettings();
@@ -553,6 +549,15 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
      * 利用谷歌webView做交互
      */
     public class XHSWebChromeClient extends WebChromeClient {
+
+        @Override
+        public void onReceivedTitle(WebView webView, String s) {
+            super.onReceivedTitle(webView, s);
+            String title = webView.getTitle();
+            if (!TextUtils.isEmpty(title)) {
+                tvTitle.setText(title);
+            }
+        }
 
         @Override
         public View getVideoLoadingProgressView() {

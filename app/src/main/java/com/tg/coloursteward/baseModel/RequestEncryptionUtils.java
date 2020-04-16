@@ -1,6 +1,7 @@
 package com.tg.coloursteward.baseModel;
 
 import android.content.Context;
+import android.net.Uri;
 import android.text.TextUtils;
 
 import com.tg.coloursteward.BuildConfig;
@@ -177,7 +178,8 @@ public class RequestEncryptionUtils {
                 if (null != item && !TextUtils.isEmpty(item.getValue().toString())) {
                     String key = item.getKey();
                     String val = item.getValue().toString();
-                    val = URLEncoder.encode(val, "utf-8");
+//                    val = URLEncoder.encode(val, "utf-8");
+                    val = Uri.encode(val);
                     val = val.replace(" ", "%20");
                     val = val.replace("*", "%2A");
                     val = val.replace("+", "%2B");

@@ -1221,6 +1221,32 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
             intent.putExtra(AddContactsCreateGroupActivity.ISFORM_WEB, true);
             startActivityForResult(intent, SELECT_ADDRESS_BOOK);
         }
+
+        @JavascriptInterface
+        public String cgjUserInfo() {
+            String json = "";
+            try {
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("corp_id", UserInfo.corp_id);//租户id
+                jsonObject.put("username", UserInfo.employeeAccount);//OA
+                jsonObject.put("name", UserInfo.realname);//姓名
+                jsonObject.put("account_uuid", UserInfo.uid);//UUID
+                jsonObject.put("gender", UserInfo.sex);
+                if (TextUtils.isEmpty(UserInfo.mobile)) {
+                    jsonObject.put("mobile", UserInfo.init_mobile);
+                } else {
+                    jsonObject.put("mobile", UserInfo.mobile);
+                }
+                jsonObject.put("job_type", UserInfo.jobName);//岗位
+                jsonObject.put("job_uuid", UserInfo.job_uuid);//岗位id
+                jsonObject.put("org_name", UserInfo.familyName);//组织架构名称
+                jsonObject.put("org_uuid", UserInfo.orgId);//组织架构id
+                json = jsonObject.toString();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            return json;
+        }
     }
 
     private void initFunction(String json) {

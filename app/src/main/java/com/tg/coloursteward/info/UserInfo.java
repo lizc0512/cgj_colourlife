@@ -14,7 +14,7 @@ public class UserInfo {
     public static String password = "";
     public static String cashierpassword = "";
     public static String jobName = "";
-    public static String familyName = "";
+    public static String familyName = "";//组织架构名称
     public static String orgId = "";//组织架构ID
     public static String infoorgId = "";//组织架构ID
 

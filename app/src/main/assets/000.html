@@ -161,5 +161,32 @@
 
     </script>
 </div>
+
+<div class="mui-content">
+
+    <button onclick="info()">H5调用</button>
+
+    <p id="info" style="padding: 10px;">显示结果</p>
+
+    <script type="text/javascript">
+
+    //Android调用：
+    function cgjuserinfo(message){
+        document.getElementById("info").innerHTML=message;
+        alert(message);
+    }
+     //Android调用：无参无返回值的方法
+    function cgjuserinfo222(){
+        document.getElementById("info").innerHTML="hello world";
+    }
+      //H5 JS调用源生方法
+    function info() {
+         //android为约定的别名(别名也可以自己定义，保持一致就好)；
+        //back()为原生的方法，方法名自己定保持一致就好
+         window.myjava.cgjUserInfo()
+    }
+
+    </script>
+</div>
 </body>
 </html>

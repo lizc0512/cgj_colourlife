@@ -30,7 +30,6 @@ import android.os.Message;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.provider.OpenableColumns;
-import android.support.v4.content.FileProvider;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.Base64;
@@ -56,6 +55,8 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.core.content.FileProvider;
 
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
@@ -89,6 +90,7 @@ import com.tg.coloursteward.baseModel.HttpResponse;
 import com.tg.coloursteward.constant.Contants;
 import com.tg.coloursteward.constant.SpConstants;
 import com.tg.coloursteward.entity.H5OauthEntity;
+import com.tg.coloursteward.entity.H5UploadEntity;
 import com.tg.coloursteward.entity.ObtainDownloadEntity;
 import com.tg.coloursteward.entity.WebviewRightEntity;
 import com.tg.coloursteward.info.UserInfo;
@@ -155,6 +157,7 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
     public static final int PIC_File_UPLOAD_IMG = 1012;
     public static final int PIC_File_UPLOAD_FILE = 1013;
     public static final int SELECT_ADDRESS_BOOK = 1014;
+    public static final int PIC_FIlE_UPLOAD_VIDEO = 1015;
     public static final String KEY_HIDE_TITLE = "hide";
     public static final String KEY_TITLE = "title";
     public static final String KEY_HTML_TEXT = "text";
@@ -219,6 +222,7 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
     private String webRightJson;
     private String appName = "cgj";
     private String fileName;
+    private String libaryType = "";
     protected static final FrameLayout.LayoutParams COVER_SCREEN_PARAMS = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
     private BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
@@ -632,23 +636,8 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
          * @param uploadMsg
          * @param acceptType
          */
-        // For Android 3.0+
-        public void openFileChooser(ValueCallback<Uri> uploadMsg, String acceptType) {
-            Log.i("test", "openFileChooser 1");
-            MyBrowserActivity.this.uploadFile = uploadFile;
-            showPhotoSelector(false, "");
-        }
-
-        // For Android < 3.0
-        public void openFileChooser(ValueCallback<Uri> uploadMsgs) {
-            Log.i("test", "openFileChooser 2");
-            MyBrowserActivity.this.uploadFile = uploadFile;
-            showPhotoSelector(false, "");
-        }
-
         // For Android  > 4.1.1
         public void openFileChooser(ValueCallback<Uri> uploadMsg, String acceptType, String capture) {
-            Log.i("test", "openFileChooser 3");
             MyBrowserActivity.this.uploadFile = uploadFile;
             showPhotoSelector(false, "");
         }
@@ -1173,19 +1162,19 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
 
         /**
          * H5调原生上传页面
+         * e
          *
          * @param data
          */
         @JavascriptInterface
         public void cgjUploadHandler(String data) {
-            try {
-                JSONObject jsonObject = new JSONObject(data);
-                appName = jsonObject.getString("appName");
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+            H5UploadEntity entity = new H5UploadEntity();
+            entity = GsonUtils.gsonToBean(data, H5UploadEntity.class);
+            appName = entity.getAppName();
+            List<String> typeList = new ArrayList<>();
+            typeList = entity.getTypes();
             isWebUpload = true;
-            showPhotoSelector(false, "");
+            webUploadSelect(typeList);
         }
 
         /**
@@ -1247,6 +1236,116 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
             }
             return json;
         }
+    }
+
+    /**
+     * 上传文件类型
+     *
+     * @param mList camera拍照  libary手机相册 video拍摄视频 movieLibary本地视频   file本地文件
+     */
+    private void webUploadSelect(List<String> mList) {
+        XXPermissions.with(this)
+                .permission(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                .request(new OnPermission() {
+                    @Override
+                    public void hasPermission(List<String> granted, boolean isAll) {
+                        if (isAll) {
+                            uploadSelectDialog(mList);
+                        } else {
+                            ToastUtil.showShortToast(MyBrowserActivity.this, "请到程序设置中打开彩管家拍照和存储权限");
+                        }
+                    }
+
+                    @Override
+                    public void noPermission(List<String> denied, boolean quick) {
+                        ToastUtil.showShortToast(MyBrowserActivity.this, "请到程序设置中打开彩管家拍照和存储权限");
+                    }
+                });
+    }
+
+    /**
+     * 打开选择类型弹窗
+     *
+     * @param mList
+     */
+    private void uploadSelectDialog(List<String> mList) {
+        photoDialog = new AlertDialog.Builder(MyBrowserActivity.this).create();
+        photoDialog.show();
+        View v = LayoutInflater.from(MyBrowserActivity.this).inflate(
+                R.layout.set_photo_dialog_layout, null);
+        Button button = v.findViewById(R.id.take_photo);
+        Button choose_photo = v.findViewById(R.id.choose_photo);
+        Button choose_video = v.findViewById(R.id.choose_video);
+        Button take_photo = v.findViewById(R.id.take_photo);
+        Button take_video = v.findViewById(R.id.take_video);
+
+        if (null != mList && mList.size() > 0) {
+            if (mList.contains("libary") && mList.contains("movieLibary")) {
+                libaryType = "image";
+                choose_video.setVisibility(View.VISIBLE);
+                choose_photo.setText("选择图片");
+            } else if (mList.contains("libary")) {
+                libaryType = "image";
+            } else if (mList.contains("movieLibary")) {
+                libaryType = "video";
+            }else {
+                choose_photo.setVisibility(View.GONE);
+            }
+            if (mList.contains("camera") && mList.contains("video")) {
+                take_video.setVisibility(View.VISIBLE);
+                take_photo.setVisibility(View.VISIBLE);
+            } else if (mList.contains("camera")) {
+                button.setText("拍照");
+                take_photo.setVisibility(View.VISIBLE);
+            } else if (mList.contains("video")) {
+                button.setText("拍视频");
+                take_video.setVisibility(View.VISIBLE);
+                take_photo.setVisibility(View.GONE);
+            }else {
+                take_photo.setVisibility(View.GONE);
+            }
+            if (mList.contains("file")) {
+                libaryType = "";
+                choose_photo.setText("选择文件");
+                choose_video.setVisibility(View.GONE);
+                choose_photo.setVisibility(View.VISIBLE);
+                take_photo.setVisibility(View.VISIBLE);
+            }
+        }
+
+        take_photo.setOnClickListener(//拍照
+                v1 -> {
+                    openFileChooseCamera("photo");
+                    photoDialog.dismiss();
+                });
+        take_video.setOnClickListener(//视频
+                v1 -> {
+                    Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+                    intent.addCategory(Intent.CATEGORY_DEFAULT);
+                    startActivityForResult(intent, PIC_FIlE_UPLOAD_VIDEO);
+                    photoDialog.dismiss();
+                });
+        choose_photo.setOnClickListener(//相册选择
+                v12 -> {
+                    openFileChooseProcess(libaryType);
+                    photoDialog.dismiss();
+                });
+        choose_video.setOnClickListener(v14 -> {// 相册选择视频
+            openFileChooseProcess("video");
+            photoDialog.dismiss();
+        });
+        v.findViewById(R.id.cancel).setOnClickListener(
+                v13 -> {
+                    photoDialog.dismiss();
+                });
+
+        Window window = photoDialog.getWindow();
+        WindowManager.LayoutParams p = window.getAttributes();
+        DisplayMetrics metrics = Tools.getDisplayMetrics(MyBrowserActivity.this);
+        p.width = metrics.widthPixels;
+        p.gravity = Gravity.BOTTOM;
+        window.setAttributes(p);
+        window.setContentView(v);
     }
 
     private void initFunction(String json) {
@@ -1412,7 +1511,6 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
             //将拍照结果保存至photo_file的Uri中
             intentVideo.putExtra(MediaStore.EXTRA_OUTPUT, videoUrl);
             startActivityForResult(intentVideo, PIC_PHOTO_BY_VIDEO);
-
         } else {
             int maxMemory = (int) Runtime.getRuntime().maxMemory();
             //M兆
@@ -1547,12 +1645,13 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
                     uploadFiles.onReceiveValue(new Uri[]{uri});
                     uploadFiles = null;
                 }
-
-
             }
         } else if (requestCode == PIC_File_UPLOAD_IMG && resultCode == Activity.RESULT_OK) {
             String corp_id = Tools.getStringValue(this, Contants.storage.CORPID);
             initUploadFile(uri, authms2Token, corp_id, appName);
+        } else if (requestCode == PIC_FIlE_UPLOAD_VIDEO && resultCode == Activity.RESULT_OK) {
+            String corp_id = Tools.getStringValue(this, Contants.storage.CORPID);
+            initUploadFile(data.getData(), authms2Token, corp_id, appName);
         } else if (requestCode == PIC_PHOTO_BY_VIDEO && resultCode == Activity.RESULT_OK) {
             if (null != uploadFiles) {
                 if (data != null) {

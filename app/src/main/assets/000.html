@@ -49,8 +49,9 @@
     function s() {
          //android为约定的别名(别名也可以自己定义，保持一致就好)；
         //back()为原生的方法，方法名自己定保持一致就好
+        // camera拍照   video拍摄视频  libary手机相册  movieLibary本地视频   file本地文件    "libary",,"video","movieLibary"
          window.myjava.cgjUploadHandler(
-                        '{"appName":"cgj",path:"","isCallback":"1","appid":"00"}'
+                        '{"appName":"cgj", "types":[ "camera","movieLibary","libary","video"]}'
                         )
     }
 

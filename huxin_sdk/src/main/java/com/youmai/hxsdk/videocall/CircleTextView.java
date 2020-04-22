@@ -8,10 +8,12 @@ import android.graphics.Paint;
 import android.graphics.RectF;
 import android.util.AttributeSet;
 
+import androidx.appcompat.widget.AppCompatTextView;
+
 import com.youmai.hxsdk.R;
 
 
-public class CircleTextView extends android.support.v7.widget.AppCompatTextView {
+public class CircleTextView extends AppCompatTextView {
     private Paint mPaint;
     private RectF mRectf;
     private int mColor;
@@ -24,7 +26,7 @@ public class CircleTextView extends android.support.v7.widget.AppCompatTextView 
     public CircleTextView(Context context, AttributeSet attrs) {
         super(context, attrs);
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.CircleTextView);
-        mColor = typedArray.getColor(R.styleable.CircleTextView_circle_color,Color.parseColor("#588CEE"));
+        mColor = typedArray.getColor(R.styleable.CircleTextView_circle_color, Color.parseColor("#588CEE"));
         typedArray.recycle();
         init();
     }
@@ -50,7 +52,7 @@ public class CircleTextView extends android.support.v7.widget.AppCompatTextView 
         mRectf = new RectF();
     }
 
-    public void setCircleColor(int color){
+    public void setCircleColor(int color) {
         mColor = color;
     }
 }

@@ -50,9 +50,6 @@ import com.youmai.hxsdk.proto.YouMaiVideo;
 import com.youmai.hxsdk.socket.PduBase;
 import com.youmai.hxsdk.socket.ReceiveListener;
 import com.youmai.hxsdk.utils.ScreenUtils;
-import com.youmai.hxsdk.utils.StatusBarUtils;
-import com.youmai.hxsdk.view.SystemBarTintManager;
-
 
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
@@ -62,7 +59,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ExecutionException;
 
 import static com.qiniu.droid.rtc.QNErrorCode.ERROR_KICKED_OUT_OF_ROOM;
 
@@ -256,24 +252,6 @@ public class RoomActivity extends SdkBaseActivity implements QNRoomEventListener
                 applyRspDialog = build.build();
                 applyRspDialog.setCanceledOnTouchOutside(false);
                 applyRspDialog.show();
-//                android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(mContext);
-//                builder.setMessage(title);
-//                builder.setNegativeButton(R.string.hx_reject, new DialogInterface.OnClickListener() {
-//                    @Override
-//                    public void onClick(DialogInterface dialog, int which) {
-//                        adminOperate(false, isOpenCamera, isOpenVoice,
-//                                roomName, userId, nickName);
-//                    }
-//                });
-//
-//                builder.setPositiveButton(R.string.hx_agree, new DialogInterface.OnClickListener() {
-//                    @Override
-//                    public void onClick(DialogInterface dialog, int which) {
-//                        adminOperate(true, isOpenCamera, isOpenVoice,
-//                                roomName, userId, nickName);
-//                    }
-//                });
-//                builder.create().show();
             }
 
             @Override

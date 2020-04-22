@@ -3,10 +3,11 @@ package lecho.lib.hellocharts.view;
 import android.content.Context;
 import android.graphics.RectF;
 import android.os.Build;
-import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
+
+import androidx.core.view.ViewCompat;
 
 import lecho.lib.hellocharts.BuildConfig;
 import lecho.lib.hellocharts.animation.PieChartRotationAnimator;

@@ -4,9 +4,9 @@ package com.youmai.hxsdk.utils;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v7.widget.AppCompatTextView;
 import android.util.AttributeSet;
 
+import androidx.appcompat.widget.AppCompatTextView;
 
 import java.lang.ref.WeakReference;
 

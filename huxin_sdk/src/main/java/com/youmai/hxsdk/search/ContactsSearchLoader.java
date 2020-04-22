@@ -2,9 +2,10 @@ package com.youmai.hxsdk.search;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.support.v4.content.AsyncTaskLoader;
 import android.text.TextUtils;
 import android.util.Log;
+
+import androidx.loader.content.AsyncTaskLoader;
 
 import com.youmai.hxsdk.config.ColorsConfig;
 import com.youmai.hxsdk.entity.SearchResult;
@@ -12,7 +13,6 @@ import com.youmai.hxsdk.entity.cn.SearchContactBean;
 import com.youmai.hxsdk.entity.cn.pinyin.Pinyin;
 import com.youmai.hxsdk.http.OkHttpConnector;
 import com.youmai.hxsdk.utils.GsonUtil;
-import com.youmai.hxsdk.utils.ListUtils;
 
 import java.util.ArrayList;
 import java.util.List;

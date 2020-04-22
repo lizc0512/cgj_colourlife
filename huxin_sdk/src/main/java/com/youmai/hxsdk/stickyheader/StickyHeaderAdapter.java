@@ -1,7 +1,8 @@
 package com.youmai.hxsdk.stickyheader;
 
-import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * The adapter to assist the {@link StickyHeaderDecoration} in creating and binding the header views.
@@ -38,10 +39,11 @@ public interface StickyHeaderAdapter<T extends RecyclerView.ViewHolder> {
     /**
      * Display the data at the specified position.
      * <p>
-     *     PLEASE NOTE THE PARAM IS CHILD POSITION!
-     *     IF YOU WANT TO USE HEADER ID, PLEASE CALL YOUR {@link #getHeaderId(int)}.
+     * PLEASE NOTE THE PARAM IS CHILD POSITION!
+     * IF YOU WANT TO USE HEADER ID, PLEASE CALL YOUR {@link #getHeaderId(int)}.
      * </p>
-     * @param holder the header view holder
+     *
+     * @param holder               the header view holder
      * @param childAdapterPosition the child item position, can be used to retrieve header id.
      */
     void onBindHeaderViewHolder(T holder, int childAdapterPosition);

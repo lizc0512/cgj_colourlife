@@ -1,14 +1,12 @@
 package com.youmai.hxsdk.view.chat;
 
-import android.Manifest;
-import android.app.Activity;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.media.MediaRecorder;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import android.support.v4.content.ContextCompat;
+import androidx.core.content.ContextCompat;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.util.AttributeSet;

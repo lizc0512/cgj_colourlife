@@ -1,7 +1,7 @@
 package com.youmai.hxsdk.group.setting;
 
 import android.os.Bundle;
-import android.support.v4.app.FragmentTransaction;
+import androidx.fragment.app.FragmentTransaction;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.RelativeLayout;

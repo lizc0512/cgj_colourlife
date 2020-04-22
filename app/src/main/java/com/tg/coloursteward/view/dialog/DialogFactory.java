@@ -2,7 +2,7 @@ package com.tg.coloursteward.view.dialog;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.support.constraint.ConstraintLayout;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;

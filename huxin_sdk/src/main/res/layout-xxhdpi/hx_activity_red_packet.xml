@@ -60,7 +60,7 @@
             android:textColor="#2d363d"
             android:textSize="16sp" />
 
-        <android.support.v7.widget.AppCompatEditText
+        <androidx.appcompat.widget.AppCompatEditText
             android:id="@+id/et_money"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -115,7 +115,7 @@
 
     </LinearLayout>
 
-    <android.support.v7.widget.AppCompatEditText
+    <androidx.appcompat.widget.AppCompatEditText
         android:id="@+id/et_msg"
         android:layout_width="match_parent"
         android:layout_height="80dp"

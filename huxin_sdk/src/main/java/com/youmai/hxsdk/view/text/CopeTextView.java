@@ -4,11 +4,12 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.support.v7.widget.AppCompatTextView;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Toast;
+
+import androidx.appcompat.widget.AppCompatTextView;
 
 import com.youmai.hxsdk.R;
 import com.youmai.hxsdk.view.tip.TipView;

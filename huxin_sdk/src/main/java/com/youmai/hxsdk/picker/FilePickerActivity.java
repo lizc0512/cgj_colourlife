@@ -4,22 +4,22 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.WindowManager;
 
-import java.util.ArrayList;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.youmai.hxsdk.R;
-
 import com.youmai.hxsdk.picker.fragments.DocFragment;
 import com.youmai.hxsdk.picker.fragments.DocPickerFragment;
-import com.youmai.hxsdk.picker.fragments.MediaFolderPickerFragment;
 import com.youmai.hxsdk.picker.fragments.MediaDetailPickerFragment;
+import com.youmai.hxsdk.picker.fragments.MediaFolderPickerFragment;
 import com.youmai.hxsdk.picker.fragments.MediaPickerFragment;
 import com.youmai.hxsdk.picker.utils.FragmentUtil;
+
+import java.util.ArrayList;
 
 public class FilePickerActivity extends AppCompatActivity implements
         MediaDetailPickerFragment.PhotoPickerFragmentListener,

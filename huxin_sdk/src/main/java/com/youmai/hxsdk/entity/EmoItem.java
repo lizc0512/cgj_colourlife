@@ -1,6 +1,6 @@
 package com.youmai.hxsdk.entity;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 
 /**

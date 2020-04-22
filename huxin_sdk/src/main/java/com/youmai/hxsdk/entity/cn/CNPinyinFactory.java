@@ -1,7 +1,8 @@
 package com.youmai.hxsdk.entity.cn;
 
-import android.support.v4.util.ArrayMap;
 import android.text.TextUtils;
+
+import androidx.collection.ArrayMap;
 
 import com.youmai.hxsdk.entity.cn.pinyin.Pinyin;
 

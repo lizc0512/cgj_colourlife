@@ -6,7 +6,7 @@
     android:orientation="vertical"
     tools:context=".activity.BonusRecordDetailNewActivity">
 
-    <android.support.v7.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_bonus_detail"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

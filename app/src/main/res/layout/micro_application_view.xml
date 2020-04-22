@@ -7,7 +7,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/size_8dp"
         android:background="@color/color_f6f6f6"/>
-    <android.support.v7.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_application"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />

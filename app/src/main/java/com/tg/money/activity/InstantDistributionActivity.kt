@@ -2,10 +2,10 @@ package com.tg.money.activity
 
 import android.content.Intent
 import android.os.Bundle
-import android.support.v4.content.ContextCompat
-import android.support.v7.widget.LinearLayoutManager
+import androidx.core.content.ContextCompat
 import android.view.View
 import android.widget.PopupWindow
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.tg.coloursteward.R
 import com.tg.coloursteward.base.BaseActivity

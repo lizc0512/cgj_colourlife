@@ -7,10 +7,6 @@ import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
-import android.support.annotation.NonNull;
-import android.support.v4.view.animation.FastOutSlowInInterpolator;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -20,6 +16,11 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.interpolator.view.animation.FastOutSlowInInterpolator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.baseModel.HttpResponse;
@@ -221,7 +222,7 @@ public class KeyChoiceRoomDialog extends Dialog implements HttpResponse, View.On
                 ((KeySendKeyPhoneActivity) mContext).setRoom(buildName + unitName);
             }
             if (mContext instanceof CardSenderPhoneActivity) {
-                ((CardSenderPhoneActivity) mContext).setRoom(buildName+ unitName);
+                ((CardSenderPhoneActivity) mContext).setRoom(buildName + unitName);
             }
             dismiss();
         }

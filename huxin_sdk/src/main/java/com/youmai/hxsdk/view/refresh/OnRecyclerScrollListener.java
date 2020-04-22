@@ -1,6 +1,6 @@
 package com.youmai.hxsdk.view.refresh;
 
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * Created by youmai on 17/2/28.

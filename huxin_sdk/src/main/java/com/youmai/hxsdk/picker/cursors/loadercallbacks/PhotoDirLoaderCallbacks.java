@@ -3,16 +3,17 @@ package com.youmai.hxsdk.picker.cursors.loadercallbacks;
 import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.Loader;
 
-import java.lang.ref.WeakReference;
-import java.util.ArrayList;
-import java.util.List;
+import androidx.loader.app.LoaderManager;
+import androidx.loader.content.Loader;
 
 import com.youmai.hxsdk.picker.PickerManager;
 import com.youmai.hxsdk.picker.cursors.PhotoDirectoryLoader;
 import com.youmai.hxsdk.picker.models.PhotoDirectory;
+
+import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+import java.util.List;
 
 import static android.provider.BaseColumns._ID;
 import static android.provider.MediaStore.Files.FileColumns.MEDIA_TYPE;

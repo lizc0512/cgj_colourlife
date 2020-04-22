@@ -30,7 +30,7 @@
         android:layout_height="wrap_content"
         android:background="@drawable/bg_patrol_white">
 
-        <android.support.v7.widget.RecyclerView
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/list_update"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

@@ -2,26 +2,20 @@ package com.youmai.hxsdk.picker;
 
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.OrientationHelper;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.OrientationHelper;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.StaggeredGridLayoutManager;
+
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-
-
 import com.youmai.hxsdk.R;
 import com.youmai.hxsdk.picker.adapters.PhotoGridAdapter;
 import com.youmai.hxsdk.picker.cursors.loadercallbacks.FileResultCallback;
@@ -29,6 +23,11 @@ import com.youmai.hxsdk.picker.models.Media;
 import com.youmai.hxsdk.picker.models.PhotoDirectory;
 import com.youmai.hxsdk.picker.utils.AndroidLifecycleUtils;
 import com.youmai.hxsdk.picker.utils.MediaStoreHelper;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 
 public class MediaDetailsActivity extends AppCompatActivity implements PickerManagerListener {

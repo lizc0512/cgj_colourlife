@@ -1,7 +1,6 @@
 package com.youmai.hxsdk.videocall;
 
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.FragmentTransaction;
 import android.content.Context;
@@ -11,23 +10,18 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v4.content.LocalBroadcastManager;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import android.text.TextUtils;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
-import android.view.WindowManager;
 import android.view.WindowManager.LayoutParams;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
-import com.google.protobuf.InvalidProtocolBufferException;
-import com.qiniu.droid.rtc.QNBeautySetting;
 import com.qiniu.droid.rtc.QNCameraSwitchResultCallback;
 import com.qiniu.droid.rtc.QNRTCManager;
 import com.qiniu.droid.rtc.QNRTCSetting;
@@ -42,20 +36,10 @@ import com.qiniu.droid.rtc.model.QNAudioDevice;
 import com.youmai.hxsdk.HuxinSdkManager;
 import com.youmai.hxsdk.R;
 import com.youmai.hxsdk.activity.SdkBaseActivity;
-import com.youmai.hxsdk.db.bean.CacheMsgBean;
-import com.youmai.hxsdk.db.helper.CacheMsgHelper;
 import com.youmai.hxsdk.im.IMMsgManager;
 import com.youmai.hxsdk.im.IMVedioSingleChatCallBack;
-import com.youmai.hxsdk.module.videocall.VideoSelectConstactActivity;
-import com.youmai.hxsdk.proto.YouMaiBasic;
-import com.youmai.hxsdk.proto.YouMaiVideo;
-import com.youmai.hxsdk.service.SendMsgService;
-import com.youmai.hxsdk.socket.NotifyListener;
 import com.youmai.hxsdk.utils.ScreenUtils;
-import com.youmai.hxsdk.utils.ToastUtils;
-import com.youmai.hxsdk.view.SystemBarTintManager;
 
-import java.lang.ref.WeakReference;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -65,7 +49,6 @@ import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static com.qiniu.droid.rtc.QNErrorCode.ERROR_KICKED_OUT_OF_ROOM;
-import static com.youmai.hxsdk.db.bean.CacheMsgBean.SINGLE_VIDEO_CALL;
 
 public class SingleRoomActivity extends SdkBaseActivity implements QNRoomEventListener, SingleControlFragment.OnCallEvents {
 

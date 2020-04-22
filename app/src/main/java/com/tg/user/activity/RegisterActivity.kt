@@ -3,7 +3,7 @@ package com.tg.user.activity
 import android.content.Intent
 import android.os.Bundle
 import android.os.CountDownTimer
-import android.support.v4.content.ContextCompat
+import androidx.core.content.ContextCompat
 import android.text.Editable
 import android.text.TextUtils
 import android.text.TextWatcher

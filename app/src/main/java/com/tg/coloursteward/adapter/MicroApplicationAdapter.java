@@ -1,8 +1,6 @@
 package com.tg.coloursteward.adapter;
 
 import android.content.Context;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +8,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -50,7 +50,7 @@ public class MicroApplicationAdapter extends RecyclerView.Adapter<RecyclerView.V
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == item_micro_application_title) {
             View view = LayoutInflater.from(context).inflate(R.layout.item_micro_application_title, null);
             TinyServerFragmentViewHolder_two holder_two = new TinyServerFragmentViewHolder_two(view);
@@ -73,7 +73,7 @@ public class MicroApplicationAdapter extends RecyclerView.Adapter<RecyclerView.V
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, final int position) {
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
         if (holder instanceof TinyServerFragmentViewHolder_two) {
             TinyServerFragmentViewHolder_two holder_two = (TinyServerFragmentViewHolder_two) holder;
             holder_two.showTitle.setText(list.get(position).getItem_name());

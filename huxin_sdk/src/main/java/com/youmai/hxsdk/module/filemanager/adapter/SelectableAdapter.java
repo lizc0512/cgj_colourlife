@@ -1,6 +1,6 @@
 package com.youmai.hxsdk.module.filemanager.adapter;
 
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.youmai.hxsdk.module.filemanager.bean.BaseFile;
 

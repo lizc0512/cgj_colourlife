@@ -2,20 +2,21 @@
 package com.youmai.hxsdk.fragment;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.jcodecraeer.xrecyclerview.ProgressStyle;
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
 import com.youmai.hxsdk.HuxinSdkManager;
 import com.youmai.hxsdk.R;
-import com.youmai.hxsdk.packet.RedPacketHistoryActivity;
-import com.youmai.hxsdk.packet.SendRedPackageRecordAdapter;
 import com.youmai.hxsdk.entity.red.SendRedPacketList;
 import com.youmai.hxsdk.http.IGetListener;
+import com.youmai.hxsdk.packet.RedPacketHistoryActivity;
+import com.youmai.hxsdk.packet.SendRedPackageRecordAdapter;
 import com.youmai.hxsdk.utils.GsonUtil;
 import com.youmai.hxsdk.utils.ListUtils;
 

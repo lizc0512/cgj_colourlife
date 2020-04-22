@@ -5,16 +5,22 @@ import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
-import android.support.multidex.MultiDex;
 import android.util.Log;
+
+import androidx.multidex.MultiDex;
 
 import com.baidu.trace.LBSTraceClient;
 import com.baidu.trace.Trace;
 import com.facebook.stetho.Stetho;
+import com.fanjun.keeplive.KeepLive;
+import com.fanjun.keeplive.config.ForegroundNotification;
+import com.fanjun.keeplive.config.ForegroundNotificationClickListener;
+import com.fanjun.keeplive.config.KeepLiveService;
 import com.tencent.bugly.Bugly;
 import com.tencent.bugly.beta.Beta;
 import com.tencent.bugly.beta.interfaces.BetaPatchListener;
 import com.tencent.smtt.sdk.QbSdk;
+import com.tg.coloursteward.R;
 import com.tg.coloursteward.constant.Contants;
 import com.tg.coloursteward.database.SharedPreferencesTools;
 import com.tg.coloursteward.module.MainActivity;
@@ -40,14 +46,12 @@ public class CityPropertyApplication extends Application {
     private static List<Activity> mList = new LinkedList<Activity>();
     private static CityPropertyApplication instance;
     public static long serviceId = 208392;
-    public static String entityName = "";
     public static LBSTraceClient lbsTraceClient;
     public static Trace trace;
     private static Context context;
 
     @Override
     public void onCreate() {
-        // TODO Auto-generated method stub
         super.onCreate();
         context = getApplicationContext();
         SSLContext sslContext = SSLContextUtil.getDefaultSLLContext();
@@ -127,6 +131,39 @@ public class CityPropertyApplication extends Application {
             }
         };
         Bugly.init(getApplicationContext(), Contants.APP.buglyKeyId, false);
+        //定义前台服务的默认样式。即标题、描述和图标
+        ForegroundNotification foregroundNotification = new ForegroundNotification("彩管家", "运行中", R.drawable.logo,
+                //定义前台服务的通知点击事件
+                new ForegroundNotificationClickListener() {
+
+                    @Override
+                    public void foregroundNotificationClick(Context context, Intent intent) {
+                    }
+                });
+        //启动保活服务
+        KeepLive.startWork(this, KeepLive.RunMode.ENERGY, foregroundNotification,
+                //你需要保活的服务，如socket连接、定时任务等，建议不用匿名内部类的方式在这里写
+                new KeepLiveService() {
+                    /**
+                     * 运行中
+                     * 由于服务可能会多次自动启动，该方法可能重复调用
+                     */
+                    @Override
+                    public void onWorking() {
+
+                    }
+
+                    /**
+                     * 服务终止
+                     * 由于服务可能会被多次终止，该方法可能重复调用，需同onWorking配套使用，如注册和注销broadcast
+                     */
+                    @Override
+                    public void onStop() {
+
+                    }
+                }
+        );
+
     }
 
     public static CityPropertyApplication getInstance() {

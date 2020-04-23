@@ -343,15 +343,6 @@
             android:exported="true"
             android:theme="@style/shareDialog" />
 
-        <service
-            android:name="com.baidu.trace.LBSTraceService"
-            android:enabled="true"
-            android:process=":remote" />
-
-        <meta-data
-            android:name="com.baidu.lbsapi.API_KEY"
-            android:value="KfVrlHlSoYmNqZQjRtoQUp6GT470rYZ3" />
-
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="com.tg.coloursteward.fileprovider"

@@ -9,8 +9,6 @@ import android.util.Log;
 
 import androidx.multidex.MultiDex;
 
-import com.baidu.trace.LBSTraceClient;
-import com.baidu.trace.Trace;
 import com.facebook.stetho.Stetho;
 import com.fanjun.keeplive.KeepLive;
 import com.fanjun.keeplive.config.ForegroundNotification;
@@ -46,8 +44,6 @@ public class CityPropertyApplication extends Application {
     private static List<Activity> mList = new LinkedList<Activity>();
     private static CityPropertyApplication instance;
     public static long serviceId = 208392;
-    public static LBSTraceClient lbsTraceClient;
-    public static Trace trace;
     private static Context context;
 
     @Override

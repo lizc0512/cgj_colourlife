@@ -30,18 +30,6 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.amap.api.location.AMapLocation;
 import com.appsafekb.safekeyboard.NKeyBoardTextField;
-import com.baidu.trace.LBSTraceClient;
-import com.baidu.trace.Trace;
-import com.baidu.trace.api.entity.AddEntityRequest;
-import com.baidu.trace.api.entity.AddEntityResponse;
-import com.baidu.trace.api.entity.OnEntityListener;
-import com.baidu.trace.api.entity.SearchRequest;
-import com.baidu.trace.api.entity.SearchResponse;
-import com.baidu.trace.api.entity.UpdateEntityRequest;
-import com.baidu.trace.api.entity.UpdateEntityResponse;
-import com.baidu.trace.model.LocationMode;
-import com.baidu.trace.model.OnTraceListener;
-import com.baidu.trace.model.PushMessage;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.FutureTarget;
 import com.bumptech.glide.request.target.Target;
@@ -104,20 +92,15 @@ import java.io.File;
 import java.lang.ref.WeakReference;
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import cn.jpush.android.api.JPushInterface;
 import cn.jpush.android.api.TagAliasCallback;
 import q.rorbin.badgeview.QBadgeView;
 
-import static com.tg.coloursteward.application.CityPropertyApplication.lbsTraceClient;
-import static com.tg.coloursteward.application.CityPropertyApplication.serviceId;
-import static com.tg.coloursteward.application.CityPropertyApplication.trace;
 import static com.tg.coloursteward.constant.Contants.URl.cqj_appid;
 import static com.tg.coloursteward.constant.Contants.URl.environment;
 
@@ -194,9 +177,6 @@ public class MainActivity extends BaseActivity implements HttpResponse {
             }
         }
     };
-    private UpdateEntityRequest updateEntityRequest;
-    private AddEntityRequest addEntityRequest;
-    private SearchRequest searchRequest;
     private String downUrl;
     private UpdateVerSionDialog updateDialog;
     private String getVersion;
@@ -244,9 +224,6 @@ public class MainActivity extends BaseActivity implements HttpResponse {
         initProto();
 
         HuxinSdkManager.instance().getStackAct().addActivity(this);
-        if (Contants.URl.environment.equals("release")) {
-            homeModel.getYingYan(9, this);
-        }
         initAd();
         CheckPermission();
         initGetLocation();
@@ -303,108 +280,6 @@ public class MainActivity extends BaseActivity implements HttpResponse {
 
     private void initAd() {
         homeModel.getAdPager(8, this);
-    }
-
-    private void initYingYan() {
-        //初始化鹰眼SDK
-        trace = new Trace(serviceId, UserInfo.uid, false);
-        lbsTraceClient = new LBSTraceClient(getApplicationContext());
-        int gatherInterval = 60;
-        int packInterval = 60;
-        lbsTraceClient.setInterval(gatherInterval, packInterval);
-        lbsTraceClient.setLocationMode(LocationMode.High_Accuracy);
-        updateEntityRequest = new UpdateEntityRequest();
-        updateEntityRequest.setEntityName(UserInfo.uid);
-        updateEntityRequest.setServiceId(serviceId);
-        updateEntityRequest.setEntityDesc(UserInfo.jobName + "-" + UserInfo.realname + "-" + UserInfo.employeeAccount);//岗位-姓名-oa账号
-        Map<String, String> map = new HashMap<>();
-        map.put("realname", UserInfo.realname);
-        map.put("oa_username", UserInfo.employeeAccount);
-        map.put("mobile", UserInfo.mobile);
-        map.put("gender", UserInfo.sex);
-        updateEntityRequest.setColumns(map);
-        OnTraceListener onTraceListener = new OnTraceListener() {
-            @Override
-            public void onBindServiceCallback(int i, String s) {
-                String mes = s;
-                if (i == 0) {
-                    lbsTraceClient.startGather(null);
-                }
-            }
-
-            @Override
-            public void onStartTraceCallback(int i, String s) {
-                String mes = s;
-
-            }
-
-            @Override
-            public void onStopTraceCallback(int i, String s) {
-                String mes = s;
-            }
-
-            @Override
-            public void onStartGatherCallback(int i, String s) {
-                String mes = s;
-            }
-
-            @Override
-            public void onStopGatherCallback(int i, String s) {
-                String mes = s;
-            }
-
-            @Override
-            public void onPushCallback(byte b, PushMessage pushMessage) {
-                String mes = String.valueOf(b);
-            }
-
-            @Override
-            public void onInitBOSCallback(int i, String s) {
-                String mes = s;
-            }
-        };
-        lbsTraceClient.setOnTraceListener(onTraceListener);
-        lbsTraceClient.startTrace(trace, null);
-
-        addEntityRequest = new AddEntityRequest();
-        addEntityRequest.setEntityName(UserInfo.uid);
-        addEntityRequest.setServiceId(serviceId);
-        addEntityRequest.setEntityDesc(UserInfo.jobName + "-" + UserInfo.realname + "-" + UserInfo.employeeAccount);//岗位-姓名-oa账号
-        addEntityRequest.setColumns(map);
-
-        searchRequest = new SearchRequest();
-        searchRequest.setKeyword(UserInfo.uid);
-        searchRequest.setServiceId(serviceId);
-
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if (null != lbsTraceClient) {
-                    lbsTraceClient.searchEntity(searchRequest, new OnEntityListener() {
-                        @Override
-                        public void onSearchEntityCallback(SearchResponse searchResponse) {
-                            super.onSearchEntityCallback(searchResponse);
-                            if (searchResponse.getTotal() == 0) {
-                                lbsTraceClient.addEntity(addEntityRequest, new OnEntityListener() {
-                                    @Override
-                                    public void onAddEntityCallback(AddEntityResponse addEntityResponse) {
-                                        super.onAddEntityCallback(addEntityResponse);
-                                    }
-                                });
-                            } else {
-                                lbsTraceClient.updateEntity(updateEntityRequest, new OnEntityListener() {
-                                    @Override
-                                    public void onUpdateEntityCallback(UpdateEntityResponse updateEntityResponse) {
-                                        super.onUpdateEntityCallback(updateEntityResponse);
-                                    }
-                                });
-                            }
-                        }
-                    });
-                }
-            }
-        }, 4000);
-
     }
 
     private void initGetToken() {
@@ -1024,23 +899,6 @@ public class MainActivity extends BaseActivity implements HttpResponse {
                         }
                     } else {
                         Tools.saveStringValue(MainActivity.this, Contants.storage.HomePageAd, "");
-                    }
-                }
-                break;
-            case 9:
-                if (!TextUtils.isEmpty(result)) {
-                    JSONObject jsonObject = HttpTools.getContentJSONObject(result);
-                    try {
-                        int isopen = jsonObject.getInt("switch");//1:开启，2关闭
-                        if (isopen == 1) {
-                            initYingYan();
-                        } else if (isopen == 2) {
-                            if (null != lbsTraceClient) {
-                                lbsTraceClient.stopGather(null);
-                            }
-                        }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
                     }
                 }
                 break;

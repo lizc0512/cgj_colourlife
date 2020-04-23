@@ -10,8 +10,6 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
-import androidx.core.view.ViewCompat;
-import androidx.appcompat.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -21,6 +19,9 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.ViewCompat;
 
 import com.tg.coloursteward.BuildConfig;
 import com.tg.coloursteward.R;
@@ -56,7 +57,6 @@ import java.lang.reflect.Method;
 
 import cn.jpush.android.api.JPushInterface;
 
-import static com.tg.coloursteward.application.CityPropertyApplication.lbsTraceClient;
 
 public abstract class BaseActivity extends AppCompatActivity implements HttpResponse {
 
@@ -498,7 +498,6 @@ public abstract class BaseActivity extends AppCompatActivity implements HttpResp
      * 退出登录，清空一切数据操作
      */
     protected void exitClearAllData(boolean isLoginActivity) {
-        StopYingYan();
         singleDevicelogout();
         //清空缓存
         UserInfo.initClear();
@@ -510,12 +509,6 @@ public abstract class BaseActivity extends AppCompatActivity implements HttpResp
             CityPropertyApplication.gotoLoginActivity(this);
         }
         HuxinSdkManager.instance().loginOut();
-    }
-
-    private void StopYingYan() {
-        if (null != lbsTraceClient) {
-            lbsTraceClient.stopGather(null);
-        }
     }
 
     /**

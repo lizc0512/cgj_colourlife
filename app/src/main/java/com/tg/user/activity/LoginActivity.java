@@ -9,7 +9,6 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.InputType;
@@ -23,6 +22,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.geetest.gt3unbindsdk.Bind.GT3GeetestBindListener;
@@ -69,8 +70,6 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import static com.tg.coloursteward.application.CityPropertyApplication.lbsTraceClient;
 
 /**
  * 登录页面
@@ -869,9 +868,4 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
         userModel.postSingleDevice(3, "2", true, this);
     }
 
-    private void StopYingYan() {
-        if (null != lbsTraceClient) {
-            lbsTraceClient.stopGather(null);
-        }
-    }
 }

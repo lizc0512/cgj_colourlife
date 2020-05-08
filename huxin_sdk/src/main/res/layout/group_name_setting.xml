@@ -49,6 +49,4 @@
 
     </RelativeLayout>
 
-    <include layout="@layout/global_bottom_tip" />
-
 </LinearLayout>

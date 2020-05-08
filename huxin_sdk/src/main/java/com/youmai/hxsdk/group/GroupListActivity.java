@@ -5,19 +5,20 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.TextView;
+
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import android.view.View;
-import android.widget.TextView;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
 import com.jcodecraeer.xrecyclerview.progressindicator.AVLoadingIndicatorView;
 import com.youmai.hxsdk.HuxinSdkManager;
 import com.youmai.hxsdk.R;
-import com.youmai.hxsdk.chatgroup.IMGroupActivity;
 import com.youmai.hxsdk.activity.SdkBaseActivity;
+import com.youmai.hxsdk.chatgroup.IMGroupActivity;
 import com.youmai.hxsdk.db.bean.GroupInfoBean;
 import com.youmai.hxsdk.db.helper.GroupInfoHelper;
 import com.youmai.hxsdk.group.adapter.GroupListAdapter;
@@ -44,7 +45,6 @@ public class GroupListActivity extends SdkBaseActivity {
     private GroupListAdapter mAdapter;
     private List<GroupInfoBean> mGroupList;
     private LinearLayoutManager mLinearLayoutManager;
-    private View linear_empty;
 
     private LocalBroadcastManager localBroadcastManager;
     private LocalMsgReceiver mLocalMsgReceiver;
@@ -106,7 +106,6 @@ public class GroupListActivity extends SdkBaseActivity {
     }
 
     private void initView() {
-        linear_empty = findViewById(R.id.linear_empty);
 
         TextView tv_back = findViewById(R.id.tv_back);
         tv_back.setOnClickListener(new View.OnClickListener() {
@@ -242,10 +241,8 @@ public class GroupListActivity extends SdkBaseActivity {
     private void emptyList() {
         if (ListUtils.isEmpty(mGroupList)) {
             mRefreshRecyclerView.setVisibility(View.GONE);
-            linear_empty.setVisibility(View.VISIBLE);
         } else {
             mRefreshRecyclerView.setVisibility(View.VISIBLE);
-            linear_empty.setVisibility(View.GONE);
         }
     }
 

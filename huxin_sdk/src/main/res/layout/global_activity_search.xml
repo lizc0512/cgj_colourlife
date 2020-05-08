@@ -74,8 +74,6 @@
                 android:layout_marginBottom="10dp"
                 android:clipChildren="false" />
 
-            <include layout="@layout/global_bottom_tip" />
-
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 </LinearLayout>

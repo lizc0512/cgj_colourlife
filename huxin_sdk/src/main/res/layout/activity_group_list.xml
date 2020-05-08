@@ -3,8 +3,8 @@
     android:id="@+id/ll_group_list"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:fitsSystemWindows="true">
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
 
     <!--标题栏-->
     <include layout="@layout/hx_common_header_title" />
@@ -14,34 +14,4 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="1px" />
-
-    <LinearLayout
-        android:id="@+id/linear_empty"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
-        android:gravity="center"
-        android:orientation="horizontal"
-        android:visibility="gone">
-
-        <View
-            android:layout_width="40dp"
-            android:layout_height="1px"
-            android:background="#979797" />
-
-        <TextView
-            android:id="@+id/group_empty_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:gravity="center"
-            android:text="把社区服务做到家"
-            android:textColor="#979797" />
-
-        <View
-            android:layout_width="40dp"
-            android:layout_height="1px"
-            android:background="#979797" />
-
-    </LinearLayout>
 </LinearLayout>

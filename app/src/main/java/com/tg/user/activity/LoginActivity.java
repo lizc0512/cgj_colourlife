@@ -20,6 +20,7 @@ import android.view.ViewTreeObserver;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -93,7 +94,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
     private TextView tv_login_smscode;
     private TextView tv_forget_pawd;
     private Button btn_login;
-    private TextView tv_login_byczy;
+    private ImageView iv_login_byczy;
     private GT3GeetestUtilsBind gt3GeetestUtils;
     private UserModel userModel;
     private UserCzyModel userCzyModel;
@@ -167,7 +168,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
         tv_login_smscode = findViewById(R.id.tv_login_smscode);
         tv_forget_pawd = findViewById(R.id.tv_forget_pawd);
         btn_login = findViewById(R.id.btn_login);
-        tv_login_byczy = findViewById(R.id.tv_login_byczy);
+        iv_login_byczy = findViewById(R.id.iv_login_byczy);
 
         tv_forget_pawd.setOnClickListener(this);
         tv_login_smscode.setOnClickListener(this);
@@ -175,7 +176,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
         btn_login.setOnClickListener(this);
         tv_register.setOnClickListener(this);
 
-        tv_login_byczy.setOnClickListener(this);
+        iv_login_byczy.setOnClickListener(this);
         edit_account.addTextChangedListener(this);
         edit_password.addTextChangedListener(this);
         edit_smscode.addTextChangedListener(this);
@@ -347,7 +348,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                     loginGt();
                 }
                 break;
-            case R.id.tv_login_byczy:
+            case R.id.iv_login_byczy:
                 czyLogin();
                 break;
             case R.id.tv_forget_pawd:

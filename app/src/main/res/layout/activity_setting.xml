@@ -14,7 +14,8 @@
     <RelativeLayout
         android:id="@+id/rl_setting_imstatus"
         android:layout_width="match_parent"
-        android:layout_height="44dp">
+        android:layout_height="44dp"
+        android:visibility="gone">
 
         <TextView
             android:id="@+id/tv_setting_imstatus"
@@ -31,7 +32,6 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1px"
-        android:layout_marginLeft="16dp"
         android:background="@color/app_bg" />
 
     <RelativeLayout

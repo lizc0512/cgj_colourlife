@@ -55,6 +55,7 @@ public interface Contants {
     }
 
     interface APP {
+        String CORP_UUID = "a8c58297436f433787725a94f780a3c9"; //彩生活租户ID
         String captchaURL = URl.URL_NEW + "/app/home/captcha/start";
         String validateURL = URl.URL_NEW + "/app/home/login/verify";
         /***彩管家4.0加密的秘钥***/

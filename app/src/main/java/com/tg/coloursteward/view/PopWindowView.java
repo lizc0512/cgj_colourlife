@@ -12,13 +12,16 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
 import android.view.WindowManager;
 import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
 
 import com.hjq.permissions.OnPermission;
 import com.hjq.permissions.XXPermissions;
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.activity.CaptureActivity;
 import com.tg.coloursteward.constant.Contants;
+import com.tg.coloursteward.constant.SpConstants;
 import com.tg.coloursteward.util.MicroAuthTimeUtils;
+import com.tg.coloursteward.util.SharedPreferencesUtils;
 import com.tg.coloursteward.util.ToastUtil;
 import com.youmai.hxsdk.HuxinSdkManager;
 import com.youmai.hxsdk.db.bean.ContactBean;
@@ -73,7 +76,12 @@ public class PopWindowView extends PopupWindow {
             mActivity.getWindow().setAttributes(lp);
         });
         microAuthTimeUtils = new MicroAuthTimeUtils();
-        conentView.findViewById(R.id.rl_add_group).setOnClickListener(new OnClickListener() {
+        RelativeLayout rl_add_group = conentView.findViewById(R.id.rl_add_group);
+        RelativeLayout rl_mail = conentView.findViewById(R.id.rl_mail);
+        RelativeLayout rl_examination = conentView.findViewById(R.id.rl_examination);
+        RelativeLayout rl_sign = conentView.findViewById(R.id.rl_sign);
+        RelativeLayout rl_saoyisao = conentView.findViewById(R.id.rl_saoyisao);
+        rl_add_group.setOnClickListener(new OnClickListener() { //发起群聊
             @Override
             public void onClick(View arg0) {
                 List<ContactBean> groupList = new ArrayList<>();
@@ -94,7 +102,7 @@ public class PopWindowView extends PopupWindow {
             }
         });
 
-        conentView.findViewById(R.id.rl_mail).setOnClickListener(new OnClickListener() { //邮件 
+        rl_mail.setOnClickListener(new OnClickListener() { //邮件
 
             @Override
             public void onClick(View arg0) {
@@ -102,7 +110,7 @@ public class PopWindowView extends PopupWindow {
                 PopWindowView.this.dismiss();
             }
         });
-        conentView.findViewById(R.id.rl_examination).setOnClickListener(new OnClickListener() {  //审批
+        rl_examination.setOnClickListener(new OnClickListener() {  //审批
 
             @Override
             public void onClick(View arg0) {
@@ -110,7 +118,7 @@ public class PopWindowView extends PopupWindow {
                 PopWindowView.this.dismiss();
             }
         });
-        conentView.findViewById(R.id.rl_sign).setOnClickListener(new OnClickListener() { // 签到
+        rl_sign.setOnClickListener(new OnClickListener() { // 签到
 
             @Override
             public void onClick(View arg0) {
@@ -118,7 +126,7 @@ public class PopWindowView extends PopupWindow {
                 PopWindowView.this.dismiss();
             }
         });
-        conentView.findViewById(R.id.rl_saoyisao).setOnClickListener(new OnClickListener() { // 扫一扫
+        rl_saoyisao.setOnClickListener(new OnClickListener() { // 扫一扫
 
             @Override
             public void onClick(View arg0) {
@@ -141,6 +149,12 @@ public class PopWindowView extends PopupWindow {
 
             }
         });
+        String corpId = SharedPreferencesUtils.getInstance().getStringData(SpConstants.storage.CORPID, "");
+        if (!Contants.APP.CORP_UUID.equals(corpId)) {
+            rl_mail.setVisibility(View.GONE);
+            rl_examination.setVisibility(View.GONE);
+            rl_sign.setVisibility(View.GONE);
+        }
     }
 
     private void lightoff() {

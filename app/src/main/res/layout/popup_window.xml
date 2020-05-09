@@ -4,11 +4,11 @@
     android:layout_height="match_parent">
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="@dimen/size_140dp"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_marginRight="@dimen/margin_5"
-        android:background="@drawable/home_bg_popover"
+        android:background="@drawable/bg_home_pop"
         android:orientation="vertical">
 
         <RelativeLayout
@@ -26,7 +26,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingBottom="16dp"
-                    android:layout_marginTop="10dp"
                     android:paddingTop="10dp">
 
                     <ImageView

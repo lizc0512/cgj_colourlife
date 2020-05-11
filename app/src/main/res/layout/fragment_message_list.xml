@@ -28,16 +28,6 @@
             android:padding="@dimen/size_12dp"
             android:src="@drawable/nav_icon_add_normal" />
 
-        <ImageView
-            android:id="@+id/iv_contactfragment_qrcode"
-            android:layout_width="@dimen/size_40dp"
-            android:layout_height="@dimen/size_40dp"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="@dimen/size_8dp"
-            android:layout_toLeftOf="@id/iv_contactfragment_scan"
-            android:padding="@dimen/size_10dp"
-            android:src="@drawable/nav_icon_qrcode_normal" />
-
     </RelativeLayout>
 
     <include layout="@layout/message_list_item_header_search" />

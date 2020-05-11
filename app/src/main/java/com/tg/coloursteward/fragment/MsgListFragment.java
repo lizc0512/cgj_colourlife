@@ -95,7 +95,6 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, View.OnC
     private List<Integer> unReadListPosition = new ArrayList<>();
     private int curPostion;
 
-    private ImageView iv_contactfragment_qrcode;
     private ImageView iv_contactfragment_scan;
     private AlertDialog dialog;
     private HomeModel homeModel;
@@ -107,9 +106,6 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, View.OnC
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.iv_contactfragment_qrcode:
-                startActivity(new Intent(mContext, InviteRegisterActivity.class));
-                break;
             case R.id.iv_contactfragment_scan:
                 PopWindowView popWindowView = PopWindowView.getInstance(mActivity, iv_contactfragment_scan);
                 popWindowView.showPopupWindow(iv_contactfragment_scan);
@@ -393,10 +389,8 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, View.OnC
     private void initView(View rootView) {
 
         View header_item = rootView.findViewById(R.id.list_item_header_search_root);
-        iv_contactfragment_qrcode = rootView.findViewById(R.id.iv_contactfragment_qrcode);
         iv_contactfragment_scan = rootView.findViewById(R.id.iv_contactfragment_scan);
         rl_home_internet = rootView.findViewById(R.id.rl_home_internet);
-        iv_contactfragment_qrcode.setOnClickListener(this);
         iv_contactfragment_scan.setOnClickListener(this);
         rl_home_internet.setOnClickListener(this);
         header_item.setOnClickListener(new View.OnClickListener() {

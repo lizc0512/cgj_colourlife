@@ -24,8 +24,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import androidx.constraintlayout.widget.ConstraintLayout;
-
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.geetest.gt3unbindsdk.Bind.GT3GeetestBindListener;
 import com.geetest.gt3unbindsdk.Bind.GT3GeetestUtilsBind;
@@ -38,7 +36,9 @@ import com.tg.coloursteward.baseModel.HttpResponse;
 import com.tg.coloursteward.baseModel.RequestEncryptionUtils;
 import com.tg.coloursteward.constant.Contants;
 import com.tg.coloursteward.constant.SpConstants;
+import com.tg.coloursteward.entity.CropListEntity;
 import com.tg.coloursteward.info.UserInfo;
+import com.tg.coloursteward.model.MicroModel;
 import com.tg.coloursteward.module.MainActivity;
 import com.tg.coloursteward.net.DES;
 import com.tg.coloursteward.net.HttpTools;
@@ -68,9 +68,12 @@ import com.youmai.hxsdk.router.APath;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 /**
  * 登录页面
@@ -112,6 +115,8 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
     private final int mAnimTime = 300;//动画时间
     private boolean isShow = false;
     private TextView tv_register;
+    private MicroModel microModel;
+    private List<CropListEntity.ContentBean> cropList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -119,6 +124,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
         setContentView(R.layout.activity_new_login);
         userModel = new UserModel(this);
         userCzyModel = new UserCzyModel(this);
+        microModel = new MicroModel(this);
         tintManager.setStatusBarTintColor(this.getResources().getColor(R.color.transparent)); //设置状态栏的颜色
         gt3GeetestUtils = new GT3GeetestUtilsBind(LoginActivity.this);
         initView();
@@ -671,6 +677,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                         oauthUserEntity = GsonUtils.gsonToBean(result, OauthUserEntity.class);
                         int status = oauthUserEntity.getContent().getStatus();
                         if (status == 0) {
+                            microModel.getCropList(13, this);
                             ResponseData data = HttpTools.getResponseContentObject(response);
                             Tools.savePassWordMD5(LoginActivity.this, getPawdMD5());//保存密码(MD5加密后)
                             Tools.loadUserInfo(data, result);
@@ -829,6 +836,20 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                     tv_forget_pawd.setVisibility(View.GONE);
                 }
                 break;
+            case 13: {
+                if (!TextUtils.isEmpty(result)) {
+                    CropListEntity cropListEntity = new CropListEntity();
+                    cropListEntity = GsonUtils.gsonToBean(result, CropListEntity.class);
+                    cropList = cropListEntity.getContent();
+                    for (CropListEntity.ContentBean contentBean : cropList) {
+                        if (contentBean.getIs_default().equals("1")) {
+                            spUtils.saveStringData(SpConstants.storage.CORPID, corpId);
+                            return;
+                        }
+                    }
+                }
+                break;
+            }
         }
     }
 

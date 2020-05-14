@@ -44,13 +44,14 @@
     <application
         android:name=".application.CityPropertyApplication"
         android:allowBackup="false"
-        android:hardwareAccelerated="false"
+        android:hardwareAccelerated="true"
         android:icon="@drawable/logo"
         android:label="@string/app_name"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:replace="android:allowBackup,android:theme,android:label">
-        <activity android:name="com.tg.point.activity.MultiCollegeActivity"></activity>
+        <activity android:name=".activity.OpenFileActivity"></activity>
+        <activity android:name="com.tg.point.activity.MultiCollegeActivity" />
         <activity android:name="com.tg.point.activity.GivenUserTypeActivity" />
         <activity
             android:name="com.tg.money.activity.MyBankActivity"
@@ -259,7 +260,6 @@
         <activity
             android:name=".activity.MyBrowserActivity"
             android:configChanges="locale|orientation|keyboard|keyboardHidden|screenSize"
-            android:hardwareAccelerated="true"
             android:windowSoftInputMode="stateHidden|adjustResize" /> <!-- 邀请同事 -->
         <activity
             android:name="com.tg.setting.activity.InviteRegisterActivity"
@@ -269,6 +269,7 @@
             android:label="@string/app_name" /> <!-- 我的下载 -->
         <activity
             android:name=".activity.DownloadManagerActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
             android:label="@string/app_name" /> <!-- 奖金包(个人) -->
         <activity
             android:name=".activity.BonusRecordPersonalActivity"
@@ -367,6 +368,17 @@
         <service android:name="com.tg.setting.service.LekaiService" />
 
         <activity android:name="com.tg.user.activity.BindMobileActivity" />
+        <activity
+            android:name="com.tencent.smtt.sdk.VideoActivity"
+            android:alwaysRetainTaskState="true"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:exported="false"
+            android:launchMode="singleTask">
+            <intent-filter>
+                <action android:name="com.tencent.smtt.tbs.video.PLAY" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

@@ -121,6 +121,45 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/size_10dp"
             android:background="@color/app_bg" />
+
+        <RelativeLayout
+            android:id="@+id/rl_user_company"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/size_50dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/size_20dp"
+                android:text="@string/user_usercompany_tv"
+                android:textColor="@color/text_color3"
+                android:textSize="@dimen/font_15sp" />
+
+            <ImageView
+                android:id="@+id/iv_company_arrow"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="10dp"
+                android:src="@drawable/yindao" />
+
+            <TextView
+                android:id="@+id/tv_user_company"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="@dimen/size_5dp"
+                android:layout_toLeftOf="@id/iv_company_arrow"
+                android:textColor="@color/text_color1"
+                android:textSize="@dimen/font_15sp" />
+        </RelativeLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/size_1px"
+            android:layout_marginLeft="@dimen/size_20dp"
+            android:background="@color/line" />
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="@dimen/size_50dp">

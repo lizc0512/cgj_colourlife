@@ -107,6 +107,10 @@ public class SettingActivity extends BaseActivity implements OnClickListener, Ht
         tv_setting_quit.setOnClickListener(this);
         String versionShort = BuildConfig.VERSION_NAME;
         tv_setting_nowver.setText(versionShort);
+        String cropId=spUtils.getStringData(SpConstants.storage.CORPID,"");
+        if(!Contants.APP.CORP_UUID.equals(cropId)){
+            rl_setting_paypwd.setVisibility(View.GONE);
+        }
         if (!HuxinSdkManager.instance().isConnect()) {
             tv_setting_imstatus.setText("IM通信状态：" + "离线,请点击这里重新登录IM");
         } else {

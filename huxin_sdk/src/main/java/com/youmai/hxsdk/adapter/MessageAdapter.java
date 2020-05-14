@@ -146,10 +146,10 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             bean4.setMsgTime(sp);
         }
 
-        list.add(bean1);
-        list.add(bean2);
-        list.add(bean3);
-        list.add(bean4);
+//        list.add(bean1);
+//        list.add(bean2);
+//        list.add(bean3);
+//        list.add(bean4);
 
     }
 

@@ -83,6 +83,7 @@ public class CityPropertyApplication extends Application {
 
             @Override
             public void onCoreInitFinished() {
+                Log.d("app", "onCoreInitFinished");
             }
         };
         //x5内核初始化接口

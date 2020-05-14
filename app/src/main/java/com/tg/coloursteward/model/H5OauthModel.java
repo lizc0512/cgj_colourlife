@@ -33,11 +33,12 @@ public class H5OauthModel extends BaseModel {
         super(context);
     }
 
-    public void getAppInfo(int what, String app_id, String response_type, String domain, final HttpResponse newHttpResponse) {
+    public void getAppInfo(int what, String app_id, String response_type, String domain, String corp_id, final HttpResponse newHttpResponse) {
         Map<String, Object> params = new HashMap<>();
         params.put("app_id", app_id);
         params.put("response_type", response_type);
         params.put("domain", domain);
+        params.put("corp_id", corp_id);
         final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 7, aouthUrl), RequestMethod.GET);
         request(what, request, RequestEncryptionUtils.getNewSaftyMap(mContext, params), new HttpListener<String>() {
             @Override
@@ -71,13 +72,14 @@ public class H5OauthModel extends BaseModel {
      * @param app_id
      * @param newHttpResponse
      */
-    public void getApplicationOauth(int what, String app_id, String response_type, String domain, final HttpResponse newHttpResponse) {
+    public void getApplicationOauth(int what, String app_id, String response_type, String domain, String corp_id, final HttpResponse newHttpResponse) {
         Map<String, Object> params = new HashMap<>();
         params.put("app_id", app_id);
         params.put("response_type", response_type);//	code/access_token
         params.put("domain", domain);//	code/access_token
         params.put("scope", "[]");
         params.put("device_uuid", TokenUtils.getUUID(mContext));
+        params.put("corp_id", corp_id);
         final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 7, applicationUrl), RequestMethod.GET);
         request(what, request, RequestEncryptionUtils.getNewSaftyMap(mContext, params), new HttpListener<String>() {
             @Override

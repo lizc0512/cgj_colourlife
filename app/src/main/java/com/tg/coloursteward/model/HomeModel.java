@@ -490,10 +490,12 @@ public class HomeModel extends BaseModel {
      * @param what
      * @param httpResponse
      */
-    public void getAuth2(int what, HttpResponse httpResponse) {
+    public void getAuth2(int what, String corp_id, HttpResponse httpResponse) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("corp_id", corp_id);
         final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(
                 mContext, 5, auth2Url), RequestMethod.GET);
-        request(what, request, null, new HttpListener<String>() {
+        request(what, request, params, new HttpListener<String>() {
             @Override
             public void onSucceed(int what, Response<String> response) {
                 int responseCode = response.getHeaders().getResponseCode();
@@ -525,12 +527,13 @@ public class HomeModel extends BaseModel {
      * @param md5Pwd
      * @param httpResponse
      */
-    public void getAuth(int what, String username, String md5Pwd, HttpResponse httpResponse) {
+    public void getAuth(int what, String username, String md5Pwd, String corp_id, HttpResponse httpResponse) {
         Map<String, Object> params = new HashMap<>();
         params.put("username", username);
         params.put("password", md5Pwd);
         params.put("clientCode", "case");
         params.put("getExpire", "1");
+        params.put("cropid", corp_id);
         final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(
                 mContext, 4, authUrl), RequestMethod.GET);
         request(what, request, RequestEncryptionUtils.getIceMap(mContext, params), new HttpListener<String>() {
@@ -561,11 +564,12 @@ public class HomeModel extends BaseModel {
      * @param timestamp
      * @param httpResponse
      */
-    public void postAppAuth(int what, String appkey, String signature, String timestamp, HttpResponse httpResponse) {
+    public void postAppAuth(int what, String appkey, String signature, String timestamp, String corp_id, HttpResponse httpResponse) {
         Map<String, Object> params = new HashMap<>();
         params.put("appkey", appkey);
         params.put("signature", signature);
         params.put("timestamp", timestamp);
+        params.put("corp_id", corp_id);
         final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(
                 mContext, 4, appAuthUrl), RequestMethod.POST);
         request(what, request, RequestEncryptionUtils.getIceNoSignatureMap(mContext, params), new HttpListener<String>() {

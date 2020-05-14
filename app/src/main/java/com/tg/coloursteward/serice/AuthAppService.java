@@ -4,12 +4,12 @@ import android.app.Activity;
 import android.text.TextUtils;
 
 import com.tg.coloursteward.baseModel.HttpResponse;
-import com.tg.coloursteward.constant.Contants;
+import com.tg.coloursteward.constant.SpConstants;
 import com.tg.coloursteward.entity.AccessTokenEntity;
 import com.tg.coloursteward.model.HomeModel;
 import com.tg.coloursteward.net.GetTwoRecordListener;
 import com.tg.coloursteward.util.GsonUtils;
-import com.tg.coloursteward.util.Tools;
+import com.tg.coloursteward.util.SharedPreferencesUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -32,7 +32,7 @@ public class AuthAppService implements HttpResponse {
      */
     public void getAppAuth(final GetTwoRecordListener<String, String> listener) {
         this.listener = listener;
-        String corp_id = Tools.getStringValue(context, Contants.storage.CORPID);
+        String corp_id = SharedPreferencesUtils.getInstance().getStringData(SpConstants.storage.CORPID, "");
         homeModel = new HomeModel(context);
         homeModel.getAccessToken(0, corp_id, this);
     }

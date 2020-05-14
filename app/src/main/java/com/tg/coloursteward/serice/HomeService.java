@@ -42,7 +42,8 @@ public class HomeService implements HttpResponse {
                 listener.onFinish(openID, token, String.valueOf(expiress));
             }
         } else {
-            homeModel.getAuth(1, username, md5_pwd, this);
+            String corp_id = SharedPreferencesUtils.getInstance().getStringData(SpConstants.storage.CORPID, "");
+            homeModel.getAuth(1, username, md5_pwd, corp_id,this);
         }
     }
 
@@ -61,7 +62,8 @@ public class HomeService implements HttpResponse {
                 listener.onFinish(username, token, String.valueOf(expiress));
             }
         } else {
-            homeModel.getAuth2(0, this);
+            String corp_id = SharedPreferencesUtils.getInstance().getStringData(SpConstants.storage.CORPID, "");
+            homeModel.getAuth2(0, corp_id,this);
         }
     }
 

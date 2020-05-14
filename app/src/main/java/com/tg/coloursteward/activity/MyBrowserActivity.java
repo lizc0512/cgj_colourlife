@@ -56,8 +56,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.core.content.FileProvider;
-
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
@@ -138,6 +136,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import androidx.core.content.FileProvider;
 import cn.sharesdk.framework.Platform;
 import cn.sharesdk.framework.PlatformActionListener;
 import cn.sharesdk.onekeyshare.OnekeyShare;
@@ -412,7 +411,8 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
                         createDialog(h5OauthEntity);
                     } else if (2 == oauth_pop) {
                         String domain = Uri.parse(url).getHost();
-                        h5OauthModel.getApplicationOauth(1, app_id, response_type, domain, this);
+                        String corp_id = spUtils.getStringData(SpConstants.storage.CORPID, "");
+                        h5OauthModel.getApplicationOauth(1, app_id, response_type, domain, corp_id, this);
                     }
                 }
                 break;
@@ -534,7 +534,8 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
                 @Override
                 public void onClick(View v) {
                     String domain = Uri.parse(url).getHost();
-                    h5OauthModel.getApplicationOauth(1, app_id, response_type, domain, MyBrowserActivity.this);
+                    String corp_id = spUtils.getStringData(SpConstants.storage.CORPID, "");
+                    h5OauthModel.getApplicationOauth(1, app_id, response_type, domain, corp_id, MyBrowserActivity.this);
                     dialog.dismiss();
                 }
             });
@@ -1288,7 +1289,7 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
                 libaryType = "image";
             } else if (mList.contains("movieLibary")) {
                 libaryType = "video";
-            }else {
+            } else {
                 choose_photo.setVisibility(View.GONE);
             }
             if (mList.contains("camera") && mList.contains("video")) {
@@ -1301,7 +1302,7 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
                 button.setText("拍视频");
                 take_video.setVisibility(View.VISIBLE);
                 take_photo.setVisibility(View.GONE);
-            }else {
+            } else {
                 take_photo.setVisibility(View.GONE);
             }
             if (mList.contains("file")) {
@@ -1438,7 +1439,8 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
     private void initGetInfo(String app_id, String response_type) {
         if (!TextUtils.isEmpty(app_id)) {
             String domain = Uri.parse(url).getHost();
-            h5OauthModel.getAppInfo(0, app_id, response_type, domain, this);
+            String corp_id = spUtils.getStringData(SpConstants.storage.CORPID, "");
+            h5OauthModel.getAppInfo(0, app_id, response_type, domain, corp_id, this);
         }
     }
 

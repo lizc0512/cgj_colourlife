@@ -1,12 +1,12 @@
 package com.youmai.hxsdk.view.chat;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.res.TypedArray;
 import android.media.MediaRecorder;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import androidx.core.content.ContextCompat;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.util.AttributeSet;
@@ -21,7 +21,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.core.content.ContextCompat;
+
 import com.youmai.hxsdk.R;
+import com.youmai.hxsdk.config.ColorsConfig;
 import com.youmai.hxsdk.dialog.HxRecordDialog;
 import com.youmai.hxsdk.utils.AnimatorUtils;
 import com.youmai.hxsdk.utils.LogUtils;
@@ -861,7 +864,11 @@ public class InputMessageLay extends AutoHeightLayout implements View.OnClickLis
         if (moreCardHidden) {
             moreChatView.findViewById(R.id.item_chat_more_card).setVisibility(GONE);
         } else {
-            moreChatView.findViewById(R.id.item_chat_more_card).setVisibility(VISIBLE);
+            SharedPreferences sharedPreferences = mContext.getSharedPreferences("wisdomPark_map", 0);
+            String cropId = sharedPreferences.getString("corp_id", "");
+            if (!ColorsConfig.CORP_UUID.equals(cropId)) {
+                moreChatView.findViewById(R.id.item_chat_more_card).setVisibility(GONE);
+            }
         }
         view.findViewById(R.id.item_chat_more_photo).setOnClickListener(new OnClickListener() {
             @Override

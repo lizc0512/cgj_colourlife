@@ -9,30 +9,22 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
-import androidx.fragment.app.Fragment;
-import androidx.core.content.ContextCompat;
-import androidx.appcompat.app.AlertDialog;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.tg.im.activity.ContactsActivity;
+import com.tg.coloursteward.R;
 import com.tg.coloursteward.activity.EmployeeDataActivity;
 import com.tg.coloursteward.activity.HomeContactOrgActivity;
-import com.tg.coloursteward.R;
 import com.tg.coloursteward.constant.Contants;
 import com.tg.coloursteward.info.FamilyInfo;
 import com.tg.coloursteward.info.UserInfo;
 import com.tg.coloursteward.util.StringUtils;
 import com.tg.coloursteward.util.Tools;
 import com.tg.coloursteward.view.dialog.ToastFactory;
+import com.tg.im.activity.ContactsActivity;
 import com.youmai.hxsdk.HuxinSdkManager;
 import com.youmai.hxsdk.adapter.ContactAdapter;
 import com.youmai.hxsdk.adapter.ContactAdapter.ItemEventListener;
@@ -58,6 +50,14 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import rx.Observable;
 import rx.Subscriber;
 import rx.Subscription;
@@ -311,8 +311,8 @@ public class ContactsFragment extends Fragment implements ItemEventListener {
      */
     @Override
     public void onLongClick(final int pos, final ContactBean contact) {
-        if(pos==0 || pos==1 ||pos==2 ||pos==3){
-        }else {
+        if (pos == 0 || pos == 1 || pos == 2 || pos == 3) {
+        } else {
             AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
             builder.setMessage("是否删除常用联系人？");
             builder.setPositiveButton(getString(R.string.hx_confirm),
@@ -405,9 +405,9 @@ public class ContactsFragment extends Fragment implements ItemEventListener {
                 break;
             case 1: //我的部门
                 info = new FamilyInfo();
-                info.id = Tools.getOrgId(mContext);
-                if (!"".equals(Tools.getOrgId(mContext))) {
-                    info.id = Tools.getOrgId(mContext);
+                String corpId = Tools.getStringValue(mContext, Contants.storage.CORPID);//租户ID
+                if (!TextUtils.isEmpty(corpId)) {
+                    info.id = corpId;
                 } else {
                     info.id = UserInfo.infoorgId;
                 }
@@ -484,7 +484,7 @@ public class ContactsFragment extends Fragment implements ItemEventListener {
         params.put("page", "1");
         params.put("pagesize", "100");
         ColorsConfig.commonParams(params);
-        OkHttpConnector.httpGet(mContext,url, params, new IGetListener() {
+        OkHttpConnector.httpGet(mContext, url, params, new IGetListener() {
             @Override
             public void httpReqResult(String response) {
                 ModifyContactsBean bean = GsonUtil.parse(response, ModifyContactsBean.class);
@@ -519,7 +519,7 @@ public class ContactsFragment extends Fragment implements ItemEventListener {
         params.put("corpId", ColorsConfig.CORP_UUID);
         ColorsConfig.commonParams(params);
 
-        OkHttpConnector.httpGet(mContext,url, params, new IGetListener() {
+        OkHttpConnector.httpGet(mContext, url, params, new IGetListener() {
             @Override
             public void httpReqResult(String response) {
                 ReqContactsBean bean = GsonUtil.parse(response, ReqContactsBean.class);

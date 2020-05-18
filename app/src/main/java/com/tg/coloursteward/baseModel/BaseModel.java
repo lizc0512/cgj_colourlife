@@ -113,7 +113,15 @@ public class BaseModel {
                 CallServer.getInstance().request(what, request, new HttpResponseListener<T>(mContext, request, callback, canCancel, isLoading));
             }
         } else {
-            CallServer.getInstance().request(what, request, new HttpResponseListener<T>(mContext, request, callback, canCancel, isLoading));
+            if (requestUrl.endsWith("home/corp/list") || requestUrl.endsWith("app/infoByCorp")) {
+                String colorToken = SharedPreferencesUtils.getKey(mContext, SpConstants.accessToken.accssToken);
+                if (!TextUtils.isEmpty(colorToken)) {
+                    request.addHeader("color-token", colorToken);
+                }
+                CallServer.getInstance().request(what, request, new HttpResponseListener<T>(mContext, request, callback, canCancel, isLoading));
+            } else {
+                CallServer.getInstance().request(what, request, new HttpResponseListener<T>(mContext, request, callback, canCancel, isLoading));
+            }
         }
     }
 

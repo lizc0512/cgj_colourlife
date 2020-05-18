@@ -915,7 +915,6 @@ public class MainActivity extends BaseActivity implements HttpResponse {
                             String corpId = data.getString("corp_id");
                             UserInfo.infoorgId = data.getString("org_uuid");
                             UserInfo.employeeAccount = data.getString("username");
-                            Tools.saveOrgId(MainActivity.this, data.getString("org_uuid"));
                             Tools.saveStringValue(MainActivity.this, Contants.storage.CORPID, corpId);//租户ID
                             if (status == 0) {//账号正常
                                 new Handler().postDelayed(new Runnable() {

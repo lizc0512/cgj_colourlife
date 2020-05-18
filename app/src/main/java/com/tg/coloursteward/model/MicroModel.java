@@ -126,12 +126,14 @@ public class MicroModel extends BaseModel {
                     if (code == 0) {
                         httpResponse.OnHttpResponse(what, result);
                     }
+                }else {
+                    showErrorCodeMessage(response);
                 }
             }
 
             @Override
             public void onFailed(int what, Response<String> response) {
-
+                showExceptionMessage(what, response);
             }
         }, true, false);
     }

@@ -70,10 +70,15 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
+import cn.sharesdk.framework.Platform;
+import cn.sharesdk.framework.PlatformActionListener;
+import cn.sharesdk.framework.ShareSDK;
+import cn.sharesdk.wechat.friends.Wechat;
 
 /**
  * 登录页面
@@ -117,6 +122,9 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
     private TextView tv_register;
     private MicroModel microModel;
     private List<CropListEntity.ContentBean> cropList = new ArrayList<>();
+    private ImageView iv_wx_login;
+    private String openid;
+    private String unionid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -161,6 +169,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
 
 
     private void initView() {
+        iv_wx_login = findViewById(R.id.iv_wx_login);
         tv_register = findViewById(R.id.tv_register);
         constrant_layout = findViewById(R.id.constrant_layout);
         distance_view = findViewById(R.id.distance_view);
@@ -181,6 +190,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
         btn_get_code.setOnClickListener(this);
         btn_login.setOnClickListener(this);
         tv_register.setOnClickListener(this);
+        iv_wx_login.setOnClickListener(this);
 
         iv_login_byczy.setOnClickListener(this);
         edit_account.addTextChangedListener(this);
@@ -268,11 +278,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
         edit_account.setSelection(account.length());
     }
 
-    private void singleDevicelogout() {
-        String device_code = spUtils.getStringData(SpConstants.storage.DEVICE_TOKEN, "");
-        userModel.postSingleExit(7, device_code, this);
-    }
-
     private void ThirdLogin(String code) {
         try {
             loginType = "4";
@@ -288,11 +293,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
             password = edit_smscode.getText().toString().trim();
         } else {
             password = edit_password.getText().toString().trim();
-        }
-        if (NumberUtils.IsPhoneNumber(account) && !isSmsLogin) {
-            userModel.getUserType(12, account, false, this);
-        } else {
-            tv_forget_pawd.setVisibility(View.VISIBLE);
         }
         if (TextUtils.isEmpty(account) || TextUtils.isEmpty(password)) {
             btn_login.setBackground(getResources().getDrawable(R.drawable.login_button_default));
@@ -334,10 +334,9 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
         switch (v.getId()) {
             case R.id.btn_login:
                 if (isSmsLogin) {
-                    loginType = "5";
+                    loginType = "2";
                     password = edit_smscode.getText().toString().trim();
                     SoftKeyboardUtils.hideSoftKeyboard(LoginActivity.this, edit_account);
-                    userCzyModel.getAuthToken(11, account, password, "3", this);
                 } else {
                     password = edit_password.getText().toString().trim();
                     SoftKeyboardUtils.hideSoftKeyboard(LoginActivity.this, edit_account);
@@ -345,13 +344,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                         ToastUtil.showLoginToastCenter(this, "请输入不少于6位数的密码");
                         return;
                     }
-                    if (NumberUtils.IsPhoneNumber(account)) {
-                        userModel.getUserType(8, account, true, this);
-                        return;
-                    } else {
-                        loginType = "1";
-                    }
-                    loginGt();
+                    userModel.getUserType(8, account, true, this);
                 }
                 break;
             case R.id.iv_login_byczy:
@@ -395,6 +388,41 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
             case R.id.tv_register:
                 Intent register = new Intent(this, CompanyInfoActivity.class);
                 startActivity(register);
+                break;
+            case R.id.iv_wx_login:
+                Platform plat = ShareSDK.getPlatform(Wechat.NAME);
+                if (!plat.isClientValid()) {
+                    ToastUtil.showShortToast(this, "您尚未安装微信");
+                    return;
+                }
+                ShareSDK.setActivity(this);
+                plat.setPlatformActionListener(new PlatformActionListener() {
+                    @Override
+                    public void onComplete(Platform platform, int i, HashMap<String, Object> hashMap) {
+                        Iterator ite = hashMap.entrySet().iterator();
+                        while (ite.hasNext()) {
+                            Map.Entry entry = (Map.Entry) ite.next();
+                            if ("openid".equals(entry.getKey())) {
+                                openid = entry.getValue().toString();
+                            }
+                            if ("unionid".equals(entry.getKey())) {
+                                unionid = entry.getValue().toString();
+                            }
+                        }
+                        isBindWx(openid, unionid);
+                    }
+
+                    @Override
+                    public void onError(Platform platform, int i, Throwable throwable) {
+
+                    }
+
+                    @Override
+                    public void onCancel(Platform platform, int i) {
+
+                    }
+                });
+                plat.showUser(null);
                 break;
         }
     }
@@ -624,16 +652,43 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
         } else {
             auth2ServiceUpdate.setLoginType(loginType);
         }
-        if ("5".equals(loginType)) {
-            auth2ServiceUpdate.setCzyAccessToken(czyAccessToken);
-        }
-        auth2ServiceUpdate.getOAuth2Service(accout, pwdMD5, this::getNetInfo);
+        auth2ServiceUpdate.getOAuth2Service(accout, pwdMD5, access_token ->
+                getCorpId()
+        );
     }
 
-    private void getNetInfo(String access_token) {
-        userModel.getOauthUser(2, access_token, true, this);
+    /**
+     * 通过租户获取用户信息
+     *
+     * @param corpId
+     */
+    private void getNetInfo(String corpId) {
+        String colorToken = SharedPreferencesUtils.getKey(this, SpConstants.accessToken.accssToken);
+        userModel.getUserInfoByCorp(14, corpId, colorToken, true, this);
     }
 
+    /**
+     * 获取租户信息接口
+     */
+    private void getCorpId() {
+        microModel.getCropList(13, this);
+    }
+
+    /**
+     * 查询微信是否绑定
+     *
+     * @param openid
+     * @param unionid
+     */
+    private void isBindWx(String openid, String unionid) {
+        loginType = "6";
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                userModel.getIsBindWechat(15, openid, unionid, true, LoginActivity.this);
+            }
+        });
+    }
 
     private String getPawdMD5() {
         String pawdMd5 = "";
@@ -658,7 +713,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                             login(account, getPawdMD5(), loginType);
                         } else {
                             gt3GeetestUtils.gt3TestClose();
-                            ToastUtil.showLoginToastCenter(LoginActivity.this, "极验验证失败,请稍后重试");
+                            ToastUtil.showShortToast(LoginActivity.this, "极验验证失败,请稍后重试");
                         }
                     } catch (Exception e) {
                         gt3GeetestUtils.gt3TestFinish();
@@ -666,7 +721,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                     }
                 } else {
                     gt3GeetestUtils.gt3TestClose();
-                    ToastUtil.showLoginToastCenter(LoginActivity.this, "极验获取数据异常,请稍后重试");
+                    ToastUtil.showShortToast(LoginActivity.this, "极验获取数据异常,请稍后重试");
                 }
                 break;
             case 2:
@@ -677,7 +732,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                         oauthUserEntity = GsonUtils.gsonToBean(result, OauthUserEntity.class);
                         int status = oauthUserEntity.getContent().getStatus();
                         if (status == 0) {
-                            microModel.getCropList(13, this);
                             ResponseData data = HttpTools.getResponseContentObject(response);
                             Tools.savePassWordMD5(LoginActivity.this, getPawdMD5());//保存密码(MD5加密后)
                             Tools.loadUserInfo(data, result);
@@ -694,7 +748,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                                 SharedPreferencesUtils.saveUserKey(this, USERACCOUNT, account);
                             }
                             SharedPreferencesUtils.saveUserKey(this, USERNAME, employeeName);
-                            Tools.saveOrgId(LoginActivity.this, data.getString("org_uuid"));
                             Tools.saveStringValue(LoginActivity.this, Contants.storage.CORPID, corpId);//租户ID
                             spUtils.saveStringData(SpConstants.storage.CORPID, corpId);
                             spUtils.saveStringData(SpConstants.storage.ORG_UUID, data.getString("org_uuid"));
@@ -759,22 +812,24 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                     try {
                         JSONObject jsonObject = new JSONObject(content);
                         user_type = jsonObject.getString("user_type");
-                        if ("1".equals(user_type)) {//1：oa账号，2：彩之云账号
+                        if ("1".equals(user_type)) {//1：oa账号，2：手机号，3：未注册
                             loginType = "1";
                             loginGt();
-                            tv_forget_pawd.setVisibility(View.VISIBLE);
                         } else if ("2".equals(user_type)) {
-                            loginType = "5";
-                            tv_forget_pawd.setVisibility(View.GONE);
-                            userCzyModel.getCheckWhite(10, account, 1, this);
+                            loginType = "3";
+                            loginGt();
+                        } else {
+                            if (NumberUtils.IsPhoneNumber(account)) {
+                                Intent intent = new Intent(this, RegisterActivity.class);
+                                intent.putExtra("phone", account);
+                                startActivity(intent);
+                            } else {
+                                ToastUtil.showShortToast(this, "该账号" + account + "尚未注册");
+                            }
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-                } else {
-                    loginType = "5";
-                    tv_forget_pawd.setVisibility(View.GONE);
-                    userCzyModel.getCheckWhite(10, account, 1, this);
                 }
                 break;
             case 9:
@@ -818,38 +873,78 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                     login(account, getPawdMD5(), loginType);
                 }
                 break;
-            case 12:
-                if (!TextUtils.isEmpty(result)) {
-                    String content = RequestEncryptionUtils.getContentString(result);
-                    try {
-                        JSONObject jsonObject = new JSONObject(content);
-                        user_type = jsonObject.getString("user_type");
-                        if ("1".equals(user_type)) {//1：oa账号，2：彩之云账号
-                            tv_forget_pawd.setVisibility(View.VISIBLE);
-                        } else if ("2".equals(user_type)) {
-                            tv_forget_pawd.setVisibility(View.GONE);
-                        }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                } else {
-                    tv_forget_pawd.setVisibility(View.GONE);
-                }
-                break;
-            case 13: {
+            case 13:
                 if (!TextUtils.isEmpty(result)) {
                     CropListEntity cropListEntity = new CropListEntity();
                     cropListEntity = GsonUtils.gsonToBean(result, CropListEntity.class);
                     cropList = cropListEntity.getContent();
                     for (CropListEntity.ContentBean contentBean : cropList) {
                         if (contentBean.getIs_default().equals("1")) {
-                            spUtils.saveStringData(SpConstants.storage.CORPID, corpId);
+                            spUtils.saveStringData(SpConstants.storage.CORPID, contentBean.getUuid());
+                            getNetInfo(contentBean.getUuid());
                             return;
                         }
                     }
                 }
                 break;
-            }
+            case 14:
+                if (!TextUtils.isEmpty(result)) {
+                    String response = HttpTools.getContentString(result);
+                    OauthUserEntity oauthUserEntity = new OauthUserEntity();
+                    try {
+                        oauthUserEntity = GsonUtils.gsonToBean(result, OauthUserEntity.class);
+                        int status = oauthUserEntity.getContent().getStatus();
+                        if (status == 0) {
+                            ResponseData data = HttpTools.getResponseContentObject(response);
+                            Tools.savePassWordMD5(LoginActivity.this, getPawdMD5());//保存密码(MD5加密后)
+                            Tools.loadUserInfo(data, result);
+                            corpId = oauthUserEntity.getContent().getCorp_id();
+                            String employeeAccount = data.getString("username");
+                            String employeeName = data.getString("name");
+                            UserInfo.employeeAccount = employeeAccount;
+                            SharedPreferencesUtils.saveUserKey(this, USEROA, employeeAccount);
+                            if (!"4".equals(loginType)) {
+                                SharedPreferencesUtils.saveUserKey(this, USERACCOUNT, account);
+                            }
+                            SharedPreferencesUtils.saveUserKey(this, USERNAME, employeeName);
+                            Tools.saveStringValue(LoginActivity.this, Contants.storage.CORPID, corpId);//租户ID
+                            spUtils.saveStringData(SpConstants.storage.CORPID, corpId);
+                            spUtils.saveStringData(SpConstants.storage.ORG_UUID, data.getString("org_uuid"));
+                            spUtils.saveBooleanData(SpConstants.UserModel.ISLOGIN, true);
+                            spUtils.saveStringData(SpConstants.UserModel.ACCOUNT_UUID, data.getString("account_uuid"));
+                            singleDevicelogin();
+                            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                            intent.putExtra(MainActivity.KEY_NEDD_FRESH, false);
+                            intent.putExtra(MainActivity.KEY_SKIN_CODE, "");
+                            intent.putExtra(MainActivity.KEY_EXTRAS, extras);
+                            intent.putExtra(MainActivity.FROM_LOGIN, true);
+                            startActivity(intent);
+                            ToastUtil.showLoginToastCenter(this, "登录成功");
+                            LoginActivity.this.finish();
+                        } else {
+                            ToastUtil.showLoginToastCenter(this, "账号异常，请及时联系管理员");
+                            spUtils.clearKey(this);
+                        }
+                    } catch (Exception e) {
+                    }
+                }
+                break;
+            case 15:
+                if (!TextUtils.isEmpty(result)) {
+                    String response = HttpTools.getContentString(result);
+                    try {
+                        JSONObject jsonObject = new JSONObject(response);
+                        String is_bind = jsonObject.getString("is_bind");//1：已绑定，2：未绑定
+                        if ("1".equals(is_bind)) {
+                            login(unionid, MD5.getMd5Value(openid), loginType);
+                        } else {
+                            ToastUtil.showShortToast(this, "调到绑定页面");
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+                break;
         }
     }
 
@@ -887,7 +982,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
     }
 
     private void singleDevicelogin() {
-        userModel.postSingleDevice(3, "2", true, this);
+        userModel.postSingleDevice(3, "1", true, this);
     }
 
 }

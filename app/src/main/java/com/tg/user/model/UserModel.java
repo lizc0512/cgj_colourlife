@@ -74,6 +74,8 @@ public class UserModel extends BaseModel {
     private String sendKeyByPackge = "/yuncontrol/ycKeyPackage/putKeyPackageByMobileHomeLoc";
     private String getKeyByQrCode = "/yuncontrol/ycKeyQrcode/getQrcode";
     private String getUserTypeUrl = "/user/type";
+    private String getUserInfoCorpUrl = "/app/infoByCorp";
+    private String getIsBindWechatUrl = "/app/isBindWechat";
 
     public UserModel(Context context) {
         super(context);
@@ -1248,19 +1250,83 @@ public class UserModel extends BaseModel {
                     if (code == 0) {
                         httpResponse.OnHttpResponse(what, result);
                     }
-                } else if (responseCode == RequestEncryptionUtils.responseFailed) {
-                    httpResponse.OnHttpResponse(what, "");
                 } else {
-                    int code = showSuccesResultMessage(result);
-                    if (code == 0) {
-                        httpResponse.OnHttpResponse(what, result);
-                    }
+                    showErrorCodeMessage(response);
                 }
             }
 
             @Override
             public void onFailed(int what, Response<String> response) {
-                httpResponse.OnHttpResponse(what, "");
+                showExceptionMessage(what, response);
+            }
+        }, true, isLoading);
+    }
+
+    /**
+     * 根据租户查询用户信息
+     *
+     * @param what
+     * @param corp_uuid
+     * @param isLoading
+     * @param httpResponse
+     */
+    public void getUserInfoByCorp(int what, String corp_uuid, String colorToken, boolean isLoading, final HttpResponse httpResponse) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("corp_uuid", corp_uuid);
+        final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 5, getUserInfoCorpUrl), RequestMethod.GET);
+        request(what, request, RequestEncryptionUtils.getNewSaftyMap(mContext, params), new HttpListener<String>() {
+            @Override
+            public void onSucceed(int what, Response<String> response) {
+                int responseCode = response.getHeaders().getResponseCode();
+                String result = response.get();
+                if (responseCode == RequestEncryptionUtils.responseSuccess) {
+                    int code = showSuccesResultMessage(result);
+                    if (code == 0) {
+                        httpResponse.OnHttpResponse(what, result);
+                    }
+                } else {
+                    showErrorCodeMessage(response);
+                }
+            }
+
+            @Override
+            public void onFailed(int what, Response<String> response) {
+                showExceptionMessage(what, response);
+            }
+        }, true, isLoading);
+    }
+
+    /**
+     * 查询微信是否绑定
+     * @param what
+     * @param openid
+     * @param unionid
+     * @param isLoading
+     * @param httpResponse
+     */
+    public void getIsBindWechat(int what, String openid, String unionid, boolean isLoading, final HttpResponse httpResponse) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("openid", openid);
+        params.put("unionid", unionid);
+        final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 5, getIsBindWechatUrl), RequestMethod.GET);
+        request(what, request, RequestEncryptionUtils.getNewSaftyMap(mContext, params), new HttpListener<String>() {
+            @Override
+            public void onSucceed(int what, Response<String> response) {
+                int responseCode = response.getHeaders().getResponseCode();
+                String result = response.get();
+                if (responseCode == RequestEncryptionUtils.responseSuccess) {
+                    int code = showSuccesResultMessage(result);
+                    if (code == 0) {
+                        httpResponse.OnHttpResponse(what, result);
+                    }
+                } else {
+                    showErrorCodeMessage(response);
+                }
+            }
+
+            @Override
+            public void onFailed(int what, Response<String> response) {
+                showExceptionMessage(what, response);
             }
         }, true, isLoading);
     }

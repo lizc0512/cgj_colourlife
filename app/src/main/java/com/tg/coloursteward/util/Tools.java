@@ -670,20 +670,6 @@ public class Tools {
     }
 
     /**
-     * 保存orgid
-     *
-     * @param con
-     */
-    public static void saveOrgId(Context con, String orgId) {
-        getSysShare(con).edit().
-                putString("orgId_new", orgId).commit();
-    }
-
-    public static String getOrgId(Context con) {
-        return getSysShare(con).getString("orgId_new", "");
-    }
-
-    /**
      * 保存key
      *
      * @param con

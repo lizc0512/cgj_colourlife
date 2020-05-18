@@ -3,7 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/base_color">
+    android:background="@color/base_color"
+    android:fitsSystemWindows="true">
 
     <RelativeLayout
         android:id="@+id/rl_employee_top"
@@ -142,11 +143,12 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_below="@id/cv_employee"
         android:layout_marginLeft="@dimen/size_12dp"
         android:layout_marginTop="@dimen/size_10dp"
         android:layout_marginRight="@dimen/size_12dp"
+        android:background="@drawable/bg_employee_white"
         android:orientation="vertical">
 
         <RelativeLayout
@@ -175,7 +177,241 @@
 
         </RelativeLayout>
 
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/size_70dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/size_17dp"
+                android:layout_marginTop="@dimen/size_10dp"
+                android:text="部门"
+                android:textColor="@color/color_6D7278"
+                android:textSize="@dimen/font_14sp" />
+
+            <TextView
+                android:id="@+id/tv_employee_jobname"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_marginLeft="@dimen/size_17dp"
+                android:layout_marginBottom="@dimen/size_8dp"
+                android:textColor="@color/color_25282e"
+                android:textSize="@dimen/font_14sp"
+                tools:text="职位" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/size_70dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/size_17dp"
+                android:layout_marginTop="@dimen/size_10dp"
+                android:text="电话"
+                android:textColor="@color/color_6D7278"
+                android:textSize="@dimen/font_14sp" />
+
+            <TextView
+                android:id="@+id/tv_employee_phone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_marginLeft="@dimen/size_17dp"
+                android:layout_marginBottom="@dimen/size_8dp"
+                android:textColor="@color/color_25282e"
+                android:textSize="@dimen/font_14sp"
+                tools:text="13600000000" />
+
+            <TextView
+                android:id="@+id/tv_employee_phonecopy"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginRight="@dimen/size_20dp"
+                android:layout_marginBottom="@dimen/size_8dp"
+                android:text="复制"
+                android:textColor="@color/color_3A85E9"
+                android:textSize="@dimen/font_14sp" />
+
+            <ImageView
+                android:layout_width="@dimen/size_18dp"
+                android:layout_height="@dimen/size_18dp"
+                android:layout_alignParentBottom="true"
+                android:layout_marginRight="@dimen/size_5dp"
+                android:layout_marginBottom="@dimen/size_8dp"
+                android:layout_toLeftOf="@id/tv_employee_phonecopy"
+                android:src="@drawable/copy" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/size_70dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/size_17dp"
+                android:layout_marginTop="@dimen/size_10dp"
+                android:text="邮件 "
+                android:textColor="@color/color_6D7278"
+                android:textSize="@dimen/font_14sp" />
+
+            <TextView
+                android:id="@+id/tv_employee_email"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_marginLeft="@dimen/size_17dp"
+                android:layout_marginBottom="@dimen/size_8dp"
+                android:textColor="@color/color_25282e"
+                android:textSize="@dimen/font_14sp"
+                tools:text="xx@qq.com" />
+
+            <TextView
+                android:id="@+id/tv_employee_emailcopy"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginRight="@dimen/size_20dp"
+                android:layout_marginBottom="@dimen/size_8dp"
+                android:text="复制"
+                android:textColor="@color/color_3A85E9"
+                android:textSize="@dimen/font_14sp" />
+
+            <ImageView
+                android:layout_width="@dimen/size_18dp"
+                android:layout_height="@dimen/size_18dp"
+                android:layout_alignParentBottom="true"
+                android:layout_marginRight="@dimen/size_5dp"
+                android:layout_marginBottom="@dimen/size_8dp"
+                android:layout_toLeftOf="@id/tv_employee_emailcopy"
+                android:src="@drawable/copy" />
+
+        </RelativeLayout>
+
+
     </LinearLayout>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/size_1px"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="@dimen/size_60dp"
+        android:background="@color/line" />
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/size_60dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/white"
+        android:orientation="horizontal">
+
+        <RelativeLayout
+            android:id="@+id/rl_employee_email"
+            android:layout_width="@dimen/size_0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <ImageView
+                android:id="@+id/iv_email"
+                android:layout_width="@dimen/size_24dp"
+                android:layout_height="@dimen/size_24dp"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="@dimen/size_12dp"
+                android:src="@drawable/email" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/iv_email"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="@dimen/size_4dp"
+                android:text="邮件"
+                android:textColor="@color/color_25282e"
+                android:textSize="@dimen/font_12sp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/rl_employee_call"
+            android:layout_width="@dimen/size_0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <ImageView
+                android:id="@+id/iv_call"
+                android:layout_width="@dimen/size_24dp"
+                android:layout_height="@dimen/size_24dp"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="@dimen/size_12dp"
+                android:src="@drawable/email" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/iv_call"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="@dimen/size_4dp"
+                android:text="打电话"
+                android:textColor="@color/color_25282e"
+                android:textSize="@dimen/font_12sp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/rl_employee_msg"
+            android:layout_width="@dimen/size_0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <ImageView
+                android:id="@+id/iv_msg"
+                android:layout_width="@dimen/size_24dp"
+                android:layout_height="@dimen/size_24dp"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="@dimen/size_12dp"
+                android:src="@drawable/email" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/iv_msg"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="@dimen/size_4dp"
+                android:text="发消息"
+                android:textColor="@color/color_25282e"
+                android:textSize="@dimen/font_12sp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/rl_employee_money"
+            android:layout_width="@dimen/size_0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <ImageView
+                android:id="@+id/iv_money"
+                android:layout_width="@dimen/size_24dp"
+                android:layout_height="@dimen/size_24dp"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="@dimen/size_12dp"
+                android:src="@drawable/email" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/iv_money"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="@dimen/size_4dp"
+                android:text="转账"
+                android:textColor="@color/color_25282e"
+                android:textSize="@dimen/font_12sp" />
+        </RelativeLayout>
+    </LinearLayout>
 </RelativeLayout>

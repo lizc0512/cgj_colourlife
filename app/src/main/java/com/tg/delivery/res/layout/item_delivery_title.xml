@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <View
+        android:id="@+id/view"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/size_12dp"
+        android:background="@color/bg_color" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/size_45dp"
+        android:layout_below="@id/view"
+        android:background="@drawable/bg_delivery_item_top">
+
+        <TextView
+            android:id="@+id/rv_delivery_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/size_16dp"
+            android:layout_centerVertical="true"
+            android:textColor="@color/color_25282e"
+            android:textSize="@dimen/font_14sp"
+            android:textStyle="bold"
+            tools:text="快递管理" />
+    </RelativeLayout>
+</RelativeLayout>

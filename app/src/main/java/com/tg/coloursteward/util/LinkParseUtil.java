@@ -12,6 +12,8 @@ import com.tg.coloursteward.activity.DataShowActivity;
 import com.tg.coloursteward.activity.DownloadManagerActivity;
 import com.tg.coloursteward.activity.MyBrowserActivity;
 import com.tg.coloursteward.activity.PublicAccountActivity;
+import com.tg.delivery.activity.DeliveryManagerActivity;
+import com.tg.delivery.activity.WarehousingActivity;
 import com.tg.money.activity.GroupAccountDetailsActivity;
 import com.tg.money.activity.GroupBounsActivity;
 import com.tg.money.activity.TransactionRecordsActivity;
@@ -94,6 +96,14 @@ public class LinkParseUtil {
                         context.overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
                     } else if (name.equals("groupBouns")) {//集体奖金包
                         it = new Intent(context, GroupBounsActivity.class);
+                        context.startActivity(it);
+                        context.overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
+                    } else if (name.equals("express")) {//快递管理
+                        it = new Intent(context, DeliveryManagerActivity.class);
+                        context.startActivity(it);
+                        context.overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
+                    } else if (name.equals("warehouse")) {//快递入仓
+                        it = new Intent(context, WarehousingActivity.class);
                         context.startActivity(it);
                         context.overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
                     } else {

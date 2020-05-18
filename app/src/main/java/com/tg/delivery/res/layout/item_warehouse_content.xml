@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/size_88dp">
+
+    <TextView
+        android:id="@+id/tv_noname"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/size_18dp"
+        android:layout_marginTop="@dimen/size_24dp"
+        android:text="运单号:"
+        android:textColor="@color/color_25282e"
+        android:textSize="@dimen/font_14sp" />
+
+    <TextView
+        android:id="@+id/tv_warehouse_nonum"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@id/tv_noname"
+        android:layout_toRightOf="@id/tv_noname"
+        android:textColor="@color/color_25282e"
+        android:textSize="@dimen/font_14sp"
+        tools:text="000000000000" />
+
+    <TextView
+        android:id="@+id/tv_phonename"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_noname"
+        android:layout_marginLeft="@dimen/size_18dp"
+        android:layout_marginTop="@dimen/size_10dp"
+        android:text="手机号:"
+        android:textColor="@color/color_25282e"
+        android:textSize="@dimen/font_14sp" />
+
+    <TextView
+        android:id="@+id/tv_warehouse_phonenum"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@id/tv_phonename"
+        android:layout_toRightOf="@id/tv_noname"
+        android:textColor="@color/color_25282e"
+        android:textSize="@dimen/font_14sp"
+        tools:text="000000000000" />
+
+    <ImageView
+        android:id="@+id/iv_warehouse_item_del"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="@dimen/size_8dp"
+        android:layout_marginRight="@dimen/size_15dp"
+        android:src="@drawable/iv_close" />
+    <ImageView
+        android:id="@+id/iv_warehouse_item_edit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toLeftOf="@id/iv_warehouse_item_del"
+        android:layout_marginTop="@dimen/size_8dp"
+        android:layout_marginRight="@dimen/size_15dp"
+        android:src="@drawable/edit" />
+</RelativeLayout>

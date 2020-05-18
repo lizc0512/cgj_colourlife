@@ -42,6 +42,7 @@ android {
                            'src/main/java/com/tg/im/res',
                            'src/main/java/com/tg/money/res',
                            'src/main/java/com/tg/point/res',
+                           'src/main/java/com/tg/delivery/res',
             ]
         }
     }

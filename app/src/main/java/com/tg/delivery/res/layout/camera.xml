@@ -1,0 +1,82 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#00000000" >
+
+    <RelativeLayout
+        android:id="@+id/camera_top_rel"
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:background="#0000CD" >
+
+        <ImageView
+            android:id="@+id/camera_close_id"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="15dp"
+            android:tint="#ffffff" />
+    </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/camera_flash_id"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/camera_top_rel"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="20dp"
+        android:rotation="90"
+        android:tint="#ffffff" />
+
+    <LinearLayout
+        android:id="@+id/camera_bottom_rel"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:background="#ffffff"
+        android:orientation="vertical" >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="80dp" >
+
+            <TextView
+                android:id="@+id/phonenum_id"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:gravity="center"
+                android:textSize="22sp"
+                android:textColor="#0000CD"
+                android:layout_centerInParent="true"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:background="#f2f2f2"
+                android:text="输出识别手机号和一维码" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#f2f2f2" >
+               <TextView
+                android:id="@+id/phonelist_comment_id"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textSize="22sp"
+                android:textColor="@android:color/holo_green_light"
+                android:layout_centerInParent="true"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:background="#f2f2f2"
+                 />
+        </RelativeLayout>
+    </LinearLayout>
+
+</RelativeLayout>

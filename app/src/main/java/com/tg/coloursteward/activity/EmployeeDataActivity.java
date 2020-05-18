@@ -5,14 +5,10 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -36,7 +32,6 @@ import com.tg.coloursteward.util.GsonUtils;
 import com.tg.coloursteward.util.MicroAuthTimeUtils;
 import com.tg.coloursteward.util.StringUtils;
 import com.tg.coloursteward.util.Tools;
-import com.tg.coloursteward.view.ManageMentLinearlayout;
 import com.tg.coloursteward.view.dialog.ToastFactory;
 import com.tg.point.activity.GivenPointAmountActivity;
 import com.tg.point.activity.MyPointActivity;
@@ -57,20 +52,20 @@ import java.util.Date;
  * @author Administrator
  */
 @Route(path = APath.EMPLOYEE_DATA_ACT)
-public class EmployeeDataActivity extends BaseActivity implements HttpResponse {
+public class EmployeeDataActivity extends BaseActivity implements HttpResponse, OnClickListener {
     public final static String CONTACTS_ID = "contacts_id";
     private String contactsID = "";
-    private ManageMentLinearlayout magLinearLayout;
-    private ManageMentLinearlayout llRedpackets;
+    private RelativeLayout rl_employee_email;
+    private RelativeLayout rl_employee_money;
     private CheckBox cbCollect;
-    private LinearLayout llSendSms;
+    private RelativeLayout rl_employee_msg;
     private EmployeeBean item;
     private EmployeePhoneInfo info;
     private TextView tvName, tvJob, tvBranch;
     private ImageView ivHead;
     private ImageView ivSex;
     private ImageView ivClose;
-    private ListView mlListView;
+    private TextView tv_employee_phone;
     private View footView;
     private ArrayList<EmployeePhoneInfo> PhoneList = new ArrayList<EmployeePhoneInfo>();
     private EmployeePhoneAdapter adapter;
@@ -101,15 +96,7 @@ public class EmployeeDataActivity extends BaseActivity implements HttpResponse {
             getAuthAppInfo();
         }
         initView();
-        requestData();//加载数据
 
-    }
-
-    /**
-     * 加载数据
-     */
-    private void requestData() {
-        magLinearLayout.loaddingData();
     }
 
     /**
@@ -159,39 +146,21 @@ public class EmployeeDataActivity extends BaseActivity implements HttpResponse {
      * 初始化控件
      */
     private void initView() {
-        ivHead = (ImageView) findViewById(R.id.iv_head);
-        ivSex = (ImageView) findViewById(R.id.iv_sex);
-        tvName = (TextView) findViewById(R.id.tv_name);
-        tvJob = (TextView) findViewById(R.id.tv_job);
-        tvBranch = (TextView) findViewById(R.id.tv_branch);
-        mlListView = (ListView) findViewById(R.id.lv_employee_phone);
-        ivClose = (ImageView) findViewById(R.id.iv_close);
-        ivClose.setOnClickListener(new OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
-        mlListView.setOnItemClickListener(new OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String phone = PhoneList.get(position).phone;
-                if (TextUtils.isEmpty(phone)) {
-                    ToastFactory.showToast(EmployeeDataActivity.this, "暂无联系电话");
-                    return;
-                }
-                Tools.call(EmployeeDataActivity.this, phone);
-            }
-        });
-
-        llSendSms = (LinearLayout) findViewById(R.id.ll_sendsms);
-        magLinearLayout = (ManageMentLinearlayout) findViewById(R.id.ll_sendemail);
-        llRedpackets = (ManageMentLinearlayout) findViewById(R.id.ll_redpackets);
-        llSendSms.setOnClickListener(singleListener);
-        magLinearLayout.setOnClickListener(singleListener);
-        llRedpackets.setOnClickListener(singleListener);
-        cbCollect = (CheckBox) findViewById(R.id.cb_collect);
+        ivHead = findViewById(R.id.view_employee_head);
+        ivSex = findViewById(R.id.iv_employee_sex);
+        tvName = findViewById(R.id.tv_employee_name);
+        tvJob = findViewById(R.id.tv_employee_job);
+        tvBranch = findViewById(R.id.tv_employee_department);
+        tv_employee_phone = findViewById(R.id.tv_employee_phone);
+        ivClose = findViewById(R.id.iv_close);
+        rl_employee_msg = findViewById(R.id.rl_employee_msg);
+        rl_employee_email = findViewById(R.id.rl_employee_email);
+        rl_employee_money = findViewById(R.id.rl_employee_money);
+        rl_employee_msg.setOnClickListener(singleListener);
+        cbCollect = findViewById(R.id.cb_collect);
+        rl_employee_email.setOnClickListener(this);
+        rl_employee_money.setOnClickListener(this);
+        ivClose.setOnClickListener(this);
     }
 
     //给动态广播发送信息
@@ -199,35 +168,6 @@ public class EmployeeDataActivity extends BaseActivity implements HttpResponse {
         Intent intent = new Intent(ContactsFragment.BROADCAST_INTENT_FILTER);
         intent.putExtra(ContactsFragment.ACTION, status);
         sendBroadcast(intent);
-    }
-
-    @Override
-    protected boolean handClickEvent(View v) {
-        switch (v.getId()) {
-            case R.id.ll_sendemail:// 发送邮件
-                MicroAuthTimeUtils microAuthTimeUtils = new MicroAuthTimeUtils();
-                microAuthTimeUtils.IsAuthTime(this, Contants.Html5.YJ, "2", "");
-                break;
-            case R.id.ll_sendsms:// 发送短信
-                if (null != item) {
-                    Intent intent = new Intent(this, IMConnectionActivity.class);
-                    intent.putExtra(IMConnectionActivity.DST_UUID, item.getUid());
-                    intent.putExtra(IMConnectionActivity.DST_USERNAME, item.getUsername());
-                    intent.putExtra(IMConnectionActivity.DST_NAME, item.getRealname());
-                    intent.putExtra(IMConnectionActivity.DST_AVATAR, item.getAvatar());
-                    startActivity(intent);
-                }
-                break;
-            case R.id.ll_redpackets:// 转账
-                if (null != item && !TextUtils.isEmpty(item.getUsername())) {
-                    Intent intent = new Intent(this, MyPointActivity.class);
-                    intent.putExtra(GivenPointAmountActivity.TYPE, "cgj-cgj");
-                    intent.putExtra(GivenPointAmountActivity.GIVENMOBILE, item.getMobile());
-                    startActivity(intent);
-                }
-                break;
-        }
-        return super.handClickEvent(v);
     }
 
     /**
@@ -282,7 +222,6 @@ public class EmployeeDataActivity extends BaseActivity implements HttpResponse {
                         personCode = item.getFavoriteid();
                     }
                 }
-
                 if (item != null) {
                     CacheEmployeeHelper.instance().insertOrUpdate(this, item);
 
@@ -317,48 +256,6 @@ public class EmployeeDataActivity extends BaseActivity implements HttpResponse {
                             }
                         }
                     });
-
-                    if (mlListView.getFooterViewsCount() > 0) {
-                        mlListView.removeFooterView(footView);
-                    }
-                    if (item.getMobile() != null) {
-                        String[] str = item.getMobile().split("，");
-                        for (int i = 0; i < str.length; i++) {
-                            info = new EmployeePhoneInfo();
-                            info.phone = str[i];
-                            PhoneList.add(info);
-                        }
-                    }
-                    if (footView == null) {
-                        footView = getLayoutInflater().inflate(R.layout.employee_foot, null);
-                    }
-                    TextView tvCornet = (TextView) footView.findViewById(R.id.tv_cornet);
-                    TextView tvSection = (TextView) footView.findViewById(R.id.tv_section);
-                    RelativeLayout rlEnterpriseCornet = (RelativeLayout) footView.findViewById(R.id.rl_enterprise_cornet);
-                    RelativeLayout rlSection = (RelativeLayout) footView.findViewById(R.id.rl_section);
-                    rlEnterpriseCornet.setOnClickListener(new OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            if (TextUtils.isEmpty(item.getEnterprise_cornet())) {
-                                ToastFactory.showToast(EmployeeDataActivity.this, "暂无联系电话");
-                                return;
-                            }
-                            Tools.call(EmployeeDataActivity.this, item.getEnterprise_cornet());
-                        }
-                    });
-
-                    rlSection.setOnClickListener(new OnClickListener() {
-
-                        @Override
-                        public void onClick(View v) {
-                        }
-                    });
-
-                    tvCornet.setText(item.getEnterprise_cornet());
-                    tvSection.setText(item.getOrgName());
-                    mlListView.addFooterView(footView);
-                    adapter = new EmployeePhoneAdapter(this, PhoneList);
-                    mlListView.setAdapter(adapter);
                 }
                 break;
             case 1:
@@ -374,6 +271,40 @@ public class EmployeeDataActivity extends BaseActivity implements HttpResponse {
                     ToastFactory.showToast(EmployeeDataActivity.this, "取消收藏成功");
                     sendToJava("delete");
                 }
+                break;
+        }
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.rl_employee_email:// 发送邮件
+                MicroAuthTimeUtils microAuthTimeUtils = new MicroAuthTimeUtils();
+                microAuthTimeUtils.IsAuthTime(this, Contants.Html5.YJ, "2", "");
+                break;
+            case R.id.rl_employee_msg:// 发送IM消息
+                if (null != item) {
+                    Intent intent = new Intent(this, IMConnectionActivity.class);
+                    intent.putExtra(IMConnectionActivity.DST_UUID, item.getUid());
+                    intent.putExtra(IMConnectionActivity.DST_USERNAME, item.getUsername());
+                    intent.putExtra(IMConnectionActivity.DST_NAME, item.getRealname());
+                    intent.putExtra(IMConnectionActivity.DST_AVATAR, item.getAvatar());
+                    startActivity(intent);
+                }
+                break;
+            case R.id.rl_employee_money:// 转账
+                if (null != item && !TextUtils.isEmpty(item.getUsername())) {
+                    Intent intent = new Intent(this, MyPointActivity.class);
+                    intent.putExtra(GivenPointAmountActivity.TYPE, "cgj-cgj");
+                    intent.putExtra(GivenPointAmountActivity.GIVENMOBILE, item.getMobile());
+                    startActivity(intent);
+                }
+                break;
+            case R.id.iv_call:
+                Tools.call(EmployeeDataActivity.this, item.getMobile());
+                break;
+            case R.id.iv_close:
+                finish();
                 break;
         }
     }

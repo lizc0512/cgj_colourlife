@@ -74,6 +74,8 @@
     <dimen name="size_62dp">62dp</dimen>
     <dimen name="size_64dp">64dp</dimen>
     <dimen name="size_65dp">65dp</dimen>
+    <dimen name="size_66dp">66dp</dimen>
+    <dimen name="size_67dp">67dp</dimen>
     <dimen name="size_70dp">70dp</dimen>
     <dimen name="size_75dp">75dp</dimen>
     <dimen name="size_76dp">76dp</dimen>
@@ -93,6 +95,8 @@
     <dimen name="size_115dp">115dp</dimen>
     <dimen name="size_120dp">120dp</dimen>
     <dimen name="size_130dp">130dp</dimen>
+    <dimen name="size_134dp">134dp</dimen>
+    <dimen name="size_137dp">137dp</dimen>
     <dimen name="size_140dp">140dp</dimen>
     <dimen name="size_150dp">150dp</dimen>
     <dimen name="size_160dp">160dp</dimen>
@@ -100,6 +104,7 @@
     <dimen name="size_170dp">170dp</dimen>
     <dimen name="size_175dp">175dp</dimen>
     <dimen name="size_180dp">180dp</dimen>
+    <dimen name="size_188dp">188dp</dimen>
     <dimen name="size_205dp">205dp</dimen>
     <dimen name="size_200dp">200dp</dimen>
     <dimen name="size_220dp">220dp</dimen>
@@ -124,6 +129,7 @@
     <dimen name="font_20sp">20sp</dimen>
     <dimen name="font_21sp">21sp</dimen>
     <dimen name="font_22sp">22sp</dimen>
+    <dimen name="font_28sp">28sp</dimen>
 
     <dimen name="size_1px">1px</dimen>
     <dimen name="size_2px">2px</dimen>

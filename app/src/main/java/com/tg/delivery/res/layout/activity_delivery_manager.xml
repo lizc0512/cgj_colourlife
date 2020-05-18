@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_F2F3F5"
+    android:fitsSystemWindows="true"
+    tools:context="com.tg.delivery.activity.DeliveryManagerActivity">
+
+    <cn.bingoogolapple.bgabanner.BGABanner
+        android:id="@+id/bga_banner"
+        style="@style/BannerDefaultStyle"
+        android:layout_marginLeft="@dimen/size_12dp"
+        android:layout_marginTop="@dimen/size_12dp"
+        android:layout_marginRight="@dimen/size_12dp"
+        app:banner_pageChangeDuration="300"
+        app:banner_pointAutoPlayAble="false"
+        app:banner_pointContainerBackground="@android:color/transparent"
+        app:banner_pointDrawable="@drawable/bga_banner_selector_point_hollow"
+        app:banner_pointTopBottomMargin="5dp"
+        app:banner_transitionEffect="alpha" />
+
+    <RelativeLayout
+        android:id="@+id/view_tips"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/size_32dp"
+        android:layout_below="@id/bga_banner"
+        android:layout_marginLeft="@dimen/size_12dp"
+        android:layout_marginTop="@dimen/size_10dp"
+        android:layout_marginRight="@dimen/size_12dp"
+        android:background="@color/color_FEF1DF">
+
+        <ImageView
+            android:id="@+id/tv_horn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/size_14dp"
+            android:src="@drawable/laba" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/size_14dp"
+            android:layout_toRightOf="@id/tv_horn"
+            android:text="@string/delivery_tips"
+            android:textColor="@color/color_F19E3A"
+            android:textSize="@dimen/font_14sp" />
+    </RelativeLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_delivery"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/view_tips"
+        android:layout_marginLeft="@dimen/size_12dp"
+        android:layout_marginRight="@dimen/size_12dp"
+        tools:listitem="@layout/item_delivery_content" />
+
+</RelativeLayout>

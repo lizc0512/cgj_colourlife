@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<resources>
+    <string name="delivery_tips" translatable="false">快递录入时请核实手机号和运单号</string>
+    <string name="delivery_phone" translatable="false">0123456789</string>
+    <string name="inputtype_digits" translatable="false">1234567890qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM</string>
+</resources>

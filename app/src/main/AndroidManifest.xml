@@ -50,7 +50,11 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:replace="android:allowBackup,android:theme,android:label">
-        <activity android:name=".activity.OpenFileActivity"></activity>
+        <activity android:name="com.tg.delivery.activity.WarehousingActivity"></activity>
+        <activity
+            android:name="com.tg.delivery.activity.DeliveryManagerActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name=".activity.OpenFileActivity" />
         <activity android:name="com.tg.point.activity.MultiCollegeActivity" />
         <activity android:name="com.tg.point.activity.GivenUserTypeActivity" />
         <activity
@@ -376,9 +380,14 @@
             android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="com.tencent.smtt.tbs.video.PLAY" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+        <activity
+            android:name="com.intsig.exp.sdk.ISCardScanActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"></activity>
     </application>
 
 </manifest>

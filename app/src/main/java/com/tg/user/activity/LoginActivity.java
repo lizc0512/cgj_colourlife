@@ -24,6 +24,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.constraintlayout.widget.ConstraintLayout;
+
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.geetest.gt3unbindsdk.Bind.GT3GeetestBindListener;
 import com.geetest.gt3unbindsdk.Bind.GT3GeetestUtilsBind;
@@ -74,7 +76,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import androidx.constraintlayout.widget.ConstraintLayout;
 import cn.sharesdk.framework.Platform;
 import cn.sharesdk.framework.PlatformActionListener;
 import cn.sharesdk.framework.ShareSDK;
@@ -337,6 +338,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                     loginType = "2";
                     password = edit_smscode.getText().toString().trim();
                     SoftKeyboardUtils.hideSoftKeyboard(LoginActivity.this, edit_account);
+                    login(account, password, loginType);
                 } else {
                     password = edit_password.getText().toString().trim();
                     SoftKeyboardUtils.hideSoftKeyboard(LoginActivity.this, edit_account);
@@ -366,7 +368,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                         edit_account.setText("");
                     }
                     edit_password.setVisibility(View.GONE);
-                    edit_account.setHint("请输入彩之云账号");
+                    edit_account.setHint("请输入手机号");
                     sms_login_layout.setVisibility(View.VISIBLE);
                     sms_login_layout.startAnimation(AnimationUtils.loadAnimation(LoginActivity.this, R.anim.push_right_alpha));
                     tv_login_smscode.setText("账号密码登录");
@@ -375,7 +377,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                 } else {
                     sms_login_layout.setVisibility(View.GONE);
                     edit_password.setVisibility(View.VISIBLE);
-                    edit_account.setHint("请输入彩之云账号/OA账号");
+                    edit_account.setHint("请输入手机号/OA账号");
                     edit_password.startAnimation(AnimationUtils.loadAnimation(LoginActivity.this, R.anim.push_right_alpha));
                     tv_login_smscode.setText("短信验证码登录");
                     edit_account.setInputType(InputType.TYPE_CLASS_TEXT);
@@ -383,7 +385,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                 }
                 break;
             case R.id.btn_get_code:
-                userCzyModel.getSmsCode(6, account, 5, 1, true, this);//找回密码获取短信验证码
+                userCzyModel.getSmsCode(6, account, 3, 1, true, this);//找回密码获取短信验证码
                 break;
             case R.id.tv_register:
                 Intent register = new Intent(this, CompanyInfoActivity.class);

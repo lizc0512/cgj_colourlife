@@ -149,8 +149,8 @@ public class UserCzyModel extends BaseModel {
     public void getSmsCode(int what, String mobile, int work_type, int sms_type, boolean isLoading, final HttpResponse newHttpResponse) {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("mobile", mobile);
-        params.put("work_type", work_type);
-        params.put("sms_type", sms_type);
+        params.put("work_type", work_type);//1:注册，2：找回密码，3:验证登录，4：更换手机号码，6：绑定微信
+        params.put("sms_type", sms_type);//1：短信验证码，2：语音验证码
         final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 13, sendCodeUrl), RequestMethod.POST);
         request(what, request, params, new HttpListener<String>() {
             @Override

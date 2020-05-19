@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.hardware.Camera;
-import android.media.AudioManager;
 import android.media.ToneGenerator;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -17,11 +16,12 @@ import android.os.Message;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.intsig.exp.sdk.CommonUtil;
 import com.intsig.exp.sdk.ExpScannerCardUtil;
-import com.intsig.exp.sdk.IRecogBarAndPhoneListener;
 import com.intsig.exp.sdk.ISCardScanActivity;
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.base.BaseActivity;
@@ -39,7 +39,7 @@ import java.util.concurrent.ArrayBlockingQueue;
 import static com.intsig.exp.sdk.key.ISBaseScanActivity.EXTRA_KEY_BOOL_BAR;
 
 public class WarehousingActivity extends BaseActivity implements
-        Camera.PreviewCallback, Camera.AutoFocusCallback {
+        Camera.PreviewCallback, Camera.AutoFocusCallback, View.OnClickListener {
     private String appKey = "Q9PDXKXJbBCHDWF0CFS8MLeX";
     private Context mContext = WarehousingActivity.this;
 
@@ -73,11 +73,13 @@ public class WarehousingActivity extends BaseActivity implements
     String lastRecgResultString = null;
     int countRecg = 0;
     ToneGenerator tone;
-
+    private ImageView iv_base_back;
+    private TextView tv_base_title;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_warehousing);
         initView();
         mImageFolder = this.getFilesDir().getPath();
         File file = new File(mImageFolder);
@@ -160,7 +162,10 @@ public class WarehousingActivity extends BaseActivity implements
     }
 
     private void initView() {
-
+        iv_base_back = findViewById(R.id.iv_base_back);
+        tv_base_title = findViewById(R.id.tv_base_title);
+        iv_base_back.setOnClickListener(this);
+        tv_base_title.setText("快件入仓");
     }
 
     private void initDraw() {
@@ -215,6 +220,15 @@ public class WarehousingActivity extends BaseActivity implements
         // Log.e("onPreviewFrame size", "width" + size.width + "h:" +
         // size.height);
         mDetectThread.addDetect(data, size.width, size.height);
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.iv_base_back:
+                finish();
+                break;
+        }
     }
 
 

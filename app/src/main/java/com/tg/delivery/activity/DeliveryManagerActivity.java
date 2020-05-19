@@ -17,6 +17,7 @@ import com.tg.coloursteward.view.MyGridLayoutManager;
 import com.tg.delivery.adapter.DeliveryManagerAdapter;
 import com.tg.delivery.entity.DeliveryHomeEntity;
 import com.tg.delivery.model.DeliveryModel;
+import com.youmai.hxsdk.adapter.PaddingItemDecoration;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -123,6 +124,7 @@ public class DeliveryManagerActivity extends BaseActivity {
         MyGridLayoutManager gridLayoutManager = new MyGridLayoutManager(this, 2);
         rv_delivery.setLayoutManager(gridLayoutManager);
         rv_delivery.setHasFixedSize(true);
+        rv_delivery.addItemDecoration(new PaddingItemDecoration(1));
         gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
             @Override
             public int getSpanSize(int position) {

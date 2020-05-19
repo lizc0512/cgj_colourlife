@@ -92,10 +92,6 @@ public class DeliveryManagerAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                             .error(R.drawable.placeholder2))
                     .load(list.get(position).getImgUrl()).into(holder_three.icon);
             holder_three.showName.setText(list.get(position).getName());
-            if (position % 2 == 0) {
-                holder_three.view_delivery_mid.setVisibility(View.GONE);
-            }
-
 
             if (null != callBack) {
                 holder_three.rl_fragmentthree.setOnClickListener(v -> callBack.onclick(

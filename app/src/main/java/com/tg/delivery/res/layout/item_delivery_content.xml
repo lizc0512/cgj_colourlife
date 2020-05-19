@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/cl_delivery"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@drawable/bg_delivery_item_bottom">
+    android:background="@color/white"
+    android:layout_height="wrap_content">
 
     <View
         android:id="@+id/item_delivery_view"
@@ -17,6 +17,7 @@
         android:id="@+id/item_delivery_line"
         android:layout_width="match_parent"
         android:layout_height="@dimen/size_1px"
+        android:visibility="gone"
         android:background="@color/color_EBEBEB"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -48,6 +49,7 @@
         android:id="@+id/view_delivery_mid"
         android:layout_width="@dimen/size_1px"
         android:layout_height="@dimen/size_40dp"
+        android:visibility="gone"
         android:background="@color/color_EBEBEB"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toRightOf="parent"

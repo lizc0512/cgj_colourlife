@@ -26,18 +26,17 @@ import java.util.Map;
  */
 public class DeliveryModel extends BaseModel {
 
-    private String deliveryHomeUrl="";
+    private String deliveryHomeUrl = "/common/getMeuns";
 
     public DeliveryModel(Context context) {
         super(context);
     }
 
-    public void getDeliveryData(int what, String mobile, int is_register, final HttpResponse newHttpResponse) {
+    public void getDeliveryData(int what, final HttpResponse newHttpResponse) {
         Map<String, Object> params = new HashMap<String, Object>();
-        params.put("mobile", mobile);
-        params.put("is_register", is_register);
-        Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 13, deliveryHomeUrl), RequestMethod.GET);
-        request(what, request, params, new HttpListener<String>() {
+        Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 17, deliveryHomeUrl),
+                RequestMethod.GET);
+        request(what, request, RequestEncryptionUtils.getNewSaftyMap(mContext, params), new HttpListener<String>() {
             @Override
             public void onSucceed(int what, Response<String> response) {
                 int responseCode = response.getHeaders().getResponseCode();

@@ -90,7 +90,7 @@ public class DeliveryManagerAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                     .applyDefaultRequestOptions(new RequestOptions()
                             .diskCacheStrategy(DiskCacheStrategy.ALL)
                             .error(R.drawable.placeholder2))
-                    .load(list.get(position).getImg_url()).into(holder_three.icon);
+                    .load(list.get(position).getImgUrl()).into(holder_three.icon);
             holder_three.showName.setText(list.get(position).getName());
             if (position % 2 == 0) {
                 holder_three.view_delivery_mid.setVisibility(View.GONE);
@@ -99,7 +99,7 @@ public class DeliveryManagerAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
             if (null != callBack) {
                 holder_three.rl_fragmentthree.setOnClickListener(v -> callBack.onclick(
-                        position, list.get(position).getRedirect_url(), list.get(position).getAuth_type()));
+                        position, list.get(position).getRedirectUrl(), list.get(position).getType()));
             }
         }
     }

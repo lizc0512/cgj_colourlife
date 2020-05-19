@@ -50,7 +50,8 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:replace="android:allowBackup,android:theme,android:label">
-        <activity android:name="com.tg.delivery.activity.WarehousingActivity"></activity>
+        <activity android:name="com.tg.delivery.activity.DeliveryHandoverActivity"></activity>
+        <activity android:name="com.tg.delivery.activity.WarehousingActivity" />
         <activity
             android:name="com.tg.delivery.activity.DeliveryManagerActivity"
             android:screenOrientation="portrait" />
@@ -387,7 +388,7 @@
         <activity
             android:name="com.intsig.exp.sdk.ISCardScanActivity"
             android:label="@string/app_name"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

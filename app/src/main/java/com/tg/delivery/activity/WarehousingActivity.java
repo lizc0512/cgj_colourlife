@@ -231,90 +231,90 @@ public class WarehousingActivity extends BaseActivity implements
         @Override
         public void run() {
             try {
-                while (true) {
-                    byte[] data = mPreviewQueue.take();// block here, if no data
-                    // in the queue.
-                    if (data.length <= 1) {// quit the thread, if we got special
-                        // byte array put by stopRun().
-                        return;
-                    }
-
-                    int left = borderLeftAndRight[1];
-                    int right = borderLeftAndRight[3];
-                    int top = borderLeftAndRight[0];
-                    int bottom = borderLeftAndRight[2];
-
-                    int roiWidthScreen = (int) (right - left);
-                    int roiHeightScreen = (int) (bottom - top);
-
-                    //recognizeScreenExp方法传入的坐标都是竖屏对应的坐标
-                    final long starttime = System.currentTimeMillis();
-                    expScannerCardUtil.recognizeExpAndBar(data, height, width,
-                            screenwidth, screenheight, roiWidthScreen,
-                            roiHeightScreen, left, top, boolTg,
-                            new IRecogBarAndPhoneListener() {
-
-
-                                @Override
-                                public void onRecognizeExpAndPhone(String phone,
-                                                                   String barcode) {
-
-                                    /**
-                                     * 连续两帧数据一样才返回结果
-                                     */
-                                    if (lastRecgResultString == null) {
-                                        //
-                                        showView("lastRecgResultString:null,"
-                                                + "result:" + phone, "", "");
-
-                                        lastRecgResultString = phone;
-                                        resumePreviewCallback();
-                                        countRecg = 0;
-                                    } else {
-
-                                        if (phone.equals(lastRecgResultString)) {
-
-
-                                            long endtime = System
-                                                    .currentTimeMillis();
-
-                                            if (tone == null) {
-                                                // 发出提示用户的声音
-                                                tone = new ToneGenerator(
-                                                        AudioManager.STREAM_MUSIC,
-                                                        ToneGenerator.MAX_VOLUME);
-                                            }
-                                            tone.startTone(ToneGenerator.TONE_PROP_BEEP);
-                                            if (setResultSet.size() >= 3) setResultSet.clear();
-
-                                            setResultSet.add(phone + barcode);
-                                            showView(phone, barcode,
-                                                    (endtime - starttime)
-                                                            + "ms");
-                                            lastRecgResultString = phone;
-                                            resumePreviewCallback();
-
-                                        } else {
-                                            countRecg = 0;
-                                            lastRecgResultString = phone;
-                                            resumePreviewCallback();
-                                        }
-
-                                    }
-
-                                }
-
-                                @Override
-                                public void onRecognizeError(int arg0) {
-                                    Log.e("DetectExpressBillBarCodeAndNumberROI",
-                                            "false");
-
-                                    // TODO Auto-generated method stub
-                                    resumePreviewCallback();
-                                }
-                            });
-
-                }
+//                while (true) {
+//                    byte[] data = mPreviewQueue.take();// block here, if no data
+//                    // in the queue.
+//                    if (data.length <= 1) {// quit the thread, if we got special
+//                        // byte array put by stopRun().
+//                        return;
+//                    }
+//
+//                    int left = borderLeftAndRight[1];
+//                    int right = borderLeftAndRight[3];
+//                    int top = borderLeftAndRight[0];
+//                    int bottom = borderLeftAndRight[2];
+//
+//                    int roiWidthScreen = (int) (right - left);
+//                    int roiHeightScreen = (int) (bottom - top);
+//
+//                    //recognizeScreenExp方法传入的坐标都是竖屏对应的坐标
+//                    final long starttime = System.currentTimeMillis();
+//                    expScannerCardUtil.recognizeExpAndBar(data, height, width,
+//                            screenwidth, screenheight, roiWidthScreen,
+//                            roiHeightScreen, left, top, boolTg,
+//                            new IRecogBarAndPhoneListener() {
+//
+//
+//                                @Override
+//                                public void onRecognizeExpAndPhone(String phone,
+//                                                                   String barcode) {
+//
+//                                    /**
+//                                     * 连续两帧数据一样才返回结果
+//                                     */
+//                                    if (lastRecgResultString == null) {
+//                                        //
+//                                        showView("lastRecgResultString:null,"
+//                                                + "result:" + phone, "", "");
+//
+//                                        lastRecgResultString = phone;
+//                                        resumePreviewCallback();
+//                                        countRecg = 0;
+//                                    } else {
+//
+////                                        if (phone.equals(lastRecgResultString)) {
+////
+////
+////                                            long endtime = System
+////                                                    .currentTimeMillis();
+////
+////                                            if (tone == null) {
+////                                                // 发出提示用户的声音
+////                                                tone = new ToneGenerator(
+////                                                        AudioManager.STREAM_MUSIC,
+////                                                        ToneGenerator.MAX_VOLUME);
+////                                            }
+////                                            tone.startTone(ToneGenerator.TONE_PROP_BEEP);
+////                                            if (setResultSet.size() >= 3) setResultSet.clear();
+////
+////                                            setResultSet.add(phone + barcode);
+////                                            showView(phone, barcode,
+////                                                    (endtime - starttime)
+////                                                            + "ms");
+////                                            lastRecgResultString = phone;
+////                                            resumePreviewCallback();
+////
+////                                        } else {
+////                                            countRecg = 0;
+////                                            lastRecgResultString = phone;
+////                                            resumePreviewCallback();
+////                                        }
+//
+//                                    }
+//
+//                                }
+//
+//                                @Override
+//                                public void onRecognizeError(int arg0) {
+//                                    Log.e("DetectExpressBillBarCodeAndNumberROI",
+//                                            "false");
+//
+//                                    // TODO Auto-generated method stub
+//                                    resumePreviewCallback();
+//                                }
+//                            });
+//
+//                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -394,9 +394,9 @@ public class WarehousingActivity extends BaseActivity implements
                 RelativeLayout.LayoutParams.MATCH_PARENT);
 
         // **********************************添加动态的布局
-        LayoutInflater inflater = getLayoutInflater();
-        View view = inflater.inflate(R.layout.activity_warehousing, null);
-        rootView.addView(view, lp);
+//        LayoutInflater inflater = getLayoutInflater();
+//        View view = inflater.inflate(R.layout.activity_warehousing, null);
+//        rootView.addView(view, lp);
     }
 
     private void initData(boolean boolkeep, boolean boolOpen) {

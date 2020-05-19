@@ -102,7 +102,7 @@ public class LinkParseUtil {
                         it = new Intent(context, DeliveryManagerActivity.class);
                         context.startActivity(it);
                         context.overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
-                    } else if (name.equals("warehouse")) {//快递入仓
+                    } else if (name.equals("expressEnter")) {//快递入仓
                         it = new Intent(context, WarehousingActivity.class);
                         context.startActivity(it);
                         context.overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);

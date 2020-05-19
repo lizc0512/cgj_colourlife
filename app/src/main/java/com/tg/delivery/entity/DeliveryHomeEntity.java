@@ -18,7 +18,7 @@ public class DeliveryHomeEntity {
     /**
      * code : 0
      * message : success
-     * content : [{"name":"常用应用","data":[{"uuid":"49f4a5f9ee3c45b88c07b4558ea5c51a","name":"签到","img_url":"https://micro-file.colourlife.com/v1/down/3364567?fileid=3364567&ts=1563848496838&sign=b4377cd688ee10987f5b96d181ffe572","redirect_url":"http://eqd.oa.colourlife.com/cailife/sign/main","auth_type":"2","quantity":"0"},{"uuid":"59927103bdd7428fa4e2dcb806b96a01","name":"邮件","img_url":"https://micro-file.colourlife.com/v1/down/3364620?fileid=3364620&ts=1563848496983&sign=8c8bbc261198fa7d4864ac93e1f9364d","redirect_url":"http://mail.oa.colourlife.com:40060/login","auth_type":"2","quantity":"0"}]},{"name":"协同办公","data":[{"uuid":"7a11a273311543d48dbf9e9ae672e4fd","name":"任务系统","img_url":"https://micro-file.colourlife.com/v1/down/3364662?fileid=3364662&ts=1563848497387&sign=7979971dce9b288c2e70514756683311","redirect_url":"http://mbee.oa.colourlife.com:4600/home","auth_type":"2","quantity":"0"},{"uuid":"efcd9da4a6304067a31b8ddab0045064","name":"额度审批","img_url":"https://micro-file.colourlife.com/v1/down/3364673?fileid=3364673&ts=1563848497544&sign=95ba93d70255405f3b1853d06175f776","redirect_url":"http://finance.colourlife.com/wx/checkOauth2.html","auth_type":"2","quantity":"0"}]}]
+     * content : [{"type":"1","name":null,"data":[{"id":11,"name":"Bannner","imgUrl":null,"redirectUrl":null,"dr":null,"createAt":null,"updateAt":null,"type":0,"parentId":0}]},{"type":"2","name":"快递管理","data":[{"id":1,"name":"快件入仓","imgUrl":"https://micro-file-test.colourlife.com/file/20205/file-15897692055252798.png","redirectUrl":"colourlife://proto?type=expressEnter","dr":"0","createAt":"2020-05-19 10:52:47.0","updateAt":"2020-05-19T02:52:47.000+0000","type":2,"parentId":5},{"id":2,"name":"扫码派件","imgUrl":"https://micro-file-test.colourlife.com/file/20205/file-15897691069134771.png","redirectUrl":"colourlife://proto?type=expressDis","dr":"0","createAt":"2020-05-19 10:50:15.0","updateAt":"2020-05-19T02:50:15.000+0000","type":2,"parentId":5},{"id":3,"name":"交接包裹","imgUrl":"https://micro-file-test.colourlife.com/file/20205/file-15897691564534111.png","redirectUrl":"https://www.baidu.com/","dr":"0","createAt":"2020-05-18 10:32:47.0","updateAt":"2020-05-18T02:32:47.000+0000","type":2,"parentId":5},{"id":4,"name":"快件记录","imgUrl":"https://micro-file-test.colourlife.com/file/20205/file-15897691867521543.png","redirectUrl":"https://www.baidu.com/","dr":"0","createAt":"2020-05-18 10:33:14.0","updateAt":"2020-05-18T02:33:14.000+0000","type":2,"parentId":5}]},{"type":"2","name":"其他业务","data":[{"id":7,"name":"盘点","imgUrl":"https://micro-file-test.colourlife.com/file/20205/file-15897692243256457.png","redirectUrl":"https://www.baidu.com/","dr":"0","createAt":"2020-05-18 10:33:57.0","updateAt":"2020-05-18T02:33:57.000+0000","type":2,"parentId":6},{"id":8,"name":"短信管理","imgUrl":"https://micro-file-test.colourlife.com/file/20205/file-15897692527016656.png","redirectUrl":"https://www.baidu.com/","dr":"0","createAt":"2020-05-18 10:34:18.0","updateAt":"2020-05-18T02:34:18.000+0000","type":2,"parentId":6},{"id":9,"name":"收款","imgUrl":"https://micro-file-test.colourlife.com/file/20205/file-15897693336506239.png","redirectUrl":"https://www.baidu.com/","dr":"0","createAt":"2020-05-18 10:36:03.0","updateAt":"2020-05-18T02:36:03.000+0000","type":2,"parentId":6},{"id":10,"name":"数据","imgUrl":"https://micro-file-test.colourlife.com/file/20205/file-15897692684692333.png","redirectUrl":"https://www.baidu.com/","dr":"0","createAt":"2020-05-18 10:34:41.0","updateAt":"2020-05-18T02:34:41.000+0000","type":2,"parentId":6}]}]
      */
 
     private int code;
@@ -51,12 +51,22 @@ public class DeliveryHomeEntity {
 
     public static class ContentBean {
         /**
-         * name : 常用应用
-         * data : [{"uuid":"49f4a5f9ee3c45b88c07b4558ea5c51a","name":"签到","img_url":"https://micro-file.colourlife.com/v1/down/3364567?fileid=3364567&ts=1563848496838&sign=b4377cd688ee10987f5b96d181ffe572","redirect_url":"http://eqd.oa.colourlife.com/cailife/sign/main","auth_type":"2","quantity":"0"},{"uuid":"59927103bdd7428fa4e2dcb806b96a01","name":"邮件","img_url":"https://micro-file.colourlife.com/v1/down/3364620?fileid=3364620&ts=1563848496983&sign=8c8bbc261198fa7d4864ac93e1f9364d","redirect_url":"http://mail.oa.colourlife.com:40060/login","auth_type":"2","quantity":"0"}]
+         * type : 1
+         * name : null
+         * data : [{"id":11,"name":"Bannner","imgUrl":null,"redirectUrl":null,"dr":null,"createAt":null,"updateAt":null,"type":0,"parentId":0}]
          */
 
+        private String type;
         private String name;
         private List<DataBean> data;
+
+        public String getType() {
+            return type;
+        }
+
+        public void setType(String type) {
+            this.type = type;
+        }
 
         public String getName() {
             return name;
@@ -76,20 +86,26 @@ public class DeliveryHomeEntity {
 
         public static class DataBean {
             /**
-             * uuid : 49f4a5f9ee3c45b88c07b4558ea5c51a
-             * name : 签到
-             * img_url : https://micro-file.colourlife.com/v1/down/3364567?fileid=3364567&ts=1563848496838&sign=b4377cd688ee10987f5b96d181ffe572
-             * redirect_url : http://eqd.oa.colourlife.com/cailife/sign/main
-             * auth_type : 2
-             * quantity : 0
+             * id : 11
+             * name : Bannner
+             * imgUrl : null
+             * redirectUrl : null
+             * dr : null
+             * createAt : null
+             * updateAt : null
+             * type : 0
+             * parentId : 0
              */
 
-            private String uuid;
+            private int id;
             private String name;
-            private String img_url;
-            private String redirect_url;
-            private String auth_type;
-            private String quantity;
+            private String imgUrl;
+            private String redirectUrl;
+            private String dr;
+            private String createAt;
+            private String updateAt;
+            private String type;
+            private String parentId;
             private String item_name;
 
             public String getItem_name() {
@@ -100,12 +116,12 @@ public class DeliveryHomeEntity {
                 this.item_name = item_name;
             }
 
-            public String getUuid() {
-                return uuid;
+            public int getId() {
+                return id;
             }
 
-            public void setUuid(String uuid) {
-                this.uuid = uuid;
+            public void setId(int id) {
+                this.id = id;
             }
 
             public String getName() {
@@ -116,36 +132,60 @@ public class DeliveryHomeEntity {
                 this.name = name;
             }
 
-            public String getImg_url() {
-                return img_url;
+            public String getImgUrl() {
+                return imgUrl;
             }
 
-            public void setImg_url(String img_url) {
-                this.img_url = img_url;
+            public void setImgUrl(String imgUrl) {
+                this.imgUrl = imgUrl;
             }
 
-            public String getRedirect_url() {
-                return redirect_url;
+            public String getRedirectUrl() {
+                return redirectUrl;
             }
 
-            public void setRedirect_url(String redirect_url) {
-                this.redirect_url = redirect_url;
+            public void setRedirectUrl(String redirectUrl) {
+                this.redirectUrl = redirectUrl;
             }
 
-            public String getAuth_type() {
-                return auth_type;
+            public String getDr() {
+                return dr;
             }
 
-            public void setAuth_type(String auth_type) {
-                this.auth_type = auth_type;
+            public void setDr(String dr) {
+                this.dr = dr;
             }
 
-            public String getQuantity() {
-                return quantity;
+            public String getCreateAt() {
+                return createAt;
             }
 
-            public void setQuantity(String quantity) {
-                this.quantity = quantity;
+            public void setCreateAt(String createAt) {
+                this.createAt = createAt;
+            }
+
+            public String getUpdateAt() {
+                return updateAt;
+            }
+
+            public void setUpdateAt(String updateAt) {
+                this.updateAt = updateAt;
+            }
+
+            public String getType() {
+                return type;
+            }
+
+            public void setType(String type) {
+                this.type = type;
+            }
+
+            public String getParentId() {
+                return parentId;
+            }
+
+            public void setParentId(String parentId) {
+                this.parentId = parentId;
             }
         }
     }

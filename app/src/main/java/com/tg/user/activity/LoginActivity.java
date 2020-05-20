@@ -110,9 +110,8 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
     private String account;
     private String password;
     private OAuth2ServiceUpdate auth2ServiceUpdate;
-    private String corpId;
     private String extras;
-    private String loginType = "1";//1：账号密码登录，2：短信验证码登录，3：手机号码密码登录，4：彩之云授权登录 5：彩之云color-token登录
+    private String loginType = "1";//1：账号密码登录，2：短信验证码登录，3：手机号码密码登录，4：彩之云授权登录，5：彩之云colour-token登录，6：微信授权登录
     private String user_type;//1：oa账号，2：彩之云账号
     private String czyAccessToken;//彩之云授权token
     private CustomDialog reviewDialog;
@@ -726,53 +725,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                     ToastUtil.showShortToast(LoginActivity.this, "极验获取数据异常,请稍后重试");
                 }
                 break;
-            case 2:
-                if (!TextUtils.isEmpty(result)) {
-                    String response = HttpTools.getContentString(result);
-                    OauthUserEntity oauthUserEntity = new OauthUserEntity();
-                    try {
-                        oauthUserEntity = GsonUtils.gsonToBean(result, OauthUserEntity.class);
-                        int status = oauthUserEntity.getContent().getStatus();
-                        if (status == 0) {
-                            ResponseData data = HttpTools.getResponseContentObject(response);
-                            Tools.savePassWordMD5(LoginActivity.this, getPawdMD5());//保存密码(MD5加密后)
-                            Tools.loadUserInfo(data, result);
-                            corpId = oauthUserEntity.getContent().getCorp_id();
-                            UserInfo.infoorgId = data.getString("org_uuid");
-                            if (loginType.equals("4") || loginType.equals("5")) {
-                                Tools.savePassWordMD5(LoginActivity.this, data.getString("password"));//保存密码(MD5加密后)
-                            }
-                            String employeeAccount = data.getString("username");
-                            String employeeName = data.getString("name");
-                            UserInfo.employeeAccount = employeeAccount;
-                            SharedPreferencesUtils.saveUserKey(this, USEROA, employeeAccount);
-                            if (!"4".equals(loginType)) {
-                                SharedPreferencesUtils.saveUserKey(this, USERACCOUNT, account);
-                            }
-                            SharedPreferencesUtils.saveUserKey(this, USERNAME, employeeName);
-                            Tools.saveStringValue(LoginActivity.this, Contants.storage.CORPID, corpId);//租户ID
-                            spUtils.saveStringData(SpConstants.storage.CORPID, corpId);
-                            spUtils.saveStringData(SpConstants.storage.ORG_UUID, data.getString("org_uuid"));
-                            spUtils.saveBooleanData(SpConstants.UserModel.ISLOGIN, true);
-                            spUtils.saveStringData(SpConstants.UserModel.ACCOUNT_UUID, data.getString("account_uuid"));
-                            singleDevicelogin();
-                            getSkin(corpId);
-                            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                            intent.putExtra(MainActivity.KEY_NEDD_FRESH, false);
-                            intent.putExtra(MainActivity.KEY_SKIN_CODE, "");
-                            intent.putExtra(MainActivity.KEY_EXTRAS, extras);
-                            intent.putExtra(MainActivity.FROM_LOGIN, true);
-                            startActivity(intent);
-                            ToastUtil.showLoginToastCenter(this, "登录成功");
-                            LoginActivity.this.finish();
-                        } else {
-                            ToastUtil.showLoginToastCenter(this, "账号异常，请及时联系管理员");
-                            spUtils.clearKey(this);
-                        }
-                    } catch (Exception e) {
-                    }
-                }
-                break;
             case 3:
                 if (!TextUtils.isEmpty(result)) {
                     SingleDeviceLogin singleDeviceLogin = GsonUtils.gsonToBean(result, SingleDeviceLogin.class);
@@ -883,6 +835,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                     for (CropListEntity.ContentBean contentBean : cropList) {
                         if (contentBean.getIs_default().equals("1")) {
                             spUtils.saveStringData(SpConstants.storage.CORPID, contentBean.getUuid());
+                            Tools.saveStringValue(LoginActivity.this, Contants.storage.CORPID, contentBean.getUuid());//租户ID
                             getNetInfo(contentBean.getUuid());
                             return;
                         }
@@ -900,7 +853,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                             ResponseData data = HttpTools.getResponseContentObject(response);
                             Tools.savePassWordMD5(LoginActivity.this, getPawdMD5());//保存密码(MD5加密后)
                             Tools.loadUserInfo(data, result);
-                            corpId = oauthUserEntity.getContent().getCorp_id();
                             String employeeAccount = data.getString("username");
                             String employeeName = data.getString("name");
                             UserInfo.employeeAccount = employeeAccount;
@@ -909,8 +861,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                                 SharedPreferencesUtils.saveUserKey(this, USERACCOUNT, account);
                             }
                             SharedPreferencesUtils.saveUserKey(this, USERNAME, employeeName);
-                            Tools.saveStringValue(LoginActivity.this, Contants.storage.CORPID, corpId);//租户ID
-                            spUtils.saveStringData(SpConstants.storage.CORPID, corpId);
                             spUtils.saveStringData(SpConstants.storage.ORG_UUID, data.getString("org_uuid"));
                             spUtils.saveBooleanData(SpConstants.UserModel.ISLOGIN, true);
                             spUtils.saveStringData(SpConstants.UserModel.ACCOUNT_UUID, data.getString("account_uuid"));

@@ -36,7 +36,7 @@ import java.util.Map;
 public class UserCzyModel extends BaseModel {
     private String czyAuthUrl = "/oauth/token";
     private String checkWhiteUrl = "/user/checkWhite";
-    private String sendCodeUrl = "/sms/sendCode";
+    private String sendCodeUrl = "/app/smsCode";
     private String checkRegisterUrl = "/user/checkRegister";
     private String checkCodeUrl = "/sms/checkCode";
     private String registerUrl = "/user/register";
@@ -151,7 +151,8 @@ public class UserCzyModel extends BaseModel {
         params.put("mobile", mobile);
         params.put("work_type", work_type);//1:注册，2：找回密码，3:验证登录，4：更换手机号码，6：绑定微信
         params.put("sms_type", sms_type);//1：短信验证码，2：语音验证码
-        final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 13, sendCodeUrl), RequestMethod.POST);
+        final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 5, sendCodeUrl),
+                RequestMethod.POST);
         request(what, request, params, new HttpListener<String>() {
             @Override
             public void onSucceed(int what, Response<String> response) {

@@ -12,11 +12,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.Settings;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
@@ -29,6 +24,12 @@ import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
 import com.jcodecraeer.xrecyclerview.progressindicator.AVLoadingIndicatorView;
@@ -49,7 +50,6 @@ import com.tg.coloursteward.util.SharedPreferencesUtils;
 import com.tg.coloursteward.util.Tools;
 import com.tg.coloursteward.view.PopWindowView;
 import com.tg.im.activity.DeskTopActivity;
-import com.tg.setting.activity.InviteRegisterActivity;
 import com.youmai.hxsdk.HuxinSdkManager;
 import com.youmai.hxsdk.ProtoCallback;
 import com.youmai.hxsdk.adapter.MessageAdapter;
@@ -96,6 +96,7 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, View.OnC
     private int curPostion;
 
     private ImageView iv_contactfragment_scan;
+    private RelativeLayout rl_home_nomsg;
     private AlertDialog dialog;
     private HomeModel homeModel;
     private String dialogUuid;
@@ -216,7 +217,6 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, View.OnC
             }
         } catch (Exception e) {
             e.printStackTrace();
-            return;
         }
         if (null != list && list.size() > 0) {
             for (MsgConfig.ContentBean.DataBean item : list) {
@@ -224,6 +224,9 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, View.OnC
                 mMessageAdapter.addPushMsgItem(bean);
             }
             initUnreadList();
+            rl_home_nomsg.setVisibility(View.GONE);
+        } else {
+            rl_home_nomsg.setVisibility(View.VISIBLE);
         }
     }
 
@@ -391,6 +394,7 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, View.OnC
         View header_item = rootView.findViewById(R.id.list_item_header_search_root);
         iv_contactfragment_scan = rootView.findViewById(R.id.iv_contactfragment_scan);
         rl_home_internet = rootView.findViewById(R.id.rl_home_internet);
+        rl_home_nomsg = rootView.findViewById(R.id.rl_home_nomsg);
         iv_contactfragment_scan.setOnClickListener(this);
         rl_home_internet.setOnClickListener(this);
         header_item.setOnClickListener(new View.OnClickListener() {

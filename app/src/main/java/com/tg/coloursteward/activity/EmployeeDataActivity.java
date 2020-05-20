@@ -1,6 +1,11 @@
 package com.tg.coloursteward.activity;
 
+import android.Manifest;
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -13,6 +18,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
+import com.hjq.permissions.OnPermission;
+import com.hjq.permissions.XXPermissions;
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.adapter.EmployeePhoneAdapter;
 import com.tg.coloursteward.base.BaseActivity;
@@ -31,6 +38,7 @@ import com.tg.coloursteward.util.GlideUtils;
 import com.tg.coloursteward.util.GsonUtils;
 import com.tg.coloursteward.util.MicroAuthTimeUtils;
 import com.tg.coloursteward.util.StringUtils;
+import com.tg.coloursteward.util.ToastUtil;
 import com.tg.coloursteward.util.Tools;
 import com.tg.coloursteward.view.dialog.ToastFactory;
 import com.tg.point.activity.GivenPointAmountActivity;
@@ -45,6 +53,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * 员工名片
@@ -59,6 +68,7 @@ public class EmployeeDataActivity extends BaseActivity implements HttpResponse, 
     private RelativeLayout rl_employee_money;
     private CheckBox cbCollect;
     private RelativeLayout rl_employee_msg;
+    private RelativeLayout rl_employee_call;
     private EmployeeBean item;
     private EmployeePhoneInfo info;
     private TextView tvName, tvJob, tvBranch;
@@ -66,6 +76,11 @@ public class EmployeeDataActivity extends BaseActivity implements HttpResponse, 
     private ImageView ivSex;
     private ImageView ivClose;
     private TextView tv_employee_phone;
+    private TextView tv_employee_depart;
+    private TextView tv_employee_jobname;
+    private TextView tv_employee_phonecopy;
+    private TextView tv_employee_email;
+    private TextView tv_employee_emailcopy;
     private View footView;
     private ArrayList<EmployeePhoneInfo> PhoneList = new ArrayList<EmployeePhoneInfo>();
     private EmployeePhoneAdapter adapter;
@@ -152,15 +167,24 @@ public class EmployeeDataActivity extends BaseActivity implements HttpResponse, 
         tvJob = findViewById(R.id.tv_employee_job);
         tvBranch = findViewById(R.id.tv_employee_department);
         tv_employee_phone = findViewById(R.id.tv_employee_phone);
+        tv_employee_depart = findViewById(R.id.tv_employee_depart);
         ivClose = findViewById(R.id.iv_close);
         rl_employee_msg = findViewById(R.id.rl_employee_msg);
+        rl_employee_call = findViewById(R.id.rl_employee_call);
         rl_employee_email = findViewById(R.id.rl_employee_email);
         rl_employee_money = findViewById(R.id.rl_employee_money);
-        rl_employee_msg.setOnClickListener(singleListener);
+        tv_employee_phonecopy = findViewById(R.id.tv_employee_phonecopy);
+        tv_employee_email = findViewById(R.id.tv_employee_email);
+        tv_employee_emailcopy = findViewById(R.id.tv_employee_emailcopy);
+        tv_employee_jobname = findViewById(R.id.tv_employee_jobname);
+        rl_employee_msg.setOnClickListener(this);
+        rl_employee_call.setOnClickListener(this);
         cbCollect = findViewById(R.id.cb_collect);
         rl_employee_email.setOnClickListener(this);
         rl_employee_money.setOnClickListener(this);
         ivClose.setOnClickListener(this);
+        tv_employee_phonecopy.setOnClickListener(this);
+        tv_employee_emailcopy.setOnClickListener(this);
     }
 
     //给动态广播发送信息
@@ -234,7 +258,11 @@ public class EmployeeDataActivity extends BaseActivity implements HttpResponse, 
                     } catch (Exception e) {
                     }
                     tvJob.setText(item.getJobName());
+                    tv_employee_jobname.setText(item.getJobName());
                     tvBranch.setText(item.getOrgName());
+                    tv_employee_depart.setText(item.getOrgName());
+                    tv_employee_phone.setText(item.getMobile());
+                    tv_employee_email.setText(item.getEmail());
                     GlideUtils.loadImageDefaultDisplay(this, item.getAvatar(), ivHead, R.drawable.default_header, R.drawable.default_header);
                     if (item.getSex().equals("女")) {
                         ivSex.setImageResource(R.drawable.employee_female);
@@ -278,9 +306,36 @@ public class EmployeeDataActivity extends BaseActivity implements HttpResponse, 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.tv_employee_phonecopy:
+                copyText("手机号已复制", tv_employee_phone.getText().toString());
+                break;
+            case R.id.tv_employee_emailcopy:
+                copyText("邮箱已复制", tv_employee_email.getText().toString());
+                break;
             case R.id.rl_employee_email:// 发送邮件
                 MicroAuthTimeUtils microAuthTimeUtils = new MicroAuthTimeUtils();
                 microAuthTimeUtils.IsAuthTime(this, Contants.Html5.YJ, "2", "");
+                break;
+            case R.id.rl_employee_call:
+                XXPermissions.with(this).permission(Manifest.permission.CALL_PHONE)
+                        .constantRequest()
+                        .request(new OnPermission() {
+                            @Override
+                            public void hasPermission(List<String> granted, boolean isAll) {
+                                if (!TextUtils.isEmpty(item.getMobile())) {
+                                    Intent it = new Intent(Intent.ACTION_CALL);
+                                    Uri data = Uri.parse("tel:" + item.getMobile());
+                                    it.setData(data);
+                                    startActivity(it);
+                                }
+                            }
+                            @Override
+                            public void noPermission(List<String> denied, boolean quick) {
+                                ToastUtil.showShortToast(EmployeeDataActivity.this,"请到程序管理中" +
+                                        "打开彩管家拨打电话权限");
+                            }
+                        });
+
                 break;
             case R.id.rl_employee_msg:// 发送IM消息
                 if (null != item) {
@@ -307,5 +362,18 @@ public class EmployeeDataActivity extends BaseActivity implements HttpResponse, 
                 finish();
                 break;
         }
+    }
+
+    private void copyText(String tip, String word) {
+        if (!TextUtils.isEmpty(word)) {
+            //获取剪贴板管理器：
+            ClipboardManager cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+            // 创建普通字符型ClipData
+            ClipData mClipData = ClipData.newPlainText("Label", word);
+            // 将ClipData内容放到系统剪贴板里。
+            cm.setPrimaryClip(mClipData);
+            ToastUtil.showShortToast(this, tip);
+        }
+
     }
 }

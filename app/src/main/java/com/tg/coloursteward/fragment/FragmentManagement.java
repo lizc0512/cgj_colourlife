@@ -3,12 +3,6 @@ package com.tg.coloursteward.fragment;
 import android.app.Activity;
 import android.content.ContentValues;
 import android.os.Bundle;
-import androidx.fragment.app.Fragment;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-import androidx.viewpager.widget.ViewPager;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
@@ -18,6 +12,13 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
+
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import androidx.viewpager.widget.ViewPager;
 
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.adapter.CropListAdapter;
@@ -39,6 +40,7 @@ import com.tg.coloursteward.util.GsonUtils;
 import com.tg.coloursteward.util.MicroAuthTimeUtils;
 import com.tg.coloursteward.util.SharedPreferencesUtils;
 import com.tg.coloursteward.util.TokenUtils;
+import com.tg.coloursteward.util.Tools;
 import com.tg.coloursteward.view.MicroViewPager;
 import com.tg.coloursteward.view.MyGridLayoutManager;
 import com.youmai.hxsdk.config.ColorsConfig;
@@ -370,6 +372,8 @@ public class FragmentManagement extends Fragment implements HttpResponse, View.O
                         if (contentBean.getIs_default().equals("1")) {
                             tv_miniservice_title.setText(contentBean.getName());
                             cropUuid = contentBean.getUuid();
+                            SharedPreferencesUtils.getInstance().saveStringData(SpConstants.storage.CORPID, contentBean.getUuid());
+                            Tools.saveStringValue(mActivity, Contants.storage.CORPID, contentBean.getUuid());//租户ID
                             return;
                         }
                     }

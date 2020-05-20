@@ -75,6 +75,7 @@ public class BagCardSenderFragment extends Fragment implements HttpResponse {
         if (what == 0) {
             int totalRecord = 0;
             if (!TextUtils.isEmpty(result)) {
+                List<KeyBagsEntity.ContentBeanX.ContentBean>  everyList=null;
                 try {
                     KeyBagsEntity keyBagsEntity = GsonUtils.gsonToBean(result, KeyBagsEntity.class);
                     if (keyPage == 1) {
@@ -82,7 +83,8 @@ public class BagCardSenderFragment extends Fragment implements HttpResponse {
                     }
                     KeyBagsEntity.ContentBeanX contentBeanX = keyBagsEntity.getContent();
                     totalRecord = contentBeanX.getTotalRecord();
-                    keyList.addAll(contentBeanX.getContent());
+                    everyList= contentBeanX.getContent();
+                    keyList.addAll(everyList);
                     if (null != getActivity()) {
                         ((CardSenderActivity) getActivity()).initTotalKeys(totalRecord);
                     }

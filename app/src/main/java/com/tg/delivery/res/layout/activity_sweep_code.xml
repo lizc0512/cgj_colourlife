@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="#f2f3f5"
+    android:layout_width="match_parent" android:layout_height="match_parent">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:background="#647786"
+        android:layout_height="@dimen/size_165dp"/>
+    
+     <LinearLayout
+         android:id="@+id/input_code_layout"
+         android:layout_width="match_parent"
+         android:background="@color/white"
+         android:layout_marginTop="140dp"
+         android:layout_marginLeft="15dp"
+         android:layout_marginRight="15dp"
+         android:orientation="horizontal"
+         android:layout_height="50dp">
+
+         <TextView
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:layout_marginLeft="@dimen/size_18dp"
+             android:layout_gravity="center_vertical"
+             android:text="运单号:"
+             android:textColor="@color/color_25282e"
+             android:textSize="@dimen/font_14sp" />
+
+         <EditText
+             android:id="@+id/ed_input_code"
+             android:paddingLeft="10dp"
+             android:layout_width="0dp"
+             android:layout_weight="1"
+             android:layout_height="match_parent"
+             android:gravity="center_vertical"
+             android:background="@null"
+             android:textColor="@color/color_25282e"
+             android:textSize="@dimen/font_14sp"
+             android:textColorHint="#A9AFB8"
+             android:hint="请输入运单号"
+             android:inputType="text"/>
+         <TextView
+             android:id="@+id/tv_define"
+             android:layout_width="50dp"
+             android:layout_height="28dp"
+             android:layout_marginRight="@dimen/size_18dp"
+             android:gravity="center"
+             android:layout_gravity="center_vertical"
+             android:background="@drawable/bg_warehouse_blue"
+             android:text="确定"
+             android:textColor="@color/color_597EF7"
+             android:textSize="@dimen/font_14sp" />
+     </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/bottom_delivery_layout"
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:background="@color/white"
+        android:layout_alignParentBottom="true"
+        android:layout_height="48dp">
+        <TextView
+            android:id="@+id/tv_choice_num"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/size_27dp"
+            android:layout_gravity="center_vertical"
+            android:text="共计2个"
+            android:textColor="@color/color_666666"
+            android:textSize="@dimen/font_14sp" />
+
+        <TextView
+            android:id="@+id/tv_define_delivery"
+            android:layout_width="165dp"
+            android:layout_height="match_parent"
+            android:background="#597EF7"
+            android:gravity="center"
+            android:text="确认派件"
+            android:textColor="@color/white"
+            android:textSize="@dimen/font_14sp" />
+
+    </LinearLayout>
+
+
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_delivery_infor"
+        android:layout_above="@id/bottom_delivery_layout"
+        android:layout_below="@id/input_code_layout"
+        android:layout_width="match_parent"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="15dp"
+        android:layout_height="match_parent"/>
+
+
+</RelativeLayout>

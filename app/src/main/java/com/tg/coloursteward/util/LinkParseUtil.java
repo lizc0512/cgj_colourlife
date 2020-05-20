@@ -13,6 +13,7 @@ import com.tg.coloursteward.activity.DownloadManagerActivity;
 import com.tg.coloursteward.activity.MyBrowserActivity;
 import com.tg.coloursteward.activity.PublicAccountActivity;
 import com.tg.delivery.activity.DeliveryManagerActivity;
+import com.tg.delivery.activity.DeliveryScannerActivity;
 import com.tg.delivery.activity.WarehousingActivity;
 import com.tg.money.activity.GroupAccountDetailsActivity;
 import com.tg.money.activity.GroupBounsActivity;
@@ -106,7 +107,11 @@ public class LinkParseUtil {
                         it = new Intent(context, WarehousingActivity.class);
                         context.startActivity(it);
                         context.overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
-                    } else {
+                    } else if (name.equals("expressDis")){
+                        it = new Intent(context, DeliveryScannerActivity.class);
+                        context.startActivity(it);
+                        context.overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
+                    }  else {
                         ToastUtil.showShortToast(context, "请升级到最新版本体验");
                         return;
                     }

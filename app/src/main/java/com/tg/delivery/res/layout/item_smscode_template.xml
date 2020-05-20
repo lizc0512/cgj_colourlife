@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:background="@color/white"
+    android:layout_height="@dimen/size_105dp">
+
+
+    <ImageView
+        android:id="@+id/iv_sms_choice"
+        android:layout_width="@dimen/size_22dp"
+        android:layout_height="@dimen/size_22dp"
+        android:layout_marginLeft="@dimen/size_15dp"
+        android:layout_marginTop="18dp"
+        android:layout_marginRight="12dp"
+        android:src="@drawable/sms_template_default"
+        />
+
+    <TextView
+        android:id="@+id/tv_sms_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/iv_sms_choice"
+        android:layout_marginTop="18dp"
+        android:text="运单号:"
+        android:textColor="@color/color_25282e"
+        android:textSize="@dimen/font_14sp" />
+
+    <TextView
+        android:id="@+id/tv_sms_content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_sms_title"
+        android:layout_marginTop="10dp"
+        android:layout_toRightOf="@id/iv_sms_choice"
+        android:textColor="@color/color_25282e"
+        android:textSize="@dimen/font_14sp"
+        tools:text="000000000000" />
+</RelativeLayout>

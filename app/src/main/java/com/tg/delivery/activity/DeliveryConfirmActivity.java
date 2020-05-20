@@ -15,9 +15,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.base.BaseActivity;
+import com.tg.coloursteward.view.dialog.DialogFactory;
 import com.tg.delivery.adapter.DeliveryAddressListAdapter;
 import com.tg.delivery.adapter.DeliveryMsgTemplateAdapter;
 import com.tg.delivery.utils.SwitchButton;
+import com.tg.setting.activity.SettingActivity;
 import com.tg.setting.util.OnItemClickListener;
 
 import java.util.ArrayList;
@@ -95,6 +97,17 @@ public class DeliveryConfirmActivity extends BaseActivity  {
         });
     }
 
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        DialogFactory.getInstance().showDialog(DeliveryConfirmActivity.this, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        }, null, "您未设置短信内容，请先设置？", null, null);
+    }
 
     @Override
     public View getContentView() {

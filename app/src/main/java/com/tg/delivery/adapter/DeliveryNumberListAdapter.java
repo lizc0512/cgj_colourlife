@@ -30,6 +30,7 @@ import java.util.List;
 public class DeliveryNumberListAdapter extends RecyclerView.Adapter<DeliveryNumberListAdapter.DefaultViewHolder> {
 
     private Context activity;
+    private Context methodActivity;
     private List<String> deliveryList;
     private List<String> phoneList;
     private OnItemClickListener onClickListener;
@@ -40,8 +41,9 @@ public class DeliveryNumberListAdapter extends RecyclerView.Adapter<DeliveryNumb
         notifyDataSetChanged();
     }
 
-    public DeliveryNumberListAdapter(Activity activity, List<String> deliveryList, List<String> phoneList) {
+    public DeliveryNumberListAdapter(Activity activity,Activity methodActivity, List<String> deliveryList, List<String> phoneList) {
         this.activity = activity;
+        this.methodActivity = methodActivity;
         this.deliveryList = deliveryList;
         this.phoneList = phoneList;
     }
@@ -76,13 +78,13 @@ public class DeliveryNumberListAdapter extends RecyclerView.Adapter<DeliveryNumb
             defaultViewHolder.iv_tracking_cancel.setVisibility(View.GONE);
         }
         defaultViewHolder.iv_tracking_del.setOnClickListener(view -> {
-            ((DeliveryScannerActivity) activity).delDeliveryItem(position);
+            ((DeliveryScannerActivity) methodActivity).delDeliveryItem(position);
         });
         defaultViewHolder.iv_tracking_cancel.setOnClickListener(view -> {
-            ((DeliveryScannerActivity) activity).cancelDeliveryItem();
+            ((DeliveryScannerActivity) methodActivity).cancelDeliveryItem();
         });
         defaultViewHolder.iv_tracking_edit.setOnClickListener(view -> {
-            ((DeliveryScannerActivity) activity).editDeliveryItem(position);
+            ((DeliveryScannerActivity) methodActivity).editDeliveryItem(position);
         });
     }
 

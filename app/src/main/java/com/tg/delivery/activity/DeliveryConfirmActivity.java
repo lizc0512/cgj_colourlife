@@ -1,6 +1,10 @@
 package com.tg.delivery.activity;
 
+import android.graphics.Color;
 import android.os.Bundle;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.style.ForegroundColorSpan;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -86,6 +90,9 @@ public class DeliveryConfirmActivity extends BaseActivity  {
                 deliveryMsgTemplateAdapter.setClickPos(var1);
             }
         });
+        btn_confirm_delivery.setOnClickListener(view -> {
+
+        });
     }
 
 
@@ -99,4 +106,16 @@ public class DeliveryConfirmActivity extends BaseActivity  {
         return "确认派件";
     }
 
+    private void showTotalNum(){
+        StringBuffer stringBuffer = new StringBuffer();
+        stringBuffer.append("共计");
+        stringBuffer.append(2);
+        stringBuffer.append("个");
+        int length= stringBuffer.toString().length();
+        SpannableString spannableString = new SpannableString(stringBuffer.toString());
+        spannableString.setSpan(new ForegroundColorSpan(Color.parseColor("#666666")), 0, 2, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+        spannableString.setSpan(new ForegroundColorSpan(Color.parseColor("#597EF7")), 2, length-1, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+        spannableString.setSpan(new ForegroundColorSpan(Color.parseColor("#666666")), length-1, length, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+        tv_choice_num.setText(spannableString);
+    }
 }

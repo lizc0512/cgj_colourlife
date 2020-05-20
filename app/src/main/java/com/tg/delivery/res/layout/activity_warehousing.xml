@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bg_color"
+    android:background="#00000000"
     android:fitsSystemWindows="true"
     tools:context="com.tg.delivery.activity.WarehousingActivity">
 
@@ -11,29 +11,32 @@
         android:id="@+id/top_view"
         layout="@layout/base_actionbar" />
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/size_188dp"
+    <TextView
+        android:id="@+id/tv_code"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_below="@id/top_view"
-        android:background="@color/color_80647786">
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/size_102dp"
+        android:text="将扫描内容放入扫描框内"
+        android:textColor="@color/white"
+        android:textSize="@dimen/font_14sp" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="@dimen/size_102dp"
-            android:text="将扫描内容放入扫描框内"
-            android:textColor="@color/white"
-            android:textSize="@dimen/font_14sp" />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/size_100dp"
+        android:layout_below="@id/tv_code"
+        android:layout_marginTop="@dimen/size_65dp"
+        android:background="@drawable/bg_warehouse_rucang" />
 
-    </RelativeLayout>
 
     <LinearLayout
         android:id="@+id/ll_warehouse_info"
         android:layout_width="match_parent"
         android:layout_height="@dimen/size_150dp"
+        android:layout_below="@id/tv_code"
         android:layout_marginLeft="@dimen/size_15dp"
-        android:layout_marginTop="@dimen/size_137dp"
+        android:layout_marginTop="@dimen/size_14dp"
         android:layout_marginRight="@dimen/size_15dp"
         android:background="@drawable/bg_delivery_manager"
         android:orientation="vertical">
@@ -57,11 +60,12 @@
 
             <ImageView
                 android:id="@+id/iv_delivery_next"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="@dimen/size_30dp"
+                android:layout_height="match_parent"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="@dimen/size_35dp"
+                android:padding="@dimen/size_3dp"
                 android:src="@drawable/delivery_next" />
         </RelativeLayout>
 
@@ -149,63 +153,78 @@
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_warehouse"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/ll_warehouse_info"
-        android:layout_marginLeft="@dimen/size_15dp"
-        android:layout_marginTop="@dimen/size_10dp"
-        android:layout_marginRight="@dimen/size_15dp"
-        android:layout_marginBottom="@dimen/size_60dp"
-        android:background="@color/white"
-        tools:listitem="@layout/item_warehouse_content" />
+        android:id="@+id/rv_warehouse_delivery"
+        android:layout_width="@dimen/size_200dp"
+        android:layout_height="@dimen/size_100dp"
+        android:layout_below="@id/tv_code"
+        android:layout_marginLeft="@dimen/size_35dp"
+        android:layout_marginTop="@dimen/size_65dp" />
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/size_48dp"
-        android:layout_alignParentBottom="true"
-        android:background="@color/white">
+        android:layout_height="match_parent"
+        android:layout_below="@id/ll_warehouse_info"
+        android:background="@drawable/bg_warehouse_rucang">
 
-        <TextView
-            android:id="@+id/tv_block"
-            android:layout_width="wrap_content"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_warehouse"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="@dimen/size_40dp"
-            android:text="共计"
-            android:textColor="@color/color_666666"
-            android:textSize="@dimen/font_14sp" />
+            android:layout_marginLeft="@dimen/size_15dp"
+            android:layout_marginTop="@dimen/size_10dp"
+            android:layout_marginRight="@dimen/size_15dp"
+            android:layout_marginBottom="@dimen/size_60dp"
+            tools:listitem="@layout/item_warehouse_content" />
 
-        <TextView
-            android:id="@+id/tv_warehouse_allnum"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="@dimen/size_10dp"
-            android:layout_toRightOf="@id/tv_block"
-            android:textColor="@color/color_597EF7"
-            android:textSize="@dimen/font_14sp"
-            tools:text="0" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/size_48dp"
+            android:layout_alignParentBottom="true"
+            android:background="@color/white">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="@dimen/size_10dp"
-            android:layout_toRightOf="@id/tv_warehouse_allnum"
-            android:text="个"
-            android:textColor="@color/color_666666"
-            android:textSize="@dimen/font_14sp" />
+            <TextView
+                android:id="@+id/tv_block"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/size_40dp"
+                android:text="共计"
+                android:textColor="@color/color_666666"
+                android:textSize="@dimen/font_14sp" />
 
-        <TextView
-            android:id="@+id/tv_warehouse_commit"
-            android:layout_width="@dimen/size_165dp"
-            android:layout_height="match_parent"
-            android:layout_alignParentRight="true"
-            android:background="@color/color_597EF7"
-            android:gravity="center"
-            android:text="确认录入"
-            android:textColor="@color/white"
-            android:textSize="@dimen/font_14sp" />
+            <TextView
+                android:id="@+id/tv_warehouse_allnum"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/size_10dp"
+                android:layout_toRightOf="@id/tv_block"
+                android:textColor="@color/color_597EF7"
+                android:textSize="@dimen/font_14sp"
+                tools:text="0" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/size_10dp"
+                android:layout_toRightOf="@id/tv_warehouse_allnum"
+                android:text="个"
+                android:textColor="@color/color_666666"
+                android:textSize="@dimen/font_14sp" />
+
+            <TextView
+                android:id="@+id/tv_warehouse_commit"
+                android:layout_width="@dimen/size_165dp"
+                android:layout_height="match_parent"
+                android:layout_alignParentRight="true"
+                android:background="@color/color_597EF7"
+                android:gravity="center"
+                android:text="确认录入"
+                android:textColor="@color/white"
+                android:textSize="@dimen/font_14sp" />
+        </RelativeLayout>
     </RelativeLayout>
+
+
 </RelativeLayout>

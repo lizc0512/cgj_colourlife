@@ -13,6 +13,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.tg.coloursteward.R;
 import com.tg.delivery.activity.DeliveryScannerActivity;
+import com.tg.delivery.activity.DeliveryTransferActivity;
+import com.tg.delivery.entity.DeliveryInforEntity;
 import com.tg.setting.util.OnItemClickListener;
 
 import java.util.List;
@@ -31,8 +33,7 @@ public class DeliveryNumberListAdapter extends RecyclerView.Adapter<DeliveryNumb
 
     private Context activity;
     private Context methodActivity;
-    private List<String> deliveryList;
-    private List<String> phoneList;
+    private List<DeliveryInforEntity.DataBean> deliveryInforList;
     private OnItemClickListener onClickListener;
     private int editPos=-1;
 
@@ -41,11 +42,10 @@ public class DeliveryNumberListAdapter extends RecyclerView.Adapter<DeliveryNumb
         notifyDataSetChanged();
     }
 
-    public DeliveryNumberListAdapter(Activity activity,Activity methodActivity, List<String> deliveryList, List<String> phoneList) {
+    public DeliveryNumberListAdapter(Activity activity,Activity methodActivity,List<DeliveryInforEntity.DataBean> deliveryInforList) {
         this.activity = activity;
         this.methodActivity = methodActivity;
-        this.deliveryList = deliveryList;
-        this.phoneList = phoneList;
+        this.deliveryInforList = deliveryInforList;
     }
 
     @NonNull
@@ -64,8 +64,10 @@ public class DeliveryNumberListAdapter extends RecyclerView.Adapter<DeliveryNumb
 
     @Override
     public void onBindViewHolder(@NonNull DefaultViewHolder defaultViewHolder, int position) {
-        defaultViewHolder.tv_tracking_nonum.setText(deliveryList.get(position));
-        defaultViewHolder.tv_tracking_phonenum.setText(phoneList.get(position));
+        DeliveryInforEntity.DataBean  dataBean=deliveryInforList.get(position);
+        defaultViewHolder.tv_tracking_nonum.setText(dataBean.getCourierNumber());
+        defaultViewHolder.tv_tracking_phonenum.setText(dataBean.getRecipientMobile());
+        defaultViewHolder.tv_delivery_name.setText(dataBean.getCourierCompany());
         if (editPos==position){
             defaultViewHolder.itemView.setBackgroundResource(R.drawable.bg_delivery_item_select);
             defaultViewHolder.iv_tracking_del.setVisibility(View.GONE);
@@ -78,13 +80,27 @@ public class DeliveryNumberListAdapter extends RecyclerView.Adapter<DeliveryNumb
             defaultViewHolder.iv_tracking_cancel.setVisibility(View.GONE);
         }
         defaultViewHolder.iv_tracking_del.setOnClickListener(view -> {
-            ((DeliveryScannerActivity) methodActivity).delDeliveryItem(position);
+            if (methodActivity instanceof DeliveryScannerActivity ){
+                ((DeliveryScannerActivity) methodActivity).delDeliveryItem(position);
+            }else{
+                ((DeliveryTransferActivity) methodActivity).delDeliveryItem(position);
+            }
+
         });
         defaultViewHolder.iv_tracking_cancel.setOnClickListener(view -> {
-            ((DeliveryScannerActivity) methodActivity).cancelDeliveryItem();
+            if (methodActivity instanceof DeliveryScannerActivity ){
+                ((DeliveryScannerActivity) methodActivity).cancelDeliveryItem();
+            }else{
+                ((DeliveryTransferActivity) methodActivity).cancelDeliveryItem();
+            }
+
         });
         defaultViewHolder.iv_tracking_edit.setOnClickListener(view -> {
-            ((DeliveryScannerActivity) methodActivity).editDeliveryItem(position);
+            if (methodActivity instanceof DeliveryScannerActivity ){
+                ((DeliveryScannerActivity) methodActivity).editDeliveryItem(position);
+            }else{
+                ((DeliveryTransferActivity) methodActivity).editDeliveryItem(position);
+            }
         });
     }
 
@@ -118,6 +134,6 @@ public class DeliveryNumberListAdapter extends RecyclerView.Adapter<DeliveryNumb
 
     @Override
     public int getItemCount() {
-        return deliveryList == null ? 0 : deliveryList.size();
+        return deliveryInforList == null ? 0 : deliveryInforList.size();
     }
 }

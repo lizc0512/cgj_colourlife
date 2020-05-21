@@ -373,6 +373,7 @@ public class FragmentManagement extends Fragment implements HttpResponse, View.O
                             tv_miniservice_title.setText(contentBean.getName());
                             cropUuid = contentBean.getUuid();
                             SharedPreferencesUtils.getInstance().saveStringData(SpConstants.storage.CORPID, contentBean.getUuid());
+                            SharedPreferencesUtils.getInstance().saveStringData(SpConstants.storage.CORPNAME, contentBean.getName());
                             Tools.saveStringValue(mActivity, Contants.storage.CORPID, contentBean.getUuid());//租户ID
                             return;
                         }

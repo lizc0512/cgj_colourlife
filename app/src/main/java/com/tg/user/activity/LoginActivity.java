@@ -835,6 +835,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                     for (CropListEntity.ContentBean contentBean : cropList) {
                         if (contentBean.getIs_default().equals("1")) {
                             spUtils.saveStringData(SpConstants.storage.CORPID, contentBean.getUuid());
+                            spUtils.saveStringData(SpConstants.storage.CORPNAME, contentBean.getName());
                             Tools.saveStringValue(LoginActivity.this, Contants.storage.CORPID, contentBean.getUuid());//租户ID
                             getNetInfo(contentBean.getUuid());
                             return;

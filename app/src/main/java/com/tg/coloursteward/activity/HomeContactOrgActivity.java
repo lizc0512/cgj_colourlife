@@ -2,8 +2,6 @@ package com.tg.coloursteward.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -11,15 +9,17 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.adapter.FamilyAdapter;
 import com.tg.coloursteward.base.BaseActivity;
-import com.tg.coloursteward.constant.Contants;
+import com.tg.coloursteward.constant.SpConstants;
 import com.tg.coloursteward.info.FamilyInfo;
 import com.tg.coloursteward.model.HomeModel;
 import com.tg.coloursteward.net.HttpTools;
 import com.tg.coloursteward.net.ResponseData;
-import com.tg.coloursteward.util.Tools;
 
 import org.json.JSONArray;
 
@@ -83,7 +83,7 @@ public class HomeContactOrgActivity extends BaseActivity {
     }
 
     private void initData(boolean isLoading) {
-        String corp_id = Tools.getStringValue(HomeContactOrgActivity.this, Contants.storage.CORPID);
+        String corp_id = spUtils.getStringData(SpConstants.storage.CORPID, "");
         homeModel.getConatctSearch(0, id, corp_id, isLoading, this);
     }
 

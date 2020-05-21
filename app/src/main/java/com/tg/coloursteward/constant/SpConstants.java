@@ -54,6 +54,7 @@ public interface SpConstants {
         String THRID_CODE = "thrid_code";//彩之云授权登录code
         String SKINCODE = "skin_code";//皮肤包
         String CORPID = "corp_id";//租户Id
+        String CORPNAME = "corp_name";//租户名称
         String ORG_UUID = "org_uuid";//租户Id
         String USER_MOBILE = "user_mobile";//租户Id
         String DEVICE_TOKEN = "device_token";//设备唯一token

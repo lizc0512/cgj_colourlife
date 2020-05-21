@@ -152,6 +152,7 @@ public class BindWeChatActivity extends BaseActivity implements View.OnClickList
                     for (CropListEntity.ContentBean contentBean : cropList) {
                         if (contentBean.getIs_default().equals("1")) {
                             spUtils.saveStringData(SpConstants.storage.CORPID, contentBean.getUuid());
+                            spUtils.saveStringData(SpConstants.storage.CORPNAME, contentBean.getName());
                             Tools.saveStringValue(this, Contants.storage.CORPID, contentBean.getUuid());//租户ID
                             getNetInfo(contentBean.getUuid());
                             return;

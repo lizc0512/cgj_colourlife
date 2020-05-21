@@ -70,8 +70,10 @@
     <dimen name="size_50dp">50dp</dimen>
     <dimen name="size_55dp">55dp</dimen>
     <dimen name="size_56dp">56dp</dimen>
+    <dimen name="size_58dp">58dp</dimen>
     <dimen name="size_60dp">60dp</dimen>
     <dimen name="size_62dp">62dp</dimen>
+    <dimen name="size_63dp">63dp</dimen>
     <dimen name="size_64dp">64dp</dimen>
     <dimen name="size_65dp">65dp</dimen>
     <dimen name="size_66dp">66dp</dimen>

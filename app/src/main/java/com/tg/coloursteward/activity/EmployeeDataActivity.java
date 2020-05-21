@@ -25,6 +25,7 @@ import com.tg.coloursteward.adapter.EmployeePhoneAdapter;
 import com.tg.coloursteward.base.BaseActivity;
 import com.tg.coloursteward.baseModel.HttpResponse;
 import com.tg.coloursteward.constant.Contants;
+import com.tg.coloursteward.constant.SpConstants;
 import com.tg.coloursteward.entity.ContactsEntity;
 import com.tg.coloursteward.entity.EmployeeEntity;
 import com.tg.coloursteward.fragment.ContactsFragment;
@@ -81,6 +82,7 @@ public class EmployeeDataActivity extends BaseActivity implements HttpResponse, 
     private TextView tv_employee_phonecopy;
     private TextView tv_employee_email;
     private TextView tv_employee_emailcopy;
+    private TextView tv_employee_company;
     private View footView;
     private ArrayList<EmployeePhoneInfo> PhoneList = new ArrayList<EmployeePhoneInfo>();
     private EmployeePhoneAdapter adapter;
@@ -177,6 +179,7 @@ public class EmployeeDataActivity extends BaseActivity implements HttpResponse, 
         tv_employee_email = findViewById(R.id.tv_employee_email);
         tv_employee_emailcopy = findViewById(R.id.tv_employee_emailcopy);
         tv_employee_jobname = findViewById(R.id.tv_employee_jobname);
+        tv_employee_company = findViewById(R.id.tv_employee_company);
         rl_employee_msg.setOnClickListener(this);
         rl_employee_call.setOnClickListener(this);
         cbCollect = findViewById(R.id.cb_collect);
@@ -185,6 +188,8 @@ public class EmployeeDataActivity extends BaseActivity implements HttpResponse, 
         ivClose.setOnClickListener(this);
         tv_employee_phonecopy.setOnClickListener(this);
         tv_employee_emailcopy.setOnClickListener(this);
+        String corpName = spUtils.getStringData(SpConstants.storage.CORPNAME, "");
+        tv_employee_company.setText(corpName);
     }
 
     //给动态广播发送信息
@@ -329,9 +334,10 @@ public class EmployeeDataActivity extends BaseActivity implements HttpResponse, 
                                     startActivity(it);
                                 }
                             }
+
                             @Override
                             public void noPermission(List<String> denied, boolean quick) {
-                                ToastUtil.showShortToast(EmployeeDataActivity.this,"请到程序管理中" +
+                                ToastUtil.showShortToast(EmployeeDataActivity.this, "请到程序管理中" +
                                         "打开彩管家拨打电话权限");
                             }
                         });

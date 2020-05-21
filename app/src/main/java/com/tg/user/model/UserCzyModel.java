@@ -38,6 +38,7 @@ public class UserCzyModel extends BaseModel {
     private String checkWhiteUrl = "/user/checkWhite";
     private String sendCodeUrl = "/app/smsCode";
     private String checkRegisterUrl = "/user/checkRegister";
+    private String bindwxUrl = "/app/bind/wechat";
     private String checkCodeUrl = "/sms/checkCode";
     private String registerUrl = "/user/register";
 
@@ -207,6 +208,48 @@ public class UserCzyModel extends BaseModel {
             }
         }, true, true);
     }
+
+
+    /**
+     * 微信授权关联手机号
+     *
+     * @param what
+     * @param openid
+     * @param unionid
+     * @param mobile
+     * @param code
+     * @param newHttpResponse
+     */
+    public void postBindWeChat(int what, String openid, String unionid, String mobile, String code, final HttpResponse newHttpResponse) {
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("openid", openid);
+        params.put("unionid", unionid);
+        params.put("mobile", mobile);
+        params.put("code", code);
+        final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 5,
+                bindwxUrl), RequestMethod.POST);
+        request(what, request, params, new HttpListener<String>() {
+            @Override
+            public void onSucceed(int what, Response<String> response) {
+                int responseCode = response.getHeaders().getResponseCode();
+                String result = response.get();
+                if (responseCode == RequestEncryptionUtils.responseSuccess) {
+                    int resultCode = showSuccesResultMessage(result);
+                    if (resultCode == 0) {
+                        newHttpResponse.OnHttpResponse(what, result);
+                    }
+                } else {
+                    showErrorCodeMessage(response);
+                }
+            }
+
+            @Override
+            public void onFailed(int what, Response<String> response) {
+                showExceptionMessage(what, response);
+            }
+        }, true, true);
+    }
+
 
     /**
      * 短信校验接口

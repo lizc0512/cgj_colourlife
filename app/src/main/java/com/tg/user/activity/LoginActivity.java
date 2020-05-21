@@ -888,9 +888,12 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                         JSONObject jsonObject = new JSONObject(response);
                         String is_bind = jsonObject.getString("is_bind");//1：已绑定，2：未绑定
                         if ("1".equals(is_bind)) {
-                            login(unionid, MD5.getMd5Value(openid), loginType);
+                            login(unionid, MD5.getMd5Value(openid).toLowerCase(), loginType);
                         } else {
-                            ToastUtil.showShortToast(this, "调到绑定页面");
+                            Intent it = new Intent(this, BindWeChatActivity.class);
+                            it.putExtra("unionid", unionid);
+                            it.putExtra("openid", openid);
+                            startActivity(it);
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();

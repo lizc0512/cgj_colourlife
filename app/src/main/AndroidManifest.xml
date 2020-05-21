@@ -62,6 +62,9 @@
         <activity
             android:name="com.tg.delivery.activity.DeliveryConfirmActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name="com.tg.delivery.activity.DeliveryTransferActivity"
+            android:screenOrientation="portrait" />
 
 
         <activity android:name=".activity.OpenFileActivity" />

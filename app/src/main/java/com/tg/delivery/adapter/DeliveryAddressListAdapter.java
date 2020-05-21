@@ -31,7 +31,7 @@ public class DeliveryAddressListAdapter extends RecyclerView.Adapter<DeliveryAdd
     private Context activity;
     private List<String> addressList;
     private OnItemClickListener onClickListener;
-    private int clickPos=-1;
+    private int clickPos=0;
 
     public  void  setClickPos(int clickPos){
         this.clickPos=clickPos;

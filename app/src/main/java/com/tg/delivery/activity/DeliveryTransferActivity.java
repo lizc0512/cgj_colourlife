@@ -26,6 +26,7 @@ import com.hjq.permissions.XXPermissions;
 import com.intsig.exp.sdk.ISCardScanActivity;
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.base.BaseActivity;
+import com.tg.coloursteward.info.UserInfo;
 import com.tg.coloursteward.util.GsonUtils;
 import com.tg.coloursteward.util.ToastUtil;
 import com.tg.delivery.adapter.DeliveryNumberListAdapter;
@@ -42,7 +43,7 @@ import static com.tg.delivery.activity.DeliveryConfirmActivity.COURIERSIZE;
 /**
  * 扫码派件
  */
-public class DeliveryScannerActivity extends BaseActivity {
+public class DeliveryTransferActivity extends BaseActivity {
     private EditText ed_input_code;
     private TextView tv_define;
     private TextView tv_choice_num;
@@ -59,8 +60,8 @@ public class DeliveryScannerActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (!XXPermissions.isHasPermission(DeliveryScannerActivity.this, Manifest.permission.CAMERA)) {
-                XXPermissions.with(DeliveryScannerActivity.this)
+            if (!XXPermissions.isHasPermission(DeliveryTransferActivity.this, Manifest.permission.CAMERA)) {
+                XXPermissions.with(DeliveryTransferActivity.this)
                         .permission(Manifest.permission.CAMERA)
                         .request(new OnPermission() {
                             @Override
@@ -70,7 +71,7 @@ public class DeliveryScannerActivity extends BaseActivity {
 
                             @Override
                             public void noPermission(List<String> denied, boolean quick) {
-                                XXPermissions.gotoPermissionSettings(DeliveryScannerActivity.this);
+                                XXPermissions.gotoPermissionSettings(DeliveryTransferActivity.this);
                             }
                         });
             } else {
@@ -141,12 +142,13 @@ public class DeliveryScannerActivity extends BaseActivity {
         TextView tv_base_title = rootView.findViewById(R.id.tv_base_title);
         iv_base_location.setVisibility(View.VISIBLE);
         tv_base_title.setVisibility(View.VISIBLE);
-        tv_base_title.setText("扫码派件");
+        tv_base_title.setText("交接快件");
         ed_input_code = rootView.findViewById(R.id.ed_input_code);
         tv_define = rootView.findViewById(R.id.tv_define);
         tv_choice_num = rootView.findViewById(R.id.tv_choice_num);
         tv_define_delivery = rootView.findViewById(R.id.tv_define_delivery);
         rv_delivery_infor = rootView.findViewById(R.id.rv_delivery_infor);
+        tv_define_delivery.setText("接收快件");
         tv_define.setOnClickListener(view -> {
             courierNumber = ed_input_code.getText().toString().trim();
             if (!TextUtils.isEmpty(courierNumber)) {
@@ -172,17 +174,17 @@ public class DeliveryScannerActivity extends BaseActivity {
             }
         });
         tv_define_delivery.setOnClickListener(view -> {
-            Intent it = new Intent(currentActivity, DeliveryConfirmActivity.class);
             List<String> deliveryNumberList=new ArrayList<>();
             for (DeliveryInforEntity.DataBean dataBean : deliveryInforList){
                 deliveryNumberList.add(dataBean.getCourierNumber());
             }
-            it.putExtra(COURIERNUMBERS,GsonUtils.gsonString(deliveryNumberList));
-            it.putExtra(COURIERSIZE,deliveryNumberList.size());
-            startActivity(it);
+            if (null==deliveryModel){
+                deliveryModel=new DeliveryModel(DeliveryTransferActivity.this);
+            }
+            deliveryModel.submitDeliveryCourierNumbers(2,GsonUtils.gsonString(deliveryNumberList),"3", UserInfo.mobile,"","",0,DeliveryTransferActivity.this);
         });
-        deliveryNumberListAdapter = new DeliveryNumberListAdapter(currentActivity, DeliveryScannerActivity
-                .this, deliveryInforList);
+        deliveryNumberListAdapter = new DeliveryNumberListAdapter(currentActivity, DeliveryTransferActivity.this
+                , deliveryInforList);
         rv_delivery_infor.setLayoutManager(new LinearLayoutManager(currentActivity));
         rv_delivery_infor.setAdapter(deliveryNumberListAdapter);
     }
@@ -283,16 +285,16 @@ public class DeliveryScannerActivity extends BaseActivity {
 
     private void getDeliverInfor() {
         if (null == deliveryModel) {
-            deliveryModel = new DeliveryModel(DeliveryScannerActivity.this);
+            deliveryModel = new DeliveryModel(DeliveryTransferActivity.this);
         }
-        deliveryModel.getDeliveryInfor(1, courierNumber, DeliveryScannerActivity.this);
+        deliveryModel.getDeliveryInfor(1, courierNumber, DeliveryTransferActivity.this);
     }
 
     private void getDeliverStatus() {
         if (null == deliveryModel) {
-            deliveryModel = new DeliveryModel(DeliveryScannerActivity.this);
+            deliveryModel = new DeliveryModel(DeliveryTransferActivity.this);
         }
-        deliveryModel.getDeliveryStatus(0, courierNumber, DeliveryScannerActivity.this);
+        deliveryModel.getDeliveryStatus(0, courierNumber, DeliveryTransferActivity.this);
     }
 
     @Override
@@ -321,6 +323,10 @@ public class DeliveryScannerActivity extends BaseActivity {
 
                     }
                 }
+                break;
+            case 2:
+
+
                 break;
         }
     }

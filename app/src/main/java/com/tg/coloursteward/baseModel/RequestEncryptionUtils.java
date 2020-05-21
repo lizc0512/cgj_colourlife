@@ -75,6 +75,10 @@ public class RequestEncryptionUtils {
             finalUrl = Contants.URl.ACCOUNT_ADDRESS + urlString;//新版彩钱包
         } else if (type == 17) {
             finalUrl = Contants.URl.DELIVERY_HOME_ADDRESS + urlString;//彩快递
+        }else if (type==18){
+            finalUrl = Contants.URl.DELIVERY_NUMBER_ADDRESS + urlString;//快递单号查询信息
+        }else if (type==19){
+            finalUrl = Contants.URl.DELIVERY_COMPANY_ADDRESS + urlString;//快递公司相关信息
         }
         return finalUrl;
     }

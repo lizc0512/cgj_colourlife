@@ -1,9 +1,11 @@
 package com.tg.delivery.activity;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.Spanned;
+import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
 import android.view.View;
 import android.widget.Button;
@@ -15,9 +17,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.base.BaseActivity;
+import com.tg.coloursteward.info.UserInfo;
+import com.tg.coloursteward.net.HttpTools;
+import com.tg.coloursteward.util.ToastUtil;
 import com.tg.coloursteward.view.dialog.DialogFactory;
 import com.tg.delivery.adapter.DeliveryAddressListAdapter;
 import com.tg.delivery.adapter.DeliveryMsgTemplateAdapter;
+import com.tg.delivery.model.DeliveryModel;
 import com.tg.delivery.utils.SwitchButton;
 import com.tg.setting.activity.SettingActivity;
 import com.tg.setting.util.OnItemClickListener;
@@ -30,7 +36,9 @@ import java.util.List;
  */
 public class DeliveryConfirmActivity extends BaseActivity  {
 
-   private DeliveryAddressListAdapter deliveryAddressListAdapter;
+    public static final String COURIERNUMBERS="couriernumbers";
+    public static final String COURIERSIZE="couriersize";
+    private DeliveryAddressListAdapter deliveryAddressListAdapter;
     private DeliveryMsgTemplateAdapter deliveryMsgTemplateAdapter;
    private TextView tv_choice_num;
    private TextView tv_sms_num;
@@ -38,13 +46,15 @@ public class DeliveryConfirmActivity extends BaseActivity  {
    private SwitchButton message_sb;
    private RecyclerView rv_message_list;
    private Button btn_confirm_delivery;
-
    private List<String> addressList=new ArrayList<>();
-
-
    private List<String> messageTitleList=new ArrayList<>();
    private List<String> messageContentList=new ArrayList<>();
 
+   private String courierNumbers;
+   private int courierTotal;
+
+   private DeliveryModel deliveryModel;
+   private int  finishType=1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +65,10 @@ public class DeliveryConfirmActivity extends BaseActivity  {
         message_sb=findViewById(R.id.message_sb);
         rv_message_list=findViewById(R.id.rv_message_list);
         btn_confirm_delivery=findViewById(R.id.btn_confirm_delivery);
+        Intent intent=getIntent();
+        courierNumbers=intent.getStringExtra(COURIERNUMBERS);
+        courierTotal=intent.getIntExtra(COURIERSIZE,0);
+        showTotalNum();
         addressList.add("自提点");
         addressList.add("家门口");
         addressList.add("快递柜");
@@ -69,6 +83,7 @@ public class DeliveryConfirmActivity extends BaseActivity  {
         deliveryAddressListAdapter =new DeliveryAddressListAdapter(DeliveryConfirmActivity.this,addressList);
         rv_delivery_address.setAdapter(deliveryAddressListAdapter);
         deliveryAddressListAdapter.setOnItemClickListener(var1 -> {
+            finishType=var1+1;
             deliveryAddressListAdapter.setClickPos(var1);
         });
         message_sb.setOnStateChangedListener(new SwitchButton.OnStateChangedListener() {
@@ -86,14 +101,10 @@ public class DeliveryConfirmActivity extends BaseActivity  {
          LinearLayoutManager  linearLayoutManager=new LinearLayoutManager(DeliveryConfirmActivity.this,LinearLayoutManager.VERTICAL,false);
          rv_message_list.setLayoutManager(linearLayoutManager);
          rv_message_list.setAdapter(deliveryMsgTemplateAdapter);
-        deliveryMsgTemplateAdapter.setOnItemClickListener(new OnItemClickListener() {
-            @Override
-            public void onItemClick(int var1) {
-                deliveryMsgTemplateAdapter.setClickPos(var1);
-            }
-        });
+        deliveryMsgTemplateAdapter.setOnItemClickListener(var1 -> deliveryMsgTemplateAdapter.setClickPos(var1));
+        deliveryModel=new DeliveryModel(DeliveryConfirmActivity.this);
         btn_confirm_delivery.setOnClickListener(view -> {
-
+            deliveryModel.submitDeliveryCourierNumbers(0,courierNumbers,"2", UserInfo.mobile,"","1",finishType,DeliveryConfirmActivity.this);
         });
     }
 
@@ -122,7 +133,7 @@ public class DeliveryConfirmActivity extends BaseActivity  {
     private void showTotalNum(){
         StringBuffer stringBuffer = new StringBuffer();
         stringBuffer.append("共计");
-        stringBuffer.append(2);
+        stringBuffer.append(courierTotal);
         stringBuffer.append("个");
         int length= stringBuffer.toString().length();
         SpannableString spannableString = new SpannableString(stringBuffer.toString());
@@ -130,5 +141,14 @@ public class DeliveryConfirmActivity extends BaseActivity  {
         spannableString.setSpan(new ForegroundColorSpan(Color.parseColor("#597EF7")), 2, length-1, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
         spannableString.setSpan(new ForegroundColorSpan(Color.parseColor("#666666")), length-1, length, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
         tv_choice_num.setText(spannableString);
+    }
+
+    @Override
+    public void OnHttpResponse(int what, String result) {
+        switch (what) {
+            case 0:
+
+                break;
+        }
     }
 }

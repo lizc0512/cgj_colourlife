@@ -181,7 +181,7 @@ public class DeliveryTransferActivity extends BaseActivity {
             if (null==deliveryModel){
                 deliveryModel=new DeliveryModel(DeliveryTransferActivity.this);
             }
-            deliveryModel.submitDeliveryCourierNumbers(2,GsonUtils.gsonString(deliveryNumberList),"3", UserInfo.mobile,"","",DeliveryTransferActivity.this);
+            deliveryModel.submitDeliveryCourierNumbers(2,GsonUtils.gsonString(deliveryNumberList),"3", UserInfo.mobile,"","",0,DeliveryTransferActivity.this);
         });
         deliveryNumberListAdapter = new DeliveryNumberListAdapter(currentActivity, DeliveryTransferActivity.this
                 , deliveryInforList);

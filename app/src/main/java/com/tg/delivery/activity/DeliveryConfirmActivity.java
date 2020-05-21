@@ -54,7 +54,7 @@ public class DeliveryConfirmActivity extends BaseActivity  {
    private int courierTotal;
 
    private DeliveryModel deliveryModel;
-
+   private int  finishType=1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,6 +83,7 @@ public class DeliveryConfirmActivity extends BaseActivity  {
         deliveryAddressListAdapter =new DeliveryAddressListAdapter(DeliveryConfirmActivity.this,addressList);
         rv_delivery_address.setAdapter(deliveryAddressListAdapter);
         deliveryAddressListAdapter.setOnItemClickListener(var1 -> {
+            finishType=var1+1;
             deliveryAddressListAdapter.setClickPos(var1);
         });
         message_sb.setOnStateChangedListener(new SwitchButton.OnStateChangedListener() {
@@ -103,7 +104,7 @@ public class DeliveryConfirmActivity extends BaseActivity  {
         deliveryMsgTemplateAdapter.setOnItemClickListener(var1 -> deliveryMsgTemplateAdapter.setClickPos(var1));
         deliveryModel=new DeliveryModel(DeliveryConfirmActivity.this);
         btn_confirm_delivery.setOnClickListener(view -> {
-            deliveryModel.submitDeliveryCourierNumbers(0,courierNumbers,"2", UserInfo.mobile,"","1",DeliveryConfirmActivity.this);
+            deliveryModel.submitDeliveryCourierNumbers(0,courierNumbers,"2", UserInfo.mobile,"","1",finishType,DeliveryConfirmActivity.this);
         });
     }
 

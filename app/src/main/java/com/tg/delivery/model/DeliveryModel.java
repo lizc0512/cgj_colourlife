@@ -1,6 +1,8 @@
 package com.tg.delivery.model;
 
 import android.content.Context;
+import android.text.TextUtils;
+import android.widget.TextView;
 
 import com.tg.coloursteward.baseModel.BaseModel;
 import com.tg.coloursteward.baseModel.HttpListener;
@@ -88,13 +90,16 @@ public class DeliveryModel extends BaseModel {
         }, true, true);
     }
 
-    public void submitDeliveryCourierNumbers(int what,String courierNumbers,String sendStatus,String loginMobile,String name,String SMSTemplate, final HttpResponse newHttpResponse) {
+    public void submitDeliveryCourierNumbers(int what,String courierNumbers,String sendStatus,String loginMobile,String name,String SMSTemplate,int finishType, final HttpResponse newHttpResponse) {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("courierNumbers",courierNumbers);
         params.put("sendStatus",sendStatus);
         params.put("loginMobile",loginMobile);
         params.put("name",name);
-        params.put("SMSTemplate",SMSTemplate);
+        if (!TextUtils.isEmpty(SMSTemplate)){
+            params.put("SMSTemplate",SMSTemplate);
+            params.put("finishType",finishType);
+        }
         Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 18, deliveryUpdateStatusUrl),
                 RequestMethod.POST);
         request(what, request, RequestEncryptionUtils.getNewSaftyMap(mContext, params), new HttpListener<String>() {

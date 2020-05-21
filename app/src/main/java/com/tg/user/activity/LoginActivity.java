@@ -387,7 +387,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                 userCzyModel.getSmsCode(6, account, 3, 1, true, this);//找回密码获取短信验证码
                 break;
             case R.id.tv_register:
-                Intent register = new Intent(this, CompanyInfoActivity.class);
+                Intent register = new Intent(this, RegisterActivity.class);
                 startActivity(register);
                 break;
             case R.id.iv_wx_login:
@@ -469,6 +469,10 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         String code = intent.getStringExtra(CZY_CODE);
+        String account = intent.getStringExtra(ACCOUNT);
+        if (!TextUtils.isEmpty(account)) {
+            setAccount(account);
+        }
         if (!TextUtils.isEmpty(code)) {
             ThirdLogin(code);
             spUtils.saveStringData(SpConstants.storage.THRID_CODE, code);

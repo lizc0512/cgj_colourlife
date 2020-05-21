@@ -3,19 +3,16 @@ package com.tg.user.activity
 import android.content.Intent
 import android.os.Bundle
 import android.os.CountDownTimer
-import androidx.core.content.ContextCompat
 import android.text.Editable
 import android.text.TextUtils
 import android.text.TextWatcher
-import android.text.method.HideReturnsTransformationMethod
-import android.text.method.PasswordTransformationMethod
 import android.view.View
 import android.view.animation.AnimationUtils
+import androidx.core.content.ContextCompat
 import com.tg.coloursteward.R
 import com.tg.coloursteward.base.BaseActivity
 import com.tg.coloursteward.baseModel.HttpResponse
 import com.tg.coloursteward.util.GsonUtils
-import com.tg.coloursteward.util.StringUtils
 import com.tg.coloursteward.util.ToastUtil
 import com.tg.coloursteward.view.dialog.DialogFactory
 import com.tg.user.entity.CheckRegisterEntity
@@ -40,26 +37,26 @@ class RegisterActivity : BaseActivity(), View.OnClickListener, HttpResponse {
     var userCzyModel = UserCzyModel()
     var countStart: Int = 0
     var isRegister: Boolean = false
-    var isSetPwd: Boolean = false
-    var isShowPwd: Boolean = false
     val myTimeCount = MyTimeCount(60000, 1000)
     override fun OnHttpResponse(what: Int, result: String) {
         when (what) {
             0 -> takeIf { !TextUtils.isEmpty(result) }?.apply { nextAt(result) }
-            1 -> initTimeCount(result)
+            1 -> {
+                initTimeCount(result)
+                changStatus()
+                btn_register_next.setText("注册")
+            }
             2 -> {
                 val intent = Intent(this, CompanyInfoActivity::class.java)
                 startActivity(intent)
             }
+            3 -> {
+                ToastUtil.showShortToast(this, "注册成功")
+                val it = Intent(this, LoginActivity::class.java)
+                it.putExtra(LoginActivity.ACCOUNT, phone)
+                startActivity(it)
+            }
         }
-    }
-
-    private fun setPwd() {
-        isSetPwd = true
-        ll_register_sms.visibility = View.GONE
-        rl_register_pwd.visibility = View.VISIBLE
-        rl_register_pwd.startAnimation(AnimationUtils.loadAnimation(this, R.anim.push_right_alpha))
-        tv_register_account.setText(getString(R.string.user_register_setpwd))
     }
 
     fun initTimeCount(result: String) {
@@ -90,7 +87,7 @@ class RegisterActivity : BaseActivity(), View.OnClickListener, HttpResponse {
 
         override fun onTick(millisUntilFinished: Long) {
             val currentSecond = millisUntilFinished / 1000
-            tv_register_time.text = "${currentSecond}s"
+            tv_register_time.text = "${currentSecond}S"
         }
     }
 
@@ -114,7 +111,7 @@ class RegisterActivity : BaseActivity(), View.OnClickListener, HttpResponse {
         ll_register_sms.visibility = View.VISIBLE
         et_register_phone.visibility = View.GONE
         ll_register_sms.startAnimation(AnimationUtils.loadAnimation(this, R.anim.push_right_alpha))
-        userCzyModel.getSmsCode(1, phone, 0, 1, false, this)//找回密码获取短信验证码
+
     }
 
     fun showDialog() {
@@ -142,35 +139,23 @@ class RegisterActivity : BaseActivity(), View.OnClickListener, HttpResponse {
     }
 
     fun initData() {
-        if (isRegister && !isSetPwd) {
-            code = et_register_code.text.toString().trim()
-            if (!TextUtils.isEmpty(code)) {
-                setPwd()
-            } else {
-                ToastUtil.showShortToast(this, "短信验证码不能为空")
-            }
-        } else if (isSetPwd && isRegister) {
-            val pwd = et_register_pwd.text.toString().trim()
-            if (!TextUtils.isEmpty(pwd) && StringUtils.checkPwdType(pwd)) {
-                userCzyModel.postRegister(2, phone, code, pwd, this)
-            } else {
-                ToastUtil.showShortToast(this, "请设置8-18位字母+数字密码")
-            }
+        code = et_register_code.text.toString().trim()
+        if (!TextUtils.isEmpty(code)) {
+            setRegister()
         } else {
-            phone = et_register_phone.text.toString().trim();
-            if (!TextUtils.isEmpty(phone)) {
-                takeIf { true }?.apply { userCzyModel.getCheckRegister(0, phone, this) }
-            } else {
-                ToastUtil.showShortToast(this, "手机号不能为空")
-            }
+            ToastUtil.showShortToast(this, "短信验证码不能为空")
         }
+    }
+
+    fun setRegister() {
+        userCzyModel.postRegister(3, phone, code, this)
     }
 
     fun initView() {
         tv_base_title.setText(getString(R.string.user_register_phone))
         iv_base_back.setOnClickListener(this)
         btn_register_next.setOnClickListener(this)
-        iv_register_showpwd.setOnClickListener(this)
+        btn_register_getcode.setOnClickListener(this)
         et_register_phone.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
             }
@@ -190,24 +175,22 @@ class RegisterActivity : BaseActivity(), View.OnClickListener, HttpResponse {
         })
     }
 
+    fun getCode() {
+        phone = et_register_phone.text.toString().trim();
+        userCzyModel.getSmsCode(1, phone, 1, 1, true, this)
+    }
+
     override fun onClick(v: View?) {
         when (v?.id) {
-            R.id.btn_register_next -> initData()
-            R.id.iv_base_back -> finish()
-            R.id.btn_register_getcode -> userCzyModel.getSmsCode(1, phone, 0, 1, true, this)//找回密码获取短信验证码
-            R.id.iv_register_showpwd -> {
-                if (!isShowPwd) {
-                    isShowPwd = true
-                    et_register_pwd.transformationMethod = HideReturnsTransformationMethod.getInstance()
-                    iv_register_showpwd.setImageResource(R.drawable.work_icon_visible)
-                    et_register_pwd.setSelection(et_register_pwd.getText().length)
+            R.id.btn_register_next -> {
+                if (isRegister) {
+                    initData()
                 } else {
-                    isShowPwd = false
-                    et_register_pwd.transformationMethod = PasswordTransformationMethod.getInstance()
-                    iv_register_showpwd.setImageResource(R.drawable.work_icon_invisible)
-                    et_register_pwd.setSelection(et_register_pwd.getText().length)
+                    getCode()
                 }
             }
+            R.id.iv_base_back -> finish()
+            R.id.btn_register_getcode -> getCode()
         }
     }
 

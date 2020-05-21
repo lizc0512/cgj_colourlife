@@ -9,8 +9,6 @@ import com.tg.coloursteward.baseModel.HttpResponse;
 import com.tg.coloursteward.baseModel.RequestEncryptionUtils;
 import com.tg.coloursteward.constant.Contants;
 import com.tg.coloursteward.util.GsonUtils;
-import com.tg.coloursteward.util.RSAUtil;
-import com.tg.coloursteward.util.TokenUtils;
 import com.tg.user.entity.Oauth2Entity;
 import com.yanzhenjie.nohttp.NoHttp;
 import com.yanzhenjie.nohttp.RequestMethod;
@@ -19,7 +17,6 @@ import com.yanzhenjie.nohttp.rest.Response;
 
 import org.json.JSONObject;
 
-import java.security.PublicKey;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -35,12 +32,9 @@ import java.util.Map;
  */
 public class UserCzyModel extends BaseModel {
     private String czyAuthUrl = "/oauth/token";
-    private String checkWhiteUrl = "/user/checkWhite";
     private String sendCodeUrl = "/app/smsCode";
-    private String checkRegisterUrl = "/user/checkRegister";
     private String bindwxUrl = "/app/bind/wechat";
-    private String checkCodeUrl = "/sms/checkCode";
-    private String registerUrl = "/user/register";
+    private String registerUrl = "/app/register";
 
     public UserCzyModel() {
     }
@@ -48,7 +42,6 @@ public class UserCzyModel extends BaseModel {
     public UserCzyModel(Context context) {
         super(context);
     }
-
 
     /**
      * 调用彩之云的授权登录获取access_token
@@ -104,41 +97,6 @@ public class UserCzyModel extends BaseModel {
     }
 
     /**
-     * 检查用户是不是白名单
-     *
-     * @param what
-     * @param mobile
-     * @param is_register
-     * @param newHttpResponse
-     */
-    public void getCheckWhite(int what, String mobile, int is_register, final HttpResponse newHttpResponse) {
-        Map<String, Object> params = new HashMap<String, Object>();
-        params.put("mobile", mobile);
-        params.put("is_register", is_register);
-        Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 13, checkWhiteUrl), RequestMethod.GET);
-        request(what, request, params, new HttpListener<String>() {
-            @Override
-            public void onSucceed(int what, Response<String> response) {
-                int responseCode = response.getHeaders().getResponseCode();
-                String result = response.get();
-                if (responseCode == RequestEncryptionUtils.responseSuccess) {
-                    int resultCode = showSuccesResultMessage(result);
-                    if (resultCode == 0) {
-                        newHttpResponse.OnHttpResponse(what, result);
-                    }
-                } else {
-                    showErrorCodeMessage(response);
-                }
-            }
-
-            @Override
-            public void onFailed(int what, Response<String> response) {
-                showExceptionMessage(what, response);
-            }
-        }, true, true);
-    }
-
-    /**
      * 获取短信或语音验证码
      *
      * @param what
@@ -175,40 +133,6 @@ public class UserCzyModel extends BaseModel {
             }
         }, true, isLoading);
     }
-
-    /**
-     * 检查该手机号是否注册
-     *
-     * @param what
-     * @param mobile
-     * @param newHttpResponse
-     */
-    public void getCheckRegister(int what, String mobile, final HttpResponse newHttpResponse) {
-        Map<String, Object> params = new HashMap<String, Object>();
-        params.put("mobile", mobile);
-        final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 13, checkRegisterUrl), RequestMethod.GET);
-        request(what, request, params, new HttpListener<String>() {
-            @Override
-            public void onSucceed(int what, Response<String> response) {
-                int responseCode = response.getHeaders().getResponseCode();
-                String result = response.get();
-                if (responseCode == RequestEncryptionUtils.responseSuccess) {
-                    int resultCode = showSuccesResultMessage(result);
-                    if (resultCode == 0) {
-                        newHttpResponse.OnHttpResponse(what, result);
-                    }
-                } else {
-                    showErrorCodeMessage(response);
-                }
-            }
-
-            @Override
-            public void onFailed(int what, Response<String> response) {
-                showExceptionMessage(what, response);
-            }
-        }, true, true);
-    }
-
 
     /**
      * 微信授权关联手机号
@@ -250,62 +174,19 @@ public class UserCzyModel extends BaseModel {
         }, true, true);
     }
 
-
-    /**
-     * 短信校验接口
-     *
-     * @param what
-     * @param mobile
-     * @param code
-     * @param work_type
-     * @param newHttpResponse
-     */
-    public void postCheckSMSCode(int what, String mobile, String code, String work_type, final HttpResponse newHttpResponse) {
-        Map<String, Object> params = new HashMap<String, Object>();
-        params.put("mobile", mobile);
-        params.put("sms_token", code);
-        params.put("work_type", work_type);
-        final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 13, checkCodeUrl), RequestMethod.POST);
-        request(what, request, params, new HttpListener<String>() {
-            @Override
-            public void onSucceed(int what, Response<String> response) {
-                int responseCode = response.getHeaders().getResponseCode();
-                String result = response.get();
-                if (responseCode == RequestEncryptionUtils.responseSuccess) {
-                    int resultCode = showSuccesResultMessage(result);
-                    if (resultCode == 0) {
-                        newHttpResponse.OnHttpResponse(what, result);
-                    }
-                } else {
-                    showErrorCodeMessage(responseCode, response);
-                }
-            }
-
-            @Override
-            public void onFailed(int what, Response<String> response) {
-                showExceptionMessage(what, response);
-            }
-        }, true, true);
-    }
-
     /**
      * 用户注册接口
      *
      * @param what
      * @param mobile
      * @param code
-     * @param password
      * @param newHttpResponse
      */
-    public void postRegister(int what, String mobile, String code, String password, final HttpResponse newHttpResponse) {
+    public void postRegister(int what, String mobile, String code, final HttpResponse newHttpResponse) {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("mobile", mobile);
-        params.put("sms_token", code);
-        PublicKey publicKey = RSAUtil.keyStrToPublicKey(Contants.URl.publicKeyString);
-        params.put("password", RSAUtil.encryptDataByPublicKey(password.getBytes(), publicKey));
-        params.put("chanel", "cgj");
-        params.put("device_uuid", TokenUtils.getUUID(mContext));
-        final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 13, registerUrl), RequestMethod.POST);
+        params.put("code", code);
+        final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 5, registerUrl), RequestMethod.POST);
         request(what, request, params, new HttpListener<String>() {
             @Override
             public void onSucceed(int what, Response<String> response) {

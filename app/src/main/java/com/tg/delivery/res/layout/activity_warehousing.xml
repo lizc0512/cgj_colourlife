@@ -46,27 +46,42 @@
             android:layout_height="0dp"
             android:layout_weight="1">
 
-            <EditText
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/size_34dp"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="@dimen/size_18dp"
-                android:layout_marginRight="@dimen/size_18dp"
-                android:background="@drawable/bg_warehouse_gray"
-                android:hint="请输入快递公司"
-                android:paddingLeft="@dimen/size_15dp"
-                android:textColorHint="@color/color_a9afb8"
-                android:textSize="@dimen/font_14sp" />
-
-            <ImageView
-                android:id="@+id/iv_delivery_next"
-                android:layout_width="@dimen/size_30dp"
                 android:layout_height="match_parent"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginRight="@dimen/size_35dp"
-                android:padding="@dimen/size_3dp"
-                android:src="@drawable/delivery_next" />
+                android:layout_marginLeft="@dimen/size_18dp"
+                android:layout_marginTop="@dimen/size_8dp"
+                android:layout_marginRight="@dimen/size_18dp"
+                android:background="@drawable/bg_warehouse_gray">
+
+                <ImageView
+                    android:id="@+id/iv_delivery_next"
+                    android:layout_width="@dimen/size_40dp"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="@dimen/size_35dp"
+                    android:padding="@dimen/size_3dp"
+                    android:src="@drawable/delivery_next" />
+
+                <com.tg.coloursteward.view.ClearEditText
+                    android:id="@+id/et_warehouse_company"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/size_34dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="@dimen/size_18dp"
+                    android:layout_marginRight="@dimen/size_100dp"
+                    android:background="@null"
+                    android:gravity="center_vertical"
+                    android:hint="请输入快递公司"
+                    android:paddingLeft="@dimen/size_15dp"
+                    android:singleLine="true"
+                    android:textColor="@color/color_25282e"
+                    android:textColorHint="@color/color_a9afb8"
+                    android:textSize="@dimen/font_14sp" />
+
+            </RelativeLayout>
+
         </RelativeLayout>
 
         <RelativeLayout
@@ -152,14 +167,6 @@
         </RelativeLayout>
     </LinearLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_warehouse_delivery"
-        android:layout_width="@dimen/size_200dp"
-        android:layout_height="@dimen/size_100dp"
-        android:layout_below="@id/tv_code"
-        android:layout_marginLeft="@dimen/size_35dp"
-        android:layout_marginTop="@dimen/size_65dp" />
-
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -177,6 +184,14 @@
             tools:listitem="@layout/item_warehouse_content" />
 
     </RelativeLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_warehouse_delivery_company"
+        android:layout_width="@dimen/size_200dp"
+        android:layout_height="@dimen/size_160dp"
+        android:layout_below="@id/tv_code"
+        android:layout_marginLeft="@dimen/size_35dp"
+        android:layout_marginTop="@dimen/size_65dp" />
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -201,9 +216,9 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="@dimen/size_10dp"
             android:layout_toRightOf="@id/tv_block"
+            android:text="0"
             android:textColor="@color/color_597EF7"
-            android:textSize="@dimen/font_14sp"
-            tools:text="0" />
+            android:textSize="@dimen/font_14sp" />
 
         <TextView
             android:layout_width="wrap_content"

@@ -51,6 +51,8 @@ public interface SpConstants {
     }
 
     interface storage {
+        String DELIVERYNAME = "delivery_name";//彩快递小区名字
+        String DELIVERYUUID = "delivery_uuid";//彩快递小区uuid
         String THRID_CODE = "thrid_code";//彩之云授权登录code
         String SKINCODE = "skin_code";//皮肤包
         String CORPID = "corp_id";//租户Id

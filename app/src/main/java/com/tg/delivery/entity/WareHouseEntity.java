@@ -14,6 +14,16 @@ public class WareHouseEntity {
 
     private String courierNumber;
     private String recipientMobile;
+    private String courierCompany;
+
+
+    public String getCourierCompany() {
+        return courierCompany;
+    }
+
+    public void setCourierCompany(String courierCompany) {
+        this.courierCompany = courierCompany;
+    }
 
     public String getCourierNumber() {
         return courierNumber;
@@ -35,8 +45,9 @@ public class WareHouseEntity {
 
     }
 
-    public WareHouseEntity(String courierNumber, String recipientMobile) {
+    public WareHouseEntity(String courierNumber, String recipientMobile,String courierCompany ) {
         this.courierNumber = courierNumber;
         this.recipientMobile = recipientMobile;
+        this.courierCompany = courierCompany;
     }
 }

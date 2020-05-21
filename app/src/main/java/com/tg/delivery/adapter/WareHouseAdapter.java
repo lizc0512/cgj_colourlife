@@ -33,6 +33,14 @@ public class WareHouseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     private List<WareHouseEntity> list = new ArrayList<>();
     private MicroApplicationCallBack delCallBack;
     private MicroApplicationCallBack editCallBack;
+    private MicroApplicationCallBack cancelCallBack;
+
+    private int editPos = -1;
+
+    public void setEditStatus(int editPos) {
+        this.editPos = editPos;
+        notifyDataSetChanged();
+    }
 
     public void setDelCallBack(MicroApplicationCallBack mcallBack) {
         this.delCallBack = mcallBack;
@@ -40,6 +48,10 @@ public class WareHouseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     public void setEditCallBack(MicroApplicationCallBack mcallBack) {
         this.editCallBack = mcallBack;
+    }
+
+    public void setCancelCallBack(MicroApplicationCallBack mcallBack) {
+        this.cancelCallBack = mcallBack;
     }
 
     public void setData(List<WareHouseEntity> mlist) {
@@ -67,18 +79,35 @@ public class WareHouseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             WareHouseViewHolder mHolder = (WareHouseViewHolder) holder;
             mHolder.tv_warehouse_nonum.setText(list.get(position).getCourierNumber());
             mHolder.tv_warehouse_phonenum.setText(list.get(position).getRecipientMobile());
+            mHolder.tv_warehouse_name.setText(list.get(position).getCourierCompany());
+
+            if (editPos == position) {
+                mHolder.itemView.setBackgroundResource(R.drawable.bg_delivery_item_select);
+                mHolder.iv_warehouse_item_del.setVisibility(View.GONE);
+                mHolder.iv_warehouse_item_edit.setVisibility(View.GONE);
+                mHolder.iv_warehouse_cancel.setVisibility(View.VISIBLE);
+            } else {
+                mHolder.itemView.setBackgroundResource(R.drawable.bg_delivery_item_default);
+                mHolder.iv_warehouse_item_del.setVisibility(View.VISIBLE);
+                mHolder.iv_warehouse_item_edit.setVisibility(View.VISIBLE);
+                mHolder.iv_warehouse_cancel.setVisibility(View.GONE);
+            }
+
             mHolder.iv_warehouse_item_del.setOnClickListener(v -> {
                 if (delCallBack != null) {
                     delCallBack.onclick(position, "", "");
                 }
             });
-            mHolder.iv_warehouse_item_edit.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (editCallBack != null) {
-                        editCallBack.onclick(position, "", "");
-                    }
+            mHolder.iv_warehouse_item_edit.setOnClickListener(v -> {
+                if (editCallBack != null) {
+                    editCallBack.onclick(position, "", "");
                 }
+            });
+            mHolder.iv_warehouse_cancel.setOnClickListener(view -> {
+                if (cancelCallBack != null) {
+                    cancelCallBack.onclick(position, "", "");
+                }
+
             });
 
         }
@@ -87,6 +116,8 @@ public class WareHouseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     private class WareHouseViewHolder extends RecyclerView.ViewHolder {
         private TextView tv_warehouse_nonum;
         private TextView tv_warehouse_phonenum;
+        private TextView iv_warehouse_cancel;
+        private TextView tv_warehouse_name;
         private ImageView iv_warehouse_item_del;
         private ImageView iv_warehouse_item_edit;
 
@@ -94,6 +125,8 @@ public class WareHouseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             super(itemView);
             tv_warehouse_nonum = itemView.findViewById(R.id.tv_warehouse_nonum);
             tv_warehouse_phonenum = itemView.findViewById(R.id.tv_warehouse_phonenum);
+            iv_warehouse_cancel = itemView.findViewById(R.id.iv_warehouse_cancel);
+            tv_warehouse_name = itemView.findViewById(R.id.tv_warehouse_name);
             iv_warehouse_item_del = itemView.findViewById(R.id.iv_warehouse_item_del);
             iv_warehouse_item_edit = itemView.findViewById(R.id.iv_warehouse_item_edit);
         }

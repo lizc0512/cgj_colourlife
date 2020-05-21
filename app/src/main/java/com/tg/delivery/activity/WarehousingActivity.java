@@ -21,9 +21,20 @@ import com.intsig.exp.sdk.ISCardScanActivity;
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.base.BaseActivity;
 import com.tg.coloursteward.constant.Contants;
+import com.tg.coloursteward.constant.SpConstants;
+import com.tg.coloursteward.info.UserInfo;
+import com.tg.coloursteward.util.GsonUtils;
+import com.tg.coloursteward.util.ToastUtil;
 import com.tg.coloursteward.view.ClearEditText;
+import com.tg.delivery.adapter.DeliveryCompanyAdapter;
 import com.tg.delivery.adapter.WareHouseAdapter;
+import com.tg.delivery.entity.DeliveryCompanyEntity;
 import com.tg.delivery.entity.WareHouseEntity;
+import com.tg.delivery.model.DeliveryModel;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,18 +46,40 @@ public class WarehousingActivity extends BaseActivity implements View.OnClickLis
     private ClearEditText et_warehouse_phone;
     private List<WareHouseEntity> listItem = new ArrayList<>();
     private RecyclerView rv_warehouse;
+    private RecyclerView rv_warehouse_delivery_company;
     private WareHouseAdapter adapter;
     private List<String> phoneList = new ArrayList<>();
     private List<String> orderNumList = new ArrayList<>();
     private String tempPhone = "";
     private String tempOrderNum = "";
+    private TextView tv_warehouse_allnum;
+    private TextView tv_warehouse_commit;
+    private TextView tv_warehouse_done;
+    private ClearEditText et_warehouse_company;
+    private DeliveryModel deliveryModel;
+    private List<String> companyList = new ArrayList<>();
+    private boolean isShowCompay = true;
+    private Activity currentActivity;
+    private boolean isSelectCompany = false;
+    private boolean isSelectOrderNum = false;
+    private String tempResult = "";
+    private String company;
+    private int editPosition = -1;
+    private String editPhone;
+    private String editOrderNum;
+    private String editCompany;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        initView();
+        deliveryModel = new DeliveryModel(this);
+        initData();
         useCamareSdk(true);
 
+    }
+
+    private void initData() {
+        deliveryModel.getDeliveryCompany(0, this);
     }
 
     @Override
@@ -59,8 +92,172 @@ public class WarehousingActivity extends BaseActivity implements View.OnClickLis
         return null;
     }
 
-    private void initView() {
+    private void initView(View view) {
+        ImageView iv_base_back = view.findViewById(R.id.iv_base_back);
+        ImageView iv_delivery_next = view.findViewById(R.id.iv_delivery_next);
+        TextView tv_base_title = view.findViewById(R.id.tv_base_title);
+        tv_warehouse_allnum = view.findViewById(R.id.tv_warehouse_allnum);
+        tv_warehouse_commit = view.findViewById(R.id.tv_warehouse_commit);
+        et_warehouse_company = view.findViewById(R.id.et_warehouse_company);
+        et_warehouse_num = view.findViewById(R.id.et_warehouse_num);
+        et_warehouse_phone = view.findViewById(R.id.et_warehouse_phone);
+        rv_warehouse = view.findViewById(R.id.rv_warehouse);
+        tv_warehouse_done = view.findViewById(R.id.tv_warehouse_done);
+        rv_warehouse_delivery_company = view.findViewById(R.id.rv_warehouse_delivery_company);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(currentActivity, LinearLayoutManager.VERTICAL, false);
+        LinearLayoutManager layoutManagerCompany = new LinearLayoutManager(currentActivity, LinearLayoutManager.VERTICAL, false);
+        rv_warehouse.setLayoutManager(layoutManager);
+        rv_warehouse_delivery_company.setLayoutManager(layoutManagerCompany);
+        tv_base_title.setText("快件入仓");
+        iv_base_back.setOnClickListener(v -> {
+            currentActivity.finish();
+            finish();
+        });
+        iv_delivery_next.setOnClickListener(v -> {
+            if (isShowCompay) {
+                if (null != companyList && companyList.size() > 0) {
+                    rv_warehouse_delivery_company.setVisibility(View.VISIBLE);
+                    DeliveryCompanyAdapter companyAdapter = new DeliveryCompanyAdapter(currentActivity, companyList);
+                    rv_warehouse_delivery_company.setAdapter(companyAdapter);
+                    companyAdapter.setDelCallBack((position, url, auth_type) -> runOnUiThread(() -> {
+                        et_warehouse_company.setText(companyList.get(position));
+                        isSelectCompany = true;
+                        tempResult = "";
+                        rv_warehouse_delivery_company.setVisibility(View.GONE);
+                    }));
+                }
+                isShowCompay = false;
+            } else {
+                rv_warehouse_delivery_company.setVisibility(View.GONE);
+                isShowCompay = true;
+            }
+        });
+        et_warehouse_num.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
 
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                String num = s.toString();
+                if (num.length() > 0) {
+                    if (num.equals(tempOrderNum)) {
+                        return;
+                    }
+                    tempOrderNum = num;
+                    setData(currentActivity);
+                }
+            }
+        });
+        et_warehouse_phone.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                String phone = s.toString();
+                if (phone.length() > 0) {
+                    setData(currentActivity);
+                }
+            }
+        });
+        tv_warehouse_commit.setOnClickListener(v -> {
+            if (listItem.size() > 0) {
+                initCommitData(listItem);
+            } else {
+                ToastUtil.showShortToast(currentActivity, "请先添加订单");
+            }
+        });
+        tv_warehouse_done.setOnClickListener(v -> {
+            editPhone = et_warehouse_phone.getText().toString().trim();
+            editOrderNum = et_warehouse_num.getText().toString().trim();
+            editCompany = et_warehouse_company.getText().toString().trim();
+            if (!TextUtils.isEmpty(editPhone) && !TextUtils.isEmpty(editOrderNum)) {
+                if (!TextUtils.isEmpty(company)) {
+                    deliveryModel.getDeliveryCheckOrder(3, editOrderNum, editCompany, this);
+                } else {
+                    ToastUtil.showShortToast(currentActivity, "请选择快递公司");
+                }
+            } else {
+                ToastUtil.showShortToast(currentActivity, "请输入运单号和手机号");
+            }
+        });
+    }
+
+    private void initCommitData(List<WareHouseEntity> mList) {
+        JSONArray jsonArray = new JSONArray();
+        String communityUuid = spUtils.getStringData(SpConstants.storage.DELIVERYUUID, "");
+        String communityName = spUtils.getStringData(SpConstants.storage.DELIVERYNAME, "");
+        for (int i = 0; i < mList.size(); i++) {
+            JSONObject jsonObject = new JSONObject();
+            try {
+                jsonObject.put("courierNumber", mList.get(i).getCourierNumber());
+                jsonObject.put("recipientMobile", mList.get(i).getRecipientMobile());
+                jsonObject.put("courierCompany", mList.get(i).getCourierCompany());
+                jsonObject.put("sendMobile", UserInfo.mobile);
+                jsonObject.put("sendName", UserInfo.realname);
+                jsonObject.put("communityUuid", communityUuid);
+                jsonObject.put("communityName", communityName);
+                jsonArray.put(jsonObject);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        JSONObject js = new JSONObject();
+        try {
+            js.put("expressInfoList", jsonArray);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        deliveryModel.postDeliveryCommit(1, js.toString(), this);
+    }
+
+    @Override
+    public void OnHttpResponse(int what, String result) {
+        switch (what) {
+            case 0:
+                if (!TextUtils.isEmpty(result)) {
+                    DeliveryCompanyEntity deliveryCompanyEntity = new DeliveryCompanyEntity();
+                    deliveryCompanyEntity = GsonUtils.gsonToBean(result, DeliveryCompanyEntity.class);
+                    companyList.clear();
+                    companyList.addAll(deliveryCompanyEntity.getContent());
+                }
+                break;
+            case 1:
+                if (!TextUtils.isEmpty(result)) {
+                    DeliveryCompanyEntity deliveryCompanyEntity = new DeliveryCompanyEntity();
+                    deliveryCompanyEntity = GsonUtils.gsonToBean(result, DeliveryCompanyEntity.class);
+                    companyList.clear();
+                    companyList.addAll(deliveryCompanyEntity.getContent());
+                }
+                break;
+            case 2:
+                if (!TextUtils.isEmpty(result)) {
+                    et_warehouse_num.setText(result);
+                    isSelectOrderNum = true;
+                }
+                break;
+            case 3:
+                if (!TextUtils.isEmpty(result)) {
+                    listItem.get(editPosition).setCourierNumber(editOrderNum);
+                    listItem.get(editPosition).setRecipientMobile(editPhone);
+                    adapter.setEditStatus(-1);
+                    adapter.setData(listItem);
+                    et_warehouse_phone.getText().clear();
+                    et_warehouse_num.getText().clear();
+                }
+                break;
+
+        }
     }
 
     @Override
@@ -83,66 +280,10 @@ public class WarehousingActivity extends BaseActivity implements View.OnClickLis
                 lp.addRule(RelativeLayout.CENTER_HORIZONTAL,
                         RelativeLayout.TRUE);
                 // **********************************添加动态的布局
+                currentActivity = activity;
                 LayoutInflater inflater = getLayoutInflater();
                 View view = inflater.inflate(R.layout.activity_warehousing, null);
-
-                ImageView iv_base_back = view.findViewById(R.id.iv_base_back);
-                ImageView iv_delivery_next = view.findViewById(R.id.iv_delivery_next);
-                TextView tv_base_title = view.findViewById(R.id.tv_base_title);
-                et_warehouse_num = view.findViewById(R.id.et_warehouse_num);
-                et_warehouse_phone = view.findViewById(R.id.et_warehouse_phone);
-                rv_warehouse = view.findViewById(R.id.rv_warehouse);
-                LinearLayoutManager layoutManager = new LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false);
-                rv_warehouse.setLayoutManager(layoutManager);
-                tv_base_title.setText("快件入仓");
-                iv_base_back.setOnClickListener(v -> {
-                    activity.finish();
-                    finish();
-                });
-                iv_delivery_next.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-                    }
-                });
-                et_warehouse_num.addTextChangedListener(new TextWatcher() {
-                    @Override
-                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                    }
-
-                    @Override
-                    public void onTextChanged(CharSequence s, int start, int before, int count) {
-                    }
-
-                    @Override
-                    public void afterTextChanged(Editable s) {
-                        String num = s.toString();
-                        if (num.length() > 0) {
-                            if (num.equals(tempOrderNum)) {
-                                return;
-                            }
-                            tempOrderNum = num;
-                            setData(activity);
-                        }
-                    }
-                });
-                et_warehouse_phone.addTextChangedListener(new TextWatcher() {
-                    @Override
-                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                    }
-
-                    @Override
-                    public void onTextChanged(CharSequence s, int start, int before, int count) {
-                    }
-
-                    @Override
-                    public void afterTextChanged(Editable s) {
-                        String phone = s.toString();
-                        if (phone.length() > 0) {
-                            setData(activity);
-                        }
-                    }
-                });
+                initView(view);
                 rootView.addView(view, lp);
             }
 
@@ -160,10 +301,23 @@ public class WarehousingActivity extends BaseActivity implements View.OnClickLis
             @Override
             public void resultSuccessKeepPreviewCallback(final String result,
                                                          final String comment, int type) {
-                if (type == 1) { //手机号
-                    et_warehouse_phone.setText(result);
-                } else if (type == 2) { //一维码
-                    et_warehouse_num.setText(result);
+
+                if (!tempResult.equals(result)) {
+                    tempResult = result;
+                    if (type == 1) { //手机号
+                        if (isSelectOrderNum) {
+                            et_warehouse_phone.setText(result);
+                        } else {
+                            ToastUtil.showShortToast(currentActivity, "请先扫码运单号");
+                        }
+                    } else if (type == 2) { //一维码
+                        if (isSelectCompany) {
+                            company = et_warehouse_company.getText().toString().trim();
+                            checkOrderNum(result, company);
+                        } else {
+                            ToastUtil.showShortToast(currentActivity, "请先选择快递公司");
+                        }
+                    }
                 }
             }
 
@@ -189,7 +343,6 @@ public class WarehousingActivity extends BaseActivity implements View.OnClickLis
         intent.putExtra(ISCardScanActivity.EXTRA_KEY_SHOW_CLOSE, false);// true打开闪光灯和关闭按钮
         intent.putExtra(ISCardScanActivity.EXTRA_KEY_COLOR_MATCH, 0xff2A7DF3);// 指定SDK相机模块ISCardScanActivity四边框角线条,检测到身份证图片后的颜色
         intent.putExtra(ISCardScanActivity.EXTRA_KEY_COLOR_NORMAL, 0xff01d2ff);// 指定SDK相机模块ISCardScanActivity四边框角线条颜色，正常显示颜色
-
         startActivity(intent);
 
     }
@@ -197,8 +350,9 @@ public class WarehousingActivity extends BaseActivity implements View.OnClickLis
     private void setData(Activity activity) {
         String phone = et_warehouse_phone.getText().toString().trim();
         String orderNum = et_warehouse_num.getText().toString().trim();
+        String company = et_warehouse_company.getText().toString().trim();
         if (!TextUtils.isEmpty(phone) && !TextUtils.isEmpty(orderNum)) {
-            WareHouseEntity entity = new WareHouseEntity(orderNum, phone);
+            WareHouseEntity entity = new WareHouseEntity(orderNum, phone, company);
             for (int i = 0; i < listItem.size(); i++) {
                 if (listItem.get(i).getCourierNumber().equals(orderNum)) {
                     return;
@@ -214,12 +368,52 @@ public class WarehousingActivity extends BaseActivity implements View.OnClickLis
                 adapter.setData(listItem);
             }
             adapter.setDelCallBack((position, url, auth_type) -> {
+                ToastUtil.showShortToast(currentActivity, "删除成功");
+                editPosition = -1;
+                et_warehouse_num.setText("");
+                et_warehouse_phone.setText("");
                 listItem.remove(position);
+                adapter.setEditStatus(editPosition);
                 adapter.setData(listItem);
+                setNum();
             });
             adapter.setEditCallBack((position, url, auth_type) -> {
+                editPosition = position;
+                adapter.setEditStatus(position);
+                et_warehouse_num.setText(listItem.get(position).getCourierNumber());
+                et_warehouse_phone.setText(listItem.get(position).getRecipientMobile());
+                et_warehouse_company.setText(listItem.get(position).getCourierCompany());
+                et_warehouse_num.setSelection(listItem.get(position).getCourierNumber().length());
+                et_warehouse_phone.setSelection(listItem.get(position).getRecipientMobile().length());
 
             });
+            adapter.setCancelCallBack((position, url, auth_type) -> {
+                adapter.setEditStatus(-1);
+                et_warehouse_num.setText("");
+                editPosition = -1;
+            });
+            setNum();
+        }
+    }
+
+    private void checkOrderNum(String num, String company) {
+        deliveryModel.getDeliveryCheckOrder(2, num, company, this);
+    }
+
+    private void setNum() {
+        int size = listItem.size();
+        if (size > 0) {
+            tv_warehouse_allnum.setText(size + "");
+        } else {
+            tv_warehouse_allnum.setText(0 + "");
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (null != currentActivity && currentActivity.isFinishing()) {
+            finish();
         }
     }
 }

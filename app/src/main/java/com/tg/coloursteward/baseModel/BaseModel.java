@@ -100,14 +100,12 @@ public class BaseModel {
                     String colorToken = SharedPreferencesUtils.getKey(mContext, SpConstants.accessToken.accssToken);
                     if (!TextUtils.isEmpty(colorToken)) {
                         request.addHeader("color-token", colorToken);
-                        request.addHeader("accessToken", colorToken);
                     }
                     CallServer.getInstance().request(what, request, new HttpResponseListener<T>(mContext, request, callback, canCancel, isLoading));
                 } else {
                     RefreshTokenModel refreshTokenModel = RefreshTokenModel.getInstance(mContext);
                     refreshTokenModel.refreshAuthToken(what, request, paramsMap, callback, canCancel, isLoading, access_token -> {
                         request.addHeader("color-token", access_token);
-                        request.addHeader("accessToken", access_token);
                         CallServer.getInstance().request(what, request, new HttpResponseListener<T>(mContext, request, callback, canCancel, isLoading));
                     });
                 }
@@ -119,7 +117,6 @@ public class BaseModel {
                 String colorToken = SharedPreferencesUtils.getKey(mContext, SpConstants.accessToken.accssToken);
                 if (!TextUtils.isEmpty(colorToken)) {
                     request.addHeader("color-token", colorToken);
-                    request.addHeader("accessToken", colorToken);
                 }
                 CallServer.getInstance().request(what, request, new HttpResponseListener<T>(mContext, request, callback, canCancel, isLoading));
             } else {

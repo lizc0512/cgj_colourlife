@@ -84,5 +84,17 @@
             android:layout_toLeftOf="@id/iv_warehouse_item_del"
             android:scaleType="fitXY"
             android:src="@drawable/edit" />
+
+        <TextView
+            android:id="@+id/iv_warehouse_cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="@dimen/size_8dp"
+            android:layout_marginRight="@dimen/size_15dp"
+            android:padding="5dp"
+            android:text="取消"
+            android:textSize="@dimen/sp_14"
+            android:visibility="gone" />
     </RelativeLayout>
 </RelativeLayout>

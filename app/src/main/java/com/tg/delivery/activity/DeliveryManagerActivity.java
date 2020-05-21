@@ -4,21 +4,25 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.base.BaseActivity;
+import com.tg.coloursteward.constant.SpConstants;
 import com.tg.coloursteward.util.GlideUtils;
 import com.tg.coloursteward.util.GsonUtils;
 import com.tg.coloursteward.util.MicroAuthTimeUtils;
-import com.tg.coloursteward.view.ClearEditText;
+import com.tg.coloursteward.util.SharedPreferencesUtils;
 import com.tg.coloursteward.view.MyGridLayoutManager;
+import com.tg.delivery.adapter.DeliveryAreaAdapter;
 import com.tg.delivery.adapter.DeliveryManagerAdapter;
-import com.tg.delivery.adapter.WareHouseAdapter;
 import com.tg.delivery.entity.DeliveryHomeEntity;
-import com.tg.delivery.entity.WareHouseEntity;
+import com.tg.delivery.entity.DeliveryUserInfoEntitiy;
 import com.tg.delivery.model.DeliveryModel;
 import com.youmai.hxsdk.adapter.PaddingItemDecoration;
 
@@ -32,7 +36,11 @@ public class DeliveryManagerActivity extends BaseActivity {
     private RecyclerView rv_delivery;
     private DeliveryModel deliveryModel;
     private MicroAuthTimeUtils mMicroAuthTimeUtils;
-
+    private LinearLayout ll_deliery_area;
+    private TextView tv_deliery_area;
+    private List<DeliveryUserInfoEntitiy.ContentBean.CommunityBean> listInfo = new ArrayList<>();
+    private RecyclerView rv_delivery_area;
+    private DeliveryAreaAdapter areaAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,11 +48,37 @@ public class DeliveryManagerActivity extends BaseActivity {
         deliveryModel = new DeliveryModel(this);
         initView();
         initData();
+        initGetUserInfo();
     }
 
     private void initView() {
+        ll_deliery_area = findViewById(R.id.ll_deliery_area);
         rv_delivery = findViewById(R.id.rv_delivery);
+        tv_deliery_area = findViewById(R.id.tv_deliery_area);
+        rv_delivery_area = findViewById(R.id.rv_delivery_area);
+        rv_delivery_area.setLayoutManager(new LinearLayoutManager(this));
+        ll_deliery_area.setOnClickListener(v -> {
+            if (listInfo.size() > 0) {
+                rv_delivery_area.setVisibility(View.VISIBLE);
+                if (null == areaAdapter) {
+                    areaAdapter = new DeliveryAreaAdapter(this, listInfo);
+                    rv_delivery_area.setAdapter(areaAdapter);
+                } else {
+                    areaAdapter.setData(listInfo);
+                }
+                areaAdapter.setDelCallBack((position, url, auth_type) -> {
+                    spUtils.saveStringData(SpConstants.storage.DELIVERYNAME, listInfo.get(position).getCommunityName());
+                    spUtils.saveStringData(SpConstants.storage.DELIVERYUUID, listInfo.get(position).getCommunityUuid());
+                    rv_delivery_area.setVisibility(View.GONE);
+                    tv_deliery_area.setText(listInfo.get(0).getCommunityName());
+                });
+            }
+        });
+    }
 
+    private void initGetUserInfo() {
+        String colorToken = SharedPreferencesUtils.getKey(this, SpConstants.accessToken.accssToken);
+        deliveryModel.postDeliveryUserInfo(1, colorToken, this);
     }
 
     private void initData() {
@@ -59,6 +93,22 @@ public class DeliveryManagerActivity extends BaseActivity {
                     initSetData(result);
                 }
                 break;
+            case 1:
+                if (!TextUtils.isEmpty(result)) {
+                    initSetUserInfo(result);
+                }
+                break;
+        }
+
+    }
+
+    private void initSetUserInfo(String result) {
+        DeliveryUserInfoEntitiy entitiy = new DeliveryUserInfoEntitiy();
+        entitiy = GsonUtils.gsonToBean(result, DeliveryUserInfoEntitiy.class);
+        for (int i = 0; i < entitiy.getContent().getCommunity().size(); i++) {
+            listInfo.clear();
+            listInfo.addAll(entitiy.getContent().getCommunity());
+            tv_deliery_area.setText(entitiy.getContent().getCommunity().get(0).getCommunityName());
         }
 
     }

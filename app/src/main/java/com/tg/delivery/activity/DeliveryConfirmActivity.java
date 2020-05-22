@@ -73,7 +73,6 @@ public class DeliveryConfirmActivity extends BaseActivity  {
         addressList.add("家门口");
         addressList.add("快递柜");
         addressList.add("其他");
-
         messageTitleList.add("模板1-1");
         messageTitleList.add("模板1-2");
         messageContentList.add("您好，您的包裹##快递公司##运单号##已到达，请到B栋楼下取件。");

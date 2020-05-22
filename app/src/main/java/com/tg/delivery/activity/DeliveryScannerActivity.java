@@ -283,14 +283,14 @@ public class DeliveryScannerActivity extends BaseActivity {
 
     private void getDeliverInfor() {
         if (null == deliveryModel) {
-            deliveryModel = new DeliveryModel(DeliveryScannerActivity.this);
+            deliveryModel = new DeliveryModel(currentActivity);
         }
         deliveryModel.getDeliveryInfor(1, courierNumber, DeliveryScannerActivity.this);
     }
 
     private void getDeliverStatus() {
         if (null == deliveryModel) {
-            deliveryModel = new DeliveryModel(DeliveryScannerActivity.this);
+            deliveryModel = new DeliveryModel(currentActivity);
         }
         deliveryModel.getDeliveryStatus(0, courierNumber, DeliveryScannerActivity.this);
     }
@@ -301,9 +301,12 @@ public class DeliveryScannerActivity extends BaseActivity {
             case 0:
                 try {
                     DeliveryStateEntity deliveryStateEntity = GsonUtils.gsonToBean(result, DeliveryStateEntity.class);
-                    if ("1".equals(deliveryStateEntity.getContent())) {
+                    String status=deliveryStateEntity.getContent();
+                    if ("1".equals(status)) {
                         ToastUtil.showShortToast(currentActivity, "运单已经派送,请勿重复扫描");
-                    } else {
+                    } else if("0".equals(status)){
+                        ToastUtil.showShortToast(currentActivity, "该运单在系统中未找到,请确认是否录入系统");
+                    }else{
                         getDeliverInfor();
                     }
                 } catch (Exception e) {

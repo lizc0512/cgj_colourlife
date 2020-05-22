@@ -27,6 +27,7 @@ import com.intsig.exp.sdk.ISCardScanActivity;
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.base.BaseActivity;
 import com.tg.coloursteward.util.GsonUtils;
+import com.tg.coloursteward.util.SoftKeyboardUtils;
 import com.tg.coloursteward.util.ToastUtil;
 import com.tg.delivery.adapter.DeliveryNumberListAdapter;
 import com.tg.delivery.entity.DeliveryInforEntity;
@@ -170,21 +171,46 @@ public class DeliveryScannerActivity extends BaseActivity {
             } else {
                 ToastUtil.showShortToast(currentActivity, "请输入运单号");
             }
+            SoftKeyboardUtils.showSoftKeyboard(currentActivity);
+            hideBottomUIMenu();
         });
         tv_define_delivery.setOnClickListener(view -> {
-            Intent it = new Intent(currentActivity, DeliveryConfirmActivity.class);
-            List<String> deliveryNumberList=new ArrayList<>();
-            for (DeliveryInforEntity.DataBean dataBean : deliveryInforList){
-                deliveryNumberList.add(dataBean.getCourierNumber());
+            if (deliveryInforList.size()>0){
+                Intent it = new Intent(currentActivity, DeliveryConfirmActivity.class);
+                List<String> deliveryNumberList=new ArrayList<>();
+                for (DeliveryInforEntity.DataBean dataBean : deliveryInforList){
+                    deliveryNumberList.add(dataBean.getCourierNumber());
+                }
+                it.putExtra(COURIERNUMBERS,GsonUtils.gsonString(deliveryNumberList));
+                it.putExtra(COURIERSIZE,deliveryNumberList.size());
+                startActivity(it);
+            }else{
+                ToastUtil.showShortToast(currentActivity,"暂无运单可以来进行派件");
             }
-            it.putExtra(COURIERNUMBERS,GsonUtils.gsonString(deliveryNumberList));
-            it.putExtra(COURIERSIZE,deliveryNumberList.size());
-            startActivity(it);
+
         });
         deliveryNumberListAdapter = new DeliveryNumberListAdapter(currentActivity, DeliveryScannerActivity
                 .this, deliveryInforList);
         rv_delivery_infor.setLayoutManager(new LinearLayoutManager(currentActivity));
         rv_delivery_infor.setAdapter(deliveryNumberListAdapter);
+    }
+
+    protected void hideBottomUIMenu() {
+        //隐藏虚拟按键，并且全屏
+        if (Build.VERSION.SDK_INT > 11 && Build.VERSION.SDK_INT < 19) { // lower api
+            View v = this.getWindow().getDecorView();
+            v.setSystemUiVisibility(View.GONE);
+        } else if (Build.VERSION.SDK_INT >= 19) {
+            //for new api versions.
+            View decorView = getWindow().getDecorView();
+            int uiOptions = View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                    | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                    | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                    | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION // hide
+                    //  | View.SYSTEM_UI_FLAG_FULLSCREEN // 不隐藏状态栏，因为隐藏了比如时间电量等信息也会隐藏
+                    | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
+            decorView.setSystemUiVisibility(uiOptions);
+        }
     }
 
     private boolean includeDelivery(String deliveryNumber) {
@@ -209,7 +235,6 @@ public class DeliveryScannerActivity extends BaseActivity {
     public String getHeadTitle() {
         return "";
     }
-
 
     public void useCamareSdk(boolean boolkeep) {
         ISCardScanActivity.setListener(new ISCardScanActivity.OnCardResultListener() {
@@ -266,16 +291,16 @@ public class DeliveryScannerActivity extends BaseActivity {
         intent.putExtra(ISCardScanActivity.EXTRA_KEY_BOOL_KEEP_PREVIEW, boolkeep);// true连续预览识别
         // false
         // 单次识别则结束
-        intent.putExtra(ISCardScanActivity.EXTRA_KEY_PREVIEW_HEIGHT, false ? 1f : 55f);// 预览框高度 根据是否同时识别 变化预览框高度
+        intent.putExtra(ISCardScanActivity.EXTRA_KEY_PREVIEW_HEIGHT, false ? 1f : 70f);// 预览框高度 根据是否同时识别 变化预览框高度
         // 单位dp
         // 一定使用float数值否则设置无效
-        intent.putExtra(ISCardScanActivity.EXTRA_KEY_PREVIEW_MATCH_LEFT, 0f);// 预览框左边距
+        intent.putExtra(ISCardScanActivity.EXTRA_KEY_PREVIEW_MATCH_LEFT, 15f);// 预览框左边距
         // 单位dp
         // 一定使用float数值否则设置无效
-        intent.putExtra(ISCardScanActivity.EXTRA_KEY_PREVIEW_MATCH_TOP, 250f);// 预览框上边距
+        intent.putExtra(ISCardScanActivity.EXTRA_KEY_PREVIEW_MATCH_TOP, 70f);// 预览框上边距
         intent.putExtra(ISCardScanActivity.EXTRA_KEY_SHOW_CLOSE, false);// true打开闪光灯和关闭按钮
-        intent.putExtra(ISCardScanActivity.EXTRA_KEY_COLOR_MATCH, 0xff2A7DF3);// 指定SDK相机模块ISCardScanActivity四边框角线条,检测到身份证图片后的颜色
-        intent.putExtra(ISCardScanActivity.EXTRA_KEY_COLOR_NORMAL, 0xff01d2ff);// 指定SDK相机模块ISCardScanActivity四边框角线条颜色，正常显示颜色
+        intent.putExtra(ISCardScanActivity.EXTRA_KEY_COLOR_MATCH, 0xffffffff);// 指定SDK相机模块ISCardScanActivity四边框角线条,检测到身份证图片后的颜色
+        intent.putExtra(ISCardScanActivity.EXTRA_KEY_COLOR_NORMAL, 0xffffffff);// 指定SDK相机模块ISCardScanActivity四边框角线条颜色，正常显示颜色
         startActivity(intent);
     }
 

@@ -1,23 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:background="@color/transparent"
-    android:layout_width="match_parent" android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <include
         android:id="@+id/top_view"
         layout="@layout/base_actionbar" />
-
-     <ImageView
-         android:layout_width="match_parent"
-         android:layout_height="70dp"
-         android:layout_marginTop="@dimen/size_66dp"
-         android:layout_marginRight="15dp"
-         android:scaleType="fitXY"
-         android:layout_marginLeft="15dp"
-         android:src="@drawable/scanner_code"
-         android:layout_centerHorizontal="true"
-         />
-
 
     <TextView
         android:id="@+id/tv_scanner_notice"

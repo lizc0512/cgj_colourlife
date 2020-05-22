@@ -336,6 +336,7 @@ public class DeliveryScannerActivity extends BaseActivity {
                 } catch (Exception e) {
 
                 }
+                hideBottomUIMenu();
                 break;
             case 1:
                 if (!TextUtils.isEmpty(result)) {

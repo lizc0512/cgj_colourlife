@@ -2,10 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#00000000"
-    android:fitsSystemWindows="true"
-    tools:context="com.tg.delivery.activity.WarehousingActivity">
+    android:layout_height="match_parent">
 
     <include
         android:id="@+id/top_view"
@@ -61,7 +58,7 @@
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="@dimen/size_35dp"
-                    android:padding="@dimen/size_3dp"
+                    android:padding="@dimen/size_10dp"
                     android:src="@drawable/delivery_next" />
 
                 <com.tg.coloursteward.view.ClearEditText
@@ -191,7 +188,9 @@
         android:layout_height="@dimen/size_160dp"
         android:layout_below="@id/tv_code"
         android:layout_marginLeft="@dimen/size_35dp"
-        android:layout_marginTop="@dimen/size_65dp" />
+        android:layout_marginTop="@dimen/size_65dp"
+        android:background="@drawable/bg_delivery_area"
+        android:visibility="gone" />
 
     <RelativeLayout
         android:layout_width="match_parent"

@@ -66,11 +66,11 @@ public class DeliveryManagerActivity extends BaseActivity {
                 } else {
                     areaAdapter.setData(listInfo);
                 }
-                areaAdapter.setDelCallBack((position, url, auth_type) -> {
+                areaAdapter.setCallBack((position, url, auth_type) -> {
                     spUtils.saveStringData(SpConstants.storage.DELIVERYNAME, listInfo.get(position).getCommunityName());
                     spUtils.saveStringData(SpConstants.storage.DELIVERYUUID, listInfo.get(position).getCommunityUuid());
                     rv_delivery_area.setVisibility(View.GONE);
-                    tv_deliery_area.setText(listInfo.get(0).getCommunityName());
+                    tv_deliery_area.setText(listInfo.get(position).getCommunityName());
                 });
             }
         });
@@ -78,11 +78,23 @@ public class DeliveryManagerActivity extends BaseActivity {
 
     private void initGetUserInfo() {
         String colorToken = SharedPreferencesUtils.getKey(this, SpConstants.accessToken.accssToken);
-        deliveryModel.postDeliveryUserInfo(1, colorToken, this);
+        boolean isLoading = true;
+        String cacheData = spUtils.getStringData(SpConstants.storage.DELIVERYAREA, "");
+        if (!TextUtils.isEmpty(cacheData)) {
+            initSetData(cacheData);
+            isLoading = false;
+        }
+        deliveryModel.postDeliveryUserInfo(1, colorToken, isLoading, this);
     }
 
     private void initData() {
-        deliveryModel.getDeliveryData(0, this);
+        boolean isLoading = true;
+        String cacheData = spUtils.getStringData(SpConstants.storage.DELIVERYHOME, "");
+        if (!TextUtils.isEmpty(cacheData)) {
+            initSetData(cacheData);
+            isLoading = false;
+        }
+        deliveryModel.getDeliveryData(0, isLoading, this);
     }
 
     @Override
@@ -90,11 +102,13 @@ public class DeliveryManagerActivity extends BaseActivity {
         switch (what) {
             case 0:
                 if (!TextUtils.isEmpty(result)) {
+                    spUtils.saveStringData(SpConstants.storage.DELIVERYHOME, result);
                     initSetData(result);
                 }
                 break;
             case 1:
                 if (!TextUtils.isEmpty(result)) {
+                    spUtils.saveStringData(SpConstants.storage.DELIVERYAREA, result);
                     initSetUserInfo(result);
                 }
                 break;
@@ -105,10 +119,13 @@ public class DeliveryManagerActivity extends BaseActivity {
     private void initSetUserInfo(String result) {
         DeliveryUserInfoEntitiy entitiy = new DeliveryUserInfoEntitiy();
         entitiy = GsonUtils.gsonToBean(result, DeliveryUserInfoEntitiy.class);
+
         for (int i = 0; i < entitiy.getContent().getCommunity().size(); i++) {
             listInfo.clear();
             listInfo.addAll(entitiy.getContent().getCommunity());
-            tv_deliery_area.setText(entitiy.getContent().getCommunity().get(0).getCommunityName());
+            if (i == 0) {
+                tv_deliery_area.setText(entitiy.getContent().getCommunity().get(0).getCommunityName());
+            }
         }
 
     }

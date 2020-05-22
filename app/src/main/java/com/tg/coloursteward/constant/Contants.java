@@ -47,7 +47,7 @@ public interface Contants {
         String ACCOUNT_ADDRESS = "https://account-finance-test.colourlife.com";//新版彩钱包
         String DELIVERY_HOME_ADDRESS = "https://gexpressbackend-czytest.colourlife.com";
         String DELIVERY_NUMBER_ADDRESS = "https://kdbackend-czytest.colourlife.com"; //快单号
-        String DELIVERY_COMPANY_ADDRESS = "https://expressbackend-czytest.colourlife.com";//快递公司
+        String DELIVERY_COMPANY_ADDRESS = "https://gexpressbackend-czytest.colourlife.com";//快递公司
         String environment = "debug";
         String cqj_appid = "323521861252157440";
         String TOKEN_ADDRESS = "http://oauth2-czytest.colourlife.com";
@@ -60,7 +60,7 @@ public interface Contants {
 
     interface APP {
         String CORP_UUID = "a8c58297436f433787725a94f780a3c9"; //彩生活租户ID
-        String APP_KEY = "Q9PDXKXJbBCHDWF0CFS8MLeX";//合合 识别key
+        String APP_KEY = "Q9PDXKXJbBCHDWF0CFS8MLeX";//合合 SDK识别key
         String captchaURL = URl.URL_NEW + "/app/home/captcha/start";
         String validateURL = URl.URL_NEW + "/app/home/login/verify";
         /***彩管家4.0加密的秘钥***/

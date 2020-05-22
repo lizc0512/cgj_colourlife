@@ -34,7 +34,7 @@ public class DeliveryAreaAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private MicroApplicationCallBack callBack;
 
 
-    public void setDelCallBack(MicroApplicationCallBack mcallBack) {
+    public void setCallBack(MicroApplicationCallBack mcallBack) {
         this.callBack = mcallBack;
     }
 

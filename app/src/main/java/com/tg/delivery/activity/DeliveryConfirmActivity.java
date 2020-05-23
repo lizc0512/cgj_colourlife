@@ -3,6 +3,7 @@ package com.tg.delivery.activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Message;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
@@ -17,19 +18,27 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.base.BaseActivity;
+import com.tg.coloursteward.constant.Contants;
 import com.tg.coloursteward.info.UserInfo;
 import com.tg.coloursteward.net.HttpTools;
+import com.tg.coloursteward.util.GsonUtils;
+import com.tg.coloursteward.util.LinkParseUtil;
 import com.tg.coloursteward.util.ToastUtil;
 import com.tg.coloursteward.view.dialog.DialogFactory;
 import com.tg.delivery.adapter.DeliveryAddressListAdapter;
 import com.tg.delivery.adapter.DeliveryMsgTemplateAdapter;
+import com.tg.delivery.entity.DeliverySmsTemplateEntity;
 import com.tg.delivery.model.DeliveryModel;
 import com.tg.delivery.utils.SwitchButton;
 import com.tg.setting.activity.SettingActivity;
 import com.tg.setting.util.OnItemClickListener;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.tg.coloursteward.constant.UserMessageConstant.DELIVERY_OPERATE_SUCCESS;
 
 /**
  * 确认派件
@@ -38,6 +47,7 @@ public class DeliveryConfirmActivity extends BaseActivity  {
 
     public static final String COURIERNUMBERS="couriernumbers";
     public static final String COURIERSIZE="couriersize";
+    public static final String COURIERLENGTHLIST="courierlengthlist";
     private DeliveryAddressListAdapter deliveryAddressListAdapter;
     private DeliveryMsgTemplateAdapter deliveryMsgTemplateAdapter;
    private TextView tv_choice_num;
@@ -47,14 +57,21 @@ public class DeliveryConfirmActivity extends BaseActivity  {
    private RecyclerView rv_message_list;
    private Button btn_confirm_delivery;
    private List<String> addressList=new ArrayList<>();
-   private List<String> messageTitleList=new ArrayList<>();
-   private List<String> messageContentList=new ArrayList<>();
+   private List<DeliverySmsTemplateEntity.ContentBean.ListBean> templateMsgList=new ArrayList<>();
 
    private String courierNumbers;
    private int courierTotal;
 
+
    private DeliveryModel deliveryModel;
    private int  finishType=1;
+   private int templateTotal;
+   private int jumpWeb=0;
+   private String smsTemplateId;
+   private int  smsContentLength;
+   private ArrayList<Integer> lengthsList;
+   private int currentTemplatePos=0;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,15 +85,13 @@ public class DeliveryConfirmActivity extends BaseActivity  {
         Intent intent=getIntent();
         courierNumbers=intent.getStringExtra(COURIERNUMBERS);
         courierTotal=intent.getIntExtra(COURIERSIZE,0);
+        lengthsList=intent.getIntegerArrayListExtra(COURIERLENGTHLIST);
         showTotalNum();
         addressList.add("自提点");
         addressList.add("家门口");
         addressList.add("快递柜");
         addressList.add("其他");
-        messageTitleList.add("模板1-1");
-        messageTitleList.add("模板1-2");
-        messageContentList.add("您好，您的包裹##快递公司##运单号##已到达，请到B栋楼下取件。");
-        messageContentList.add("您好，您的包裹##快递公司##运单号##已到达，请到快递柜取件。");
+
         GridLayoutManager gridLayoutManager=new GridLayoutManager(DeliveryConfirmActivity.this, 3);
         rv_delivery_address.setLayoutManager(gridLayoutManager);
         deliveryAddressListAdapter =new DeliveryAddressListAdapter(DeliveryConfirmActivity.this,addressList);
@@ -89,34 +104,57 @@ public class DeliveryConfirmActivity extends BaseActivity  {
             @Override
             public void toggleToOn(View view) {
                 message_sb.setOpened(true);
+                if (templateTotal==0){
+                    DialogFactory.getInstance().showDialog(DeliveryConfirmActivity.this, new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            jumpWeb=1;
+                            LinkParseUtil.parse(DeliveryConfirmActivity.this, Contants.URl.SMS_TEMPLATE_URL,"");
+
+                        }
+                    }, null, "您未设置短信内容，请先设置？", null, null);
+                }
+                smsTemplateId=templateMsgList.get(currentTemplatePos).getSmsTemplateId();
+                rv_message_list.setVisibility(View.VISIBLE);
+                tv_sms_num.setVisibility(View.VISIBLE);
+
             }
 
             @Override
             public void toggleToOff(View view) {
                 message_sb.setOpened(false);
+                rv_message_list.setVisibility(View.GONE);
+                tv_sms_num.setVisibility(View.GONE);
+                smsTemplateId="";
             }
         });
-         deliveryMsgTemplateAdapter=new DeliveryMsgTemplateAdapter(DeliveryConfirmActivity.this,messageTitleList,messageContentList);
+         deliveryMsgTemplateAdapter=new DeliveryMsgTemplateAdapter(DeliveryConfirmActivity.this,templateMsgList);
          LinearLayoutManager  linearLayoutManager=new LinearLayoutManager(DeliveryConfirmActivity.this,LinearLayoutManager.VERTICAL,false);
          rv_message_list.setLayoutManager(linearLayoutManager);
          rv_message_list.setAdapter(deliveryMsgTemplateAdapter);
-        deliveryMsgTemplateAdapter.setOnItemClickListener(var1 -> deliveryMsgTemplateAdapter.setClickPos(var1));
+        deliveryMsgTemplateAdapter.setOnItemClickListener(var1 ->{
+            currentTemplatePos=var1;
+            deliveryMsgTemplateAdapter.setClickPos(var1);
+            DeliverySmsTemplateEntity.ContentBean.ListBean    listBean= templateMsgList.get(var1);
+            smsTemplateId=listBean.getSmsTemplateId();
+            smsContentLength=listBean.getSmsUserTemplateLength();
+            showMssageCount();
+        });
         deliveryModel=new DeliveryModel(DeliveryConfirmActivity.this);
         btn_confirm_delivery.setOnClickListener(view -> {
-            deliveryModel.submitDeliveryCourierNumbers(0,courierNumbers,"2", UserInfo.mobile,"","1",finishType,DeliveryConfirmActivity.this);
+            deliveryModel.submitDeliveryCourierNumbers(0,courierNumbers,"2", UserInfo.mobile,"",smsTemplateId,finishType,DeliveryConfirmActivity.this);
         });
+        deliveryModel. getDeliverySmsTemplateList(1,DeliveryConfirmActivity.this);
     }
 
 
     @Override
     protected void onResume() {
         super.onResume();
-        DialogFactory.getInstance().showDialog(DeliveryConfirmActivity.this, new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        }, null, "您未设置短信内容，请先设置？", null, null);
+        if (jumpWeb==1){
+            deliveryModel. getDeliverySmsTemplateList(1,DeliveryConfirmActivity.this);
+            jumpWeb=0;
+        }
     }
 
     @Override
@@ -146,8 +184,56 @@ public class DeliveryConfirmActivity extends BaseActivity  {
     public void OnHttpResponse(int what, String result) {
         switch (what) {
             case 0:
+                ToastUtil.showShortToast(DeliveryConfirmActivity.this,"派件成功");
+                EventBus eventBus=EventBus.getDefault();
+                Message message=Message.obtain();
+                message.what=DELIVERY_OPERATE_SUCCESS;
+                eventBus.post(message);
+                finish();
+                break;
+            case 1:
+                try {
+                    templateMsgList.clear();
+                    DeliverySmsTemplateEntity  deliverySmsTemplateEntity= GsonUtils.gsonToBean(result, DeliverySmsTemplateEntity.class);
+                    DeliverySmsTemplateEntity.ContentBean contentBean=deliverySmsTemplateEntity.getContent();
+                    if (null!=contentBean){
+                       List<DeliverySmsTemplateEntity.ContentBean.ListBean>  beanList=    contentBean.getList();
+                        templateTotal=contentBean.getTotal();
+                       if (null!=beanList){
+                           templateMsgList.addAll(beanList) ;
+                           if (templateMsgList.size()>0){
+                               smsContentLength=templateMsgList.get(0).getSmsUserTemplateLength();
+                               showMssageCount();
+                           }
+                           deliveryMsgTemplateAdapter.notifyDataSetChanged();
+                       }
+                    }
+                }catch (Exception e){
 
+                }
                 break;
         }
+    }
+
+
+    private  void  showMssageCount(){
+        int totalMsgNumber=0;
+        for (int i=0;i<lengthsList.size();i++){
+            int singleLength=lengthsList.get(i)+smsContentLength;
+            int everyMsgNumber=singleLength/70;
+            if (everyMsgNumber%70!=0){
+                everyMsgNumber++;
+            }
+            totalMsgNumber+=everyMsgNumber;
+        }
+        StringBuffer stringBuffer = new StringBuffer();
+        stringBuffer.append("短信计费条数:");
+        stringBuffer.append(totalMsgNumber);
+        stringBuffer.append("条");
+        int length= stringBuffer.toString().length();
+        SpannableString spannableString = new SpannableString(stringBuffer.toString());
+        spannableString.setSpan(new ForegroundColorSpan(Color.parseColor("#666666")), 0, 7, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+        spannableString.setSpan(new ForegroundColorSpan(Color.parseColor("#597EF7")), 7, length, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+        tv_sms_num.setText(spannableString);
     }
 }

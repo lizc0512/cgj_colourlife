@@ -35,6 +35,7 @@ public class UserMessageConstant {
     public static final int POINT_INPUT_PAYPAWD = USER_MESSAGE_BASE + 86;//输入支付密码
     public static final int POINT_SET_PAYPAWD= USER_MESSAGE_BASE + 87;//设置支付密码成功
     public static final int POINT_CHANGE_PAYPAWD= USER_MESSAGE_BASE + 88;//修改或忘记密码成功
+    public static final int DELIVERY_OPERATE_SUCCESS= USER_MESSAGE_BASE + 89;//派件成功
 
 
 }

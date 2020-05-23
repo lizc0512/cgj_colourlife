@@ -35,6 +35,7 @@ public class DeliveryModel extends BaseModel {
     private String deliveryCommitUrl = "/trusteeship/addExpressTrusteeship";//新增快递托管记录录单
     private String deliveryCheckOrderUrl = "/trusteeship/checkSignCourierNumber";//判断签收快递单号是否存在,是否有效,返回收件人信息
     private String deliveryUserInfoUrl = "/property/getLandInfor";//获取用户登陆信息
+    private String deliverySmsTemplateUrl="/smsUserTemplate/selectSmsUserTemplateListByInfo";
 
     public DeliveryModel(Context context) {
         super(context);
@@ -99,15 +100,45 @@ public class DeliveryModel extends BaseModel {
         }, true, true);
     }
 
+
+    public void getDeliverySmsTemplateList(int what, final HttpResponse newHttpResponse) {
+        Map<String, Object> params = new HashMap<String, Object>();
+        Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 18, deliverySmsTemplateUrl),
+                RequestMethod.GET);
+        request(what, request, RequestEncryptionUtils.getNewSaftyMap(mContext, params), new HttpListener<String>() {
+            @Override
+            public void onSucceed(int what, Response<String> response) {
+                int responseCode = response.getHeaders().getResponseCode();
+                String result = response.get();
+                if (responseCode == RequestEncryptionUtils.responseSuccess) {
+                    int resultCode = showSuccesResultMessage(result);
+                    if (resultCode == 0) {
+                        newHttpResponse.OnHttpResponse(what, result);
+                    }
+                } else {
+                    showErrorCodeMessage(response);
+                }
+            }
+
+            @Override
+            public void onFailed(int what, Response<String> response) {
+                showExceptionMessage(what, response);
+            }
+        }, true, false);
+    }
+
+
     public void submitDeliveryCourierNumbers(int what, String courierNumbers, String sendStatus, String loginMobile, String name, String SMSTemplate, int finishType, final HttpResponse newHttpResponse) {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("courierNumbers", courierNumbers);
         params.put("sendStatus", sendStatus);
         params.put("loginMobile", loginMobile);
         params.put("name", name);
+        if (finishType!=-1){
+            params.put("finishType", finishType);
+        }
         if (!TextUtils.isEmpty(SMSTemplate)) {
             params.put("SMSTemplate", SMSTemplate);
-            params.put("finishType", finishType);
         }
         Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 18, deliveryUpdateStatusUrl),
                 RequestMethod.POST);

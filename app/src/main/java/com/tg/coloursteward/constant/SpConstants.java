@@ -59,6 +59,7 @@ public interface SpConstants {
         String SKINCODE = "skin_code";//皮肤包
         String CORPID = "corp_id";//租户Id
         String CORPNAME = "corp_name";//租户名称
+        String CORPDATA = "corp_data";//租户数据
         String ORG_UUID = "org_uuid";//租户Id
         String USER_MOBILE = "user_mobile";//租户Id
         String DEVICE_TOKEN = "device_token";//设备唯一token

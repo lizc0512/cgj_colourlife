@@ -232,7 +232,7 @@ public class DeliveryModel extends BaseModel {
      */
     public void postDeliveryCommit(int what, String json, final HttpResponse newHttpResponse) {
         Map<String, Object> params = new HashMap<String, Object>();
-        params.put("expressInfo", json);
+        params.put("expressInfoList", json);
         Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 18, deliveryCommitUrl),
                 RequestMethod.POST);
         request(what, request, RequestEncryptionUtils.getNewSaftyMap(mContext, params), new HttpListener<String>() {

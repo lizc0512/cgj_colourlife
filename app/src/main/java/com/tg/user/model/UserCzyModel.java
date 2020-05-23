@@ -182,10 +182,11 @@ public class UserCzyModel extends BaseModel {
      * @param code
      * @param newHttpResponse
      */
-    public void postRegister(int what, String mobile, String code, final HttpResponse newHttpResponse) {
+    public void postRegister(int what, String mobile, String code, String password, final HttpResponse newHttpResponse) {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("mobile", mobile);
         params.put("code", code);
+        params.put("password", password);
         final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 5, registerUrl), RequestMethod.POST);
         request(what, request, params, new HttpListener<String>() {
             @Override

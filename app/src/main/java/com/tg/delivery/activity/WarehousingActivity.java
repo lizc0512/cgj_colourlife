@@ -1,7 +1,6 @@
 package com.tg.delivery.activity;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.hardware.Camera;
 import android.os.Bundle;
@@ -24,6 +23,7 @@ import com.tg.coloursteward.constant.Contants;
 import com.tg.coloursteward.constant.SpConstants;
 import com.tg.coloursteward.info.UserInfo;
 import com.tg.coloursteward.util.GsonUtils;
+import com.tg.coloursteward.util.ScreenUtils;
 import com.tg.coloursteward.util.ToastUtil;
 import com.tg.coloursteward.view.ClearEditText;
 import com.tg.delivery.adapter.DeliveryCompanyAdapter;
@@ -31,6 +31,7 @@ import com.tg.delivery.adapter.WareHouseAdapter;
 import com.tg.delivery.entity.DeliveryCompanyEntity;
 import com.tg.delivery.entity.WareHouseEntity;
 import com.tg.delivery.model.DeliveryModel;
+import com.youmai.hxsdk.adapter.DividerItemDecoration;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -41,16 +42,12 @@ import java.util.List;
 
 public class WarehousingActivity extends BaseActivity implements View.OnClickListener {
 
-    private Context mContext = WarehousingActivity.this;
     private ClearEditText et_warehouse_num;
     private ClearEditText et_warehouse_phone;
     private List<WareHouseEntity> listItem = new ArrayList<>();
     private RecyclerView rv_warehouse;
     private RecyclerView rv_warehouse_delivery_company;
     private WareHouseAdapter adapter;
-    private List<String> phoneList = new ArrayList<>();
-    private List<String> orderNumList = new ArrayList<>();
-    private String tempPhone = "";
     private String tempOrderNum = "";
     private TextView tv_warehouse_allnum;
     private TextView tv_warehouse_commit;
@@ -63,23 +60,24 @@ public class WarehousingActivity extends BaseActivity implements View.OnClickLis
     private boolean isSelectCompany = false;
     private boolean isSelectOrderNum = false;
     private String tempResult = "";
-    private String company;
     private int editPosition = -1;
     private String editPhone;
     private String editOrderNum;
     private String editCompany;
+    private boolean isCheckOrderFinish;
+    private int isEditItemPostion;
+    private boolean isEditItemStatus;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        deliveryModel = new DeliveryModel(this);
-        initData();
         useCamareSdk(true);
 
     }
 
     private void initData() {
         deliveryModel.getDeliveryCompany(0, this);
+
     }
 
     @Override
@@ -107,6 +105,7 @@ public class WarehousingActivity extends BaseActivity implements View.OnClickLis
         LinearLayoutManager layoutManager = new LinearLayoutManager(currentActivity, LinearLayoutManager.VERTICAL, false);
         LinearLayoutManager layoutManagerCompany = new LinearLayoutManager(currentActivity, LinearLayoutManager.VERTICAL, false);
         rv_warehouse.setLayoutManager(layoutManager);
+        rv_warehouse.addItemDecoration(new DividerItemDecoration(this, 5, layoutManager.getOrientation()));
         rv_warehouse_delivery_company.setLayoutManager(layoutManagerCompany);
         tv_base_title.setText("快件入仓");
         iv_base_back.setOnClickListener(v -> {
@@ -149,7 +148,6 @@ public class WarehousingActivity extends BaseActivity implements View.OnClickLis
                         return;
                     }
                     tempOrderNum = num;
-                    setData(currentActivity);
                 }
             }
         });
@@ -166,7 +164,6 @@ public class WarehousingActivity extends BaseActivity implements View.OnClickLis
             public void afterTextChanged(Editable s) {
                 String phone = s.toString();
                 if (phone.length() > 0) {
-                    setData(currentActivity);
                 }
             }
         });
@@ -182,8 +179,8 @@ public class WarehousingActivity extends BaseActivity implements View.OnClickLis
             editOrderNum = et_warehouse_num.getText().toString().trim();
             editCompany = et_warehouse_company.getText().toString().trim();
             if (!TextUtils.isEmpty(editPhone) && !TextUtils.isEmpty(editOrderNum)) {
-                if (!TextUtils.isEmpty(company)) {
-                    deliveryModel.getDeliveryCheckOrder(3, editOrderNum, editCompany, this);
+                if (!TextUtils.isEmpty(editCompany)) {
+                    checkOrderNum(3, editOrderNum, editCompany);
                 } else {
                     ToastUtil.showShortToast(currentActivity, "请选择快递公司");
                 }
@@ -223,6 +220,7 @@ public class WarehousingActivity extends BaseActivity implements View.OnClickLis
 
     @Override
     public void OnHttpResponse(int what, String result) {
+        ScreenUtils.hideBottomUIMenu(currentActivity);
         switch (what) {
             case 0:
                 if (!TextUtils.isEmpty(result)) {
@@ -234,30 +232,40 @@ public class WarehousingActivity extends BaseActivity implements View.OnClickLis
                 break;
             case 1:
                 if (!TextUtils.isEmpty(result)) {
-                    DeliveryCompanyEntity deliveryCompanyEntity = new DeliveryCompanyEntity();
-                    deliveryCompanyEntity = GsonUtils.gsonToBean(result, DeliveryCompanyEntity.class);
-                    companyList.clear();
-                    companyList.addAll(deliveryCompanyEntity.getContent());
+                    ToastUtil.showShortToast(currentActivity, "录入成功");
+                    listItem.clear();
+                    adapter.setData(listItem);
                 }
                 break;
             case 2:
                 if (!TextUtils.isEmpty(result)) {
-                    et_warehouse_num.setText(result);
+                    et_warehouse_num.setText(editOrderNum);
                     isSelectOrderNum = true;
+                } else {
+                    isCheckOrderFinish = true;
                 }
                 break;
             case 3:
                 if (!TextUtils.isEmpty(result)) {
-                    listItem.get(editPosition).setCourierNumber(editOrderNum);
-                    listItem.get(editPosition).setRecipientMobile(editPhone);
-                    adapter.setEditStatus(-1);
-                    adapter.setData(listItem);
-                    et_warehouse_phone.getText().clear();
-                    et_warehouse_num.getText().clear();
+                    if (isEditItemStatus) {
+                        UpdateData();
+                    } else {
+                        setData(currentActivity);
+                    }
                 }
                 break;
-
         }
+    }
+
+    private void UpdateData() {
+        listItem.get(isEditItemPostion).setCourierCompany(editCompany);
+        listItem.get(isEditItemPostion).setCourierNumber(editOrderNum);
+        listItem.get(isEditItemPostion).setRecipientMobile(editPhone);
+        adapter.setData(listItem);
+        et_warehouse_num.getText().clear();
+        et_warehouse_phone.getText().clear();
+        adapter.setEditStatus(-1);
+        isEditItemStatus = false;
     }
 
     @Override
@@ -281,6 +289,8 @@ public class WarehousingActivity extends BaseActivity implements View.OnClickLis
                         RelativeLayout.TRUE);
                 // **********************************添加动态的布局
                 currentActivity = activity;
+                deliveryModel = new DeliveryModel(currentActivity);
+                initData();
                 LayoutInflater inflater = getLayoutInflater();
                 View view = inflater.inflate(R.layout.activity_warehousing, null);
                 initView(view);
@@ -302,22 +312,26 @@ public class WarehousingActivity extends BaseActivity implements View.OnClickLis
             public void resultSuccessKeepPreviewCallback(final String result,
                                                          final String comment, int type) {
 
-                if (!tempResult.equals(result)) {
-                    tempResult = result;
-                    if (type == 1) { //手机号
-                        if (isSelectOrderNum) {
-                            et_warehouse_phone.setText(result);
-                        } else {
-                            ToastUtil.showShortToast(currentActivity, "请先扫码运单号");
-                        }
-                    } else if (type == 2) { //一维码
+                if (type == 1) { //手机号
+                    if (isSelectOrderNum) {
+                        et_warehouse_phone.setText(result);
+                        setData(currentActivity);
+                    } else {
+                        ToastUtil.showShortToast(currentActivity, "请先扫码运单号");
+                    }
+                } else if (type == 2) { //一维码
+                    if (!tempResult.equals(result)) {
+                        tempResult = result;
                         if (isSelectCompany) {
-                            company = et_warehouse_company.getText().toString().trim();
-                            checkOrderNum(result, company);
+                            editCompany = et_warehouse_company.getText().toString().trim();
+                            editPhone = et_warehouse_phone.getText().toString().trim();
+                            editOrderNum = result;
+                            checkOrderNum(2, result, editCompany);
                         } else {
                             ToastUtil.showShortToast(currentActivity, "请先选择快递公司");
                         }
                     }
+
                 }
             }
 
@@ -336,13 +350,13 @@ public class WarehousingActivity extends BaseActivity implements View.OnClickLis
         intent.putExtra(ISCardScanActivity.EXTRA_KEY_PREVIEW_HEIGHT, false ? 1f : 55f);// 预览框高度 根据是否同时识别 变化预览框高度
         // 单位dp
         // 一定使用float数值否则设置无效
-        intent.putExtra(ISCardScanActivity.EXTRA_KEY_PREVIEW_MATCH_LEFT, 0f);// 预览框左边距
+        intent.putExtra(ISCardScanActivity.EXTRA_KEY_PREVIEW_MATCH_LEFT, 15f);// 预览框左边距
         // 单位dp
         // 一定使用float数值否则设置无效
         intent.putExtra(ISCardScanActivity.EXTRA_KEY_PREVIEW_MATCH_TOP, 60f);// 预览框上边距
         intent.putExtra(ISCardScanActivity.EXTRA_KEY_SHOW_CLOSE, false);// true打开闪光灯和关闭按钮
-        intent.putExtra(ISCardScanActivity.EXTRA_KEY_COLOR_MATCH, 0xff2A7DF3);// 指定SDK相机模块ISCardScanActivity四边框角线条,检测到身份证图片后的颜色
-        intent.putExtra(ISCardScanActivity.EXTRA_KEY_COLOR_NORMAL, 0xff01d2ff);// 指定SDK相机模块ISCardScanActivity四边框角线条颜色，正常显示颜色
+        intent.putExtra(ISCardScanActivity.EXTRA_KEY_COLOR_MATCH, 0xffffffff);// 指定SDK相机模块ISCardScanActivity四边框角线条,检测到身份证图片后的颜色
+        intent.putExtra(ISCardScanActivity.EXTRA_KEY_COLOR_NORMAL, 0xffffffff);// 指定SDK相机模块ISCardScanActivity四边框角线条颜色，正常显示颜色
         startActivity(intent);
 
     }
@@ -353,11 +367,6 @@ public class WarehousingActivity extends BaseActivity implements View.OnClickLis
         String company = et_warehouse_company.getText().toString().trim();
         if (!TextUtils.isEmpty(phone) && !TextUtils.isEmpty(orderNum)) {
             WareHouseEntity entity = new WareHouseEntity(orderNum, phone, company);
-            for (int i = 0; i < listItem.size(); i++) {
-                if (listItem.get(i).getCourierNumber().equals(orderNum)) {
-                    return;
-                }
-            }
             listItem.add(entity);
             et_warehouse_phone.getText().clear();
             et_warehouse_num.getText().clear();
@@ -385,28 +394,32 @@ public class WarehousingActivity extends BaseActivity implements View.OnClickLis
                 et_warehouse_company.setText(listItem.get(position).getCourierCompany());
                 et_warehouse_num.setSelection(listItem.get(position).getCourierNumber().length());
                 et_warehouse_phone.setSelection(listItem.get(position).getRecipientMobile().length());
+                isEditItemPostion = position;
+                isEditItemStatus = true;
 
             });
             adapter.setCancelCallBack((position, url, auth_type) -> {
+                isEditItemStatus = false;
                 adapter.setEditStatus(-1);
                 et_warehouse_num.setText("");
+                et_warehouse_phone.setText("");
                 editPosition = -1;
             });
             setNum();
         }
     }
 
-    private void checkOrderNum(String num, String company) {
-        deliveryModel.getDeliveryCheckOrder(2, num, company, this);
+    private void checkOrderNum(int what, String num, String company) {
+        if (listItem.size() > 50) {
+            ToastUtil.showShortToast(currentActivity, "一次最多录入50条数据");
+        } else {
+            deliveryModel.getDeliveryCheckOrder(what, num, company, this);
+        }
     }
 
     private void setNum() {
-        int size = listItem.size();
-        if (size > 0) {
-            tv_warehouse_allnum.setText(size + "");
-        } else {
-            tv_warehouse_allnum.setText(0 + "");
-        }
+        String size = String.valueOf(listItem.size());
+        tv_warehouse_allnum.setText(size);
     }
 
     @Override

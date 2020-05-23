@@ -28,6 +28,7 @@ import com.hjq.permissions.XXPermissions;
 import com.intsig.exp.sdk.ISCardScanActivity;
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.base.BaseActivity;
+import com.tg.coloursteward.constant.Contants;
 import com.tg.coloursteward.info.UserInfo;
 import com.tg.coloursteward.util.GsonUtils;
 import com.tg.coloursteward.util.SoftKeyboardUtils;
@@ -40,9 +41,6 @@ import com.tg.delivery.model.DeliveryModel;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.tg.delivery.activity.DeliveryConfirmActivity.COURIERNUMBERS;
-import static com.tg.delivery.activity.DeliveryConfirmActivity.COURIERSIZE;
 
 /**
  * 扫码派件
@@ -180,16 +178,16 @@ public class DeliveryTransferActivity extends BaseActivity {
             hideBottomUIMenu();
         });
         tv_define_delivery.setOnClickListener(view -> {
-            if (deliveryInforList.size()>0){
-            List<String> deliveryNumberList=new ArrayList<>();
-            for (DeliveryInforEntity.DataBean dataBean : deliveryInforList){
-                deliveryNumberList.add(dataBean.getCourierNumber());
-            }
-            if (null==deliveryModel){
-                deliveryModel=new DeliveryModel(currentActivity);
-            }
-            deliveryModel.submitDeliveryCourierNumbers(2,GsonUtils.gsonString(deliveryNumberList),"3", UserInfo.mobile,"","",0,DeliveryTransferActivity.this);
-            }else{
+            if (deliveryInforList.size() > 0) {
+                List<String> deliveryNumberList = new ArrayList<>();
+                for (DeliveryInforEntity.DataBean dataBean : deliveryInforList) {
+                    deliveryNumberList.add(dataBean.getCourierNumber());
+                }
+                if (null == deliveryModel) {
+                    deliveryModel = new DeliveryModel(currentActivity);
+                }
+                deliveryModel.submitDeliveryCourierNumbers(2, GsonUtils.gsonString(deliveryNumberList), "3", UserInfo.mobile, "", "", 0, DeliveryTransferActivity.this);
+            } else {
                 ToastUtil.showShortToast(currentActivity, "暂无运单进行交接");
             }
 
@@ -311,7 +309,7 @@ public class DeliveryTransferActivity extends BaseActivity {
             }
         });
         Intent intent = new Intent(this, ISCardScanActivity.class);
-        intent.putExtra(ISCardScanActivity.EXTRA_KEY_APP_KEY, "Q9PDXKXJbBCHDWF0CFS8MLeX");
+        intent.putExtra(ISCardScanActivity.EXTRA_KEY_APP_KEY, Contants.APP.APP_KEY);
         intent.putExtra(ISCardScanActivity.EXTRA_KEY_BOOL_CONTIUE_AUTOFOCUS,
                 true);// true 表示参数自动对焦模式 false 采用默认的定时对焦
         intent.putExtra(ISCardScanActivity.EXTRA_KEY_BOOL_BAR, false);// 是否开启同时识别
@@ -353,12 +351,12 @@ public class DeliveryTransferActivity extends BaseActivity {
             case 0:
                 try {
                     DeliveryStateEntity deliveryStateEntity = GsonUtils.gsonToBean(result, DeliveryStateEntity.class);
-                    String status=deliveryStateEntity.getContent();
+                    String status = deliveryStateEntity.getContent();
                     if ("1".equals(status)) {
                         ToastUtil.showShortToast(currentActivity, "运单已经派送,请勿重复扫描");
-                    } else if("0".equals(status)){
+                    } else if ("0".equals(status)) {
                         ToastUtil.showShortToast(currentActivity, "该运单在系统中未找到,请确认是否录入系统");
-                    }else{
+                    } else {
                         getDeliverInfor();
                     }
                 } catch (Exception e) {

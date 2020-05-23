@@ -40,7 +40,13 @@ public class DeliveryModel extends BaseModel {
         super(context);
     }
 
-    public void getDeliveryData(int what, final HttpResponse newHttpResponse) {
+    /**
+     * 获取快递管理页面数据
+     *
+     * @param what
+     * @param newHttpResponse
+     */
+    public void getDeliveryData(int what, boolean isLoading, final HttpResponse newHttpResponse) {
         Map<String, Object> params = new HashMap<String, Object>();
         Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 17, deliveryHomeUrl),
                 RequestMethod.GET);
@@ -63,7 +69,7 @@ public class DeliveryModel extends BaseModel {
             public void onFailed(int what, Response<String> response) {
                 showExceptionMessage(what, response);
             }
-        }, true, true);
+        }, true, isLoading);
     }
 
     public void getDeliveryInfor(int what, String courierNumber, final HttpResponse newHttpResponse) {
@@ -176,12 +182,14 @@ public class DeliveryModel extends BaseModel {
                     }
                 } else {
                     showErrorCodeMessage(response);
+                    newHttpResponse.OnHttpResponse(what, "");
                 }
             }
 
             @Override
             public void onFailed(int what, Response<String> response) {
                 showExceptionMessage(what, response);
+                newHttpResponse.OnHttpResponse(what, "");
             }
         }, true, true);
     }
@@ -210,12 +218,14 @@ public class DeliveryModel extends BaseModel {
                     }
                 } else {
                     showErrorCodeMessage(response);
+                    newHttpResponse.OnHttpResponse(what, "");
                 }
             }
 
             @Override
             public void onFailed(int what, Response<String> response) {
                 showExceptionMessage(what, response);
+                newHttpResponse.OnHttpResponse(what, "");
             }
         }, true, true);
     }
@@ -246,12 +256,14 @@ public class DeliveryModel extends BaseModel {
                     }
                 } else {
                     showErrorCodeMessage(response);
+                    newHttpResponse.OnHttpResponse(what, "");
                 }
             }
 
             @Override
             public void onFailed(int what, Response<String> response) {
                 showExceptionMessage(what, response);
+                newHttpResponse.OnHttpResponse(what, "");
             }
         }, true, true);
     }
@@ -263,11 +275,11 @@ public class DeliveryModel extends BaseModel {
      * @param accessToken
      * @param newHttpResponse
      */
-    public void postDeliveryUserInfo(int what, String accessToken, final HttpResponse newHttpResponse) {
+    public void postDeliveryUserInfo(int what, String accessToken, boolean isLoading, final HttpResponse newHttpResponse) {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("colorToken", accessToken);
-        Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 18, deliveryUserInfoUrl),
-                RequestMethod.POST);
+        Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 19, deliveryUserInfoUrl),
+                RequestMethod.GET);
         request(what, request, RequestEncryptionUtils.getNewSaftyMap(mContext, params), new HttpListener<String>() {
             @Override
             public void onSucceed(int what, Response<String> response) {
@@ -287,6 +299,6 @@ public class DeliveryModel extends BaseModel {
             public void onFailed(int what, Response<String> response) {
                 showExceptionMessage(what, response);
             }
-        }, true, true);
+        }, true, isLoading);
     }
 }

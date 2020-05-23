@@ -62,6 +62,7 @@ public class UserInfoActivity extends BaseActivity implements OnClickListener, H
     private TextView tv_user_part;
     private TextView tv_user_job;
     private TextView tv_user_mobile;
+    private TextView tv_user_company;
     private EditText et_user_email;
     private RelativeLayout rl_usersex_change;
     private RelativeLayout rl_usermobile_change;
@@ -92,6 +93,7 @@ public class UserInfoActivity extends BaseActivity implements OnClickListener, H
         et_user_email = findViewById(R.id.et_user_email);
         rl_usersex_change = findViewById(R.id.rl_usersex_change);
         rl_usermobile_change = findViewById(R.id.rl_usermobile_change);
+        tv_user_company = findViewById(R.id.tv_user_company);
         rl_usersex_change.setOnClickListener(this);
         rl_usermobile_change.setOnClickListener(this);
 
@@ -109,6 +111,8 @@ public class UserInfoActivity extends BaseActivity implements OnClickListener, H
         } else {
             et_user_email.setHint("< 未绑定 >");
         }
+        String company = spUtils.getStringData(SpConstants.storage.CORPNAME, "");
+        tv_user_company.setText(company);
         freshImg();
     }
 

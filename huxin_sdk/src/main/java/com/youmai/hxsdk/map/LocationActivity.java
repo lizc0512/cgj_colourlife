@@ -4,8 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
@@ -15,6 +13,9 @@ import android.widget.AutoCompleteTextView;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
@@ -135,7 +136,7 @@ public class LocationActivity extends SdkBaseActivity implements
 
         LinearLayoutManager layout = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layout);
-        recyclerView.addItemDecoration(new DividerItemDecoration(this, layout.getOrientation()));
+        recyclerView.addItemDecoration(new DividerItemDecoration(this, 1, layout.getOrientation()));
 
         recyclerView.setAdapter(adapter);
         img_cancel = (ImageView) findViewById(R.id.img_cancel);

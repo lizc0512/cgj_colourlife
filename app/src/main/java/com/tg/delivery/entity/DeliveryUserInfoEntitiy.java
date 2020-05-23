@@ -112,6 +112,15 @@ public class DeliveryUserInfoEntitiy {
 
             private String communityUuid;
             private String communityName;
+            private String pilotPlot;
+
+            public String getPilotPlot() {
+                return pilotPlot;
+            }
+
+            public void setPilotPlot(String pilotPlot) {
+                this.pilotPlot = pilotPlot;
+            }
 
             public String getCommunityUuid() {
                 return communityUuid;

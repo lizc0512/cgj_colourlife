@@ -28,6 +28,7 @@ import com.hjq.permissions.XXPermissions;
 import com.intsig.exp.sdk.ISCardScanActivity;
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.base.BaseActivity;
+import com.tg.coloursteward.constant.Contants;
 import com.tg.coloursteward.util.GsonUtils;
 import com.tg.coloursteward.util.SoftKeyboardUtils;
 import com.tg.coloursteward.util.ToastUtil;
@@ -310,7 +311,7 @@ public class DeliveryScannerActivity extends BaseActivity {
             }
         });
         Intent intent = new Intent(this, ISCardScanActivity.class);
-        intent.putExtra(ISCardScanActivity.EXTRA_KEY_APP_KEY, "Q9PDXKXJbBCHDWF0CFS8MLeX");
+        intent.putExtra(ISCardScanActivity.EXTRA_KEY_APP_KEY, Contants.APP.APP_KEY);
         intent.putExtra(ISCardScanActivity.EXTRA_KEY_BOOL_CONTIUE_AUTOFOCUS,
                 true);// true 表示参数自动对焦模式 false 采用默认的定时对焦
         intent.putExtra(ISCardScanActivity.EXTRA_KEY_BOOL_BAR, false);// 是否开启同时识别

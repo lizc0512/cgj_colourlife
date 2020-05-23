@@ -87,6 +87,8 @@ import cn.sharesdk.wechat.friends.Wechat;
 @Route(path = APath.RE_LOGIN)
 public class LoginActivity extends BaseActivity implements View.OnClickListener, HttpResponse, TextWatcher {
     public static final String ACCOUNT = "account";
+    public static final String PASSWORD = "password";
+    public static final String ISLOGIN = "islogin";
     public static final String CZY_CODE = "czy_code";
     public static final String USERACCOUNT = "user_account";
     public static final String USEROA = "user_oa";
@@ -278,6 +280,11 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
         edit_account.setSelection(account.length());
     }
 
+    private void setPassword(String pwd) {
+        edit_password.setText(pwd);
+        edit_password.setSelection(pwd.length());
+    }
+
     private void ThirdLogin(String code) {
         try {
             loginType = "4";
@@ -333,20 +340,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
         account = edit_account.getText().toString().trim();
         switch (v.getId()) {
             case R.id.btn_login:
-                if (isSmsLogin) {
-                    loginType = "2";
-                    password = edit_smscode.getText().toString().trim();
-                    SoftKeyboardUtils.hideSoftKeyboard(LoginActivity.this, edit_account);
-                    login(account, password, loginType);
-                } else {
-                    password = edit_password.getText().toString().trim();
-                    SoftKeyboardUtils.hideSoftKeyboard(LoginActivity.this, edit_account);
-                    if (6 > password.length()) {
-                        ToastUtil.showLoginToastCenter(this, "请输入不少于6位数的密码");
-                        return;
-                    }
-                    userModel.getUserType(8, account, true, this);
-                }
+                setLogin();
                 break;
             case R.id.iv_login_byczy:
                 czyLogin();
@@ -428,6 +422,24 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
         }
     }
 
+    private void setLogin() {
+        if (isSmsLogin) {
+            loginType = "2";
+            password = edit_smscode.getText().toString().trim();
+            SoftKeyboardUtils.hideSoftKeyboard(LoginActivity.this, edit_account);
+            login(account, password, loginType);
+        } else {
+            password = edit_password.getText().toString().trim();
+            account = edit_account.getText().toString().trim();
+            SoftKeyboardUtils.hideSoftKeyboard(LoginActivity.this, edit_account);
+            if (6 > password.length()) {
+                ToastUtil.showLoginToastCenter(this, "请输入不少于6位数的密码");
+                return;
+            }
+            userModel.getUserType(8, account, true, this);
+        }
+    }
+
     /**
      * 彩之云授权登录
      */
@@ -470,12 +482,20 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
         super.onNewIntent(intent);
         String code = intent.getStringExtra(CZY_CODE);
         String account = intent.getStringExtra(ACCOUNT);
+        String registerPassword = intent.getStringExtra(PASSWORD);
+        String registerLogin = intent.getStringExtra(ISLOGIN);
         if (!TextUtils.isEmpty(account)) {
             setAccount(account);
+        }
+        if (!TextUtils.isEmpty(registerPassword)) {
+            setPassword(registerPassword);
         }
         if (!TextUtils.isEmpty(code)) {
             ThirdLogin(code);
             spUtils.saveStringData(SpConstants.storage.THRID_CODE, code);
+        }
+        if ("true".equals(registerLogin)) {
+            setLogin();
         }
     }
 

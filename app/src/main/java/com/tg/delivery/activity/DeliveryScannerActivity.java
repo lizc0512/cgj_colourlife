@@ -9,6 +9,7 @@ import android.graphics.Color;
 import android.hardware.Camera;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Message;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
@@ -29,6 +30,7 @@ import com.intsig.exp.sdk.ISCardScanActivity;
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.base.BaseActivity;
 import com.tg.coloursteward.constant.Contants;
+import com.tg.coloursteward.constant.UserMessageConstant;
 import com.tg.coloursteward.util.GsonUtils;
 import com.tg.coloursteward.util.SoftKeyboardUtils;
 import com.tg.coloursteward.util.ToastUtil;
@@ -36,11 +38,17 @@ import com.tg.delivery.adapter.DeliveryNumberListAdapter;
 import com.tg.delivery.entity.DeliveryInforEntity;
 import com.tg.delivery.entity.DeliveryStateEntity;
 import com.tg.delivery.model.DeliveryModel;
+import com.tg.point.activity.ChangePawdOneStepActivity;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
+import static com.tg.delivery.activity.DeliveryConfirmActivity.COURIERLENGTHLIST;
 import static com.tg.delivery.activity.DeliveryConfirmActivity.COURIERNUMBERS;
 import static com.tg.delivery.activity.DeliveryConfirmActivity.COURIERSIZE;
 
@@ -84,7 +92,30 @@ public class DeliveryScannerActivity extends BaseActivity {
         } else {
             useCamareSdk(true);
         }
+        if (!EventBus.getDefault().isRegistered(DeliveryScannerActivity.this)) {
+            EventBus.getDefault().register(DeliveryScannerActivity.this);
+        }
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (EventBus.getDefault().isRegistered(DeliveryScannerActivity.this)) {
+            EventBus.getDefault().unregister(DeliveryScannerActivity.this);
+        }
+    }
+
+    @Subscribe
+    public void onEvent(Object event) {
+        final Message message = (Message) event;
+        switch (message.what) {
+            case UserMessageConstant.DELIVERY_OPERATE_SUCCESS:
+                currentActivity.finish();
+                finish();
+                break;
+        }
+    }
+
 
 
     /***删除当前的单号***/
@@ -182,10 +213,15 @@ public class DeliveryScannerActivity extends BaseActivity {
             if (deliveryInforList.size()>0){
                 Intent it = new Intent(currentActivity, DeliveryConfirmActivity.class);
                 List<String> deliveryNumberList=new ArrayList<>();
+                ArrayList<Integer>  lengthList=new ArrayList<>();
                 for (DeliveryInforEntity.ContentBean dataBean : deliveryInforList){
+                    String  courierNumber=dataBean.getCourierNumber();
+                    String  courierCompany=dataBean.getCourierCompany();
                     deliveryNumberList.add(dataBean.getCourierNumber());
+                    lengthList.add(courierNumber.length()+courierCompany.length());
                 }
                 it.putExtra(COURIERNUMBERS,GsonUtils.gsonString(deliveryNumberList));
+                it.putIntegerArrayListExtra(COURIERLENGTHLIST,lengthList);
                 it.putExtra(COURIERSIZE,deliveryNumberList.size());
                 startActivity(it);
             }else{

@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.tg.coloursteward.R;
+import com.tg.delivery.entity.DeliverySmsTemplateEntity;
 import com.tg.setting.util.OnItemClickListener;
 
 import java.util.List;
@@ -29,8 +30,7 @@ import java.util.List;
 public class DeliveryMsgTemplateAdapter extends RecyclerView.Adapter<DeliveryMsgTemplateAdapter.DefaultViewHolder> {
 
     private Context activity;
-    private List<String> messageTitleList;
-    private List<String> messageContentList;
+    private List<DeliverySmsTemplateEntity.ContentBean.ListBean> templateMsgList;
     private OnItemClickListener onClickListener;
     private int clickPos=-1;
 
@@ -39,10 +39,9 @@ public class DeliveryMsgTemplateAdapter extends RecyclerView.Adapter<DeliveryMsg
         notifyDataSetChanged();
     }
 
-    public DeliveryMsgTemplateAdapter(Activity activity, List<String> messageTitleList, List<String> messageContentList) {
+    public DeliveryMsgTemplateAdapter(Activity activity,List<DeliverySmsTemplateEntity.ContentBean.ListBean> templateMsgList) {
         this.activity = activity;
-        this.messageTitleList = messageTitleList;
-        this.messageContentList = messageContentList;
+        this.templateMsgList = templateMsgList;
 
     }
 
@@ -62,8 +61,9 @@ public class DeliveryMsgTemplateAdapter extends RecyclerView.Adapter<DeliveryMsg
 
     @Override
     public void onBindViewHolder(@NonNull DefaultViewHolder defaultViewHolder, int position) {
-        defaultViewHolder.tv_sms_title.setText(messageTitleList.get(position));
-        defaultViewHolder.tv_sms_content.setText(messageContentList.get(position));
+        DeliverySmsTemplateEntity.ContentBean.ListBean  listBean=templateMsgList.get(position);
+        defaultViewHolder.tv_sms_title.setText(listBean.getSmsUserUemplatePlace());
+        defaultViewHolder.tv_sms_content.setText(listBean.getSmsUserTemplateContent());
         if (clickPos==position){
             defaultViewHolder.iv_sms_choice.setImageResource(R.drawable.sms_template_choice);
         }else{
@@ -96,6 +96,6 @@ public class DeliveryMsgTemplateAdapter extends RecyclerView.Adapter<DeliveryMsg
 
     @Override
     public int getItemCount() {
-        return messageTitleList == null ? 0 : messageTitleList.size();
+        return templateMsgList == null ? 0 : templateMsgList.size();
     }
 }

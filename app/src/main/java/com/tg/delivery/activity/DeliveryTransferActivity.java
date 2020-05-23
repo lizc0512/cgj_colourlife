@@ -379,8 +379,8 @@ public class DeliveryTransferActivity extends BaseActivity {
                 }
                 break;
             case 2:
-
-
+                ToastUtil.showShortToast(DeliveryTransferActivity.this,"快件交接成功");
+                finish();
                 break;
         }
         hideBottomUIMenu();

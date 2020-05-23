@@ -24,13 +24,14 @@ import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.provider.Settings;
-import androidx.core.content.ContextCompat;
 import android.telephony.TelephonyManager;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
 import android.widget.Toast;
+
+import androidx.core.content.ContextCompat;
 
 import com.youmai.hxsdk.config.AppConfig;
 
@@ -289,19 +290,6 @@ public class AppUtils {
         }
     }
 
-
-    /**
-     * 获取SharedPreferences
-     *
-     * @param context 场景
-     * @return
-     */
-    public static SharedPreferences getAppSharedPreferences(Context context) {
-        SharedPreferences sp = context.getSharedPreferences(
-                AppConfig.SHARED_PREFERENCES, Context.MODE_PRIVATE);
-        return sp;
-    }
-
     /**
      * 写入SharedPreferences数据
      *
@@ -315,6 +303,36 @@ public class AppUtils {
                 AppConfig.SHARED_PREFERENCES, Context.MODE_PRIVATE).edit();
         editor.putString(key, value);
         editor.apply();
+    }
+
+    /**
+     * APP base存储类
+     *
+     * @param context
+     * @param key
+     * @param value
+     */
+    public static void setAppStringSharedPreferences(Context context, String key,
+                                                     String value) {
+        SharedPreferences.Editor editor = context.getSharedPreferences(
+                AppConfig.APPSHARED_PREFERENCES, Context.MODE_PRIVATE).edit();
+        editor.putString(key, value);
+        editor.apply();
+    }
+
+    /**
+     * APP base获取类
+     *
+     * @param context
+     * @param key
+     * @param defaultValue
+     * @return
+     */
+    public static String getAPPStringSharedPreferences(Context context,
+                                                       String key, String defaultValue) {
+        SharedPreferences sharedPref = context.getSharedPreferences(
+                AppConfig.APPSHARED_PREFERENCES, Context.MODE_PRIVATE);
+        return sharedPref.getString(key, defaultValue);
     }
 
     /**

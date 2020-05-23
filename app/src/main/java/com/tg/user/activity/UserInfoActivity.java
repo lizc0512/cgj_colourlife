@@ -66,6 +66,7 @@ public class UserInfoActivity extends BaseActivity implements OnClickListener, H
     private EditText et_user_email;
     private RelativeLayout rl_usersex_change;
     private RelativeLayout rl_usermobile_change;
+    private RelativeLayout rl_user_company;
     private UserModel userModel;
 
     @Override
@@ -94,8 +95,10 @@ public class UserInfoActivity extends BaseActivity implements OnClickListener, H
         rl_usersex_change = findViewById(R.id.rl_usersex_change);
         rl_usermobile_change = findViewById(R.id.rl_usermobile_change);
         tv_user_company = findViewById(R.id.tv_user_company);
+        rl_user_company = findViewById(R.id.rl_user_company);
         rl_usersex_change.setOnClickListener(this);
         rl_usermobile_change.setOnClickListener(this);
+        rl_user_company.setOnClickListener(this);
 
         tv_user_name.setText(UserInfo.realname);
         tv_user_sex.setText(UserInfo.sex);
@@ -150,6 +153,9 @@ public class UserInfoActivity extends BaseActivity implements OnClickListener, H
             } else if (requestCode == 100) {
                 String mobile = data.getStringExtra("mobile");
                 tv_user_mobile.setText(mobile);
+            } else if (requestCode == 1001) {
+                String name = data.getStringExtra("companyName");
+                tv_user_company.setText(name);
             }
         }
     }
@@ -243,6 +249,11 @@ public class UserInfoActivity extends BaseActivity implements OnClickListener, H
                 Intent intent = new Intent(this, BindMobileActivity.class);
                 intent.putExtra(ISFROMUSER, true);
                 startActivityForResult(intent, 100);
+                break;
+            case R.id.rl_user_company:
+                Intent it = new Intent(this, ChangeCompanyActivity.class);
+                startActivityForResult(it, 1001);
+                break;
         }
     }
 

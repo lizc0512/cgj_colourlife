@@ -99,6 +99,45 @@
             android:visibility="visible" />
     </LinearLayout>
 
+    <RelativeLayout
+        android:id="@+id/rl_register_pwd"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/size_30dp"
+        android:layout_marginLeft="@dimen/size_40dp"
+        android:layout_marginTop="@dimen/size_20dp"
+        android:layout_marginRight="@dimen/size_40dp"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/tv_register_account">
+
+        <ImageView
+            android:id="@+id/iv_register_showpwd"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/size_25dp"
+            android:adjustViewBounds="true"
+            android:padding="@dimen/size_4dp"
+            android:src="@drawable/work_icon_invisible" />
+
+        <com.tg.coloursteward.view.ClearEditText
+            android:id="@+id/et_register_pwd"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/size_20dp"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@id/iv_register_showpwd"
+            android:layout_marginRight="@dimen/size_20dp"
+            android:background="@null"
+            android:hint="@string/user_register_pwd"
+            android:inputType="textPassword"
+            android:maxLength="18"
+            android:singleLine="true"
+            android:textColor="@color/color_131719"
+            android:textColorHint="@color/color_bbc0cb"
+            android:textSize="@dimen/font_16sp" />
+
+    </RelativeLayout>
+
     <View
         android:id="@+id/line"
         android:layout_width="match_parent"

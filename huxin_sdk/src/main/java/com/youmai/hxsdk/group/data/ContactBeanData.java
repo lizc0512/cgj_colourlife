@@ -1,13 +1,14 @@
 package com.youmai.hxsdk.group.data;
 
 import android.content.Context;
+
 import com.youmai.hxsdk.HuxinSdkManager;
 import com.youmai.hxsdk.R;
-import com.youmai.hxsdk.config.ColorsConfig;
 import com.youmai.hxsdk.db.bean.ContactBean;
-import com.youmai.hxsdk.entity.cn.pinyin.Pinyin;
 import com.youmai.hxsdk.entity.ModifyContactsBean;
+import com.youmai.hxsdk.entity.cn.pinyin.Pinyin;
 import com.youmai.hxsdk.group.adapter.SearchContactAdapter;
+import com.youmai.hxsdk.utils.AppUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +40,8 @@ public class ContactBeanData {
             ContactBean bean = addHeadItem(content);
             if (content.contains("组织架构")) {
                 bean.setUiType(SearchContactAdapter.TYPE.ORGANIZATION_TYPE.ordinal());
-                bean.setOrgName(ColorsConfig.ColorLifeAppName);
+                String corpName = AppUtils.getAPPStringSharedPreferences(context, "corp_name", "");
+                bean.setOrgName(corpName);
                 bean.setResId(R.drawable.contacts_icon_organizational);
             } else if (content.contains("我的部门")) {
                 bean.setUiType(SearchContactAdapter.TYPE.DEPARTMENT_TYPE.ordinal());

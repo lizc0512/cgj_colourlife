@@ -22,6 +22,7 @@ public class AppConfig {
      * pref文件名定义
      */
     public static final String SHARED_PREFERENCES = "sdk_app";
+    public static final String APPSHARED_PREFERENCES = "wisdomPark_map";
 
     public static final boolean QINIU_ENABLE = false;
 

@@ -6,8 +6,10 @@ import com.tg.coloursteward.baseModel.BaseModel;
 import com.tg.coloursteward.baseModel.HttpListener;
 import com.tg.coloursteward.baseModel.HttpResponse;
 import com.tg.coloursteward.baseModel.RequestEncryptionUtils;
+import com.tg.coloursteward.constant.SpConstants;
 import com.tg.coloursteward.info.UserInfo;
 import com.tg.coloursteward.net.DES;
+import com.tg.coloursteward.util.SharedPreferencesUtils;
 import com.yanzhenjie.nohttp.BasicBinary;
 import com.yanzhenjie.nohttp.FileBinary;
 import com.yanzhenjie.nohttp.NoHttp;
@@ -125,8 +127,9 @@ public class MicroModel extends BaseModel {
                     int code = showSuccesResultMessageTheme(result);
                     if (code == 0) {
                         httpResponse.OnHttpResponse(what, result);
+                        SharedPreferencesUtils.getInstance().saveStringData(SpConstants.storage.CORPDATA, result);
                     }
-                }else {
+                } else {
                     showErrorCodeMessage(response);
                 }
             }

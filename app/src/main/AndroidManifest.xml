@@ -404,6 +404,9 @@
         <activity
             android:name="com.tg.user.activity.BindWeChatActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name="com.tg.user.activity.ChangeCompanyActivity"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

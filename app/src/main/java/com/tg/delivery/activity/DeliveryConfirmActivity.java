@@ -70,6 +70,7 @@ public class DeliveryConfirmActivity extends BaseActivity  {
    private String smsTemplateId;
    private int  smsContentLength;
    private ArrayList<Integer> lengthsList;
+   private int currentTemplatePos=0;
 
 
     @Override
@@ -113,8 +114,10 @@ public class DeliveryConfirmActivity extends BaseActivity  {
                         }
                     }, null, "您未设置短信内容，请先设置？", null, null);
                 }
+                smsTemplateId=templateMsgList.get(currentTemplatePos).getSmsTemplateId();
                 rv_message_list.setVisibility(View.VISIBLE);
                 tv_sms_num.setVisibility(View.VISIBLE);
+
             }
 
             @Override
@@ -130,6 +133,7 @@ public class DeliveryConfirmActivity extends BaseActivity  {
          rv_message_list.setLayoutManager(linearLayoutManager);
          rv_message_list.setAdapter(deliveryMsgTemplateAdapter);
         deliveryMsgTemplateAdapter.setOnItemClickListener(var1 ->{
+            currentTemplatePos=var1;
             deliveryMsgTemplateAdapter.setClickPos(var1);
             DeliverySmsTemplateEntity.ContentBean.ListBean    listBean= templateMsgList.get(var1);
             smsTemplateId=listBean.getSmsTemplateId();

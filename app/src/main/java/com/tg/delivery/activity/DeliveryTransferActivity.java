@@ -179,14 +179,17 @@ public class DeliveryTransferActivity extends BaseActivity {
         });
         tv_define_delivery.setOnClickListener(view -> {
             if (deliveryInforList.size() > 0) {
-                List<String> deliveryNumberList = new ArrayList<>();
-                for (DeliveryInforEntity.ContentBean dataBean : deliveryInforList) {
-                    deliveryNumberList.add(dataBean.getCourierNumber());
+                StringBuffer sb=new StringBuffer();
+                for (DeliveryInforEntity.ContentBean dataBean : deliveryInforList){
+                    String  courierNumber=dataBean.getCourierNumber();
+                    sb.append(courierNumber);
+                    sb.append(",");
                 }
+                String  totalCurierNumber=sb.toString();
                 if (null == deliveryModel) {
                     deliveryModel = new DeliveryModel(currentActivity);
                 }
-                deliveryModel.submitDeliveryCourierNumbers(2, GsonUtils.gsonString(deliveryNumberList), "3", UserInfo.mobile, "", "", 0, DeliveryTransferActivity.this);
+                deliveryModel.submitDeliveryCourierNumbers(2,totalCurierNumber.substring(0,totalCurierNumber.length()-1), "3", UserInfo.mobile, "", "", -1, DeliveryTransferActivity.this);
             } else {
                 ToastUtil.showShortToast(currentActivity, "暂无运单进行交接");
             }

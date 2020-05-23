@@ -134,7 +134,9 @@ public class DeliveryModel extends BaseModel {
         params.put("sendStatus", sendStatus);
         params.put("loginMobile", loginMobile);
         params.put("name", name);
-        params.put("finishType", finishType);
+        if (finishType!=-1){
+            params.put("finishType", finishType);
+        }
         if (!TextUtils.isEmpty(SMSTemplate)) {
             params.put("SMSTemplate", SMSTemplate);
         }

@@ -212,17 +212,19 @@ public class DeliveryScannerActivity extends BaseActivity {
         tv_define_delivery.setOnClickListener(view -> {
             if (deliveryInforList.size()>0){
                 Intent it = new Intent(currentActivity, DeliveryConfirmActivity.class);
-                List<String> deliveryNumberList=new ArrayList<>();
+                StringBuffer sb=new StringBuffer();
                 ArrayList<Integer>  lengthList=new ArrayList<>();
                 for (DeliveryInforEntity.ContentBean dataBean : deliveryInforList){
                     String  courierNumber=dataBean.getCourierNumber();
                     String  courierCompany=dataBean.getCourierCompany();
-                    deliveryNumberList.add(dataBean.getCourierNumber());
+                    sb.append(courierNumber);
+                    sb.append(",");
                     lengthList.add(courierNumber.length()+courierCompany.length());
                 }
-                it.putExtra(COURIERNUMBERS,GsonUtils.gsonString(deliveryNumberList));
+                String  totalCurierNumber=sb.toString();
+                it.putExtra(COURIERNUMBERS,totalCurierNumber.substring(0,totalCurierNumber.length()-1));
                 it.putIntegerArrayListExtra(COURIERLENGTHLIST,lengthList);
-                it.putExtra(COURIERSIZE,deliveryNumberList.size());
+                it.putExtra(COURIERSIZE,deliveryInforList.size());
                 startActivity(it);
             }else{
                 ToastUtil.showShortToast(currentActivity,"暂无运单可以来进行派件");

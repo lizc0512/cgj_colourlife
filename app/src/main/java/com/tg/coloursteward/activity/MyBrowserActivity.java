@@ -56,6 +56,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.core.content.FileProvider;
+
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
@@ -136,7 +138,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import androidx.core.content.FileProvider;
 import cn.sharesdk.framework.Platform;
 import cn.sharesdk.framework.PlatformActionListener;
 import cn.sharesdk.onekeyshare.OnekeyShare;
@@ -1231,6 +1232,27 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
                 jsonObject.put("job_uuid", UserInfo.job_uuid);//岗位id
                 jsonObject.put("org_name", UserInfo.familyName);//组织架构名称
                 jsonObject.put("org_uuid", UserInfo.orgId);//组织架构id
+                json = jsonObject.toString();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            return json;
+        }
+
+        /**
+         * 获取彩快递当前小区信息
+         *
+         * @return
+         */
+        @JavascriptInterface
+        public String cgjExpressCommunityInfo() {
+            String json = "";
+            try {
+                JSONObject jsonObject = new JSONObject();
+                String uuid = spUtils.getStringData(SpConstants.storage.DELIVERYUUID, "");
+                String name = spUtils.getStringData(SpConstants.storage.DELIVERYNAME, "");
+                jsonObject.put("community_uuid", uuid);
+                jsonObject.put("community_name", name);
                 json = jsonObject.toString();
             } catch (JSONException e) {
                 e.printStackTrace();

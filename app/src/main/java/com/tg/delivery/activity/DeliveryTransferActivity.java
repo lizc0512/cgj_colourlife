@@ -52,7 +52,7 @@ public class DeliveryTransferActivity extends BaseActivity {
     private TextView tv_define_delivery;
     private RecyclerView rv_delivery_infor;
 
-    private List<DeliveryInforEntity.DataBean> deliveryInforList = new ArrayList<>();
+    private List<DeliveryInforEntity.ContentBean> deliveryInforList = new ArrayList<>();
     private DeliveryNumberListAdapter deliveryNumberListAdapter;
 
     private Activity currentActivity;
@@ -101,7 +101,7 @@ public class DeliveryTransferActivity extends BaseActivity {
     public void editDeliveryItem(int position) {
         editPosition = position;
         deliveryNumberListAdapter.setEditStatus(position);
-        DeliveryInforEntity.DataBean dataBean = deliveryInforList.get(position);
+        DeliveryInforEntity.ContentBean dataBean = deliveryInforList.get(position);
         String courierNumber = dataBean.getCourierNumber();
         ed_input_code.setText(courierNumber);
         ed_input_code.setSelection(courierNumber.length());
@@ -180,7 +180,7 @@ public class DeliveryTransferActivity extends BaseActivity {
         tv_define_delivery.setOnClickListener(view -> {
             if (deliveryInforList.size() > 0) {
                 List<String> deliveryNumberList = new ArrayList<>();
-                for (DeliveryInforEntity.DataBean dataBean : deliveryInforList) {
+                for (DeliveryInforEntity.ContentBean dataBean : deliveryInforList) {
                     deliveryNumberList.add(dataBean.getCourierNumber());
                 }
                 if (null == deliveryModel) {
@@ -200,7 +200,7 @@ public class DeliveryTransferActivity extends BaseActivity {
 
     private boolean includeDelivery(String deliveryNumber) {
         boolean isContain = false;
-        for (DeliveryInforEntity.DataBean dataBean : deliveryInforList) {
+        for (DeliveryInforEntity.ContentBean dataBean : deliveryInforList) {
             if (deliveryNumber.equals(dataBean.getCourierNumber())) {
                 isContain = true;
                 break;
@@ -362,15 +362,14 @@ public class DeliveryTransferActivity extends BaseActivity {
                 } catch (Exception e) {
 
                 }
-                hideBottomUIMenu();
                 break;
             case 1:
                 if (!TextUtils.isEmpty(result)) {
                     try {
                         DeliveryInforEntity deliveryInforEntity = GsonUtils.gsonToBean(result, DeliveryInforEntity.class);
-                        DeliveryInforEntity.DataBean  dataBean=deliveryInforEntity.getData();
+                        DeliveryInforEntity.ContentBean  dataBean=deliveryInforEntity.getContent();
                         if (null!=dataBean){
-                            deliveryInforList.add(0, deliveryInforEntity.getData());
+                            deliveryInforList.add(0,dataBean);
                             deliveryNumberListAdapter.notifyDataSetChanged();
                             showTotalNum();
                         }
@@ -384,5 +383,6 @@ public class DeliveryTransferActivity extends BaseActivity {
 
                 break;
         }
+        hideBottomUIMenu();
     }
 }

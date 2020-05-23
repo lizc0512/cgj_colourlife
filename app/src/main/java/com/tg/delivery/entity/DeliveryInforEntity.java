@@ -11,21 +11,22 @@ import com.tg.coloursteward.entity.BaseContentEntity;
  **/
 public class DeliveryInforEntity extends BaseContentEntity {
 
+
     /**
-     * data : {"recipientMobile":"123242313421213","courierNumber":"SF1083868670319","courierCompany":"顺丰快递"}
+     * content : {"recipientMobile":"123242313421213","courierNumber":"SF1083868670319","courierCompany":"顺丰快递"}
      */
 
-    private DataBean data;
+    private ContentBean content;
 
-    public DataBean getData() {
-        return data;
+    public ContentBean getContent() {
+        return content;
     }
 
-    public void setData(DataBean data) {
-        this.data = data;
+    public void setContent(ContentBean content) {
+        this.content = content;
     }
 
-    public static class DataBean {
+    public static class ContentBean {
         /**
          * recipientMobile : 123242313421213
          * courierNumber : SF1083868670319

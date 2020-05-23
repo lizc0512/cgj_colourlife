@@ -33,7 +33,7 @@ public class DeliveryNumberListAdapter extends RecyclerView.Adapter<DeliveryNumb
 
     private Context activity;
     private Context methodActivity;
-    private List<DeliveryInforEntity.DataBean> deliveryInforList;
+    private List<DeliveryInforEntity.ContentBean> deliveryInforList;
     private OnItemClickListener onClickListener;
     private int editPos=-1;
 
@@ -42,7 +42,7 @@ public class DeliveryNumberListAdapter extends RecyclerView.Adapter<DeliveryNumb
         notifyDataSetChanged();
     }
 
-    public DeliveryNumberListAdapter(Activity activity,Activity methodActivity,List<DeliveryInforEntity.DataBean> deliveryInforList) {
+    public DeliveryNumberListAdapter(Activity activity,Activity methodActivity,List<DeliveryInforEntity.ContentBean> deliveryInforList) {
         this.activity = activity;
         this.methodActivity = methodActivity;
         this.deliveryInforList = deliveryInforList;
@@ -64,7 +64,7 @@ public class DeliveryNumberListAdapter extends RecyclerView.Adapter<DeliveryNumb
 
     @Override
     public void onBindViewHolder(@NonNull DefaultViewHolder defaultViewHolder, int position) {
-        DeliveryInforEntity.DataBean  dataBean=deliveryInforList.get(position);
+        DeliveryInforEntity.ContentBean  dataBean=deliveryInforList.get(position);
         defaultViewHolder.tv_tracking_nonum.setText(dataBean.getCourierNumber());
         defaultViewHolder.tv_tracking_phonenum.setText(dataBean.getRecipientMobile());
         defaultViewHolder.tv_delivery_name.setText(dataBean.getCourierCompany());

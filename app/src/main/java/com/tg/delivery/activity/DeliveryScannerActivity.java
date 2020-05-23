@@ -2,7 +2,9 @@ package com.tg.delivery.activity;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.hardware.Camera;
 import android.os.Build;
@@ -34,6 +36,7 @@ import com.tg.delivery.entity.DeliveryInforEntity;
 import com.tg.delivery.entity.DeliveryStateEntity;
 import com.tg.delivery.model.DeliveryModel;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -195,20 +198,44 @@ public class DeliveryScannerActivity extends BaseActivity {
         rv_delivery_infor.setAdapter(deliveryNumberListAdapter);
     }
 
+    public boolean checkDeviceHasNavigationBar(Context context) {
+        boolean hasNavigationBar = false;
+        Resources rs = context.getResources();
+        int id = rs.getIdentifier("config_showNavigationBar", "bool", "android");
+        if (id > 0) {
+            hasNavigationBar = rs.getBoolean(id);
+        }
+        try {
+            Class systemPropertiesClass = Class.forName("android.os.SystemProperties");
+            Method m = systemPropertiesClass.getMethod("get", String.class);
+            String navBarOverride = (String) m.invoke(systemPropertiesClass, "qemu.hw.mainkeys");
+            if ("1".equals(navBarOverride)) {
+                hasNavigationBar = false;
+            } else if ("0".equals(navBarOverride)) {
+                hasNavigationBar = true;
+            }
+        } catch (Exception e) {
+
+        }
+        return hasNavigationBar;
+    }
+
     protected void hideBottomUIMenu() {
         //隐藏虚拟按键，并且全屏
-        if (Build.VERSION.SDK_INT > 11 && Build.VERSION.SDK_INT < 19) { // lower api
-            View v = currentActivity.getWindow().getDecorView();
-            v.setSystemUiVisibility(View.GONE);
-        } else if (Build.VERSION.SDK_INT >= 19) {
-            //for new api versions.
-            View decorView = currentActivity.getWindow().getDecorView();
-            int uiOptions = View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                    | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                    | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                    | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                    | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
-            decorView.setSystemUiVisibility(uiOptions);
+        if (checkDeviceHasNavigationBar(currentActivity)){
+            if (Build.VERSION.SDK_INT > 11 && Build.VERSION.SDK_INT < 19) { // lower api
+                View v = currentActivity.getWindow().getDecorView();
+                v.setSystemUiVisibility(View.GONE);
+            } else if (Build.VERSION.SDK_INT >= 19) {
+                //for new api versions.
+                View decorView = currentActivity.getWindow().getDecorView();
+                int uiOptions = View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
+                decorView.setSystemUiVisibility(uiOptions);
+            }
         }
     }
 
@@ -342,9 +369,12 @@ public class DeliveryScannerActivity extends BaseActivity {
                 if (!TextUtils.isEmpty(result)) {
                     try {
                         DeliveryInforEntity deliveryInforEntity = GsonUtils.gsonToBean(result, DeliveryInforEntity.class);
-                        deliveryInforList.add(0, deliveryInforEntity.getData());
-                        deliveryNumberListAdapter.notifyDataSetChanged();
-                        showTotalNum();
+                        DeliveryInforEntity.DataBean  dataBean=deliveryInforEntity.getData();
+                        if (null!=dataBean){
+                            deliveryInforList.add(0, deliveryInforEntity.getData());
+                            deliveryNumberListAdapter.notifyDataSetChanged();
+                            showTotalNum();
+                        }
                     } catch (Exception e) {
 
                     }

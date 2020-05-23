@@ -5,6 +5,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -41,6 +42,8 @@ public class DeliveryManagerActivity extends BaseActivity {
     private List<DeliveryUserInfoEntitiy.ContentBean.CommunityBean> listInfo = new ArrayList<>();
     private RecyclerView rv_delivery_area;
     private DeliveryAreaAdapter areaAdapter;
+    private RelativeLayout rl_delivery_nomsg;
+    private RelativeLayout view_tips;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +59,8 @@ public class DeliveryManagerActivity extends BaseActivity {
         rv_delivery = findViewById(R.id.rv_delivery);
         tv_deliery_area = findViewById(R.id.tv_deliery_area);
         rv_delivery_area = findViewById(R.id.rv_delivery_area);
+        rl_delivery_nomsg = findViewById(R.id.rl_delivery_nomsg);
+        view_tips = findViewById(R.id.view_tips);
         rv_delivery_area.setLayoutManager(new LinearLayoutManager(this));
         ll_deliery_area.setOnClickListener(v -> {
             if (listInfo.size() > 0) {
@@ -67,13 +72,26 @@ public class DeliveryManagerActivity extends BaseActivity {
                     areaAdapter.setData(listInfo);
                 }
                 areaAdapter.setCallBack((position, url, auth_type) -> {
-                    spUtils.saveStringData(SpConstants.storage.DELIVERYNAME, listInfo.get(position).getCommunityName());
-                    spUtils.saveStringData(SpConstants.storage.DELIVERYUUID, listInfo.get(position).getCommunityUuid());
-                    rv_delivery_area.setVisibility(View.GONE);
-                    tv_deliery_area.setText(listInfo.get(position).getCommunityName());
+                    setAreaData(position);
                 });
             }
         });
+    }
+
+    private void setAreaData(int position) {
+        spUtils.saveStringData(SpConstants.storage.DELIVERYNAME, listInfo.get(position).getCommunityName());
+        spUtils.saveStringData(SpConstants.storage.DELIVERYUUID, listInfo.get(position).getCommunityUuid());
+        rv_delivery_area.setVisibility(View.GONE);
+        tv_deliery_area.setText(listInfo.get(position).getCommunityName());
+        if (listInfo.get(position).getPilotPlot().equals("2")) {//1是试点小区，2 是非试点小区
+            rv_delivery.setVisibility(View.GONE);
+            view_tips.setVisibility(View.GONE);
+            rl_delivery_nomsg.setVisibility(View.VISIBLE);
+        } else {
+            rv_delivery.setVisibility(View.VISIBLE);
+            view_tips.setVisibility(View.VISIBLE);
+            rl_delivery_nomsg.setVisibility(View.GONE);
+        }
     }
 
     private void initGetUserInfo() {
@@ -119,12 +137,11 @@ public class DeliveryManagerActivity extends BaseActivity {
     private void initSetUserInfo(String result) {
         DeliveryUserInfoEntitiy entitiy = new DeliveryUserInfoEntitiy();
         entitiy = GsonUtils.gsonToBean(result, DeliveryUserInfoEntitiy.class);
-
         for (int i = 0; i < entitiy.getContent().getCommunity().size(); i++) {
             listInfo.clear();
             listInfo.addAll(entitiy.getContent().getCommunity());
             if (i == 0) {
-                tv_deliery_area.setText(entitiy.getContent().getCommunity().get(0).getCommunityName());
+                setAreaData(i);
             }
         }
 
@@ -161,7 +178,7 @@ public class DeliveryManagerActivity extends BaseActivity {
                 bannerUrlList.add(dataBean.getImgUrl());
             }
             bga_banner.setAdapter((banner, itemView, model, position) ->
-                    GlideUtils.loadRoundImageDisplay(this, model, 10, (ImageView) itemView,
+                    GlideUtils.loadRoundImageDisplay(this, model, 15, (ImageView) itemView,
                             R.drawable.pic_banner_normal, R.drawable.pic_banner_normal));
             bga_banner.setDelegate((BGABanner.Delegate<ImageView, String>) (banner, itemView, model, position) -> {
                 if (position >= 0 && position < bannerUrlList.size()) {

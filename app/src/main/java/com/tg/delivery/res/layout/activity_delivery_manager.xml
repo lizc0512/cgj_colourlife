@@ -44,9 +44,10 @@
         <ImageView
             android:id="@+id/iv_deliery_area"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:src="@drawable/delivery_next" />
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/area_more" />
 
     </LinearLayout>
 
@@ -88,16 +89,41 @@
         android:layout_marginRight="@dimen/size_12dp"
         tools:listitem="@layout/item_delivery_content" />
 
+    <RelativeLayout
+        android:id="@+id/rl_delivery_nomsg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/iv_delivery_nomsg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:paddingLeft="@dimen/size_60dp"
+            android:src="@drawable/delivery_nomsg" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/iv_delivery_nomsg"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/size_10dp"
+            android:text="暂未开放" />
+
+    </RelativeLayout>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_delivery_area"
         android:layout_width="@dimen/size_200dp"
         android:layout_height="wrap_content"
         android:layout_below="@id/ll_deliery_area"
         android:layout_alignParentRight="true"
-        android:visibility="gone"
-        tools:listitem="@layout/item_delivery_area"
-        android:background="@drawable/bg_delivery_area"
         android:layout_marginTop="@dimen/size_5dp"
-        android:layout_marginRight="@dimen/size_25dp" />
+        android:layout_marginRight="@dimen/size_25dp"
+        android:background="@drawable/bg_delivery_area"
+        android:visibility="gone"
+        tools:listitem="@layout/item_delivery_area" />
 
 </RelativeLayout>

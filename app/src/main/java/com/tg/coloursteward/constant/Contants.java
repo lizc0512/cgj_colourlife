@@ -23,6 +23,8 @@ public interface Contants {
 //        String URL_LEKAI = "https://lekaiadminapi-door.colourlife.com";
 //        String ACCOUNT_ADDRESS = "https://account-finance.colourlife.com/";//新版彩钱包
 //        String DELIVERY_HOME_ADDRESS = "https://gexpressbackend-czytest.colourlife.com";
+//        String DELIVERY_NUMBER_ADDRESS = "https://kdbackend-czytest.colourlife.com"; //快单号
+//        String DELIVERY_COMPANY_ADDRESS = "https://gexpressbackend-czytest.colourlife.com";//快递公司
 //        String environment = "release";
 //        String cqj_appid = "327494513335603200";
 //        String TOKEN_ADDRESS = "https://oauth2czy.colourlife.com";

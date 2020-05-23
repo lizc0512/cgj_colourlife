@@ -1,5 +1,6 @@
 package com.tg.delivery.activity;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.hardware.Camera;
@@ -16,6 +17,8 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.hjq.permissions.OnPermission;
+import com.hjq.permissions.XXPermissions;
 import com.intsig.exp.sdk.ISCardScanActivity;
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.base.BaseActivity;
@@ -71,13 +74,25 @@ public class WarehousingActivity extends BaseActivity implements View.OnClickLis
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        useCamareSdk(true);
+        XXPermissions.with(this)
+                .constantRequest()
+                .permission(Manifest.permission.CAMERA)
+                .request(new OnPermission() {
+                    @Override
+                    public void hasPermission(List<String> granted, boolean isAll) {
+                        useCamareSdk(true);
+                    }
 
+                    @Override
+                    public void noPermission(List<String> denied, boolean quick) {
+                        ToastUtil.showShortToast(WarehousingActivity.this, "请在程序管理中，打开彩管家的拍照权限");
+                        XXPermissions.gotoPermissionSettings(WarehousingActivity.this);
+                    }
+                });
     }
 
     private void initData() {
         deliveryModel.getDeliveryCompany(0, this);
-
     }
 
     @Override
@@ -194,6 +209,7 @@ public class WarehousingActivity extends BaseActivity implements View.OnClickLis
         JSONArray jsonArray = new JSONArray();
         String communityUuid = spUtils.getStringData(SpConstants.storage.DELIVERYUUID, "");
         String communityName = spUtils.getStringData(SpConstants.storage.DELIVERYNAME, "");
+        String cropId = spUtils.getStringData(SpConstants.storage.CORPID, "");
         for (int i = 0; i < mList.size(); i++) {
             JSONObject jsonObject = new JSONObject();
             try {
@@ -204,18 +220,13 @@ public class WarehousingActivity extends BaseActivity implements View.OnClickLis
                 jsonObject.put("sendName", UserInfo.realname);
                 jsonObject.put("communityUuid", communityUuid);
                 jsonObject.put("communityName", communityName);
+                jsonObject.put("cropId", cropId);
                 jsonArray.put(jsonObject);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         }
-        JSONObject js = new JSONObject();
-        try {
-            js.put("expressInfoList", jsonArray);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        deliveryModel.postDeliveryCommit(1, js.toString(), this);
+        deliveryModel.postDeliveryCommit(1, jsonArray.toString(), this);
     }
 
     @Override
@@ -232,9 +243,10 @@ public class WarehousingActivity extends BaseActivity implements View.OnClickLis
                 break;
             case 1:
                 if (!TextUtils.isEmpty(result)) {
-                    ToastUtil.showShortToast(currentActivity, "录入成功");
+                    ToastUtil.showShortToast(this, "录入成功");
                     listItem.clear();
                     adapter.setData(listItem);
+                    setNum();
                 }
                 break;
             case 2:

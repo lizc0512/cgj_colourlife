@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -49,6 +50,11 @@ public class ChangeCompanyAdapter extends RecyclerView.Adapter<ChangeCompanyAdap
     public void onBindViewHolder(@NonNull Holder holder, int position) {
         holder.tv_title.setText(list.get(position).getName());
         holder.callBack = transferCallBack;
+        if (list.get(position).getIs_default().equals("1")) {
+            holder.iv_show_done.setVisibility(View.VISIBLE);
+        } else {
+            holder.iv_show_done.setVisibility(View.GONE);
+        }
     }
 
     public void setCallBack(TransferCallBack back) {
@@ -63,10 +69,12 @@ public class ChangeCompanyAdapter extends RecyclerView.Adapter<ChangeCompanyAdap
     class Holder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private TextView tv_title;
         private TransferCallBack callBack;
+        private ImageView iv_show_done;
 
         public Holder(@NonNull View itemView) {
             super(itemView);
             tv_title = itemView.findViewById(R.id.tv_company);
+            iv_show_done = itemView.findViewById(R.id.iv_show_done);
             tv_title.setOnClickListener(this);
         }
 

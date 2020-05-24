@@ -273,17 +273,19 @@ public class DeliveryTransferActivity extends BaseActivity {
             public void updatePreviewUICallBack(Activity activity,
                                                 RelativeLayout rootView, final Camera camera) {// 支持简单自定义相机页面，在相机页面上添加一层ui
                 // TODO Auto-generated method stub
-                currentActivity = activity;
-                RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(
-                        RelativeLayout.LayoutParams.WRAP_CONTENT,
-                        RelativeLayout.LayoutParams.WRAP_CONTENT);
-                lp.addRule(RelativeLayout.CENTER_HORIZONTAL,
-                        RelativeLayout.TRUE);
-                // **********************************添加动态的布局
-                LayoutInflater inflater = getLayoutInflater();
-                View view = inflater.inflate(R.layout.activity_sweep_code, null);
-                initView(view);
-                rootView.addView(view, lp);
+                if(currentActivity==null){
+                    currentActivity = activity;
+                    RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(
+                            RelativeLayout.LayoutParams.WRAP_CONTENT,
+                            RelativeLayout.LayoutParams.WRAP_CONTENT);
+                    lp.addRule(RelativeLayout.CENTER_HORIZONTAL,
+                            RelativeLayout.TRUE);
+                    // **********************************添加动态的布局
+                    LayoutInflater inflater = getLayoutInflater();
+                    View view = inflater.inflate(R.layout.activity_sweep_code, null);
+                    initView(view);
+                    rootView.addView(view, lp);
+                }
             }
 
             @Override

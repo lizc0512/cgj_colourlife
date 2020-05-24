@@ -218,7 +218,11 @@ public class DeliveryConfirmActivity extends BaseActivity {
                         }
                         templateTotal = templateMsgList.size();
                         if (templateTotal> 0) {
-                            smsContentLength = templateMsgList.get(0).getSmsContentLength();
+                            DeliverySmsTemplateEntity.ContentBean.ListBean.ChildListBean  childListBean=   templateMsgList.get(0);
+                            if (message_sb.isOpened()){
+                                smsTemplateId=childListBean.getSmsUserTemplateId();
+                            }
+                            smsContentLength = childListBean.getSmsContentLength();
                             showMssageCount();
                             deliveryMsgTemplateAdapter.notifyDataSetChanged();
                         }

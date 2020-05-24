@@ -54,6 +54,22 @@ public class DeliverySmsTemplateEntity extends BaseContentEntity {
         }
 
         public static class ListBean {
+            public String getSmsUserTemplatePlace() {
+                return smsUserTemplatePlace;
+            }
+
+            public void setSmsUserTemplatePlace(String smsUserTemplatePlace) {
+                this.smsUserTemplatePlace = smsUserTemplatePlace;
+            }
+
+            public int getSmsContentLength() {
+                return smsContentLength;
+            }
+
+            public void setSmsContentLength(int smsContentLength) {
+                this.smsContentLength = smsContentLength;
+            }
+
             /**
              * smsUserUemplatePlace :
              * smsManagerModel : https://gexpress-czytest.colourlife.com/new_express/#/pages/message/message
@@ -69,37 +85,18 @@ public class DeliverySmsTemplateEntity extends BaseContentEntity {
              * smsUserTemplateContent : 1
              */
 
-            private String smsUserUemplatePlace;
-            private String smsManagerModel;
+            private String smsUserTemplatePlace;
+            private int smsContentLength;
             private String smsUserTemplatePhone;
             private String smsTemplateId;
             private String smsUserTemplateContent;
 
-            public int getSmsUserTemplateLength() {
-                return smsUserTemplateLength;
-            }
 
-            public void setSmsUserTemplateLength(int smsUserTemplateLength) {
-                this.smsUserTemplateLength = smsUserTemplateLength;
-            }
 
-            private int smsUserTemplateLength;
 
-            public String getSmsUserUemplatePlace() {
-                return smsUserUemplatePlace;
-            }
 
-            public void setSmsUserUemplatePlace(String smsUserUemplatePlace) {
-                this.smsUserUemplatePlace = smsUserUemplatePlace;
-            }
 
-            public String getSmsManagerModel() {
-                return smsManagerModel;
-            }
 
-            public void setSmsManagerModel(String smsManagerModel) {
-                this.smsManagerModel = smsManagerModel;
-            }
 
             public String getSmsUserTemplatePhone() {
                 return smsUserTemplatePhone;

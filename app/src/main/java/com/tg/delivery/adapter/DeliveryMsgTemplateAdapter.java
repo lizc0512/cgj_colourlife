@@ -75,7 +75,7 @@ public class DeliveryMsgTemplateAdapter extends RecyclerView.Adapter<DeliveryMsg
     @Override
     public void onBindViewHolder(@NonNull DefaultViewHolder defaultViewHolder, int position) {
         DeliverySmsTemplateEntity.ContentBean.ListBean listBean = templateMsgList.get(position);
-        defaultViewHolder.tv_sms_title.setText(listBean.getSmsUserUemplatePlace());
+        defaultViewHolder.tv_sms_title.setText(listBean.getSmsUserTemplatePlace());
         String sms_template_content = listBean.getSmsUserTemplateContent();
         defaultViewHolder.tv_sms_content.setText(toSBC(sms_template_content));
         if (clickPos == position) {

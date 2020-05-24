@@ -127,6 +127,7 @@ public class DeliveryConfirmActivity extends BaseActivity  {
          deliveryMsgTemplateAdapter=new DeliveryMsgTemplateAdapter(DeliveryConfirmActivity.this,templateMsgList);
          LinearLayoutManager  linearLayoutManager=new LinearLayoutManager(DeliveryConfirmActivity.this,LinearLayoutManager.VERTICAL,false);
          rv_message_list.setVisibility(View.INVISIBLE);
+         tv_sms_num.setVisibility(View.GONE);
          rv_message_list.setLayoutManager(linearLayoutManager);
          rv_message_list.setAdapter(deliveryMsgTemplateAdapter);
         deliveryMsgTemplateAdapter.setOnItemClickListener(var1 ->{
@@ -134,10 +135,7 @@ public class DeliveryConfirmActivity extends BaseActivity  {
             deliveryMsgTemplateAdapter.setClickPos(var1);
             DeliverySmsTemplateEntity.ContentBean.ListBean    listBean= templateMsgList.get(var1);
             smsTemplateId=listBean.getSmsTemplateId();
-            smsContentLength=listBean.getSmsUserTemplateLength();
-            if (smsContentLength==0){
-                smsContentLength=listBean.getSmsUserTemplateContent().length();
-            }
+            smsContentLength=listBean.getSmsContentLength();
             showMssageCount();
         });
         deliveryModel=new DeliveryModel(DeliveryConfirmActivity.this);
@@ -202,10 +200,7 @@ public class DeliveryConfirmActivity extends BaseActivity  {
                        if (null!=beanList){
                            templateMsgList.addAll(beanList) ;
                            if (templateMsgList.size()>0){
-                               smsContentLength=templateMsgList.get(0).getSmsUserTemplateLength();
-                               if (smsContentLength==0){
-                                   smsContentLength=templateMsgList.get(0).getSmsUserTemplateContent().length();
-                               }
+                               smsContentLength=templateMsgList.get(0).getSmsContentLength();
                                showMssageCount();
                            }
                            deliveryMsgTemplateAdapter.notifyDataSetChanged();

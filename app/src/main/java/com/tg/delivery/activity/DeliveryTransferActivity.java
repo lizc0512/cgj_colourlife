@@ -179,17 +179,15 @@ public class DeliveryTransferActivity extends BaseActivity {
         });
         tv_define_delivery.setOnClickListener(view -> {
             if (deliveryInforList.size() > 0) {
-                StringBuffer sb=new StringBuffer();
+                List<String> deliveryNumberList=new ArrayList<>();
                 for (DeliveryInforEntity.ContentBean dataBean : deliveryInforList){
                     String  courierNumber=dataBean.getCourierNumber();
-                    sb.append(courierNumber);
-                    sb.append(",");
+                    deliveryNumberList.add(courierNumber);
                 }
-                String  totalCurierNumber=sb.toString();
                 if (null == deliveryModel) {
                     deliveryModel = new DeliveryModel(currentActivity);
                 }
-                deliveryModel.submitDeliveryCourierNumbers(2,totalCurierNumber.substring(0,totalCurierNumber.length()-1), "3", UserInfo.mobile, "", "", -1, DeliveryTransferActivity.this);
+                deliveryModel.submitDeliveryCourierNumbers(2,GsonUtils.gsonString(deliveryNumberList), "3", UserInfo.mobile, "", "", -1, DeliveryTransferActivity.this);
             } else {
                 ToastUtil.showShortToast(currentActivity, "暂无运单进行交接");
             }
@@ -383,6 +381,7 @@ public class DeliveryTransferActivity extends BaseActivity {
                 break;
             case 2:
                 ToastUtil.showShortToast(DeliveryTransferActivity.this,"快件交接成功");
+                currentActivity.finish();
                 finish();
                 break;
         }

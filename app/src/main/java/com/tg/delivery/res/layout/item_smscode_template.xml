@@ -3,7 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:background="@color/white"
-    android:layout_height="@dimen/size_110dp">
+    android:minHeight="@dimen/size_110dp"
+    android:layout_height="wrap_content">
 
 
     <ImageView
@@ -22,7 +23,8 @@
         android:layout_height="wrap_content"
         android:layout_toRightOf="@id/iv_sms_choice"
         android:layout_marginTop="18dp"
-        android:text="运单号:"
+        android:singleLine="true"
+        tools:text="运单号:"
         android:textColor="@color/color_25282e"
         android:textSize="@dimen/font_14sp" />
 
@@ -34,6 +36,7 @@
         android:layout_below="@id/tv_sms_title"
         android:layout_marginTop="10dp"
         android:lineSpacingExtra="@dimen/size_2dp"
+        android:layout_marginBottom="5dp"
         android:layout_toRightOf="@id/iv_sms_choice"
         android:textColor="@color/color_25282e"
         android:textSize="@dimen/font_14sp"

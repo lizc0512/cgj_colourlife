@@ -212,17 +212,15 @@ public class DeliveryScannerActivity extends BaseActivity {
         tv_define_delivery.setOnClickListener(view -> {
             if (deliveryInforList.size()>0){
                 Intent it = new Intent(currentActivity, DeliveryConfirmActivity.class);
-                StringBuffer sb=new StringBuffer();
+                List<String> deliveryNumberList=new ArrayList<>();
                 ArrayList<Integer>  lengthList=new ArrayList<>();
                 for (DeliveryInforEntity.ContentBean dataBean : deliveryInforList){
                     String  courierNumber=dataBean.getCourierNumber();
                     String  courierCompany=dataBean.getCourierCompany();
-                    sb.append(courierNumber);
-                    sb.append(",");
+                    deliveryNumberList.add(courierNumber);
                     lengthList.add(courierNumber.length()+courierCompany.length());
                 }
-                String  totalCurierNumber=sb.toString();
-                it.putExtra(COURIERNUMBERS,totalCurierNumber.substring(0,totalCurierNumber.length()-1));
+                it.putExtra(COURIERNUMBERS,GsonUtils.gsonString(deliveryNumberList));
                 it.putIntegerArrayListExtra(COURIERLENGTHLIST,lengthList);
                 it.putExtra(COURIERSIZE,deliveryInforList.size());
                 startActivity(it);

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
@@ -10,122 +11,197 @@
         android:id="@+id/top_bind_mobile"
         layout="@layout/base_actionbar" />
 
-    <View
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_data"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/size_8dp"
-        android:background="@color/line_mine_bg"
-        app:layout_constraintTop_toBottomOf="@id/top_bind_mobile" />
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/size_44dp"
+        android:visibility="gone">
 
-    <TextView
-        android:id="@+id/tv_bindmobile_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/size_60dp"
-        android:text="@string/user_bindmobile_title_tv"
-        android:textColor="@color/color_131719"
-        android:textSize="@dimen/font_16sp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/top_bind_mobile" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/size_8dp"
+            android:background="@color/line_mine_bg"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/tv_bindmobile_tip"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/size_20dp"
-        android:text="@string/user_bindmobile_tip_tv"
-        android:textColor="@color/color_999faa"
-        android:textSize="@dimen/font_14sp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_bindmobile_title" />
+        <TextView
+            android:id="@+id/tv_bindmobile_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/size_60dp"
+            android:text="@string/user_bindmobile_title_tv"
+            android:textColor="@color/color_131719"
+            android:textSize="@dimen/font_16sp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <EditText
-        android:id="@+id/et_bindmobile_phone"
+        <TextView
+            android:id="@+id/tv_bindmobile_tip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/size_20dp"
+            android:text="@string/user_bindmobile_tip_tv"
+            android:textColor="@color/color_999faa"
+            android:textSize="@dimen/font_14sp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_bindmobile_title" />
+
+        <EditText
+            android:id="@+id/et_bindmobile_phone"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/size_44dp"
+            android:layout_marginLeft="@dimen/size_40dp"
+            android:layout_marginTop="@dimen/size_28dp"
+            android:layout_marginRight="@dimen/size_40dp"
+            android:background="@null"
+            android:hint="@string/user_bindmobile_input_tv"
+            android:inputType="phone"
+            android:singleLine="true"
+            android:textColor="@color/color_131719"
+            android:textColorHint="@color/login_tv_gray_account"
+            android:textSize="@dimen/font_16sp"
+            app:layout_constraintTop_toBottomOf="@id/tv_bindmobile_tip" />
+
+        <ImageView
+            android:id="@+id/iv_bindmobile_deloa"
+            android:layout_width="@dimen/size_22dp"
+            android:layout_height="@dimen/size_22dp"
+            android:layout_marginEnd="@dimen/size_5dp"
+            android:layout_marginRight="@dimen/size_5dp"
+            android:contentDescription="@null"
+            android:src="@mipmap/login_icon_delete_normal"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@id/et_bindmobile_phone"
+            app:layout_constraintRight_toRightOf="@id/et_bindmobile_phone"
+            app:layout_constraintTop_toTopOf="@+id/et_bindmobile_phone" />
+
+        <View
+            android:id="@+id/view_bindmobile_view"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/size_1dp"
+            android:layout_marginLeft="@dimen/size_40dp"
+            android:layout_marginRight="@dimen/size_40dp"
+            android:background="@color/line_login_index"
+            app:layout_constraintTop_toBottomOf="@id/et_bindmobile_phone" />
+
+        <EditText
+            android:id="@+id/et_bindmobile_mms"
+            android:layout_width="@dimen/size_200dp"
+            android:layout_height="@dimen/size_44dp"
+            android:layout_marginLeft="@dimen/size_40dp"
+            android:layout_marginRight="@dimen/size_40dp"
+            android:background="@null"
+            android:hint="@string/user_bindmobile_mms_tv"
+            android:inputType="number"
+            android:singleLine="true"
+            android:textColor="@color/color_131719"
+            android:textColorHint="@color/login_tv_gray_account"
+            android:textSize="@dimen/font_16sp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/view_bindmobile_view" />
+
+        <TextView
+            android:id="@+id/tv_bindmobile_getmms"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/size_40dp"
+            android:text="@string/user_bindmobile_getmms_tv"
+            android:textColor="@color/blue_index"
+            android:textSize="@dimen/font_12sp"
+            app:layout_constraintBottom_toBottomOf="@id/et_bindmobile_mms"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@id/et_bindmobile_mms" />
+
+        <View
+            android:id="@+id/view_bindmobile_viewtwo"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/size_1dp"
+            android:layout_marginLeft="@dimen/size_40dp"
+            android:layout_marginRight="@dimen/size_40dp"
+            android:background="@color/line_login_index"
+            app:layout_constraintTop_toBottomOf="@id/et_bindmobile_mms" />
+
+        <Button
+            android:id="@+id/btn_bindmobile_bind"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/size_44dp"
+            android:layout_marginLeft="@dimen/size_30dp"
+            android:layout_marginTop="@dimen/size_20dp"
+            android:layout_marginRight="@dimen/size_30dp"
+            android:background="@drawable/bg_login_button_gray"
+            android:stateListAnimator="@null"
+            android:text="@string/user_bindmobile_bind_tv"
+            android:textColor="@color/line_login_button"
+            android:textSize="@dimen/font_16sp"
+            app:layout_constraintTop_toBottomOf="@id/et_bindmobile_mms" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <RelativeLayout
+        android:id="@+id/rl_show"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/size_44dp"
-        android:layout_marginLeft="@dimen/size_40dp"
-        android:layout_marginTop="@dimen/size_28dp"
-        android:layout_marginRight="@dimen/size_40dp"
-        android:background="@null"
-        android:hint="@string/user_bindmobile_input_tv"
-        android:inputType="phone"
-        android:singleLine="true"
-        android:textColor="@color/color_131719"
-        android:textColorHint="@color/login_tv_gray_account"
-        android:textSize="@dimen/font_16sp"
-        app:layout_constraintTop_toBottomOf="@id/tv_bindmobile_tip" />
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/top_bind_mobile">
 
-    <ImageView
-        android:id="@+id/iv_bindmobile_deloa"
-        android:layout_width="@dimen/size_22dp"
-        android:layout_height="@dimen/size_22dp"
-        android:layout_marginEnd="@dimen/size_5dp"
-        android:layout_marginRight="@dimen/size_5dp"
-        android:contentDescription="@null"
-        android:src="@mipmap/login_icon_delete_normal"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="@id/et_bindmobile_phone"
-        app:layout_constraintRight_toRightOf="@id/et_bindmobile_phone"
-        app:layout_constraintTop_toTopOf="@+id/et_bindmobile_phone" />
+        <ImageView
+            android:id="@+id/iv_phone"
+            android:layout_width="@dimen/size_134dp"
+            android:layout_height="@dimen/size_134dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/size_42dp"
+            android:src="@drawable/phone_show" />
 
-    <View
-        android:id="@+id/view_bindmobile_view"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/size_1dp"
-        android:layout_marginLeft="@dimen/size_40dp"
-        android:layout_marginRight="@dimen/size_40dp"
-        android:background="@color/line_login_index"
-        app:layout_constraintTop_toBottomOf="@id/et_bindmobile_phone" />
+        <TextView
+            android:id="@+id/tv_tips"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/iv_phone"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/size_7dp"
+            android:text="当前手机号"
+            android:textColor="@color/color_25282e"
+            android:textSize="@dimen/font_15sp" />
 
-    <EditText
-        android:id="@+id/et_bindmobile_mms"
-        android:layout_width="@dimen/size_200dp"
-        android:layout_height="@dimen/size_44dp"
-        android:layout_marginLeft="@dimen/size_40dp"
-        android:layout_marginRight="@dimen/size_40dp"
-        android:background="@null"
-        android:hint="@string/user_bindmobile_mms_tv"
-        android:inputType="number"
-        android:singleLine="true"
-        android:textColor="@color/color_131719"
-        android:textColorHint="@color/login_tv_gray_account"
-        android:textSize="@dimen/font_16sp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/view_bindmobile_view" />
+        <TextView
+            android:id="@+id/tv_user_phone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_tips"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/size_7dp"
+            android:textColor="@color/color_25282e"
+            android:textSize="@dimen/font_15sp"
+            tools:text="00000000000" />
 
-    <TextView
-        android:id="@+id/tv_bindmobile_getmms"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginRight="@dimen/size_40dp"
-        android:text="@string/user_bindmobile_getmms_tv"
-        android:textColor="@color/blue_index"
-        android:textSize="@dimen/font_12sp"
-        app:layout_constraintBottom_toBottomOf="@id/et_bindmobile_mms"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="@id/et_bindmobile_mms" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_user_phone"
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="@dimen/size_40dp"
+            android:layout_marginTop="@dimen/size_22dp"
+            android:layout_marginRight="@dimen/size_40dp"
+            android:gravity="center"
+            android:text="此手机号将显示在个人信息中，你也可以使用此手机号进行登录"
+            android:textColor="@color/color_6D7278"
+            android:textSize="@dimen/font_15sp" />
 
-    <View
-        android:id="@+id/view_bindmobile_viewtwo"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/size_1dp"
-        android:layout_marginLeft="@dimen/size_40dp"
-        android:layout_marginRight="@dimen/size_40dp"
-        android:background="@color/line_login_index"
-        app:layout_constraintTop_toBottomOf="@id/et_bindmobile_mms" />
 
-    <Button
-        android:id="@+id/btn_bindmobile_bind"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/size_44dp"
-        android:layout_marginLeft="@dimen/size_30dp"
-        android:layout_marginTop="@dimen/size_20dp"
-        android:layout_marginRight="@dimen/size_30dp"
-        android:background="@drawable/bg_login_button_gray"
-        android:stateListAnimator="@null"
-        android:text="@string/user_bindmobile_bind_tv"
-        android:textColor="@color/line_login_button"
-        android:textSize="@dimen/font_16sp"
-        app:layout_constraintTop_toBottomOf="@id/et_bindmobile_mms" />
+        <TextView
+            android:id="@+id/tv_user_changephone"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/size_44dp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginLeft="@dimen/size_15dp"
+            android:layout_marginRight="@dimen/size_15dp"
+            android:layout_marginBottom="@dimen/size_25dp"
+            android:background="@drawable/bg_login_button_blue"
+            android:gravity="center"
+            android:text="修改手机号"
+            android:textColor="@color/white"
+            android:textSize="@dimen/font_14sp" />
+    </RelativeLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

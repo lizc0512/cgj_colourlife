@@ -22,4 +22,95 @@
         android:textColor="@color/login_tv"
         android:textSize="@dimen/font_14sp" />
 
+
+    <RelativeLayout
+        android:id="@+id/rl_about_introduce"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/size_44dp"
+        android:layout_marginTop="@dimen/size_40dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/size_30dp"
+            android:text="彩管家产品介绍"
+            android:textColor="@color/color_25282e"
+            android:textSize="@dimen/font_14sp" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/size_30dp"
+            android:padding="@dimen/size_5dp"
+            android:src="@drawable/about_next" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/size_1px"
+            android:layout_alignParentBottom="true"
+            android:background="@color/bg_color" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/rl_about_privacy"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/size_44dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/size_30dp"
+            android:text="彩管家隐私条款"
+            android:textColor="@color/color_25282e"
+            android:textSize="@dimen/font_14sp" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/size_30dp"
+            android:padding="@dimen/size_5dp"
+            android:src="@drawable/about_next" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/size_1px"
+            android:layout_alignParentBottom="true"
+            android:background="@color/bg_color" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/rl_about_agreement"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/size_44dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/size_30dp"
+            android:text="彩管家用户协议"
+            android:textColor="@color/color_25282e"
+            android:textSize="@dimen/font_14sp" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/size_30dp"
+            android:padding="@dimen/size_5dp"
+            android:src="@drawable/about_next" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/size_1px"
+            android:layout_alignParentBottom="true"
+            android:background="@color/bg_color" />
+    </RelativeLayout>
 </LinearLayout>

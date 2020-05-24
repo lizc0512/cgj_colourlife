@@ -9,12 +9,13 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Message;
 import android.provider.Settings;
-import androidx.annotation.RequiresApi;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import androidx.annotation.RequiresApi;
 
 import com.hjq.permissions.OnPermission;
 import com.hjq.permissions.XXPermissions;
@@ -32,12 +33,12 @@ import com.tg.point.activity.ChangePawdStyleActivity;
 import com.tg.point.activity.ChangePawdTwoStepActivity;
 import com.tg.point.entity.PointTransactionTokenEntity;
 import com.tg.point.model.PointModel;
+import com.tg.setting.SetLoginPwdActivity;
 import com.tg.setting.adapter.UpdateAdapter;
 import com.tg.setting.entity.VersionEntity;
 import com.tg.setting.model.SettingModel;
 import com.tg.setting.view.DeleteMsgDialog;
 import com.tg.setting.view.UpdateVerSionDialog;
-import com.tg.user.model.UserModel;
 import com.youmai.hxsdk.HuxinSdkManager;
 import com.youmai.hxsdk.config.AppConfig;
 import com.youmai.hxsdk.utils.AppUtils;
@@ -62,6 +63,7 @@ public class SettingActivity extends BaseActivity implements OnClickListener, Ht
     private RelativeLayout rl_setting_aboutus;
     private RelativeLayout rl_setting_update;
     private RelativeLayout rl_setting_imstatus;
+    private RelativeLayout rl_setting_loginpwd;
     private TextView tv_setting_quit;
     private TextView tv_setting_imstatus;
     private View tv_setting_point;
@@ -99,7 +101,9 @@ public class SettingActivity extends BaseActivity implements OnClickListener, Ht
         tv_setting_nowver = findViewById(R.id.tv_setting_nowver);
         tv_setting_newver = findViewById(R.id.tv_setting_newver);
         tv_setting_point = findViewById(R.id.tv_setting_point);
+        rl_setting_loginpwd = findViewById(R.id.rl_setting_loginpwd);
         rl_setting_paypwd.setOnClickListener(this);
+        rl_setting_loginpwd.setOnClickListener(this);
         rl_setting_changepwd.setOnClickListener(this);
         rl_setting_clearinfo.setOnClickListener(this);
         rl_setting_aboutus.setOnClickListener(this);
@@ -107,8 +111,8 @@ public class SettingActivity extends BaseActivity implements OnClickListener, Ht
         tv_setting_quit.setOnClickListener(this);
         String versionShort = BuildConfig.VERSION_NAME;
         tv_setting_nowver.setText(versionShort);
-        String cropId=spUtils.getStringData(SpConstants.storage.CORPID,"");
-        if(!Contants.APP.CORP_UUID.equals(cropId)){
+        String cropId = spUtils.getStringData(SpConstants.storage.CORPID, "");
+        if (!Contants.APP.CORP_UUID.equals(cropId)) {
             rl_setting_paypwd.setVisibility(View.GONE);
         }
         if (!HuxinSdkManager.instance().isConnect()) {
@@ -179,6 +183,9 @@ public class SettingActivity extends BaseActivity implements OnClickListener, Ht
                 break;
             case R.id.rl_setting_changepwd:
                 startActivity(new Intent(this, ModifiedPasswordActivity.class));
+                break;
+            case R.id.rl_setting_loginpwd:
+                startActivity(new Intent(this, SetLoginPwdActivity.class));
                 break;
             case R.id.rl_setting_clearinfo:
                 DialogFactory.getInstance().showDialog(SettingActivity.this, new OnClickListener() {

@@ -9,7 +9,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.base.BaseActivity;
@@ -32,6 +35,7 @@ import com.tg.user.model.UserModel;
  */
 public class BindMobileActivity extends BaseActivity implements View.OnClickListener, HttpResponse {
     public static final String ISFROMUSER = "isfromuser";
+    public static final String PHONE = "phone";
     private TextView tv_base_title;
     private ImageView iv_base_back;
     private TextView tv_bindmobile_getmms;
@@ -43,6 +47,10 @@ public class BindMobileActivity extends BaseActivity implements View.OnClickList
     private MyTimeCount myTimeCount;
     private Boolean fromHome = false;
     private String phone;
+    private TextView tv_user_changephone;
+    private TextView tv_user_phone;
+    private RelativeLayout rl_show;
+    private ConstraintLayout cl_data;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +63,10 @@ public class BindMobileActivity extends BaseActivity implements View.OnClickList
 
     private void initView() {
         tv_base_title = findViewById(R.id.tv_base_title);
+        cl_data = findViewById(R.id.cl_data);
+        rl_show = findViewById(R.id.rl_show);
+        tv_user_phone = findViewById(R.id.tv_user_phone);
+        tv_user_changephone = findViewById(R.id.tv_user_changephone);
         iv_base_back = findViewById(R.id.iv_base_back);
         tv_bindmobile_getmms = findViewById(R.id.tv_bindmobile_getmms);
         iv_bindmobile_deloa = findViewById(R.id.iv_bindmobile_deloa);
@@ -65,7 +77,9 @@ public class BindMobileActivity extends BaseActivity implements View.OnClickList
         btn_bindmobile_bind.setOnClickListener(this);
         tv_bindmobile_getmms.setOnClickListener(this);
         iv_bindmobile_deloa.setOnClickListener(this);
-
+        tv_user_changephone.setOnClickListener(this);
+        String phone = getIntent().getStringExtra(PHONE);
+        tv_user_phone.setText(phone);
 
         tv_base_title.setText(getString(R.string.user_bindmobile_tv));
         et_bindmobile_phone.addTextChangedListener(new TextWatcher() {
@@ -169,6 +183,10 @@ public class BindMobileActivity extends BaseActivity implements View.OnClickList
                     return;
                 }
                 userModel.postBindMobile(1, phone, mms, this);
+                break;
+            case R.id.tv_user_changephone:
+                rl_show.setVisibility(View.GONE);
+                cl_data.setVisibility(View.VISIBLE);
                 break;
         }
     }

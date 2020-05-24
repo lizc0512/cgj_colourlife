@@ -143,6 +143,8 @@ public class DeliveryModel extends BaseModel {
         params.put("sendStatus", sendStatus);
         params.put("loginMobile", loginMobile);
         params.put("name", name);
+        String colorToken = SharedPreferencesUtils.getKey(mContext, SpConstants.accessToken.accssToken);
+        params.put("colorToken", colorToken);
         if (finishType != -1) {
             params.put("finishType", finishType);
         }

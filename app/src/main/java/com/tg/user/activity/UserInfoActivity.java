@@ -25,9 +25,14 @@ import com.tg.coloursteward.baseModel.RequestEncryptionUtils;
 import com.tg.coloursteward.constant.Contants;
 import com.tg.coloursteward.constant.SpConstants;
 import com.tg.coloursteward.info.UserInfo;
+import com.tg.coloursteward.net.HttpTools;
+import com.tg.coloursteward.net.ResponseData;
 import com.tg.coloursteward.util.GlideUtils;
+import com.tg.coloursteward.util.GsonUtils;
+import com.tg.coloursteward.util.SharedPreferencesUtils;
 import com.tg.coloursteward.util.ToastUtil;
 import com.tg.coloursteward.util.Tools;
+import com.tg.user.entity.OauthUserEntity;
 import com.tg.user.model.UserModel;
 import com.youmai.hxsdk.router.APath;
 import com.youmai.hxsdk.view.pickerview.OptionsPickerView;
@@ -157,8 +162,20 @@ public class UserInfoActivity extends BaseActivity implements OnClickListener, H
             } else if (requestCode == 1001) {
                 String name = data.getStringExtra("companyName");
                 tv_user_company.setText(name);
+                initRefreshUserInfo();
             }
         }
+    }
+
+    /**
+     * 重新请求用户信息，更新数据
+     */
+    private void initRefreshUserInfo() {
+        String corpId = spUtils.getStringData(SpConstants.storage.CORPID, "");
+        String colorToken = SharedPreferencesUtils.getKey(this, SpConstants.accessToken.accssToken);
+        UserModel userModel = new UserModel(this);
+        userModel.getUserInfoByCorp(2, corpId, colorToken, true, this);
+        spUtils.saveBooleanData(SpConstants.UserModel.ISREFRESHWORK, true);
     }
 
     /**
@@ -351,6 +368,23 @@ public class UserInfoActivity extends BaseActivity implements OnClickListener, H
                     isSaveHeadImg = true;
                     submitUserInfo();
                     freshImg();
+                }
+                break;
+            case 2:
+                if (!TextUtils.isEmpty(result)) {
+                    String response = HttpTools.getContentString(result);
+                    OauthUserEntity oauthUserEntity = new OauthUserEntity();
+                    try {
+                        oauthUserEntity = GsonUtils.gsonToBean(result, OauthUserEntity.class);
+                        int status = oauthUserEntity.getContent().getStatus();
+                        if (status == 0) {
+                            ResponseData data = HttpTools.getResponseContentObject(response);
+                            Tools.loadUserInfo(data, result);
+                            spUtils.saveStringData(SpConstants.storage.ORG_UUID, data.getString("org_uuid"));
+                            spUtils.saveStringData(SpConstants.UserModel.ACCOUNT_UUID, data.getString("account_uuid"));
+                        }
+                    } catch (Exception e) {
+                    }
                 }
                 break;
         }

@@ -2,7 +2,7 @@ package com.tg.coloursteward.view.dialog;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import androidx.constraintlayout.widget.ConstraintLayout;
+import android.content.Intent;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
@@ -15,9 +15,12 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.constraintlayout.widget.ConstraintLayout;
+
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.util.ToastUtil;
 import com.tg.coloursteward.util.Tools;
+import com.tg.setting.activity.SetLoginPwdActivity;
 import com.tg.user.callback.CreateDialgCallBack;
 
 /**
@@ -36,6 +39,7 @@ public class DialogFactory {
 
     private Button btnOk;
     private Button btnCancel;
+    private TextView tv_dialog_close;
 
     private DialogFactory() {
     }
@@ -251,6 +255,43 @@ public class DialogFactory {
         }
         tvContent.setText(content);
         dialog_title.setText(title);
+        dialog.show();
+    }
+
+    /**
+     * 单选弹窗，不可取消
+     *
+     * @param activity
+     * @param title
+     * @param content
+     */
+    public void showSingleNoCancelDialog(Activity activity, String title, String content, String ok) {
+        if (dialog == null || dialogActivity != activity) {
+            dialogActivity = activity;
+            DisplayMetrics metrics = Tools.getDisplayMetrics(activity);
+            dialog = new AlertDialog.Builder(activity).create();
+            Window window = dialog.getWindow();
+            dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+            dialog.show();
+            LinearLayout layout = (LinearLayout) LayoutInflater.from(activity)
+                    .inflate(R.layout.dialog_income_fee, null);
+            tvContent = layout.findViewById(R.id.tv_income_msg);
+            dialog_title = layout.findViewById(R.id.dialog_title);
+            tv_dialog_close = layout.findViewById(R.id.tv_dialog_close);
+            tv_dialog_close.setOnClickListener(v -> {
+                        Intent it = new Intent(activity, SetLoginPwdActivity.class);
+                        activity.startActivity(it);
+                        dialog.dismiss();
+                    }
+            );
+            window.setContentView(layout);
+            WindowManager.LayoutParams p = window.getAttributes();
+            p.width = ((int) (metrics.widthPixels - 80 * metrics.density));
+            window.setAttributes(p);
+        }
+        tvContent.setText(content);
+        dialog_title.setText(title);
+        tv_dialog_close.setText(ok);
         dialog.show();
     }
 }

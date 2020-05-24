@@ -33,7 +33,6 @@ import com.tg.point.activity.ChangePawdStyleActivity;
 import com.tg.point.activity.ChangePawdTwoStepActivity;
 import com.tg.point.entity.PointTransactionTokenEntity;
 import com.tg.point.model.PointModel;
-import com.tg.setting.SetLoginPwdActivity;
 import com.tg.setting.adapter.UpdateAdapter;
 import com.tg.setting.entity.VersionEntity;
 import com.tg.setting.model.SettingModel;
@@ -153,6 +152,15 @@ public class SettingActivity extends BaseActivity implements OnClickListener, Ht
                 }
             }
         });
+
+        boolean ishavepwd = spUtils.getBooleanData(SpConstants.UserModel.NoHAVEPWD, false);
+        if (ishavepwd) {//没有设置密码，显示设置密码按钮
+            rl_setting_loginpwd.setVisibility(View.VISIBLE);
+            rl_setting_changepwd.setVisibility(View.GONE);
+        } else {
+            rl_setting_loginpwd.setVisibility(View.GONE);
+            rl_setting_changepwd.setVisibility(View.VISIBLE);
+        }
 
     }
 

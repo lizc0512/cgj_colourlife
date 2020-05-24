@@ -15,12 +15,23 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.activity.EmployeeDataActivity;
 import com.tg.coloursteward.activity.HomeContactOrgActivity;
 import com.tg.coloursteward.constant.Contants;
+import com.tg.coloursteward.constant.SpConstants;
 import com.tg.coloursteward.info.FamilyInfo;
 import com.tg.coloursteward.info.UserInfo;
+import com.tg.coloursteward.util.SharedPreferencesUtils;
 import com.tg.coloursteward.util.StringUtils;
 import com.tg.coloursteward.util.Tools;
 import com.tg.coloursteward.view.dialog.ToastFactory;
@@ -50,14 +61,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import rx.Observable;
 import rx.Subscriber;
 import rx.Subscription;
@@ -139,6 +142,14 @@ public class ContactsFragment extends Fragment implements ItemEventListener {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        headContacts = ContactBeanData.contactList(mContext, ContactBeanData.TYPE_HOME);
+        getHeadList();
+        getCacheList();//读取本地缓存列表
+    }
+
+    @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         if (!ListUtils.isEmpty(contactList)) {
@@ -147,9 +158,9 @@ public class ContactsFragment extends Fragment implements ItemEventListener {
 
         initView(view);
 
-        getHeadList();
+//        getHeadList();
 
-        getCacheList();//读取本地缓存列表
+//        getCacheList();//读取本地缓存列表
 
         reqContacts();
 
@@ -178,11 +189,12 @@ public class ContactsFragment extends Fragment implements ItemEventListener {
 
         manager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(manager);
-
-        adapter = new ContactAdapter(mContext, contactList, headContacts.size(), this);
-        recyclerView.setAdapter(adapter);
-        recyclerView.addItemDecoration(new StickyHeaderDecoration(adapter));
-
+        try {
+            adapter = new ContactAdapter(mContext, contactList, headContacts.size(), this);
+            recyclerView.setAdapter(adapter);
+            recyclerView.addItemDecoration(new StickyHeaderDecoration(adapter));
+        } catch (Exception e) {
+        }
     }
 
     @Override
@@ -454,7 +466,7 @@ public class ContactsFragment extends Fragment implements ItemEventListener {
 
 
     /**
-     * 获取首页缓存列表
+     * 获取首页缓存列表 常用联系人
      */
     private void getCacheList() {
         String json = AppUtils.getStringSharedPreferences(mContext, "contents", "");
@@ -511,7 +523,7 @@ public class ContactsFragment extends Fragment implements ItemEventListener {
      */
     private void reqContacts() {
         String url = ColorsConfig.CONTACTS_CHILD_DATAS;
-
+        String corpId = SharedPreferencesUtils.getInstance().getStringData(SpConstants.storage.CORPID, "");
         ContentValues params = new ContentValues();
         params.put("orgID", "0");//架构UUID编号,0取顶级架构
         params.put("familyTypeId", "0");//族谱类型ID：0组织架构

@@ -32,7 +32,6 @@ import java.util.List;
 public class ChangeCompanyActivity extends BaseActivity {
 
     private RecyclerView rv_change_company;
-    private ChangeCompanyAdapter adapter;
     private List<CropListEntity.ContentBean> list = new ArrayList<>();
 
     @Override
@@ -52,11 +51,9 @@ public class ChangeCompanyActivity extends BaseActivity {
         String result = spUtils.getStringData(SpConstants.storage.CORPDATA, "");
         CropListEntity bean = GsonUtils.gsonToBean(result, CropListEntity.class);
         list.addAll(bean.getContent());
-        adapter = new ChangeCompanyAdapter(this, list);
+        ChangeCompanyAdapter adapter = new ChangeCompanyAdapter(this, list);
         rv_change_company.setAdapter(adapter);
-        adapter.setCallBack(position -> {
-            setHandle(position);
-        });
+        adapter.setCallBack(this::setHandle);
     }
 
     private void setHandle(int pos) {
@@ -69,7 +66,7 @@ public class ChangeCompanyActivity extends BaseActivity {
                     it.putExtra("companyName", name);
                     setResult(2001, it);
                     finish();
-                }, null, 1, "切换到" + name + "该组织架构下，APP的所有配置将根据你所在组织权限重新进行配置",
+                }, null, 1, "将切换到" + name + "组织架构下，APP的所有配置将根据你所在组织架构重新进行配置",
                 "切换", "取消");
     }
 

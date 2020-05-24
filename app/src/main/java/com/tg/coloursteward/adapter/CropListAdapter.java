@@ -1,9 +1,10 @@
 package com.tg.coloursteward.adapter;
 
 import android.content.Context;
-import androidx.annotation.Nullable;
 import android.view.View;
 import android.widget.TextView;
+
+import androidx.annotation.Nullable;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
@@ -14,8 +15,7 @@ import java.util.List;
 
 /**
  * @name ${lizc}
- * @class name：com.patrol.adapter
- * @class 巡逻防控适配器
+ * @class name：com.tg.coloursteward.adapter
  * @anthor ${lizc} QQ:510906433
  * @time 2019/1/18 21:39
  * @change

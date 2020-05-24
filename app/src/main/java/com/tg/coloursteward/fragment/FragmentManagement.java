@@ -2,6 +2,7 @@ package com.tg.coloursteward.fragment;
 
 import android.app.Activity;
 import android.content.ContentValues;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
@@ -37,12 +38,16 @@ import com.tg.coloursteward.serice.HomeService;
 import com.tg.coloursteward.util.DisplayUtil;
 import com.tg.coloursteward.util.GlideUtils;
 import com.tg.coloursteward.util.GsonUtils;
+import com.tg.coloursteward.util.LinkParseUtil;
 import com.tg.coloursteward.util.MicroAuthTimeUtils;
 import com.tg.coloursteward.util.SharedPreferencesUtils;
 import com.tg.coloursteward.util.TokenUtils;
 import com.tg.coloursteward.util.Tools;
 import com.tg.coloursteward.view.MicroViewPager;
 import com.tg.coloursteward.view.MyGridLayoutManager;
+import com.tg.delivery.activity.DeliveryManagerActivity;
+import com.tg.delivery.entity.DeliveryUserInfoEntitiy;
+import com.tg.delivery.model.DeliveryModel;
 import com.youmai.hxsdk.config.ColorsConfig;
 import com.youmai.hxsdk.http.OkHttpConnector;
 
@@ -79,12 +84,14 @@ public class FragmentManagement extends Fragment implements HttpResponse, View.O
     private HomeService homeService;
     private SwipeRefreshLayout sr_micro;
     private boolean TryAgain = true;
+    private DeliveryModel deliveryModel;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.fragment_management_layout, container, false);
         microModel = new MicroModel(mActivity);
+        cropUuid = SharedPreferencesUtils.getInstance().getStringData(SpConstants.storage.CORPID, "");
         initView();
         showCache();
         initData();
@@ -122,7 +129,7 @@ public class FragmentManagement extends Fragment implements HttpResponse, View.O
         microModel.getMicroList(1, corpUuid, access_token, this);
     }
 
-    private void initData() {
+    public void initData() {
         microModel.getCropList(0, this);
     }
 
@@ -226,7 +233,15 @@ public class FragmentManagement extends Fragment implements HttpResponse, View.O
                     if (null == mMicroAuthTimeUtils) {
                         mMicroAuthTimeUtils = new MicroAuthTimeUtils();
                     }
-                    mMicroAuthTimeUtils.IsAuthTime(mActivity, url, auth_type, "");
+                    if ("colourlife://proto?type=express".equals(url)) {
+                        if (null == deliveryModel) {
+                            deliveryModel = new DeliveryModel(mActivity);
+                        }
+                        String colorToken = SharedPreferencesUtils.getKey(mActivity, SpConstants.accessToken.accssToken);
+                        deliveryModel.postDeliveryUserInfo(2, colorToken, true, this);
+                    } else {
+                        mMicroAuthTimeUtils.IsAuthTime(mActivity, url, auth_type, "");
+                    }
                 });
             }
         }
@@ -332,7 +347,15 @@ public class FragmentManagement extends Fragment implements HttpResponse, View.O
     @Override
     public void onResume() {
         super.onResume();
-        initLayout(cropUuid);
+        boolean isCorpRefresh = SharedPreferencesUtils.getInstance().getBooleanData(SpConstants.UserModel.ISREFRESHWORK, false);
+        if (isCorpRefresh) {
+            String uuid = SharedPreferencesUtils.getInstance().getStringData(SpConstants.storage.CORPID, "");
+            initLayout(uuid);
+            cropUuid = uuid;
+            SharedPreferencesUtils.getInstance().saveBooleanData(SpConstants.UserModel.ISREFRESHWORK, false);
+        } else {
+            initLayout(cropUuid);
+        }
         showFirstData = true;
     }
 
@@ -385,6 +408,7 @@ public class FragmentManagement extends Fragment implements HttpResponse, View.O
                 if (!TextUtils.isEmpty(result)) {
                     SharedPreferencesUtils.getInstance().saveStringData(SpConstants.UserModel.MICRODATA, result);
                     initInitialize(result);
+                    initData();
                     TryAgain = true;//请求成功状态改为True;
                 } else if (TryAgain) {//失败了重试一次，还不行就用缓存
                     initLayout(cropUuid);
@@ -394,6 +418,17 @@ public class FragmentManagement extends Fragment implements HttpResponse, View.O
                 } else {
                     String localCache = Contants.storage.MICRODATA;
                     initInitialize(localCache);
+                }
+                break;
+            case 2:
+                if (!TextUtils.isEmpty(result)) {
+                    DeliveryUserInfoEntitiy entitiy = new DeliveryUserInfoEntitiy();
+                    entitiy = GsonUtils.gsonToBean(result, DeliveryUserInfoEntitiy.class);
+                    if ("1".equals(entitiy.getContent().getAppFunction())) {
+                        LinkParseUtil.parse(mActivity, entitiy.getContent().getDataUrl(), "");
+                    } else {
+                        startActivity(new Intent(mActivity, DeliveryManagerActivity.class));
+                    }
                 }
                 break;
         }
@@ -477,9 +512,10 @@ public class FragmentManagement extends Fragment implements HttpResponse, View.O
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT,
                 true);
-        if (null == cropListAdapter) {
-            cropListAdapter = new CropListAdapter(mActivity, R.layout.item_micro_croplist, mList);
-        }
+        RecyclerView rv_crop = contentview.findViewById(R.id.rv_item_crop);
+        rv_crop.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false));
+        cropListAdapter = new CropListAdapter(mActivity, R.layout.item_micro_croplist, mList);
+        rv_crop.setAdapter(cropListAdapter);
         cropListAdapter.setOnItemClickListener((adapter, view, position) -> {
             iv_miniservice_next.setImageDrawable(getResources().getDrawable(R.drawable.nav_icon_shaixuan_n));
             cropUuid = cropList.get(position).getUuid();
@@ -492,11 +528,8 @@ public class FragmentManagement extends Fragment implements HttpResponse, View.O
             initLayout(cropUuid);
             popupWindow.dismiss();
         });
-        RecyclerView rv_crop = contentview.findViewById(R.id.rv_item_crop);
         View view_bg = contentview.findViewById(R.id.view_bg);
         view_bg.setOnClickListener(v -> popupWindow.dismiss());
-        rv_crop.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false));
-        rv_crop.setAdapter(cropListAdapter);
         popupWindow.setOutsideTouchable(true);
         popupWindow.showAsDropDown(mActivity.findViewById(R.id.rl_miniservice), 0, 0);
         popupWindow.setBackgroundDrawable(getResources().getDrawable(R.color.bg_transparent));

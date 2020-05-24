@@ -26,6 +26,7 @@ import com.tg.delivery.entity.DeliveryHomeEntity;
 import com.tg.delivery.entity.DeliveryUserInfoEntitiy;
 import com.tg.delivery.model.DeliveryModel;
 import com.youmai.hxsdk.adapter.PaddingItemDecoration;
+import com.youmai.hxsdk.view.pickerview.OptionsPickerView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,6 +46,7 @@ public class DeliveryManagerActivity extends BaseActivity {
     private RelativeLayout rl_delivery_nomsg;
     private RelativeLayout view_tips;
     private boolean isHaveArea;
+    private OptionsPickerView pickerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,16 +67,18 @@ public class DeliveryManagerActivity extends BaseActivity {
         rv_delivery_area.setLayoutManager(new LinearLayoutManager(this));
         ll_deliery_area.setOnClickListener(v -> {
             if (listInfo.size() > 0) {
-                rv_delivery_area.setVisibility(View.VISIBLE);
-                if (null == areaAdapter) {
-                    areaAdapter = new DeliveryAreaAdapter(this, listInfo);
-                    rv_delivery_area.setAdapter(areaAdapter);
-                } else {
-                    areaAdapter.setData(listInfo);
+                List<String> itemList = new ArrayList<>();
+                for (int i = 0; i < listInfo.size(); i++) {
+                    itemList.add(listInfo.get(i).getCommunityName());
                 }
-                areaAdapter.setCallBack((position, url, auth_type) -> {
-                    setAreaData(position);
-                });
+                pickerView = new OptionsPickerView.Builder(this, new OptionsPickerView.OnOptionsSelectListener() {
+                    @Override
+                    public void onOptionsSelect(int options1, int options2, int options3, View v) {
+                        setAreaData(options1);
+                    }
+                }).build();
+                pickerView.setPicker(itemList);
+                pickerView.show();
             }
         });
 

@@ -62,7 +62,16 @@ public class DeliveryUserInfoEntitiy {
         private String mobile;
         private String appFunction;
         private String recent;
+        private String dataUrl;
         private List<CommunityBean> community;
+
+        public String getDataUrl() {
+            return dataUrl;
+        }
+
+        public void setDataUrl(String dataUrl) {
+            this.dataUrl = dataUrl;
+        }
 
         public String getName() {
             return name;

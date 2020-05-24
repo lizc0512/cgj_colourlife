@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.os.Message;
 import android.text.SpannableString;
 import android.text.Spanned;
-import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
 import android.view.View;
 import android.widget.Button;
@@ -20,7 +19,6 @@ import com.tg.coloursteward.R;
 import com.tg.coloursteward.base.BaseActivity;
 import com.tg.coloursteward.constant.Contants;
 import com.tg.coloursteward.info.UserInfo;
-import com.tg.coloursteward.net.HttpTools;
 import com.tg.coloursteward.util.GsonUtils;
 import com.tg.coloursteward.util.LinkParseUtil;
 import com.tg.coloursteward.util.ToastUtil;
@@ -30,8 +28,6 @@ import com.tg.delivery.adapter.DeliveryMsgTemplateAdapter;
 import com.tg.delivery.entity.DeliverySmsTemplateEntity;
 import com.tg.delivery.model.DeliveryModel;
 import com.tg.delivery.utils.SwitchButton;
-import com.tg.setting.activity.SettingActivity;
-import com.tg.setting.util.OnItemClickListener;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -123,13 +119,14 @@ public class DeliveryConfirmActivity extends BaseActivity  {
             @Override
             public void toggleToOff(View view) {
                 message_sb.setOpened(false);
-                rv_message_list.setVisibility(View.GONE);
+                rv_message_list.setVisibility(View.INVISIBLE);
                 tv_sms_num.setVisibility(View.GONE);
                 smsTemplateId="";
             }
         });
          deliveryMsgTemplateAdapter=new DeliveryMsgTemplateAdapter(DeliveryConfirmActivity.this,templateMsgList);
          LinearLayoutManager  linearLayoutManager=new LinearLayoutManager(DeliveryConfirmActivity.this,LinearLayoutManager.VERTICAL,false);
+         rv_message_list.setVisibility(View.INVISIBLE);
          rv_message_list.setLayoutManager(linearLayoutManager);
          rv_message_list.setAdapter(deliveryMsgTemplateAdapter);
         deliveryMsgTemplateAdapter.setOnItemClickListener(var1 ->{
@@ -138,6 +135,9 @@ public class DeliveryConfirmActivity extends BaseActivity  {
             DeliverySmsTemplateEntity.ContentBean.ListBean    listBean= templateMsgList.get(var1);
             smsTemplateId=listBean.getSmsTemplateId();
             smsContentLength=listBean.getSmsUserTemplateLength();
+            if (smsContentLength==0){
+                smsContentLength=listBean.getSmsUserTemplateContent().length();
+            }
             showMssageCount();
         });
         deliveryModel=new DeliveryModel(DeliveryConfirmActivity.this);
@@ -203,6 +203,9 @@ public class DeliveryConfirmActivity extends BaseActivity  {
                            templateMsgList.addAll(beanList) ;
                            if (templateMsgList.size()>0){
                                smsContentLength=templateMsgList.get(0).getSmsUserTemplateLength();
+                               if (smsContentLength==0){
+                                   smsContentLength=templateMsgList.get(0).getSmsUserTemplateContent().length();
+                               }
                                showMssageCount();
                            }
                            deliveryMsgTemplateAdapter.notifyDataSetChanged();
@@ -221,7 +224,7 @@ public class DeliveryConfirmActivity extends BaseActivity  {
         for (int i=0;i<lengthsList.size();i++){
             int singleLength=lengthsList.get(i)+smsContentLength;
             int everyMsgNumber=singleLength/70;
-            if (everyMsgNumber%70!=0){
+            if (singleLength%70!=0){
                 everyMsgNumber++;
             }
             totalMsgNumber+=everyMsgNumber;

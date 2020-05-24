@@ -32,17 +32,29 @@ public class DeliveryMsgTemplateAdapter extends RecyclerView.Adapter<DeliveryMsg
     private Context activity;
     private List<DeliverySmsTemplateEntity.ContentBean.ListBean> templateMsgList;
     private OnItemClickListener onClickListener;
-    private int clickPos=-1;
+    private int clickPos = 0;
 
-    public  void  setClickPos(int clickPos){
-        this.clickPos=clickPos;
+    public void setClickPos(int clickPos) {
+        this.clickPos = clickPos;
         notifyDataSetChanged();
     }
 
-    public DeliveryMsgTemplateAdapter(Activity activity,List<DeliverySmsTemplateEntity.ContentBean.ListBean> templateMsgList) {
+    public DeliveryMsgTemplateAdapter(Activity activity, List<DeliverySmsTemplateEntity.ContentBean.ListBean> templateMsgList) {
         this.activity = activity;
         this.templateMsgList = templateMsgList;
 
+    }
+
+    public static String toSBC(String input) {
+        char c[] = input.toCharArray();
+        for (int i = 0; i < c.length; i++) {
+            if (c[i] == ' ') {
+                c[i] = '\u3000';
+            } else if (c[i] < '\177') {
+                c[i] = (char) (c[i] + 65248);
+            }
+        }
+        return new String(c);
     }
 
     @NonNull
@@ -54,6 +66,7 @@ public class DeliveryMsgTemplateAdapter extends RecyclerView.Adapter<DeliveryMsg
         return defaultViewHolder;
 
     }
+
     public void setOnItemClickListener(OnItemClickListener onClickListener) {
         this.onClickListener = onClickListener;
     }
@@ -61,23 +74,25 @@ public class DeliveryMsgTemplateAdapter extends RecyclerView.Adapter<DeliveryMsg
 
     @Override
     public void onBindViewHolder(@NonNull DefaultViewHolder defaultViewHolder, int position) {
-        DeliverySmsTemplateEntity.ContentBean.ListBean  listBean=templateMsgList.get(position);
+        DeliverySmsTemplateEntity.ContentBean.ListBean listBean = templateMsgList.get(position);
         defaultViewHolder.tv_sms_title.setText(listBean.getSmsUserUemplatePlace());
-        defaultViewHolder.tv_sms_content.setText(listBean.getSmsUserTemplateContent());
-        if (clickPos==position){
+        String sms_template_content = listBean.getSmsUserTemplateContent();
+        defaultViewHolder.tv_sms_content.setText(toSBC(sms_template_content));
+        if (clickPos == position) {
             defaultViewHolder.iv_sms_choice.setImageResource(R.drawable.sms_template_choice);
-        }else{
+        } else {
             defaultViewHolder.iv_sms_choice.setImageResource(R.drawable.sms_template_default);
         }
     }
 
 
-     class DefaultViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    class DefaultViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private ImageView iv_sms_choice;
         private TextView tv_sms_title;
         private TextView tv_sms_content;
 
         OnItemClickListener onClickListener;
+
         public DefaultViewHolder(View itemView) {
             super(itemView);
             iv_sms_choice = itemView.findViewById(R.id.iv_sms_choice);

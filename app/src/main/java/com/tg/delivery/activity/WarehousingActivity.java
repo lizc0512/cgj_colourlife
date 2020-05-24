@@ -141,6 +141,7 @@ public class WarehousingActivity extends BaseActivity implements View.OnClickLis
                         rv_warehouse_delivery_company.setVisibility(View.GONE);
                         et_warehouse_company.setText(companyList.get(position));
                         et_warehouse_company.setSelection(companyList.get(position).length());
+                        SoftKeyboardUtils.hideSoftKeyboard(currentActivity, et_warehouse_company);
                     }));
                 }
                 isShowCompay = false;

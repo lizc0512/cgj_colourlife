@@ -63,7 +63,7 @@ public class DeliveryConfirmActivity extends BaseActivity {
     private int finishType = 1;
     private int templateTotal;
     private int jumpWeb = 0;
-    private String smsTemplateId;
+    private String smsTemplateId="";
     private int smsContentLength;
     private ArrayList<Integer> lengthsList;
     private int currentTemplatePos = 0;

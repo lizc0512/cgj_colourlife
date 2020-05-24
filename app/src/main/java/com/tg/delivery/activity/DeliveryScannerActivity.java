@@ -424,6 +424,7 @@ public class DeliveryScannerActivity extends BaseActivity {
                                     deliveryInforList.set(editPosition, conntentBean);
                                 }
                                 editPosition = -1;
+                                ed_input_code.setText("");
                                 deliveryNumberListAdapter.setEditStatus(-1);
                                 deliveryNumberListAdapter.notifyDataSetChanged();
                                 spUtils.saveStringData("scannerDeliveryList", GsonUtils.gsonString(deliveryInforList));

@@ -388,6 +388,7 @@ public class DeliveryTransferActivity extends BaseActivity {
                                     deliveryInforList.set(editPosition, dataBean);
                                 }
                                 editPosition = -1;
+                                ed_input_code.setText("");
                                 deliveryNumberListAdapter.setEditStatus(-1);
                                 deliveryNumberListAdapter.notifyDataSetChanged();
                                 spUtils.saveStringData("transDeliveryList", GsonUtils.gsonString(deliveryInforList));

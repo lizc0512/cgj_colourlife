@@ -109,11 +109,11 @@ public class DeliveryConfirmActivity extends BaseActivity {
 
                         }
                     }, null, "您未设置短信内容，请先设置？", null, null);
+                }else{
+                    smsTemplateId = templateMsgList.get(currentTemplatePos).getSmsTemplateId();
                 }
-                smsTemplateId = templateMsgList.get(currentTemplatePos).getSmsTemplateId();
                 rv_message_list.setVisibility(View.VISIBLE);
                 tv_sms_num.setVisibility(View.VISIBLE);
-
             }
 
             @Override

@@ -95,6 +95,7 @@ public class DeliveryTransferActivity extends BaseActivity {
         deliveryNumberListAdapter.setEditStatus(editPosition);
         deliveryNumberListAdapter.notifyDataSetChanged();
         showTotalNum();
+        hideBottomUIMenu();
     }
 
     private int editPosition = -1;
@@ -107,6 +108,7 @@ public class DeliveryTransferActivity extends BaseActivity {
         String courierNumber = dataBean.getCourierNumber();
         ed_input_code.setText(courierNumber);
         ed_input_code.setSelection(courierNumber.length());
+        hideBottomUIMenu();
     }
 
     /***取消编辑单号***/
@@ -114,6 +116,7 @@ public class DeliveryTransferActivity extends BaseActivity {
         deliveryNumberListAdapter.setEditStatus(-1);
         ed_input_code.setText("");
         editPosition = -1;
+        hideBottomUIMenu();
     }
 
     @Override
@@ -156,23 +159,15 @@ public class DeliveryTransferActivity extends BaseActivity {
         tv_define.setOnClickListener(view -> {
             courierNumber = ed_input_code.getText().toString().trim();
             if (!TextUtils.isEmpty(courierNumber)) {
-                //根据订单号 查询手机号
-                if (editPosition == -1) {
-                    //表示用户输入新增
-                    if (deliveryInforList.size() > 50) {
-                        ToastUtil.showShortToast(currentActivity, "运单号最大只能录入50个");
-                    } else {
-                        if (!includeDelivery(courierNumber)) {
-                            getDeliverStatus();
-                        } else {
-                            ToastUtil.showShortToast(currentActivity, "运单号已录入,请勿重复录入");
-                        }
-                    }
+                //根据订单号 查询手机 //表示用户输入新增
+                if (deliveryInforList.size() > 50) {
+                    ToastUtil.showShortToast(currentActivity, "运单号最大只能录入50个");
                 } else {
-                    //表示单号列表的编辑 请求数据成功 将editPosition置为-1
-                    deliveryInforList.get(editPosition).setCourierNumber(courierNumber);
-                    spUtils.saveStringData("scannerDeliveryList", GsonUtils.gsonString(deliveryInforList));
-                    deliveryNumberListAdapter.notifyDataSetChanged();
+                    if (!includeDelivery(courierNumber)) {
+                        getDeliverStatus();
+                    } else {
+                        ToastUtil.showShortToast(currentActivity, "运单号已录入,请勿重复录入");
+                    }
                 }
             } else {
                 ToastUtil.showShortToast(currentActivity, "请输入运单号");
@@ -385,7 +380,13 @@ public class DeliveryTransferActivity extends BaseActivity {
                         DeliveryInforEntity.ContentBean dataBean = deliveryInforEntity.getContent();
                         if (null != dataBean) {
                             if (!includeDelivery(dataBean.getCourierNumber())) {
-                                deliveryInforList.add(0, dataBean);
+                                if (editPosition == -1) {
+                                    deliveryInforList.add(0, dataBean);
+                                } else {
+                                    deliveryInforList.set(editPosition, dataBean);
+                                }
+                                editPosition = -1;
+                                deliveryNumberListAdapter.setEditStatus(-1);
                                 deliveryNumberListAdapter.notifyDataSetChanged();
                                 spUtils.saveStringData("transDeliveryList", GsonUtils.gsonString(deliveryInforList));
                                 showTotalNum();
@@ -396,7 +397,7 @@ public class DeliveryTransferActivity extends BaseActivity {
                     } catch (Exception e) {
 
                     }
-                }else{
+                } else {
                     courierNumber = "";
                 }
                 break;

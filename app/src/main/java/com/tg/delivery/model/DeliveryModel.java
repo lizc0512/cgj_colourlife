@@ -7,6 +7,8 @@ import com.tg.coloursteward.baseModel.BaseModel;
 import com.tg.coloursteward.baseModel.HttpListener;
 import com.tg.coloursteward.baseModel.HttpResponse;
 import com.tg.coloursteward.baseModel.RequestEncryptionUtils;
+import com.tg.coloursteward.constant.SpConstants;
+import com.tg.coloursteward.util.SharedPreferencesUtils;
 import com.yanzhenjie.nohttp.NoHttp;
 import com.yanzhenjie.nohttp.RequestMethod;
 import com.yanzhenjie.nohttp.rest.Request;
@@ -35,7 +37,7 @@ public class DeliveryModel extends BaseModel {
     private String deliveryCommitUrl = "/trusteeship/addExpressTrusteeship";//新增快递托管记录录单
     private String deliveryCheckOrderUrl = "/trusteeship/checkSignCourierNumber";//判断签收快递单号是否存在,是否有效,返回收件人信息
     private String deliveryUserInfoUrl = "/property/getLandInfor";//获取用户登陆信息
-    private String deliverySmsTemplateUrl="/smsUserTemplate/selectSmsUserTemplateListByInfo";
+    private String deliverySmsTemplateUrl = "/smsUserTemplate/selectSmsUserTemplateListByInfo";
 
     public DeliveryModel(Context context) {
         super(context);
@@ -87,7 +89,7 @@ public class DeliveryModel extends BaseModel {
                     int resultCode = showSuccesResultMessage(result);
                     if (resultCode == 0) {
                         newHttpResponse.OnHttpResponse(what, result);
-                    }else{
+                    } else {
                         newHttpResponse.OnHttpResponse(what, "");
                     }
                 } else {
@@ -107,6 +109,7 @@ public class DeliveryModel extends BaseModel {
 
     public void getDeliverySmsTemplateList(int what, final HttpResponse newHttpResponse) {
         Map<String, Object> params = new HashMap<String, Object>();
+        params.put("colorToken", SharedPreferencesUtils.getKey(mContext, SpConstants.accessToken.accssToken));
         Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 18, deliverySmsTemplateUrl),
                 RequestMethod.GET);
         request(what, request, RequestEncryptionUtils.getNewSaftyMap(mContext, params), new HttpListener<String>() {
@@ -139,7 +142,7 @@ public class DeliveryModel extends BaseModel {
         params.put("sendStatus", sendStatus);
         params.put("loginMobile", loginMobile);
         params.put("name", name);
-        if (finishType!=-1){
+        if (finishType != -1) {
             params.put("finishType", finishType);
         }
         if (!TextUtils.isEmpty(SMSTemplate)) {
@@ -183,7 +186,7 @@ public class DeliveryModel extends BaseModel {
                     int resultCode = showSuccesResultMessage(result);
                     if (resultCode == 0) {
                         newHttpResponse.OnHttpResponse(what, result);
-                    }else{
+                    } else {
                         newHttpResponse.OnHttpResponse(what, "");
                     }
                 } else {

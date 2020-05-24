@@ -39,6 +39,7 @@ import java.util.Date;
 import java.util.List;
 
 import static com.tg.user.activity.BindMobileActivity.ISFROMUSER;
+import static com.tg.user.activity.BindMobileActivity.PHONE;
 
 /**
  * 个人中心
@@ -248,6 +249,7 @@ public class UserInfoActivity extends BaseActivity implements OnClickListener, H
             case R.id.rl_usermobile_change:
                 Intent intent = new Intent(this, BindMobileActivity.class);
                 intent.putExtra(ISFROMUSER, true);
+                intent.putExtra(PHONE, UserInfo.mobile);
                 startActivityForResult(intent, 100);
                 break;
             case R.id.rl_user_company:

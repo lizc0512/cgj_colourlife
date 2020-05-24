@@ -87,15 +87,19 @@ public class DeliveryModel extends BaseModel {
                     int resultCode = showSuccesResultMessage(result);
                     if (resultCode == 0) {
                         newHttpResponse.OnHttpResponse(what, result);
+                    }else{
+                        newHttpResponse.OnHttpResponse(what, "");
                     }
                 } else {
                     showErrorCodeMessage(response);
+                    newHttpResponse.OnHttpResponse(what, "");
                 }
             }
 
             @Override
             public void onFailed(int what, Response<String> response) {
                 showExceptionMessage(what, response);
+                newHttpResponse.OnHttpResponse(what, "");
             }
         }, true, true);
     }
@@ -117,6 +121,7 @@ public class DeliveryModel extends BaseModel {
                     }
                 } else {
                     showErrorCodeMessage(response);
+
                 }
             }
 
@@ -178,15 +183,19 @@ public class DeliveryModel extends BaseModel {
                     int resultCode = showSuccesResultMessage(result);
                     if (resultCode == 0) {
                         newHttpResponse.OnHttpResponse(what, result);
+                    }else{
+                        newHttpResponse.OnHttpResponse(what, "");
                     }
                 } else {
                     showErrorCodeMessage(response);
+                    newHttpResponse.OnHttpResponse(what, "");
                 }
             }
 
             @Override
             public void onFailed(int what, Response<String> response) {
                 showExceptionMessage(what, response);
+                newHttpResponse.OnHttpResponse(what, "");
             }
         }, true, true);
     }

@@ -357,18 +357,22 @@ public class DeliveryTransferActivity extends BaseActivity {
     public void OnHttpResponse(int what, String result) {
         switch (what) {
             case 0:
-                try {
-                    DeliveryStateEntity deliveryStateEntity = GsonUtils.gsonToBean(result, DeliveryStateEntity.class);
-                    String status = deliveryStateEntity.getContent();
-                    if ("1".equals(status)) {
-                        ToastUtil.showShortToast(currentActivity, "运单已经派送,请勿重复扫描");
-                    } else if ("0".equals(status)) {
-                        ToastUtil.showShortToast(currentActivity, "该运单在系统中未找到,请确认是否录入系统");
-                    } else {
-                        getDeliverInfor();
-                    }
-                } catch (Exception e) {
+                if (!TextUtils.isEmpty(result)) {
+                    try {
+                        DeliveryStateEntity deliveryStateEntity = GsonUtils.gsonToBean(result, DeliveryStateEntity.class);
+                        String status = deliveryStateEntity.getContent();
+                        if ("1".equals(status)) {
+                            ToastUtil.showShortToast(currentActivity, "运单已经派送,请勿重复扫描");
+                        } else if ("0".equals(status)) {
+                            ToastUtil.showShortToast(currentActivity, "该运单在系统中未找到,请确认是否录入系统");
+                        } else {
+                            getDeliverInfor();
+                        }
+                    } catch (Exception e) {
 
+                    }
+                } else {
+                    courierNumber = "";
                 }
                 break;
             case 1:
@@ -389,6 +393,8 @@ public class DeliveryTransferActivity extends BaseActivity {
                     } catch (Exception e) {
 
                     }
+                }else{
+                    courierNumber = "";
                 }
                 break;
             case 2:

@@ -101,14 +101,13 @@ public class DeliveryConfirmActivity extends BaseActivity {
             public void toggleToOn(View view) {
                 message_sb.setOpened(true);
                 if (templateTotal == 0) {
-                    DialogFactory.getInstance().showDialog(DeliveryConfirmActivity.this, new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            jumpWeb = 1;
-                            LinkParseUtil.parse(DeliveryConfirmActivity.this, Contants.URl.SMS_TEMPLATE_URL, "");
+                    DialogFactory.getInstance().showDialog(DeliveryConfirmActivity.this, v -> {
+                        jumpWeb = 1;
+                        LinkParseUtil.parse(DeliveryConfirmActivity.this, Contants.URl.SMS_TEMPLATE_URL, "");
 
-                        }
-                    }, null, "您未设置短信内容，请先设置？", null, null);
+                    }, view1 -> {
+                        message_sb.setOpened(false);
+                    }, "您未设置短信内容，请先设置？", null, null);
                 }else{
                     smsTemplateId = templateMsgList.get(currentTemplatePos).getSmsTemplateId();
                 }

@@ -2,6 +2,7 @@ package com.tg.delivery.adapter;
 
 import android.app.Activity;
 import android.content.Context;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,15 +47,19 @@ public class DeliveryMsgTemplateAdapter extends RecyclerView.Adapter<DeliveryMsg
     }
 
     public static String toSBC(String input) {
-        char c[] = input.toCharArray();
-        for (int i = 0; i < c.length; i++) {
-            if (c[i] == ' ') {
-                c[i] = '\u3000';
-            } else if (c[i] < '\177') {
-                c[i] = (char) (c[i] + 65248);
+        if(TextUtils.isEmpty(input)){
+            return "";
+        }else{
+            char c[] = input.toCharArray();
+            for (int i = 0; i < c.length; i++) {
+                if (c[i] == ' ') {
+                    c[i] = '\u3000';
+                } else if (c[i] < '\177') {
+                    c[i] = (char) (c[i] + 65248);
+                }
             }
+            return new String(c);
         }
-        return new String(c);
     }
 
     @NonNull

@@ -286,6 +286,7 @@ public class DeliveryTransferActivity extends BaseActivity {
                     initView(view);
                     rootView.addView(view, lp);
                 }
+                hideBottomUIMenu();
             }
 
             @Override

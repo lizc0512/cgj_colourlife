@@ -31,7 +31,7 @@ import java.util.List;
 public class DeliveryMsgTemplateAdapter extends RecyclerView.Adapter<DeliveryMsgTemplateAdapter.DefaultViewHolder> {
 
     private Context activity;
-    private List<DeliverySmsTemplateEntity.ContentBean.ListBean> templateMsgList;
+    private List<DeliverySmsTemplateEntity.ContentBean.ListBean.ChildListBean> templateMsgList;
     private OnItemClickListener onClickListener;
     private int clickPos = 0;
 
@@ -40,16 +40,16 @@ public class DeliveryMsgTemplateAdapter extends RecyclerView.Adapter<DeliveryMsg
         notifyDataSetChanged();
     }
 
-    public DeliveryMsgTemplateAdapter(Activity activity, List<DeliverySmsTemplateEntity.ContentBean.ListBean> templateMsgList) {
+    public DeliveryMsgTemplateAdapter(Activity activity, List<DeliverySmsTemplateEntity.ContentBean.ListBean.ChildListBean> templateMsgList) {
         this.activity = activity;
         this.templateMsgList = templateMsgList;
 
     }
 
     public static String toSBC(String input) {
-        if(TextUtils.isEmpty(input)){
+        if (TextUtils.isEmpty(input)) {
             return "";
-        }else{
+        } else {
             char c[] = input.toCharArray();
             for (int i = 0; i < c.length; i++) {
                 if (c[i] == ' ') {
@@ -79,8 +79,8 @@ public class DeliveryMsgTemplateAdapter extends RecyclerView.Adapter<DeliveryMsg
 
     @Override
     public void onBindViewHolder(@NonNull DefaultViewHolder defaultViewHolder, int position) {
-        DeliverySmsTemplateEntity.ContentBean.ListBean listBean = templateMsgList.get(position);
-        defaultViewHolder.tv_sms_title.setText(listBean.getSmsUserTemplatePlace());
+        DeliverySmsTemplateEntity.ContentBean.ListBean.ChildListBean listBean = templateMsgList.get(position);
+        defaultViewHolder.tv_sms_title.setText(listBean.getShowSmsTemplatePlace());
         String sms_template_content = listBean.getSmsUserTemplateContent();
         defaultViewHolder.tv_sms_content.setText(toSBC(sms_template_content));
         if (clickPos == position) {

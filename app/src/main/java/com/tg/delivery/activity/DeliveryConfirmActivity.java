@@ -53,7 +53,7 @@ public class DeliveryConfirmActivity extends BaseActivity {
     private RecyclerView rv_message_list;
     private Button btn_confirm_delivery;
     private List<String> addressList = new ArrayList<>();
-    private List<DeliverySmsTemplateEntity.ContentBean.ListBean> templateMsgList = new ArrayList<>();
+    private List<DeliverySmsTemplateEntity.ContentBean.ListBean.ChildListBean> templateMsgList = new ArrayList<>();
 
     private String courierNumbers;
     private int courierTotal;
@@ -110,7 +110,7 @@ public class DeliveryConfirmActivity extends BaseActivity {
                     }, "您未设置短信内容，请先设置？", null, null);
                 }else{
                     if (templateMsgList.size()>0){
-                        smsTemplateId = templateMsgList.get(currentTemplatePos).getSmsTemplateId();
+                        smsTemplateId = templateMsgList.get(currentTemplatePos).getSmsUserTemplateId();
                     }
                 }
                 rv_message_list.setVisibility(View.VISIBLE);
@@ -134,8 +134,8 @@ public class DeliveryConfirmActivity extends BaseActivity {
         deliveryMsgTemplateAdapter.setOnItemClickListener(var1 -> {
             currentTemplatePos = var1;
             deliveryMsgTemplateAdapter.setClickPos(var1);
-            DeliverySmsTemplateEntity.ContentBean.ListBean listBean = templateMsgList.get(var1);
-            smsTemplateId = listBean.getSmsTemplateId();
+            DeliverySmsTemplateEntity.ContentBean.ListBean.ChildListBean  listBean = templateMsgList.get(var1);
+            smsTemplateId = listBean.getSmsUserTemplateId();
             smsContentLength = listBean.getSmsContentLength();
             showMssageCount();
         });
@@ -198,13 +198,28 @@ public class DeliveryConfirmActivity extends BaseActivity {
                     DeliverySmsTemplateEntity.ContentBean contentBean = deliverySmsTemplateEntity.getContent();
                     if (null != contentBean) {
                         List<DeliverySmsTemplateEntity.ContentBean.ListBean> beanList = contentBean.getList();
-                        templateTotal = contentBean.getTotal();
-                        if (null != beanList) {
-                            templateMsgList.addAll(beanList);
-                            if (templateMsgList.size() > 0) {
-                                smsContentLength = templateMsgList.get(0).getSmsContentLength();
-                                showMssageCount();
-                            }
+                        if (null!=beanList&&beanList.size()>0){
+                                for (DeliverySmsTemplateEntity.ContentBean.ListBean  listBean:beanList){
+                                    List<DeliverySmsTemplateEntity.ContentBean.ListBean.ChildListBean>  childListBeanList=    listBean.getChildList();
+                                    if (null!=childListBeanList&&childListBeanList.size()>0){
+                                        for (int j=0;j<childListBeanList.size();j++){
+                                            DeliverySmsTemplateEntity.ContentBean.ListBean.ChildListBean childListBean=  childListBeanList.get(j);
+                                            StringBuffer sb=new StringBuffer();
+                                            sb.append("模板");
+                                            sb.append(" ");
+                                            sb.append(listBean.getSmsTemplateId());
+                                            sb.append("-");
+                                            sb.append(j+1);
+                                            childListBean.setShowSmsTemplatePlace(sb.toString());
+                                            templateMsgList.add(childListBean);
+                                        }
+                                    }
+                                }
+                        }
+                        templateTotal = templateMsgList.size();
+                        if (templateTotal> 0) {
+                            smsContentLength = templateMsgList.get(0).getSmsContentLength();
+                            showMssageCount();
                             deliveryMsgTemplateAdapter.notifyDataSetChanged();
                         }
                     }

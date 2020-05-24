@@ -38,14 +38,12 @@ import com.tg.delivery.adapter.DeliveryNumberListAdapter;
 import com.tg.delivery.entity.DeliveryInforEntity;
 import com.tg.delivery.entity.DeliveryStateEntity;
 import com.tg.delivery.model.DeliveryModel;
-import com.tg.point.activity.ChangePawdOneStepActivity;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static com.tg.delivery.activity.DeliveryConfirmActivity.COURIERLENGTHLIST;

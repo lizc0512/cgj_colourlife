@@ -49,6 +49,7 @@ import com.tg.coloursteward.util.GsonUtils;
 import com.tg.coloursteward.util.SharedPreferencesUtils;
 import com.tg.coloursteward.util.Tools;
 import com.tg.coloursteward.view.PopWindowView;
+import com.tg.coloursteward.view.dialog.DialogFactory;
 import com.tg.im.activity.DeskTopActivity;
 import com.youmai.hxsdk.HuxinSdkManager;
 import com.youmai.hxsdk.ProtoCallback;
@@ -294,9 +295,18 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, View.OnC
         reqPushMsg();
         initDialog();
         initNet();
+        initSetLoginPwd();
         String cacheData = SharedPreferencesUtils.getInstance().getStringData(SpConstants.UserModel.HOMEDATA, "");
         if (!TextUtils.isEmpty(cacheData)) {
             initSetData(cacheData);
+        }
+    }
+
+    private void initSetLoginPwd() {
+        boolean isHavePwd = SharedPreferencesUtils.getInstance().getBooleanData(SpConstants.UserModel.NoHAVEPWD, false);
+        if (isHavePwd) {//没有设置密码，则每次启动APP提示
+            DialogFactory.getInstance().showSingleNoCancelDialog(mActivity, "重要提示", "您的账号尚未设置登录密码," +
+                    "为了更好提升您的体验，请前往设置", "前往设置");
         }
     }
 

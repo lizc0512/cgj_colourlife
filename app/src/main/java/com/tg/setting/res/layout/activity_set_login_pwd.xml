@@ -3,9 +3,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     android:fitsSystemWindows="true"
     android:orientation="vertical"
-    tools:context="com.tg.setting.SetLoginPwdActivity">
+    tools:context="com.tg.setting.activity.SetLoginPwdActivity">
+
+    <include layout="@layout/base_actionbar" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -14,7 +17,7 @@
         android:layout_marginTop="@dimen/size_26dp"
         android:text="登陆密码"
         android:textColor="@color/color_25282e"
-        android:textSize="@dimen/font_20sp" />
+        android:textSize="@dimen/font_16sp" />
 
     <com.tg.coloursteward.view.ClearEditText
         android:id="@+id/et_set_pwd"
@@ -26,7 +29,8 @@
         android:background="@null"
         android:hint="请输入密码"
         android:maxLength="16"
-        android:singleLine="true" />
+        android:singleLine="true"
+        android:textSize="@dimen/font_14sp" />
 
     <View
         android:layout_width="match_parent"
@@ -43,7 +47,7 @@
         android:layout_marginTop="@dimen/size_26dp"
         android:text="确认密码"
         android:textColor="@color/color_25282e"
-        android:textSize="@dimen/font_20sp" />
+        android:textSize="@dimen/font_16sp" />
 
     <com.tg.coloursteward.view.ClearEditText
         android:id="@+id/et_set_confirm"
@@ -55,7 +59,8 @@
         android:background="@null"
         android:hint="请再次输入密码"
         android:maxLength="16"
-        android:singleLine="true" />
+        android:singleLine="true"
+        android:textSize="@dimen/font_14sp" />
 
     <View
         android:layout_width="match_parent"

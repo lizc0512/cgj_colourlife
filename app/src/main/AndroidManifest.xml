@@ -50,7 +50,7 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:replace="android:allowBackup,android:theme,android:label">
-        <activity android:name="com.tg.setting.SetLoginPwdActivity"></activity>
+        <activity android:name="com.tg.setting.activity.SetLoginPwdActivity"></activity>
         <activity android:name="com.tg.delivery.activity.DeliveryHandoverActivity" />
         <activity android:name="com.tg.delivery.activity.WarehousingActivity" />
         <activity

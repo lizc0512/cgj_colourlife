@@ -880,6 +880,12 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                             Tools.loadUserInfo(data, result);
                             String employeeAccount = data.getString("username");
                             String employeeName = data.getString("name");
+                            String password = data.getString("password");
+                            if (TextUtils.isEmpty(password)) {
+                                spUtils.saveBooleanData(SpConstants.UserModel.NoHAVEPWD, true);
+                            } else {
+                                spUtils.saveBooleanData(SpConstants.UserModel.NoHAVEPWD, false);
+                            }
                             UserInfo.employeeAccount = employeeAccount;
                             SharedPreferencesUtils.saveUserKey(this, USEROA, employeeAccount);
                             if (!"4".equals(loginType)) {

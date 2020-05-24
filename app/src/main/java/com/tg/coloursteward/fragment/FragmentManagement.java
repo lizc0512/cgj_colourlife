@@ -2,6 +2,7 @@ package com.tg.coloursteward.fragment;
 
 import android.app.Activity;
 import android.content.ContentValues;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
@@ -37,12 +38,16 @@ import com.tg.coloursteward.serice.HomeService;
 import com.tg.coloursteward.util.DisplayUtil;
 import com.tg.coloursteward.util.GlideUtils;
 import com.tg.coloursteward.util.GsonUtils;
+import com.tg.coloursteward.util.LinkParseUtil;
 import com.tg.coloursteward.util.MicroAuthTimeUtils;
 import com.tg.coloursteward.util.SharedPreferencesUtils;
 import com.tg.coloursteward.util.TokenUtils;
 import com.tg.coloursteward.util.Tools;
 import com.tg.coloursteward.view.MicroViewPager;
 import com.tg.coloursteward.view.MyGridLayoutManager;
+import com.tg.delivery.activity.DeliveryManagerActivity;
+import com.tg.delivery.entity.DeliveryUserInfoEntitiy;
+import com.tg.delivery.model.DeliveryModel;
 import com.youmai.hxsdk.config.ColorsConfig;
 import com.youmai.hxsdk.http.OkHttpConnector;
 
@@ -79,6 +84,7 @@ public class FragmentManagement extends Fragment implements HttpResponse, View.O
     private HomeService homeService;
     private SwipeRefreshLayout sr_micro;
     private boolean TryAgain = true;
+    private DeliveryModel deliveryModel;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -227,7 +233,15 @@ public class FragmentManagement extends Fragment implements HttpResponse, View.O
                     if (null == mMicroAuthTimeUtils) {
                         mMicroAuthTimeUtils = new MicroAuthTimeUtils();
                     }
-                    mMicroAuthTimeUtils.IsAuthTime(mActivity, url, auth_type, "");
+                    if ("colourlife://proto?type=express".equals(url)) {
+                        if (null == deliveryModel) {
+                            deliveryModel = new DeliveryModel(mActivity);
+                        }
+                        String colorToken = SharedPreferencesUtils.getKey(mActivity, SpConstants.accessToken.accssToken);
+                        deliveryModel.postDeliveryUserInfo(2, colorToken, true, this);
+                    } else {
+                        mMicroAuthTimeUtils.IsAuthTime(mActivity, url, auth_type, "");
+                    }
                 });
             }
         }
@@ -404,6 +418,17 @@ public class FragmentManagement extends Fragment implements HttpResponse, View.O
                 } else {
                     String localCache = Contants.storage.MICRODATA;
                     initInitialize(localCache);
+                }
+                break;
+            case 2:
+                if (!TextUtils.isEmpty(result)) {
+                    DeliveryUserInfoEntitiy entitiy = new DeliveryUserInfoEntitiy();
+                    entitiy = GsonUtils.gsonToBean(result, DeliveryUserInfoEntitiy.class);
+                    if ("1".equals(entitiy.getContent().getAppFunction())) {
+                        LinkParseUtil.parse(mActivity, entitiy.getContent().getDataUrl(), "");
+                    } else {
+                        startActivity(new Intent(mActivity, DeliveryManagerActivity.class));
+                    }
                 }
                 break;
         }

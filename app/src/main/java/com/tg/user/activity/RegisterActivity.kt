@@ -60,6 +60,8 @@ class RegisterActivity : BaseActivity(), View.OnClickListener, HttpResponse {
                 ToastUtil.showShortToast(this, "注册成功")
                 val it = Intent(this, LoginActivity::class.java)
                 it.putExtra(LoginActivity.ACCOUNT, phone)
+                it.putExtra(LoginActivity.PASSWORD, password)
+                it.putExtra(LoginActivity.ISLOGIN, "true")
                 startActivity(it)
             }
         }
@@ -160,9 +162,9 @@ class RegisterActivity : BaseActivity(), View.OnClickListener, HttpResponse {
     }
 
     fun setRegister() {
-        val password = et_register_pwd.text.toString().trim();
+        password = et_register_pwd.text.toString().trim();
         if (!TextUtils.isEmpty(password)) {
-            userCzyModel.postRegister(3, phone, MD5.getMd5Value(code).toLowerCase(), password, this)
+            userCzyModel.postRegister(3, phone, code, MD5.getMd5Value(password).toLowerCase(), this)
         } else {
             ToastUtil.showShortToast(this, "登陆密码不能为空")
         }

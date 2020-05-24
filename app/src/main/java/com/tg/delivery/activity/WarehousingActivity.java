@@ -41,6 +41,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class WarehousingActivity extends BaseActivity implements View.OnClickListener {
@@ -380,6 +381,7 @@ public class WarehousingActivity extends BaseActivity implements View.OnClickLis
         if (!TextUtils.isEmpty(phone) && !TextUtils.isEmpty(orderNum)) {
             WareHouseEntity entity = new WareHouseEntity(orderNum, phone, company);
             listItem.add(entity);
+            Collections.reverse(listItem);
             et_warehouse_phone.getText().clear();
             et_warehouse_num.getText().clear();
             if (null == adapter) {
@@ -422,7 +424,7 @@ public class WarehousingActivity extends BaseActivity implements View.OnClickLis
     }
 
     private void checkOrderNum(int what, String num, String company) {
-        if (listItem.size() > 50) {
+        if (listItem.size() > 49) {
             ToastUtil.showShortToast(currentActivity, "一次最多录入50条数据");
         } else {
             deliveryModel.getDeliveryCheckOrder(what, num, company, this);

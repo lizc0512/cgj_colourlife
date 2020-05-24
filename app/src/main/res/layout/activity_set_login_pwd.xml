@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical"
+    tools:context="com.tg.setting.SetLoginPwdActivity">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/size_38dp"
+        android:layout_marginTop="@dimen/size_26dp"
+        android:text="登陆密码"
+        android:textColor="@color/color_25282e"
+        android:textSize="@dimen/font_20sp" />
+
+    <com.tg.coloursteward.view.ClearEditText
+        android:id="@+id/et_set_pwd"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/size_24dp"
+        android:layout_marginLeft="@dimen/size_38dp"
+        android:layout_marginTop="@dimen/size_15dp"
+        android:layout_marginRight="@dimen/size_38dp"
+        android:background="@null"
+        android:hint="请输入密码"
+        android:maxLength="16"
+        android:singleLine="true" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/size_1px"
+        android:layout_marginLeft="@dimen/size_38dp"
+        android:layout_marginTop="@dimen/size_5dp"
+        android:layout_marginRight="@dimen/size_38dp"
+        android:background="@color/bg_color" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/size_38dp"
+        android:layout_marginTop="@dimen/size_26dp"
+        android:text="确认密码"
+        android:textColor="@color/color_25282e"
+        android:textSize="@dimen/font_20sp" />
+
+    <com.tg.coloursteward.view.ClearEditText
+        android:id="@+id/et_set_confirm"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/size_24dp"
+        android:layout_marginLeft="@dimen/size_38dp"
+        android:layout_marginTop="@dimen/size_15dp"
+        android:layout_marginRight="@dimen/size_38dp"
+        android:background="@null"
+        android:hint="请再次输入密码"
+        android:maxLength="16"
+        android:singleLine="true" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/size_1px"
+        android:layout_marginLeft="@dimen/size_38dp"
+        android:layout_marginTop="@dimen/size_5dp"
+        android:layout_marginRight="@dimen/size_38dp"
+        android:background="@color/bg_color" />
+
+    <TextView
+        android:id="@+id/tv_setpwd_commit"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/size_44dp"
+        android:layout_marginLeft="@dimen/size_50dp"
+        android:layout_marginTop="@dimen/size_42dp"
+        android:layout_marginRight="@dimen/size_50dp"
+        android:background="@drawable/bg_login_button_blue"
+        android:gravity="center"
+        android:text="提交"
+        android:textColor="@color/white"
+        android:textSize="@dimen/size_14dp" />
+
+</LinearLayout>

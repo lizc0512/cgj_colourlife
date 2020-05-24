@@ -30,6 +30,7 @@ public class SettingModel extends BaseModel {
     private String updateUrl = "/get/version";
     private String homeDelAllMsgUrl = "/app/home/delUserMsg";
     private String inviteShareUrl = "/app/home/share/info";
+    private String setLoginPwdUrl = "/app/setPassword";
 
     public SettingModel(Context context) {
         super(context);
@@ -131,5 +132,39 @@ public class SettingModel extends BaseModel {
             public void onFailed(int what, Response<String> response) {
             }
         }, true, false);
+    }
+
+    /**
+     * 设置登陆密码
+     *
+     * @param what
+     * @param password
+     * @param httpResponse
+     */
+    public void postLoginPwd(int what, String password, HttpResponse httpResponse) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("password", password);
+        final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(
+                mContext, 0, setLoginPwdUrl), RequestMethod.POST);
+        request(what, request, RequestEncryptionUtils.getNewSaftyMap(mContext, params), new HttpListener<String>() {
+            @Override
+            public void onSucceed(int what, Response<String> response) {
+                int responseCode = response.getHeaders().getResponseCode();
+                String result = response.get();
+                if (responseCode == RequestEncryptionUtils.responseSuccess) {
+                    int code = showSuccesResultMessage(result);
+                    if (code == 0) {
+                        httpResponse.OnHttpResponse(what, result);
+                    }
+                } else {
+                    showErrorCodeMessage(response);
+                }
+            }
+
+            @Override
+            public void onFailed(int what, Response<String> response) {
+                showExceptionMessage(what, response);
+            }
+        }, true, true);
     }
 }

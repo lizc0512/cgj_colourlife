@@ -38,6 +38,7 @@ public class DeliveryModel extends BaseModel {
     private String deliveryCheckOrderUrl = "/trusteeship/checkSignCourierNumber";//判断签收快递单号是否存在,是否有效,返回收件人信息
     private String deliveryUserInfoUrl = "/property/getLandInfor";//获取用户登陆信息
     private String deliverySmsTemplateUrl = "/smsUserTemplate/selectSmsUserTemplateListByInfo";
+    private String deliverySearchUrl = "/courierCompany/fuzzyQueryCourierCompany";//模糊搜索
 
     public DeliveryModel(Context context) {
         super(context);
@@ -234,7 +235,7 @@ public class DeliveryModel extends BaseModel {
                 showExceptionMessage(what, response);
                 newHttpResponse.OnHttpResponse(what, "");
             }
-        }, true, true);
+        }, true, false);
     }
 
     /**
@@ -343,5 +344,39 @@ public class DeliveryModel extends BaseModel {
                 showExceptionMessage(what, response);
             }
         }, true, isLoading);
+    }
+
+    /**
+     * 模糊搜索快递公司
+     *
+     * @param what
+     * @param word
+     * @param newHttpResponse
+     */
+    public void getSearchDelivery(int what, String word, final HttpResponse newHttpResponse) {
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("courierCompanyStr", word);
+        Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 18, deliverySearchUrl),
+                RequestMethod.GET);
+        request(what, request, RequestEncryptionUtils.getNewSaftyMap(mContext, params), new HttpListener<String>() {
+            @Override
+            public void onSucceed(int what, Response<String> response) {
+                int responseCode = response.getHeaders().getResponseCode();
+                String result = response.get();
+                if (responseCode == RequestEncryptionUtils.responseSuccess) {
+                    int resultCode = showSuccesResultMessage(result);
+                    if (resultCode == 0) {
+                        newHttpResponse.OnHttpResponse(what, result);
+                    }
+                } else {
+                    showErrorCodeMessage(response);
+                }
+            }
+
+            @Override
+            public void onFailed(int what, Response<String> response) {
+                showExceptionMessage(what, response);
+            }
+        }, true, false);
     }
 }

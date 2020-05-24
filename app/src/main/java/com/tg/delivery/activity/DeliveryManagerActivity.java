@@ -44,6 +44,7 @@ public class DeliveryManagerActivity extends BaseActivity {
     private DeliveryAreaAdapter areaAdapter;
     private RelativeLayout rl_delivery_nomsg;
     private RelativeLayout view_tips;
+    private boolean isHaveArea;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,6 +77,15 @@ public class DeliveryManagerActivity extends BaseActivity {
                 });
             }
         });
+
+        String name = spUtils.getStringData(SpConstants.storage.DELIVERYNAME, "");
+        String uuid = spUtils.getStringData(SpConstants.storage.DELIVERYUUID, "");
+        if (!TextUtils.isEmpty(name)) {
+            tv_deliery_area.setText(name);
+            isHaveArea = true;
+        } else {
+
+        }
     }
 
     private void setAreaData(int position) {
@@ -137,14 +147,11 @@ public class DeliveryManagerActivity extends BaseActivity {
     private void initSetUserInfo(String result) {
         DeliveryUserInfoEntitiy entitiy = new DeliveryUserInfoEntitiy();
         entitiy = GsonUtils.gsonToBean(result, DeliveryUserInfoEntitiy.class);
-        for (int i = 0; i < entitiy.getContent().getCommunity().size(); i++) {
-            listInfo.clear();
-            listInfo.addAll(entitiy.getContent().getCommunity());
-            if (i == 0) {
-                setAreaData(i);
-            }
+        listInfo.clear();
+        listInfo.addAll(entitiy.getContent().getCommunity());
+        if (listInfo.size() > 0 && !isHaveArea) {
+            setAreaData(0);
         }
-
     }
 
     private void initSetData(String result) {

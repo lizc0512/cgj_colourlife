@@ -27,6 +27,7 @@ import com.tg.coloursteward.constant.SpConstants;
 import com.tg.coloursteward.info.UserInfo;
 import com.tg.coloursteward.util.GsonUtils;
 import com.tg.coloursteward.util.ScreenUtils;
+import com.tg.coloursteward.util.SoftKeyboardUtils;
 import com.tg.coloursteward.util.ToastUtil;
 import com.tg.coloursteward.view.ClearEditText;
 import com.tg.delivery.adapter.DeliveryCompanyAdapter;
@@ -59,6 +60,7 @@ public class WarehousingActivity extends BaseActivity implements View.OnClickLis
     private ClearEditText et_warehouse_company;
     private DeliveryModel deliveryModel;
     private List<String> companyList = new ArrayList<>();
+    private List<String> companySerachList = new ArrayList<>();
     private boolean isShowCompay = true;
     private Activity currentActivity;
     private boolean isSelectCompany = false;
@@ -71,6 +73,7 @@ public class WarehousingActivity extends BaseActivity implements View.OnClickLis
     private boolean isCheckOrderFinish;
     private int isEditItemPostion;
     private boolean isEditItemStatus;
+    private boolean isClickCompany = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -118,10 +121,7 @@ public class WarehousingActivity extends BaseActivity implements View.OnClickLis
         rv_warehouse = view.findViewById(R.id.rv_warehouse);
         tv_warehouse_done = view.findViewById(R.id.tv_warehouse_done);
         rv_warehouse_delivery_company = view.findViewById(R.id.rv_warehouse_delivery_company);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(currentActivity, LinearLayoutManager.VERTICAL, false);
         LinearLayoutManager layoutManagerCompany = new LinearLayoutManager(currentActivity, LinearLayoutManager.VERTICAL, false);
-        rv_warehouse.setLayoutManager(layoutManager);
-        rv_warehouse.addItemDecoration(new DividerItemDecoration(this, 5, layoutManager.getOrientation()));
         rv_warehouse_delivery_company.setLayoutManager(layoutManagerCompany);
         tv_base_title.setText("快件入仓");
         iv_base_back.setOnClickListener(v -> {
@@ -135,10 +135,12 @@ public class WarehousingActivity extends BaseActivity implements View.OnClickLis
                     DeliveryCompanyAdapter companyAdapter = new DeliveryCompanyAdapter(currentActivity, companyList);
                     rv_warehouse_delivery_company.setAdapter(companyAdapter);
                     companyAdapter.setDelCallBack((position, url, auth_type) -> runOnUiThread(() -> {
-                        et_warehouse_company.setText(companyList.get(position));
                         isSelectCompany = true;
+                        isClickCompany = true;
                         tempResult = "";
                         rv_warehouse_delivery_company.setVisibility(View.GONE);
+                        et_warehouse_company.setText(companyList.get(position));
+                        et_warehouse_company.setSelection(companyList.get(position).length());
                     }));
                 }
                 isShowCompay = false;
@@ -183,6 +185,30 @@ public class WarehousingActivity extends BaseActivity implements View.OnClickLis
                 }
             }
         });
+        et_warehouse_company.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                String word = s.toString();
+                if (word.length() > 0) {
+                    if (!isClickCompany) {//未点击，则允许搜索
+                        deliveryModel.getSearchDelivery(4, word, WarehousingActivity.this);
+                    } else {
+                        rv_warehouse_delivery_company.setVisibility(View.GONE);
+                    }
+                } else {
+                    rv_warehouse_delivery_company.setVisibility(View.GONE);
+                    isClickCompany = false;
+                }
+            }
+        });
         tv_warehouse_commit.setOnClickListener(v -> {
             if (listItem.size() > 0) {
                 initCommitData(listItem);
@@ -204,6 +230,11 @@ public class WarehousingActivity extends BaseActivity implements View.OnClickLis
                 ToastUtil.showShortToast(currentActivity, "请输入运单号和手机号");
             }
         });
+        String cache = spUtils.getStringData(SpConstants.UserModel.WAREHOUSECACHE, "");
+        if (!TextUtils.isEmpty(cache)) {
+            listItem = GsonUtils.jsonToList(cache, WareHouseEntity.class);
+            setAdapter(currentActivity);
+        }
     }
 
     private void initCommitData(List<WareHouseEntity> mList) {
@@ -248,6 +279,7 @@ public class WarehousingActivity extends BaseActivity implements View.OnClickLis
                     listItem.clear();
                     adapter.setData(listItem);
                     setNum();
+                    spUtils.saveStringData(SpConstants.UserModel.WAREHOUSECACHE, "");
                 }
                 break;
             case 2:
@@ -264,6 +296,30 @@ public class WarehousingActivity extends BaseActivity implements View.OnClickLis
                         UpdateData();
                     } else {
                         setData(currentActivity);
+                    }
+                }
+                break;
+            case 4:
+                if (!TextUtils.isEmpty(result)) {
+                    DeliveryCompanyEntity deliveryCompanyEntity = new DeliveryCompanyEntity();
+                    deliveryCompanyEntity = GsonUtils.gsonToBean(result, DeliveryCompanyEntity.class);
+                    companySerachList.clear();
+                    companySerachList.addAll(deliveryCompanyEntity.getContent());
+                    if (null != companySerachList && companySerachList.size() > 0) {
+                        rv_warehouse_delivery_company.setVisibility(View.VISIBLE);
+                        DeliveryCompanyAdapter companyAdapter = new DeliveryCompanyAdapter(currentActivity, companySerachList);
+                        rv_warehouse_delivery_company.setAdapter(companyAdapter);
+                        companyAdapter.setDelCallBack((position, url, auth_type) ->
+                                runOnUiThread(() -> {
+                                    isSelectCompany = true;
+                                    tempResult = "";
+                                    rv_warehouse_delivery_company.setVisibility(View.GONE);
+                                    isClickCompany = true;
+                                    SoftKeyboardUtils.hideSoftKeyboard(currentActivity, et_warehouse_company);
+                                    et_warehouse_company.setText(companySerachList.get(position));
+                                    et_warehouse_company.setSelection(companySerachList.get(position).length());
+
+                                }));
                     }
                 }
                 break;
@@ -295,19 +351,21 @@ public class WarehousingActivity extends BaseActivity implements View.OnClickLis
             @Override
             public void updatePreviewUICallBack(final Activity activity,
                                                 RelativeLayout rootView, final Camera camera) {// 支持简单自定义相机页面，在相机页面上添加一层ui
-                RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(
-                        RelativeLayout.LayoutParams.WRAP_CONTENT,
-                        RelativeLayout.LayoutParams.WRAP_CONTENT);
-                lp.addRule(RelativeLayout.CENTER_HORIZONTAL,
-                        RelativeLayout.TRUE);
                 // **********************************添加动态的布局
-                currentActivity = activity;
-                deliveryModel = new DeliveryModel(currentActivity);
-                initData();
-                LayoutInflater inflater = getLayoutInflater();
-                View view = inflater.inflate(R.layout.activity_warehousing, null);
-                initView(view);
-                rootView.addView(view, lp);
+                if (null == currentActivity) {
+                    RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(
+                            RelativeLayout.LayoutParams.WRAP_CONTENT,
+                            RelativeLayout.LayoutParams.WRAP_CONTENT);
+                    lp.addRule(RelativeLayout.CENTER_HORIZONTAL,
+                            RelativeLayout.TRUE);
+                    currentActivity = activity;
+                    deliveryModel = new DeliveryModel(currentActivity);
+                    initData();
+                    LayoutInflater inflater = getLayoutInflater();
+                    View view = inflater.inflate(R.layout.activity_warehousing, null);
+                    initView(view);
+                    rootView.addView(view, lp);
+                }
             }
 
             @Override
@@ -374,6 +432,53 @@ public class WarehousingActivity extends BaseActivity implements View.OnClickLis
 
     }
 
+    private void setAdapter(Activity activity) {
+        Collections.reverse(listItem);
+        et_warehouse_phone.getText().clear();
+        et_warehouse_num.getText().clear();
+        spUtils.saveStringData(SpConstants.UserModel.WAREHOUSECACHE, GsonUtils.gsonString(listItem));
+        LinearLayoutManager layoutManager = new LinearLayoutManager(currentActivity, LinearLayoutManager.VERTICAL, false);
+        rv_warehouse.setLayoutManager(layoutManager);
+        rv_warehouse.addItemDecoration(new DividerItemDecoration(this, 5, layoutManager.getOrientation()));
+        if (null == adapter) {
+            adapter = new WareHouseAdapter(activity, listItem);
+            rv_warehouse.setAdapter(adapter);
+        } else {
+            adapter.setData(listItem);
+        }
+        adapter.setDelCallBack((position, url, auth_type) -> {
+            ToastUtil.showShortToast(currentActivity, "删除成功");
+            editPosition = -1;
+            et_warehouse_num.setText("");
+            et_warehouse_phone.setText("");
+            listItem.remove(position);
+            adapter.setEditStatus(editPosition);
+            adapter.setData(listItem);
+            setNum();
+            spUtils.saveStringData(SpConstants.UserModel.WAREHOUSECACHE, GsonUtils.gsonString(listItem));
+        });
+        adapter.setEditCallBack((position, url, auth_type) -> {
+            editPosition = position;
+            adapter.setEditStatus(position);
+            et_warehouse_num.setText(listItem.get(position).getCourierNumber());
+            et_warehouse_phone.setText(listItem.get(position).getRecipientMobile());
+            et_warehouse_company.setText(listItem.get(position).getCourierCompany());
+            et_warehouse_num.setSelection(listItem.get(position).getCourierNumber().length());
+            et_warehouse_phone.setSelection(listItem.get(position).getRecipientMobile().length());
+            isEditItemPostion = position;
+            isEditItemStatus = true;
+
+        });
+        adapter.setCancelCallBack((position, url, auth_type) -> {
+            isEditItemStatus = false;
+            adapter.setEditStatus(-1);
+            et_warehouse_num.setText("");
+            et_warehouse_phone.setText("");
+            editPosition = -1;
+        });
+        setNum();
+    }
+
     private void setData(Activity activity) {
         String phone = et_warehouse_phone.getText().toString().trim();
         String orderNum = et_warehouse_num.getText().toString().trim();
@@ -381,45 +486,7 @@ public class WarehousingActivity extends BaseActivity implements View.OnClickLis
         if (!TextUtils.isEmpty(phone) && !TextUtils.isEmpty(orderNum)) {
             WareHouseEntity entity = new WareHouseEntity(orderNum, phone, company);
             listItem.add(entity);
-            Collections.reverse(listItem);
-            et_warehouse_phone.getText().clear();
-            et_warehouse_num.getText().clear();
-            if (null == adapter) {
-                adapter = new WareHouseAdapter(activity, listItem);
-                rv_warehouse.setAdapter(adapter);
-            } else {
-                adapter.setData(listItem);
-            }
-            adapter.setDelCallBack((position, url, auth_type) -> {
-                ToastUtil.showShortToast(currentActivity, "删除成功");
-                editPosition = -1;
-                et_warehouse_num.setText("");
-                et_warehouse_phone.setText("");
-                listItem.remove(position);
-                adapter.setEditStatus(editPosition);
-                adapter.setData(listItem);
-                setNum();
-            });
-            adapter.setEditCallBack((position, url, auth_type) -> {
-                editPosition = position;
-                adapter.setEditStatus(position);
-                et_warehouse_num.setText(listItem.get(position).getCourierNumber());
-                et_warehouse_phone.setText(listItem.get(position).getRecipientMobile());
-                et_warehouse_company.setText(listItem.get(position).getCourierCompany());
-                et_warehouse_num.setSelection(listItem.get(position).getCourierNumber().length());
-                et_warehouse_phone.setSelection(listItem.get(position).getRecipientMobile().length());
-                isEditItemPostion = position;
-                isEditItemStatus = true;
-
-            });
-            adapter.setCancelCallBack((position, url, auth_type) -> {
-                isEditItemStatus = false;
-                adapter.setEditStatus(-1);
-                et_warehouse_num.setText("");
-                et_warehouse_phone.setText("");
-                editPosition = -1;
-            });
-            setNum();
+            setAdapter(activity);
         }
     }
 

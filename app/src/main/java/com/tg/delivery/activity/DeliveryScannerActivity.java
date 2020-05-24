@@ -407,9 +407,13 @@ public class DeliveryScannerActivity extends BaseActivity {
                         DeliveryInforEntity deliveryInforEntity = GsonUtils.gsonToBean(result, DeliveryInforEntity.class);
                         DeliveryInforEntity.ContentBean  conntentBean=deliveryInforEntity.getContent();
                         if (null!=conntentBean){
-                            deliveryInforList.add(0, conntentBean);
-                            deliveryNumberListAdapter.notifyDataSetChanged();
-                            showTotalNum();
+                            if(!includeDelivery(conntentBean.getCourierNumber())){
+                                deliveryInforList.add(0,conntentBean);
+                                deliveryNumberListAdapter.notifyDataSetChanged();
+                                showTotalNum();
+                            }else{
+                                ToastUtil.showShortToast(currentActivity, "运单号已录入,请勿重复录入");
+                            }
                         }
                     } catch (Exception e) {
 

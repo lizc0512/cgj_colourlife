@@ -370,9 +370,13 @@ public class DeliveryTransferActivity extends BaseActivity {
                         DeliveryInforEntity deliveryInforEntity = GsonUtils.gsonToBean(result, DeliveryInforEntity.class);
                         DeliveryInforEntity.ContentBean  dataBean=deliveryInforEntity.getContent();
                         if (null!=dataBean){
-                            deliveryInforList.add(0,dataBean);
-                            deliveryNumberListAdapter.notifyDataSetChanged();
-                            showTotalNum();
+                            if(!includeDelivery(dataBean.getCourierNumber())){
+                                deliveryInforList.add(0,dataBean);
+                                deliveryNumberListAdapter.notifyDataSetChanged();
+                                showTotalNum();
+                            }else{
+                                ToastUtil.showShortToast(currentActivity, "运单号已录入,请勿重复录入");
+                            }
                         }
                     } catch (Exception e) {
 

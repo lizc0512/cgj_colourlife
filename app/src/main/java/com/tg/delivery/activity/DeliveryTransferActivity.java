@@ -56,7 +56,7 @@ public class DeliveryTransferActivity extends BaseActivity {
     private DeliveryNumberListAdapter deliveryNumberListAdapter;
 
     private Activity currentActivity;
-    private String courierNumber;
+    private String courierNumber = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -187,7 +187,7 @@ public class DeliveryTransferActivity extends BaseActivity {
                 if (null == deliveryModel) {
                     deliveryModel = new DeliveryModel(currentActivity);
                 }
-                deliveryModel.submitDeliveryCourierNumbers(2, GsonUtils.gsonString(deliveryNumberList), "3", UserInfo.mobile, "", "", -1, DeliveryTransferActivity.this);
+                deliveryModel.submitDeliveryCourierNumbers(2, GsonUtils.gsonString(deliveryNumberList), "3", UserInfo.mobile, UserInfo.realname, "", -1, DeliveryTransferActivity.this);
             } else {
                 ToastUtil.showShortToast(currentActivity, "暂无运单进行交接");
             }
@@ -307,7 +307,7 @@ public class DeliveryTransferActivity extends BaseActivity {
                 if (deliveryInforList.size() > 50) {
                     ToastUtil.showShortToast(currentActivity, "运单号最大只能录入50个");
                 } else {
-                    if (!includeDelivery(result)) {
+                    if (!includeDelivery(result) || !result.equals(courierNumber)) {
                         courierNumber = result;
                         getDeliverStatus();
                     } else {

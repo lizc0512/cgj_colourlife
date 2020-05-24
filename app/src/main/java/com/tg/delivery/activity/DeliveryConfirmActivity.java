@@ -140,7 +140,7 @@ public class DeliveryConfirmActivity extends BaseActivity {
         });
         deliveryModel = new DeliveryModel(DeliveryConfirmActivity.this);
         btn_confirm_delivery.setOnClickListener(view -> {
-            deliveryModel.submitDeliveryCourierNumbers(0, courierNumbers, "2", UserInfo.mobile, "", smsTemplateId, finishType, DeliveryConfirmActivity.this);
+            deliveryModel.submitDeliveryCourierNumbers(0, courierNumbers, "2", UserInfo.mobile, UserInfo.realname, smsTemplateId, finishType, DeliveryConfirmActivity.this);
         });
         deliveryModel.getDeliverySmsTemplateList(1, DeliveryConfirmActivity.this);
     }

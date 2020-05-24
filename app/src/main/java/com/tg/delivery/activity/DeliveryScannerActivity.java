@@ -342,7 +342,7 @@ public class DeliveryScannerActivity extends BaseActivity {
                 if (deliveryInforList.size() > 50) {
                     ToastUtil.showShortToast(currentActivity, "运单号最大只能录入50个");
                 } else {
-                    if (!includeDelivery(result)) {
+                    if (!includeDelivery(result)||!result.equals(courierNumber)) {
                         courierNumber = result;
                         getDeliverStatus();
                     } else {

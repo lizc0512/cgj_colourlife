@@ -89,10 +89,12 @@ public class DeliveryTransferActivity extends BaseActivity {
     public void delDeliveryItem(int position) {
         ToastUtil.showShortToast(currentActivity, "删除成功");
         deliveryInforList.remove(position);
+        spUtils.saveStringData("scannerDeliveryList", GsonUtils.gsonString(deliveryInforList));
         editPosition = -1;
         ed_input_code.setText("");
         deliveryNumberListAdapter.setEditStatus(editPosition);
         deliveryNumberListAdapter.notifyDataSetChanged();
+        showTotalNum();
     }
 
     private int editPosition = -1;
@@ -169,6 +171,7 @@ public class DeliveryTransferActivity extends BaseActivity {
                 } else {
                     //表示单号列表的编辑 请求数据成功 将editPosition置为-1
                     deliveryInforList.get(editPosition).setCourierNumber(courierNumber);
+                    spUtils.saveStringData("scannerDeliveryList", GsonUtils.gsonString(deliveryInforList));
                     deliveryNumberListAdapter.notifyDataSetChanged();
                 }
             } else {

@@ -117,7 +117,6 @@ public class DeliveryScannerActivity extends BaseActivity {
     }
 
 
-
     /***删除当前的单号***/
     public void delDeliveryItem(int position) {
         ToastUtil.showShortToast(currentActivity, "删除成功");
@@ -210,25 +209,31 @@ public class DeliveryScannerActivity extends BaseActivity {
             hideBottomUIMenu();
         });
         tv_define_delivery.setOnClickListener(view -> {
-            if (deliveryInforList.size()>0){
+            if (deliveryInforList.size() > 0) {
                 Intent it = new Intent(currentActivity, DeliveryConfirmActivity.class);
-                List<String> deliveryNumberList=new ArrayList<>();
-                ArrayList<Integer>  lengthList=new ArrayList<>();
-                for (DeliveryInforEntity.ContentBean dataBean : deliveryInforList){
-                    String  courierNumber=dataBean.getCourierNumber();
-                    String  courierCompany=dataBean.getCourierCompany();
+                List<String> deliveryNumberList = new ArrayList<>();
+                ArrayList<Integer> lengthList = new ArrayList<>();
+                for (DeliveryInforEntity.ContentBean dataBean : deliveryInforList) {
+                    String courierNumber = dataBean.getCourierNumber();
+                    String courierCompany = dataBean.getCourierCompany();
                     deliveryNumberList.add(courierNumber);
-                    lengthList.add(courierNumber.length()+courierCompany.length());
+                    lengthList.add(courierNumber.length() + courierCompany.length());
                 }
-                it.putExtra(COURIERNUMBERS,GsonUtils.gsonString(deliveryNumberList));
-                it.putIntegerArrayListExtra(COURIERLENGTHLIST,lengthList);
-                it.putExtra(COURIERSIZE,deliveryInforList.size());
+                it.putExtra(COURIERNUMBERS, GsonUtils.gsonString(deliveryNumberList));
+                it.putIntegerArrayListExtra(COURIERLENGTHLIST, lengthList);
+                it.putExtra(COURIERSIZE, deliveryInforList.size());
                 startActivity(it);
-            }else{
-                ToastUtil.showShortToast(currentActivity,"暂无运单可以来进行派件");
+            } else {
+                ToastUtil.showShortToast(currentActivity, "暂无运单可以来进行派件");
             }
 
         });
+        String scannerCache = spUtils.getStringData("scannerDeliveryList", "");
+        if (!TextUtils.isEmpty(scannerCache)) {
+            deliveryInforList.clear();
+            deliveryInforList = GsonUtils.jsonToList(scannerCache, DeliveryInforEntity.ContentBean.class);
+            showTotalNum();
+        }
         deliveryNumberListAdapter = new DeliveryNumberListAdapter(currentActivity, DeliveryScannerActivity
                 .this, deliveryInforList);
         rv_delivery_infor.setLayoutManager(new LinearLayoutManager(currentActivity));
@@ -259,7 +264,7 @@ public class DeliveryScannerActivity extends BaseActivity {
 
     protected void hideBottomUIMenu() {
         //隐藏虚拟按键，并且全屏
-        if (checkDeviceHasNavigationBar(currentActivity)){
+        if (checkDeviceHasNavigationBar(currentActivity)) {
             if (Build.VERSION.SDK_INT > 11 && Build.VERSION.SDK_INT < 19) { // lower api
                 View v = currentActivity.getWindow().getDecorView();
                 v.setSystemUiVisibility(View.GONE);
@@ -389,12 +394,12 @@ public class DeliveryScannerActivity extends BaseActivity {
             case 0:
                 try {
                     DeliveryStateEntity deliveryStateEntity = GsonUtils.gsonToBean(result, DeliveryStateEntity.class);
-                    String status=deliveryStateEntity.getContent();
+                    String status = deliveryStateEntity.getContent();
                     if ("1".equals(status)) {
                         ToastUtil.showShortToast(currentActivity, "运单已经派送,请勿重复扫描");
-                    } else if("0".equals(status)){
+                    } else if ("0".equals(status)) {
                         ToastUtil.showShortToast(currentActivity, "该运单在系统中未找到,请确认是否录入系统");
-                    }else{
+                    } else {
                         getDeliverInfor();
                     }
                 } catch (Exception e) {
@@ -405,13 +410,14 @@ public class DeliveryScannerActivity extends BaseActivity {
                 if (!TextUtils.isEmpty(result)) {
                     try {
                         DeliveryInforEntity deliveryInforEntity = GsonUtils.gsonToBean(result, DeliveryInforEntity.class);
-                        DeliveryInforEntity.ContentBean  conntentBean=deliveryInforEntity.getContent();
-                        if (null!=conntentBean){
-                            if(!includeDelivery(conntentBean.getCourierNumber())){
-                                deliveryInforList.add(0,conntentBean);
+                        DeliveryInforEntity.ContentBean conntentBean = deliveryInforEntity.getContent();
+                        if (null != conntentBean) {
+                            if (!includeDelivery(conntentBean.getCourierNumber())) {
+                                deliveryInforList.add(0, conntentBean);
                                 deliveryNumberListAdapter.notifyDataSetChanged();
+                                spUtils.saveStringData("scannerDeliveryList", GsonUtils.gsonString(deliveryInforList));
                                 showTotalNum();
-                            }else{
+                            } else {
                                 ToastUtil.showShortToast(currentActivity, "运单号已录入,请勿重复录入");
                             }
                         }

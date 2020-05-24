@@ -179,20 +179,26 @@ public class DeliveryTransferActivity extends BaseActivity {
         });
         tv_define_delivery.setOnClickListener(view -> {
             if (deliveryInforList.size() > 0) {
-                List<String> deliveryNumberList=new ArrayList<>();
-                for (DeliveryInforEntity.ContentBean dataBean : deliveryInforList){
-                    String  courierNumber=dataBean.getCourierNumber();
+                List<String> deliveryNumberList = new ArrayList<>();
+                for (DeliveryInforEntity.ContentBean dataBean : deliveryInforList) {
+                    String courierNumber = dataBean.getCourierNumber();
                     deliveryNumberList.add(courierNumber);
                 }
                 if (null == deliveryModel) {
                     deliveryModel = new DeliveryModel(currentActivity);
                 }
-                deliveryModel.submitDeliveryCourierNumbers(2,GsonUtils.gsonString(deliveryNumberList), "3", UserInfo.mobile, "", "", -1, DeliveryTransferActivity.this);
+                deliveryModel.submitDeliveryCourierNumbers(2, GsonUtils.gsonString(deliveryNumberList), "3", UserInfo.mobile, "", "", -1, DeliveryTransferActivity.this);
             } else {
                 ToastUtil.showShortToast(currentActivity, "暂无运单进行交接");
             }
 
         });
+        String scannerCache = spUtils.getStringData("transDeliveryList", "");
+        if (!TextUtils.isEmpty(scannerCache)) {
+            deliveryInforList.clear();
+            deliveryInforList = GsonUtils.jsonToList(scannerCache, DeliveryInforEntity.ContentBean.class);
+            showTotalNum();
+        }
         deliveryNumberListAdapter = new DeliveryNumberListAdapter(currentActivity, DeliveryTransferActivity.this
                 , deliveryInforList);
         rv_delivery_infor.setLayoutManager(new LinearLayoutManager(currentActivity));
@@ -246,7 +252,7 @@ public class DeliveryTransferActivity extends BaseActivity {
 
     protected void hideBottomUIMenu() {
         //隐藏虚拟按键，并且全屏
-        if (checkDeviceHasNavigationBar(currentActivity)){
+        if (checkDeviceHasNavigationBar(currentActivity)) {
             if (Build.VERSION.SDK_INT > 11 && Build.VERSION.SDK_INT < 19) { // lower api
                 View v = currentActivity.getWindow().getDecorView();
                 v.setSystemUiVisibility(View.GONE);
@@ -262,6 +268,7 @@ public class DeliveryTransferActivity extends BaseActivity {
             }
         }
     }
+
     public void useCamareSdk(boolean boolkeep) {
         ISCardScanActivity.setListener(new ISCardScanActivity.OnCardResultListener() {
             @Override
@@ -368,13 +375,14 @@ public class DeliveryTransferActivity extends BaseActivity {
                 if (!TextUtils.isEmpty(result)) {
                     try {
                         DeliveryInforEntity deliveryInforEntity = GsonUtils.gsonToBean(result, DeliveryInforEntity.class);
-                        DeliveryInforEntity.ContentBean  dataBean=deliveryInforEntity.getContent();
-                        if (null!=dataBean){
-                            if(!includeDelivery(dataBean.getCourierNumber())){
-                                deliveryInforList.add(0,dataBean);
+                        DeliveryInforEntity.ContentBean dataBean = deliveryInforEntity.getContent();
+                        if (null != dataBean) {
+                            if (!includeDelivery(dataBean.getCourierNumber())) {
+                                deliveryInforList.add(0, dataBean);
                                 deliveryNumberListAdapter.notifyDataSetChanged();
+                                spUtils.saveStringData("transDeliveryList", GsonUtils.gsonString(deliveryInforList));
                                 showTotalNum();
-                            }else{
+                            } else {
                                 ToastUtil.showShortToast(currentActivity, "运单号已录入,请勿重复录入");
                             }
                         }
@@ -384,7 +392,8 @@ public class DeliveryTransferActivity extends BaseActivity {
                 }
                 break;
             case 2:
-                ToastUtil.showShortToast(DeliveryTransferActivity.this,"快件交接成功");
+                ToastUtil.showShortToast(DeliveryTransferActivity.this, "快件交接成功");
+                spUtils.saveStringData("transDeliveryList", "");
                 currentActivity.finish();
                 finish();
                 break;

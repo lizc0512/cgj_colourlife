@@ -1,6 +1,7 @@
 package com.tg.coloursteward.fragment;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.ContentValues;
 import android.content.Context;
@@ -27,10 +28,15 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.activity.EmployeeDataActivity;
 import com.tg.coloursteward.activity.HomeContactOrgActivity;
+import com.tg.coloursteward.baseModel.HttpResponse;
 import com.tg.coloursteward.constant.Contants;
 import com.tg.coloursteward.constant.SpConstants;
+import com.tg.coloursteward.entity.ContactPermissionEntity;
 import com.tg.coloursteward.info.FamilyInfo;
 import com.tg.coloursteward.info.UserInfo;
+import com.tg.coloursteward.model.ContactModel;
+import com.tg.coloursteward.util.GsonUtils;
+import com.tg.coloursteward.util.LinkParseUtil;
 import com.tg.coloursteward.util.SharedPreferencesUtils;
 import com.tg.coloursteward.util.StringUtils;
 import com.tg.coloursteward.util.Tools;
@@ -72,7 +78,7 @@ import rx.schedulers.Schedulers;
  * 日期：2018.04.03 11:59
  * 描述：联系人页面
  */
-public class ContactsFragment extends Fragment implements ItemEventListener {
+public class ContactsFragment extends Fragment implements ItemEventListener, HttpResponse {
 
     private static final int REQUEST_PERMISSION = 110;
 
@@ -84,7 +90,6 @@ public class ContactsFragment extends Fragment implements ItemEventListener {
     private Context mContext;
     private List<ContactBean> headContacts;
 
-    private String skinCode;
     private String orgName;
     private String orgId;
 
@@ -104,6 +109,27 @@ public class ContactsFragment extends Fragment implements ItemEventListener {
 
     public ModifyContactsReceiver mModifyContactsReceiver;
     private IntentFilter filter;
+    private ContactModel contactModel;
+    private boolean hasPermission;
+    private String permissionJumpUrl;
+
+    @Override
+    public void OnHttpResponse(int what, String result) {
+        switch (what) {
+            case 0:
+                if (!TextUtils.isEmpty(result)) {
+                    ContactPermissionEntity entity = new ContactPermissionEntity();
+                    entity = GsonUtils.gsonToBean(result, ContactPermissionEntity.class);
+                    hasPermission = entity.getContent().getIsHas_permission();
+                    if (hasPermission) {
+                        permissionJumpUrl = entity.getContent().getRedirect_url();
+                        headContacts = ContactBeanData.contactList(mContext, ContactBeanData.TYPE_GROUP_PERMISSION);
+                        getHeadList();
+                    }
+                }
+                break;
+        }
+    }
 
     class ModifyContactsReceiver extends BroadcastReceiver {
 
@@ -131,7 +157,6 @@ public class ContactsFragment extends Fragment implements ItemEventListener {
         registerReceiver();
         headContacts = ContactBeanData.contactList(mContext, ContactBeanData.TYPE_HOME);
 
-        skinCode = Tools.getStringValue(mContext, Contants.storage.SKINCODE);
         orgName = Tools.getStringValue(mContext, Contants.storage.ORGNAME);
         orgId = Tools.getStringValue(mContext, Contants.storage.ORGID);
     }
@@ -147,6 +172,7 @@ public class ContactsFragment extends Fragment implements ItemEventListener {
         headContacts = ContactBeanData.contactList(mContext, ContactBeanData.TYPE_HOME);
         getHeadList();
         getCacheList();//读取本地缓存列表
+        initGetPermission();
     }
 
     @Override
@@ -155,7 +181,7 @@ public class ContactsFragment extends Fragment implements ItemEventListener {
         if (!ListUtils.isEmpty(contactList)) {
             contactList.clear();
         }
-
+        contactModel = new ContactModel(mContext);
         initView(view);
 
 //        getHeadList();
@@ -165,6 +191,11 @@ public class ContactsFragment extends Fragment implements ItemEventListener {
         reqContacts();
 
         setListener();
+    }
+
+    private void initGetPermission() {
+        String colorToken = SharedPreferencesUtils.getKey(mContext, SpConstants.accessToken.accssToken);
+        contactModel.getColudPermission(0, colorToken, this);
     }
 
 
@@ -379,28 +410,13 @@ public class ContactsFragment extends Fragment implements ItemEventListener {
         switch (pos) {
             case 0: //组织架构
                 if (familyList.size() > 0) {
-                    if (skinCode.equals("101")) {//101 彩生活
-                        for (int i = 0; i < familyList.size(); i++) {
-                            if (familyList.get(i).name.equals("彩生活服务集团")) {
-                                info = new FamilyInfo();
-                                info.id = "0";
-                                info.type = "org";
-                                info.name = "";
-                                intent = new Intent(mContext, HomeContactOrgActivity.class);
-                                intent.putExtra(HomeContactOrgActivity.FAMILY_INFO, info);
-                                startActivity(intent);
-                            }
-                        }
-                    } else {
-                        info = new FamilyInfo();
-                        info.id = "0";
-                        info.type = "org";
-                        info.name = "";
-                        intent = new Intent(mContext, HomeContactOrgActivity.class);
-                        intent.putExtra(HomeContactOrgActivity.FAMILY_INFO, info);
-                        startActivity(intent);
-                    }
-
+                    info = new FamilyInfo();
+                    info.id = "0";
+                    info.type = "org";
+                    info.name = "";
+                    intent = new Intent(mContext, HomeContactOrgActivity.class);
+                    intent.putExtra(HomeContactOrgActivity.FAMILY_INFO, info);
+                    startActivity(intent);
                 } else {
                     if (StringUtils.isNotEmpty(orgId) && StringUtils.isNotEmpty(orgName)) {
                         info = new FamilyInfo();
@@ -433,11 +449,15 @@ public class ContactsFragment extends Fragment implements ItemEventListener {
                 startActivity(intent);
                 break;
             case 2: //手机联系人
-                if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
-                    //申请权限
-                    ActivityCompat.requestPermissions(requireActivity(), new String[]{Manifest.permission.READ_CONTACTS}, REQUEST_PERMISSION);
+                if (hasPermission) {
+                    LinkParseUtil.parse((Activity) mContext, permissionJumpUrl, "");
                 } else {
-                    startActivity(new Intent(mContext, ContactsActivity.class));
+                    if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
+                        //申请权限
+                        ActivityCompat.requestPermissions(requireActivity(), new String[]{Manifest.permission.READ_CONTACTS}, REQUEST_PERMISSION);
+                    } else {
+                        startActivity(new Intent(mContext, ContactsActivity.class));
+                    }
                 }
                 break;
             case 3: //群聊
@@ -446,24 +466,10 @@ public class ContactsFragment extends Fragment implements ItemEventListener {
             default: //item
                 Intent i = new Intent(mContext, EmployeeDataActivity.class);
                 i.putExtra(EmployeeDataActivity.CONTACTS_ID, item.getUsername());
-//                i.putExtra(EmployeeDataActivity.CONTACTS_UUID, item.getUuid());
                 startActivity(i);
-//                String avatar = Contants.URl.HEAD_ICON_URL + "avatar?uid=" + item.getUsername();
-//                if (TextUtils.isEmpty(item.getUuid())) {
-//                    Toast.makeText(mContext, item.getRealname() + "的uuid为空，无法进行IM聊天", Toast.LENGTH_SHORT).show();
-//                    return;
-//                }
-//                Intent i = new Intent(mContext, IMConnectionActivity.class);
-//                i.putExtra(IMConnectionActivity.DST_UUID, item.getUuid());
-//                i.putExtra(IMConnectionActivity.DST_NAME, item.getRealname());
-//                i.putExtra(IMConnectionActivity.DST_AVATAR, avatar);
-//                i.putExtra(IMConnectionActivity.DST_USERNAME, item.getUsername());
-//                i.putExtra(IMConnectionActivity.DST_PHONE, item.getMobile());
-//                startActivity(i);
                 break;
         }
     }
-
 
     /**
      * 获取首页缓存列表 常用联系人
@@ -528,7 +534,7 @@ public class ContactsFragment extends Fragment implements ItemEventListener {
         params.put("orgID", "0");//架构UUID编号,0取顶级架构
         params.put("familyTypeId", "0");//族谱类型ID：0组织架构
         params.put("status", 0);//状态，0正常，1禁用
-        params.put("corpId", ColorsConfig.CORP_UUID);
+        params.put("corpId", corpId);
         ColorsConfig.commonParams(params);
 
         OkHttpConnector.httpGet(mContext, url, params, new IGetListener() {
@@ -544,22 +550,11 @@ public class ContactsFragment extends Fragment implements ItemEventListener {
                         familyInfo.name = lists.get(i).getName();
                         familyList.add(familyInfo);
                     }
-                    if (skinCode.equals("101")) {//101 彩生活
-                        for (int i = 0; i < familyList.size(); i++) {
-                            if (familyList.get(i).name.equals(ColorsConfig.ColorLifeAppName)) {
-                                Tools.saveStringValue(mContext, Contants.storage.ORGNAME, familyList.get(i).name);
-                                Tools.saveStringValue(mContext, Contants.storage.ORGID, familyList.get(i).id);
-                                adapter.org_name = familyList.get(i).name;
-                            }
-                        }
-                    } else {
-                        if (StringUtils.isNotEmpty(familyList.get(0).name)) {
-                            Tools.saveStringValue(mContext, Contants.storage.ORGNAME, familyList.get(0).name);
-                            Tools.saveStringValue(mContext, Contants.storage.ORGID, familyList.get(0).id);
-                            adapter.org_name = familyList.get(0).name;
-                        }
+                    if (familyList.size() > 0) {
+                        Tools.saveStringValue(mContext, Contants.storage.ORGNAME, familyList.get(0).name);
+                        Tools.saveStringValue(mContext, Contants.storage.ORGID, familyList.get(0).id);
+                        adapter.org_name = familyList.get(0).name;
                     }
-
                 }
             }
         });

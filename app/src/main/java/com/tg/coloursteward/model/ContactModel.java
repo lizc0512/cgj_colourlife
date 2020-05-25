@@ -29,6 +29,7 @@ import java.util.Map;
 public class ContactModel extends BaseModel {
     private String idCardUrl = "/txl2/contacts/search";
     private String collextUrl = "/txl2/contacts";
+    private String cloudPermissionUrl = "/app/cloud/apply";
 
     public ContactModel(Context context) {
         super(context);
@@ -146,6 +147,38 @@ public class ContactModel extends BaseModel {
             @Override
             public void onFailed(int what, Response<String> response) {
                 showExceptionMessage(what, response);
+            }
+        }, true, false);
+    }
+
+    /**
+     * 物业云账号申请入口控制
+     *
+     * @param what
+     * @param color_token
+     * @param httpResponse
+     */
+    public void getColudPermission(int what, String color_token, HttpResponse httpResponse) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("color-token", color_token);
+        final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 5,
+                cloudPermissionUrl), RequestMethod.GET);
+        request(what, request, RequestEncryptionUtils.getNewSaftyMap(mContext, params), new HttpListener<String>() {
+            @Override
+            public void onSucceed(int what, Response<String> response) {
+                int responseCode = response.getHeaders().getResponseCode();
+                String result = response.get();
+                if (responseCode == RequestEncryptionUtils.responseSuccess) {
+                    int code = showSuccesResultMessageTheme(result);
+                    if (code == 0) {
+                        httpResponse.OnHttpResponse(what, result);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailed(int what, Response<String> response) {
+
             }
         }, true, false);
     }

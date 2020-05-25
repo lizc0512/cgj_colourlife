@@ -25,6 +25,7 @@ public interface Contants {
 //        String DELIVERY_HOME_ADDRESS = "https://gexpressbackend-czytest.colourlife.com";
 //        String DELIVERY_NUMBER_ADDRESS = "https://kdbackend-czytest.colourlife.com"; //快单号
 //        String DELIVERY_COMPANY_ADDRESS = "https://gexpressbackend-czytest.colourlife.com";//快递公司
+//        String SMS_TEMPLATE_URL="https://gexpress-czy.colourlife.com/new_express/#/pages/message/message";//短信模版url
 //        String environment = "release";
 //        String cqj_appid = "327494513335603200";
 //        String TOKEN_ADDRESS = "https://oauth2czy.colourlife.com";
@@ -50,7 +51,7 @@ public interface Contants {
         String DELIVERY_HOME_ADDRESS = "https://gexpressbackend-czytest.colourlife.com";
         String DELIVERY_NUMBER_ADDRESS = "https://kdbackend-czytest.colourlife.com"; //快单号
         String DELIVERY_COMPANY_ADDRESS = "https://gexpressbackend-czytest.colourlife.com";//快递公司
-        String SMS_TEMPLATE_URL="https://gexpress-czytest.colourlife.com/new_express/#/pages/message/message";//短信模版url
+        String SMS_TEMPLATE_URL = "https://gexpress-czytest.colourlife.com/new_express/#/pages/message/message";//短信模版url
         String environment = "debug";
         String cqj_appid = "323521861252157440";
         String TOKEN_ADDRESS = "http://oauth2-czytest.colourlife.com";

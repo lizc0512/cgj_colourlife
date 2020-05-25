@@ -73,7 +73,7 @@
             android:src="@drawable/next" />
     </RelativeLayout>
 
-    <androidx.constraintlayout.Barrier
+    <androidx.constraintlayout.widget.Barrier
         android:id="@+id/barry"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

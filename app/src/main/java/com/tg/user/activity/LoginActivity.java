@@ -113,7 +113,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
     private String password;
     private OAuth2ServiceUpdate auth2ServiceUpdate;
     private String extras;
-    private String loginType = "1";//1：账号密码登录，2：短信验证码登录，3：手机号码密码登录，4：彩之云授权登录，5：彩之云colour-token登录，6：微信授权登录
+    private String loginType = "1";//1：账号密码登录，2：短信验证码登录，3：手机号码密码登录，4：彩之云授权登录，5：彩之云colour-token登录(暂无该类型)，6：微信授权登录
     private String user_type;//1：oa账号，2：彩之云账号
     private String czyAccessToken;//彩之云授权token
     private CustomDialog reviewDialog;
@@ -881,7 +881,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                             String employeeAccount = data.getString("username");
                             String employeeName = data.getString("name");
                             String password = data.getString("password");
-                            if (TextUtils.isEmpty(password)) {
+                            if (TextUtils.isEmpty(password) && !"4".equals(loginType)) {
                                 spUtils.saveBooleanData(SpConstants.UserModel.NoHAVEPWD, true);
                             } else {
                                 spUtils.saveBooleanData(SpConstants.UserModel.NoHAVEPWD, false);

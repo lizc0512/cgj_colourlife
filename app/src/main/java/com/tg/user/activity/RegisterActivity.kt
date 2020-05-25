@@ -58,11 +58,11 @@ class RegisterActivity : BaseActivity(), View.OnClickListener, HttpResponse {
             }
             3 -> {
                 ToastUtil.showShortToast(this, "注册成功")
-                val it = Intent(this, LoginActivity::class.java)
+                val it = Intent()
                 it.putExtra(LoginActivity.ACCOUNT, phone)
                 it.putExtra(LoginActivity.PASSWORD, password)
-                it.putExtra(LoginActivity.ISLOGIN, "true")
-                startActivity(it)
+                setResult(4001, it);
+                finish()
             }
         }
     }

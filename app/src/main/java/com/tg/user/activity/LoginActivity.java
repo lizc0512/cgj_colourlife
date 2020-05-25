@@ -88,7 +88,6 @@ import cn.sharesdk.wechat.friends.Wechat;
 public class LoginActivity extends BaseActivity implements View.OnClickListener, HttpResponse, TextWatcher {
     public static final String ACCOUNT = "account";
     public static final String PASSWORD = "password";
-    public static final String ISLOGIN = "islogin";
     public static final String CZY_CODE = "czy_code";
     public static final String USERACCOUNT = "user_account";
     public static final String USEROA = "user_oa";
@@ -382,7 +381,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                 break;
             case R.id.tv_register:
                 Intent register = new Intent(this, RegisterActivity.class);
-                startActivity(register);
+                startActivityForResult(register, 4000);
                 break;
             case R.id.iv_wx_login:
                 Platform plat = ShareSDK.getPlatform(Wechat.NAME);
@@ -482,20 +481,12 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
         super.onNewIntent(intent);
         String code = intent.getStringExtra(CZY_CODE);
         String account = intent.getStringExtra(ACCOUNT);
-        String registerPassword = intent.getStringExtra(PASSWORD);
-        String registerLogin = intent.getStringExtra(ISLOGIN);
         if (!TextUtils.isEmpty(account)) {
             setAccount(account);
-        }
-        if (!TextUtils.isEmpty(registerPassword)) {
-            setPassword(registerPassword);
         }
         if (!TextUtils.isEmpty(code)) {
             ThirdLogin(code);
             spUtils.saveStringData(SpConstants.storage.THRID_CODE, code);
-        }
-        if ("true".equals(registerLogin)) {
-            setLogin();
         }
     }
 
@@ -944,6 +935,18 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                 loginType = "6";
                 ToastUtil.showShortToast(this, "绑定成功，正在登录");
                 login(account, pwd, loginType);
+            }
+        } else if (requestCode == 4000) {
+            if (resultCode == 4001) {
+                String account = data.getStringExtra(ACCOUNT);
+                String registerPassword = data.getStringExtra(PASSWORD);
+                if (!TextUtils.isEmpty(account)) {
+                    setAccount(account);
+                }
+                if (!TextUtils.isEmpty(registerPassword)) {
+                    setPassword(registerPassword);
+                }
+                setLogin();
             }
         }
     }

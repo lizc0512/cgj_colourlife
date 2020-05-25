@@ -31,6 +31,7 @@ public interface SpConstants {
         String HOMEDATA = "homedata";
         String NoHAVEPWD = "nohavepwd";//用户信息没有返回密码,需要提示
         String ISREFRESHWORK = "isrefreshwork";//刷新工作页面
+        String ISREFRESHMINE = "isrefreshmine";//刷新我的页面
         String WAREHOUSECACHE = "warehousecache";//快递入仓缓存数据
     }
 

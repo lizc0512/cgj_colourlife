@@ -176,6 +176,7 @@ public class UserInfoActivity extends BaseActivity implements OnClickListener, H
         UserModel userModel = new UserModel(this);
         userModel.getUserInfoByCorp(2, corpId, colorToken, true, this);
         spUtils.saveBooleanData(SpConstants.UserModel.ISREFRESHWORK, true);
+        spUtils.saveBooleanData(SpConstants.UserModel.ISREFRESHMINE, true);
     }
 
     /**

@@ -38,8 +38,9 @@ public class MineModel extends BaseModel {
      * @param what
      * @param httpResponse 我的页面列表接口
      */
-    public void getMineData(int what, HttpResponse httpResponse) {
+    public void getMineData(int what, String corp_id, HttpResponse httpResponse) {
         Map<String, Object> params = new HashMap<>();
+        params.put("corp_id", corp_id);
         final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 0, mineUrl), RequestMethod.GET);
         request(what, request, RequestEncryptionUtils.getNewSaftyMap(mContext, params), new HttpListener<String>() {
             @Override

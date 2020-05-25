@@ -4,9 +4,6 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
@@ -18,6 +15,10 @@ import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.activity.MyBrowserActivity;
@@ -95,8 +96,10 @@ public class FragmentMine extends Fragment implements OnClickListener, HttpRespo
     }
 
     private void initGetData() {
-        mineModel.getMineData(0, this);
+        String corp_id = SharedPreferencesUtils.getInstance().getStringData(SpConstants.storage.CORPID, "");
+        mineModel.getMineData(0, corp_id, this);
     }
+
 
     private void initDataAdapter(String json) {
         list.clear();
@@ -210,7 +213,13 @@ public class FragmentMine extends Fragment implements OnClickListener, HttpRespo
     @Override
     public void onResume() {
         super.onResume();
+        boolean isCorpRefresh = SharedPreferencesUtils.getInstance().getBooleanData(SpConstants.UserModel.ISREFRESHMINE, false);
+        if (isCorpRefresh) {
+            initGetData();
+            SharedPreferencesUtils.getInstance().saveBooleanData(SpConstants.UserModel.ISREFRESHMINE, false);
+        }
         getHeadImg();
+
     }
 
     public void getHeadImg() {

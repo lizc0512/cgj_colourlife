@@ -30,6 +30,7 @@ public interface SpConstants {
         String SCANCODEOFFDATA = "scancodeoffdata";
         String HOMEDATA = "homedata";
         String NoHAVEPWD = "nohavepwd";//用户信息没有返回密码,需要提示
+        String ISREFRESHCONTACT = "isrefreshcontact";//刷新通讯录页面
         String ISREFRESHWORK = "isrefreshwork";//刷新工作页面
         String ISREFRESHMINE = "isrefreshmine";//刷新我的页面
         String WAREHOUSECACHE = "warehousecache";//快递入仓缓存数据
@@ -64,8 +65,8 @@ public interface SpConstants {
         String CORPID = "corp_id";//租户Id
         String CORPNAME = "corp_name";//租户名称
         String CORPDATA = "corp_data";//租户数据
-        String ORG_UUID = "org_uuid";//租户Id
-        String USER_MOBILE = "user_mobile";//租户Id
+        String ORG_UUID = "org_uuid";//部门ID
+        String USER_MOBILE = "user_mobile";//
         String DEVICE_TOKEN = "device_token";//设备唯一token
         String BANK_LIST = "bank_list";//
 

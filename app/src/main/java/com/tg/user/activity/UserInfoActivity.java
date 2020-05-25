@@ -162,6 +162,9 @@ public class UserInfoActivity extends BaseActivity implements OnClickListener, H
             } else if (requestCode == 1001) {
                 String name = data.getStringExtra("companyName");
                 tv_user_company.setText(name);
+                spUtils.saveBooleanData(SpConstants.UserModel.ISREFRESHWORK, true);
+                spUtils.saveBooleanData(SpConstants.UserModel.ISREFRESHMINE, true);
+                spUtils.saveBooleanData(SpConstants.UserModel.ISREFRESHMINE, true);
                 initRefreshUserInfo();
             }
         }
@@ -175,8 +178,6 @@ public class UserInfoActivity extends BaseActivity implements OnClickListener, H
         String colorToken = SharedPreferencesUtils.getKey(this, SpConstants.accessToken.accssToken);
         UserModel userModel = new UserModel(this);
         userModel.getUserInfoByCorp(2, corpId, colorToken, true, this);
-        spUtils.saveBooleanData(SpConstants.UserModel.ISREFRESHWORK, true);
-        spUtils.saveBooleanData(SpConstants.UserModel.ISREFRESHMINE, true);
     }
 
     /**

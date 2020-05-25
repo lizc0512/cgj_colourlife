@@ -34,6 +34,8 @@ import com.tg.coloursteward.entity.CropListEntity;
 import com.tg.coloursteward.entity.MicroDataEntity;
 import com.tg.coloursteward.model.MicroModel;
 import com.tg.coloursteward.net.GetTwoRecordListener;
+import com.tg.coloursteward.net.HttpTools;
+import com.tg.coloursteward.net.ResponseData;
 import com.tg.coloursteward.serice.HomeService;
 import com.tg.coloursteward.util.DisplayUtil;
 import com.tg.coloursteward.util.GlideUtils;
@@ -48,6 +50,8 @@ import com.tg.coloursteward.view.MyGridLayoutManager;
 import com.tg.delivery.activity.DeliveryManagerActivity;
 import com.tg.delivery.entity.DeliveryUserInfoEntitiy;
 import com.tg.delivery.model.DeliveryModel;
+import com.tg.user.entity.OauthUserEntity;
+import com.tg.user.model.UserModel;
 import com.youmai.hxsdk.config.ColorsConfig;
 import com.youmai.hxsdk.http.OkHttpConnector;
 
@@ -431,6 +435,21 @@ public class FragmentManagement extends Fragment implements HttpResponse, View.O
                     }
                 }
                 break;
+            case 3:
+                if (!TextUtils.isEmpty(result)) {
+                    String response = HttpTools.getContentString(result);
+                    OauthUserEntity oauthUserEntity = new OauthUserEntity();
+                    try {
+                        oauthUserEntity = GsonUtils.gsonToBean(result, OauthUserEntity.class);
+                        int status = oauthUserEntity.getContent().getStatus();
+                        if (status == 0) {
+                            ResponseData data = HttpTools.getResponseContentObject(response);
+                            Tools.loadUserInfo(data, result);
+                        }
+                    } catch (Exception e) {
+                    }
+                }
+                break;
         }
     }
 
@@ -526,6 +545,7 @@ public class FragmentManagement extends Fragment implements HttpResponse, View.O
             cropList.get(position).setIs_default("1");
             cropListAdapter.notifyDataSetChanged();
             initLayout(cropUuid);
+            initRefreshUserInfo(cropUuid);
             popupWindow.dismiss();
         });
         View view_bg = contentview.findViewById(R.id.view_bg);
@@ -537,6 +557,15 @@ public class FragmentManagement extends Fragment implements HttpResponse, View.O
             iv_miniservice_next.setImageDrawable(getResources().getDrawable(R.drawable.nav_icon_shaixuan_n));
         });
         iv_miniservice_next.setImageDrawable(getResources().getDrawable(R.drawable.nav_icon_shaixuan_p));
+    }
+
+    /**
+     * 重新请求用户信息，更新数据
+     */
+    private void initRefreshUserInfo(String cropUuid) {
+        String colorToken = SharedPreferencesUtils.getKey(mActivity, SpConstants.accessToken.accssToken);
+        UserModel userModel = new UserModel(mActivity);
+        userModel.getUserInfoByCorp(3, cropUuid, colorToken, true, this);
     }
 }
 

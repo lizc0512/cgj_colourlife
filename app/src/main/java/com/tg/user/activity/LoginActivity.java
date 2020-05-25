@@ -924,13 +924,27 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                             Intent it = new Intent(this, BindWeChatActivity.class);
                             it.putExtra("unionid", unionid);
                             it.putExtra("openid", openid);
-                            startActivity(it);
+                            startActivityForResult(it, 3000);
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
                 }
                 break;
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 3000) {
+            if (resultCode == 3001) {
+                String account = data.getStringExtra(ACCOUNT);
+                String pwd = data.getStringExtra(PASSWORD);
+                loginType = "6";
+                ToastUtil.showShortToast(this, "绑定成功，正在登录");
+                login(account, pwd, loginType);
+            }
         }
     }
 

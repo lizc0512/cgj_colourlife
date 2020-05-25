@@ -141,8 +141,11 @@ public class BindWeChatActivity extends BaseActivity implements View.OnClickList
                 }
                 break;
             case 1:
-                ToastUtil.showShortToast(this, "绑定成功，正在登录");
-                login(unionid, MD5.getMd5Value(openid).toLowerCase(), "6");
+                Intent it = new Intent();
+                it.putExtra(LoginActivity.ACCOUNT, unionid);
+                it.putExtra(LoginActivity.PASSWORD, MD5.getMd5Value(openid).toLowerCase());
+                setResult(3001, it);
+                finish();
                 break;
             case 2:
                 if (!TextUtils.isEmpty(result)) {

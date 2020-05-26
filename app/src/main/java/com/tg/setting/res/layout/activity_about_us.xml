@@ -39,12 +39,11 @@
             android:textSize="@dimen/font_14sp" />
 
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/size_15dp"
+            android:layout_height="@dimen/size_15dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="@dimen/size_30dp"
-            android:padding="@dimen/size_5dp"
             android:src="@drawable/about_next" />
 
         <View
@@ -69,12 +68,11 @@
             android:textSize="@dimen/font_14sp" />
 
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/size_15dp"
+            android:layout_height="@dimen/size_15dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="@dimen/size_30dp"
-            android:padding="@dimen/size_5dp"
             android:src="@drawable/about_next" />
 
         <View
@@ -99,12 +97,11 @@
             android:textSize="@dimen/font_14sp" />
 
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/size_15dp"
+            android:layout_height="@dimen/size_15dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="@dimen/size_30dp"
-            android:padding="@dimen/size_5dp"
             android:src="@drawable/about_next" />
 
         <View

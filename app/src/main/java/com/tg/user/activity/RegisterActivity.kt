@@ -163,10 +163,10 @@ class RegisterActivity : BaseActivity(), View.OnClickListener, HttpResponse {
 
     fun setRegister() {
         password = et_register_pwd.text.toString().trim();
-        if (!TextUtils.isEmpty(password)) {
+        if (!TextUtils.isEmpty(password) && password.length > 7) {
             userCzyModel.postRegister(3, phone, code, MD5.getMd5Value(password).toLowerCase(), this)
         } else {
-            ToastUtil.showShortToast(this, "登陆密码不能为空")
+            ToastUtil.showShortToast(this, "请输入不少于8位数的登陆密码")
         }
     }
 

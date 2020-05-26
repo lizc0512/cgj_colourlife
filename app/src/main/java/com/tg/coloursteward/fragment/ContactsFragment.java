@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Message;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -63,6 +64,9 @@ import com.youmai.hxsdk.utils.GsonUtil;
 import com.youmai.hxsdk.utils.ListUtils;
 import com.youmai.hxsdk.widget.CharIndexView;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -88,7 +92,7 @@ public class ContactsFragment extends Fragment implements ItemEventListener, Htt
     public static final String DELETE_CONTACT = "delete";
 
     private Context mContext;
-    private List<ContactBean> headContacts;
+    private List<ContactBean> headContacts;//头部数据
 
     private String orgName;
     private String orgId;
@@ -101,8 +105,8 @@ public class ContactsFragment extends Fragment implements ItemEventListener, Htt
     private CharIndexView iv_main;
     private TextView tv_index;
 
-    private List<CNPinyin<ContactBean>> HeadList;
-    private ArrayList<CNPinyin<ContactBean>> contactList = new ArrayList<>();
+    private List<CNPinyin<ContactBean>> HeadList;//头部数据对象
+    private ArrayList<CNPinyin<ContactBean>> contactList = new ArrayList<>();//全部数据
     private LinearLayoutManager manager;
     private Subscription subscription;
 
@@ -112,18 +116,22 @@ public class ContactsFragment extends Fragment implements ItemEventListener, Htt
     private ContactModel contactModel;
     private boolean hasPermission;
     private String permissionJumpUrl;
+    private String permissionNum;
 
     @Override
     public void OnHttpResponse(int what, String result) {
         switch (what) {
             case 0:
                 if (!TextUtils.isEmpty(result)) {
-                    ContactPermissionEntity entity = new ContactPermissionEntity();
-                    entity = GsonUtils.gsonToBean(result, ContactPermissionEntity.class);
+                    ContactPermissionEntity entity = GsonUtils.gsonToBean(result, ContactPermissionEntity.class);
                     hasPermission = entity.getContent().getIsHas_permission();
                     if (hasPermission) {
                         permissionJumpUrl = entity.getContent().getRedirect_url();
+                        permissionNum = entity.getContent().getUn_approved_num();
                         headContacts = ContactBeanData.contactList(mContext, ContactBeanData.TYPE_GROUP_PERMISSION);
+                        getHeadList();
+                    } else {
+                        headContacts = ContactBeanData.contactList(mContext, ContactBeanData.TYPE_HOME);
                         getHeadList();
                     }
                 }
@@ -154,6 +162,9 @@ public class ContactsFragment extends Fragment implements ItemEventListener, Htt
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this);
+        }
         registerReceiver();
         headContacts = ContactBeanData.contactList(mContext, ContactBeanData.TYPE_HOME);
 
@@ -166,14 +177,6 @@ public class ContactsFragment extends Fragment implements ItemEventListener, Htt
         return inflater.inflate(R.layout.fragment_contacts_layout, container, false);
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        headContacts = ContactBeanData.contactList(mContext, ContactBeanData.TYPE_HOME);
-        getHeadList();
-        getCacheList();//读取本地缓存列表
-        initGetPermission();
-    }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -184,20 +187,32 @@ public class ContactsFragment extends Fragment implements ItemEventListener, Htt
         contactModel = new ContactModel(mContext);
         initView(view);
 
-//        getHeadList();
+        getHeadList();
 
-//        getCacheList();//读取本地缓存列表
+        getCacheList();//读取本地缓存列表
 
         reqContacts();
 
         setListener();
+        initGetPermission();
     }
 
     private void initGetPermission() {
         String colorToken = SharedPreferencesUtils.getKey(mContext, SpConstants.accessToken.accssToken);
-        contactModel.getColudPermission(0, colorToken, this);
+        String corp_id = SharedPreferencesUtils.getInstance().getStringData(SpConstants.storage.CORPID, "");
+        contactModel.getColudPermission(0, colorToken, corp_id, this);
     }
 
+    @Subscribe
+    public void onEvent(Object event) {
+        final Message message = (Message) event;
+        switch (message.what) {
+            case Contants.EVENT.changeCorp:
+                initGetPermission();
+                break;
+
+        }
+    }
 
     /**
      * 初始化
@@ -240,6 +255,9 @@ public class ContactsFragment extends Fragment implements ItemEventListener, Htt
         }
         if (!ListUtils.isEmpty(familyList)) {
             familyList.clear();
+        }
+        if (EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().unregister(this);
         }
         super.onDestroy();
     }
@@ -293,9 +311,16 @@ public class ContactsFragment extends Fragment implements ItemEventListener, Htt
                     @Override
                     public void onNext(List<CNPinyin<ContactBean>> cnPinyins) {
                         //回调业务数据
-                        HeadList = cnPinyins;
-                        contactList.addAll(cnPinyins);
-                        adapter.notifyDataSetChanged();
+                        if (hasPermission) {
+                            contactList.get(2).data.setRealname("↑##@@**3 新成员申请");
+                            contactList.get(2).data.setMsgNum(permissionNum);
+                            adapter.notifyDataSetChanged();
+                        } else {
+                            HeadList = cnPinyins;
+                            contactList.addAll(cnPinyins);
+                            contactList.get(2).data.setRealname("↑##@@**3 手机联系人");
+                            adapter.setData(contactList);
+                        }
                     }
                 });
 
@@ -494,6 +519,10 @@ public class ContactsFragment extends Fragment implements ItemEventListener, Htt
      * 查询常用联系人
      */
     private void modifyContactsList() {
+        String corpId = SharedPreferencesUtils.getInstance().getStringData(SpConstants.storage.CORPID, "");
+        if (!Contants.APP.CORP_UUID.equals(corpId)) {
+            return;
+        }
         String url = ColorsConfig.CONTACTS_MAIN_DATAS;
         String userName = HuxinSdkManager.instance().getUserName();
 

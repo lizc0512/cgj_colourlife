@@ -8,6 +8,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Message;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.view.View;
@@ -36,6 +37,8 @@ import com.tg.user.entity.OauthUserEntity;
 import com.tg.user.model.UserModel;
 import com.youmai.hxsdk.router.APath;
 import com.youmai.hxsdk.view.pickerview.OptionsPickerView;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -166,6 +169,9 @@ public class UserInfoActivity extends BaseActivity implements OnClickListener, H
                 spUtils.saveBooleanData(SpConstants.UserModel.ISREFRESHMINE, true);
                 spUtils.saveBooleanData(SpConstants.UserModel.ISREFRESHMINE, true);
                 initRefreshUserInfo();
+                Message msghome = new Message();
+                msghome.what = Contants.EVENT.changeCorp;
+                EventBus.getDefault().post(msghome);
             }
         }
     }

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Message;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
@@ -55,6 +56,7 @@ import com.tg.user.model.UserModel;
 import com.youmai.hxsdk.config.ColorsConfig;
 import com.youmai.hxsdk.http.OkHttpConnector;
 
+import org.greenrobot.eventbus.EventBus;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -104,9 +106,10 @@ public class FragmentManagement extends Fragment implements HttpResponse, View.O
 
     private void showCache() {
         String cacheData = SharedPreferencesUtils.getInstance().getStringData(SpConstants.UserModel.MICRODATA, "");
+        String nowCorpId = SharedPreferencesUtils.getInstance().getStringData(SpConstants.storage.CORPID, "");
         if (!TextUtils.isEmpty(cacheData)) {
             initInitialize(cacheData);
-        } else {
+        } else if (Contants.APP.CORP_UUID.equals(nowCorpId)) {
             String localCache = Contants.storage.MICRODATA;
             initInitialize(localCache);
         }
@@ -420,8 +423,11 @@ public class FragmentManagement extends Fragment implements HttpResponse, View.O
                 } else if (!TextUtils.isEmpty(cacheData)) {
                     initInitialize(cacheData);
                 } else {
-                    String localCache = Contants.storage.MICRODATA;
-                    initInitialize(localCache);
+                    String nowCorpId = SharedPreferencesUtils.getInstance().getStringData(SpConstants.storage.CORPID, "");
+                    if (Contants.APP.CORP_UUID.equals(nowCorpId)) {
+                        String localCache = Contants.storage.MICRODATA;
+                        initInitialize(localCache);
+                    }
                 }
                 break;
             case 2:
@@ -546,6 +552,10 @@ public class FragmentManagement extends Fragment implements HttpResponse, View.O
             cropListAdapter.notifyDataSetChanged();
             initLayout(cropUuid);
             initRefreshUserInfo(cropUuid);
+            SharedPreferencesUtils.getInstance().saveStringData(SpConstants.storage.CORPID, cropUuid);
+            Message msghome = new Message();
+            msghome.what = Contants.EVENT.changeCorp;
+            EventBus.getDefault().post(msghome);
             popupWindow.dismiss();
         });
         View view_bg = contentview.findViewById(R.id.view_bg);

@@ -84,6 +84,10 @@ public interface Contants {
         int UPDATE_HOMELIST = 35;
     }
 
+    interface EVENT{
+        int changeCorp=700;
+    }
+
     interface PARAMETER {
         /**
          * 红包余额

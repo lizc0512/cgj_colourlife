@@ -72,6 +72,9 @@ public class ContactBean implements CN, Parcelable {
     @Transient
     private int resId;
 
+    @Transient
+    private String msgNum;
+
     public ContactBean(String name) {
         this.realname = name;
     }
@@ -97,6 +100,14 @@ public class ContactBean implements CN, Parcelable {
         }
         return res;
 
+    }
+
+    public String getMsgNum() {
+        return msgNum;
+    }
+
+    public void setMsgNum(String msgNum) {
+        this.msgNum = msgNum;
     }
 
     public Long getId() {

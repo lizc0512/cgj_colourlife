@@ -1,6 +1,7 @@
 package com.youmai.hxsdk.adapter;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,7 +39,7 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     private Context mContext;
     private int mCollectIndex;
     private ItemEventListener itemEventListener;
-    private final List<CNPinyin<ContactBean>> cnPinyinList;
+    private List<CNPinyin<ContactBean>> cnPinyinList;
     public String org_name;
 
     public ContactAdapter(Context context, List<CNPinyin<ContactBean>> cnPinyinList, int collectIndex, ItemEventListener listener) {
@@ -51,6 +52,11 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     public void removeItem(int position) {
         cnPinyinList.remove(position);
         notifyItemRemoved(position);
+        notifyDataSetChanged();
+    }
+
+    public void setData(List<CNPinyin<ContactBean>> cnPinyinList) {
+        this.cnPinyinList = cnPinyinList;
         notifyDataSetChanged();
     }
 
@@ -102,7 +108,19 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             } else {
                 contactHolder.tv_name.setText(contact.getRealname());
             }
-
+            if (position == 2 && !TextUtils.isEmpty(contact.getMsgNum())) {
+                int num = Integer.parseInt(contact.getMsgNum());
+                contactHolder.tv_contact_msg_num.setVisibility(View.VISIBLE);
+                if (num > 0) {
+                    if (num > 99) {
+                        contactHolder.tv_contact_msg_num.setText("99+");
+                    } else {
+                        contactHolder.tv_contact_msg_num.setText(num + "");
+                    }
+                }
+            } else {
+                contactHolder.tv_contact_msg_num.setVisibility(View.GONE);
+            }
         }
 
         //搜索框不处理
@@ -173,14 +191,16 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         private ImageView iv_header;
         private TextView tv_name;
         private TextView tv_user_name;
+        private TextView tv_contact_msg_num;
         private CheckBox cb_collect;
 
         ContactHolder(View itemView) {
             super(itemView);
-            iv_header = (ImageView) itemView.findViewById(R.id.iv_header);
-            tv_name = (TextView) itemView.findViewById(R.id.tv_name);
-            tv_user_name = (TextView) itemView.findViewById(R.id.tv_user_name);
+            iv_header = itemView.findViewById(R.id.iv_header);
+            tv_name = itemView.findViewById(R.id.tv_name);
+            tv_user_name = itemView.findViewById(R.id.tv_user_name);
             cb_collect = itemView.findViewById(R.id.cb_collect);
+            tv_contact_msg_num = itemView.findViewById(R.id.tv_contact_msg_num);
         }
     }
 

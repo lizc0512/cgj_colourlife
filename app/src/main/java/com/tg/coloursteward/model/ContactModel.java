@@ -158,9 +158,10 @@ public class ContactModel extends BaseModel {
      * @param color_token
      * @param httpResponse
      */
-    public void getColudPermission(int what, String color_token, HttpResponse httpResponse) {
+    public void getColudPermission(int what, String color_token, String corp_id, HttpResponse httpResponse) {
         Map<String, Object> params = new HashMap<>();
         params.put("color-token", color_token);
+        params.put("corp_id", corp_id);
         final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 5,
                 cloudPermissionUrl), RequestMethod.GET);
         request(what, request, RequestEncryptionUtils.getNewSaftyMap(mContext, params), new HttpListener<String>() {

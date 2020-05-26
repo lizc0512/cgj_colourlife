@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Message;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
@@ -15,10 +16,6 @@ import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.activity.MyBrowserActivity;
@@ -43,8 +40,15 @@ import com.tg.coloursteward.view.CircleImageView;
 import com.tg.coloursteward.view.dialog.ToastFactory;
 import com.tg.user.activity.UserInfoActivity;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+
 import java.util.ArrayList;
 import java.util.List;
+
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * 个人中心
@@ -76,6 +80,9 @@ public class FragmentMine extends Fragment implements OnClickListener, HttpRespo
         updateTime = SharedPreferencesUtils.getInstance().getStringData(SpConstants.UserModel.UPDATETIME_IMG, "");
         if (TextUtils.isEmpty(updateTime)) {
             SharedPreferencesUtils.getInstance().saveStringData(SpConstants.UserModel.UPDATETIME_IMG, UserInfo.employeeAccount);
+        }
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this);
         }
         mineModel = new MineModel(mActivity);
         initView();
@@ -166,15 +173,7 @@ public class FragmentMine extends Fragment implements OnClickListener, HttpRespo
         recyclerview.setLayoutManager(linearLayoutManager);
         recyclerview.setNestedScrollingEnabled(false);
         tv_mine_name.setText(UserInfo.realname);
-        if (!TextUtils.isEmpty(UserInfo.familyName)) {
-            if (UserInfo.jobName.contains(UserInfo.familyName)) {
-                tv_mine_job.setText(UserInfo.jobName);
-            } else {
-                tv_mine_job.setText(UserInfo.jobName + "(" + UserInfo.familyName + ")");
-            }
-        } else {
-            tv_mine_job.setText(UserInfo.jobName + UserInfo.familyName);
-        }
+        initRefresh();
     }
 
     /**
@@ -213,13 +212,7 @@ public class FragmentMine extends Fragment implements OnClickListener, HttpRespo
     @Override
     public void onResume() {
         super.onResume();
-        boolean isCorpRefresh = SharedPreferencesUtils.getInstance().getBooleanData(SpConstants.UserModel.ISREFRESHMINE, false);
-        if (isCorpRefresh) {
-            initGetData();
-            SharedPreferencesUtils.getInstance().saveBooleanData(SpConstants.UserModel.ISREFRESHMINE, false);
-        }
         getHeadImg();
-
     }
 
     public void getHeadImg() {
@@ -322,6 +315,38 @@ public class FragmentMine extends Fragment implements OnClickListener, HttpRespo
                     }
                 }
                 break;
+        }
+    }
+
+    @Subscribe
+    public void onEvent(Object event) {
+        final Message message = (Message) event;
+        switch (message.what) {
+            case Contants.EVENT.changeCorp:
+                initRefresh();
+                break;
+
+        }
+    }
+
+    private void initRefresh() {
+        initGetData();
+        if (!TextUtils.isEmpty(UserInfo.familyName)) {
+            if (UserInfo.jobName.contains(UserInfo.familyName)) {
+                tv_mine_job.setText(UserInfo.jobName);
+            } else {
+                tv_mine_job.setText(UserInfo.jobName + "(" + UserInfo.familyName + ")");
+            }
+        } else {
+            tv_mine_job.setText(UserInfo.jobName + UserInfo.familyName);
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().unregister(this);
         }
     }
 }

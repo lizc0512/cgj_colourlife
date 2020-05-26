@@ -25,17 +25,12 @@ import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
 import com.jcodecraeer.xrecyclerview.progressindicator.AVLoadingIndicatorView;
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.adapter.HomeDialogAdapter;
 import com.tg.coloursteward.baseModel.HttpResponse;
+import com.tg.coloursteward.constant.Contants;
 import com.tg.coloursteward.constant.SpConstants;
 import com.tg.coloursteward.entity.HomeDialogEntitiy;
 import com.tg.coloursteward.entity.HomeMsgEntity;
@@ -64,6 +59,8 @@ import com.youmai.hxsdk.im.IMMsgCallback;
 import com.youmai.hxsdk.im.IMMsgManager;
 import com.youmai.hxsdk.search.GlobalSearchActivity;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -71,6 +68,12 @@ import org.json.JSONObject;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * 主页-沟通
@@ -270,6 +273,9 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, View.OnC
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this);
+        }
         HuxinSdkManager.instance().chatMsgFromCache(this,
                 new ProtoCallback.CacheMsgCallBack() {
                     @Override
@@ -526,6 +532,9 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, View.OnC
         if (mHandler != null) {
             mHandler.removeCallbacksAndMessages(null);
         }
+        if (EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().unregister(this);
+        }
     }
 
     private void topPopUp(View v, ExCacheMsgBean bean, String app_uuid) {
@@ -659,4 +668,16 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, View.OnC
             curPostion = 0;
         }
     }
+
+    @Subscribe
+    public void onEvent(Object event) {
+        final Message message = (Message) event;
+        switch (message.what) {
+            case Contants.EVENT.changeCorp:
+                reqPushMsg();
+                break;
+
+        }
+    }
+
 }

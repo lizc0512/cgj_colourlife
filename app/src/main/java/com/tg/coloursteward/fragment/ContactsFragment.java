@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
@@ -15,16 +14,8 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.activity.EmployeeDataActivity;
@@ -39,7 +30,6 @@ import com.tg.coloursteward.model.ContactModel;
 import com.tg.coloursteward.util.GsonUtils;
 import com.tg.coloursteward.util.LinkParseUtil;
 import com.tg.coloursteward.util.SharedPreferencesUtils;
-import com.tg.coloursteward.util.StringUtils;
 import com.tg.coloursteward.util.Tools;
 import com.tg.coloursteward.view.dialog.ToastFactory;
 import com.tg.im.activity.ContactsActivity;
@@ -50,7 +40,6 @@ import com.youmai.hxsdk.config.ColorsConfig;
 import com.youmai.hxsdk.db.bean.ContactBean;
 import com.youmai.hxsdk.entity.DeleteUserBean;
 import com.youmai.hxsdk.entity.ModifyContactsBean;
-import com.youmai.hxsdk.entity.ReqContactsBean;
 import com.youmai.hxsdk.entity.cn.CNPinyin;
 import com.youmai.hxsdk.entity.cn.CNPinyinFactory;
 import com.youmai.hxsdk.group.GroupListActivity;
@@ -71,6 +60,14 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import rx.Observable;
 import rx.Subscriber;
 import rx.Subscription;
@@ -82,7 +79,7 @@ import rx.schedulers.Schedulers;
  * 日期：2018.04.03 11:59
  * 描述：联系人页面
  */
-public class ContactsFragment extends Fragment implements ItemEventListener, HttpResponse {
+public class ContactsFragment extends Fragment implements ItemEventListener, HttpResponse, View.OnClickListener {
 
     private static final int REQUEST_PERMISSION = 110;
 
@@ -92,12 +89,6 @@ public class ContactsFragment extends Fragment implements ItemEventListener, Htt
     public static final String DELETE_CONTACT = "delete";
 
     private Context mContext;
-    private List<ContactBean> headContacts;//头部数据
-
-    private String orgName;
-    private String orgId;
-
-    private ArrayList<FamilyInfo> familyList = new ArrayList<>(); //组织架构人
 
     private RecyclerView recyclerView;
     private ContactAdapter adapter;
@@ -105,7 +96,6 @@ public class ContactsFragment extends Fragment implements ItemEventListener, Htt
     private CharIndexView iv_main;
     private TextView tv_index;
 
-    private List<CNPinyin<ContactBean>> HeadList;//头部数据对象
     private ArrayList<CNPinyin<ContactBean>> contactList = new ArrayList<>();//全部数据
     private LinearLayoutManager manager;
     private Subscription subscription;
@@ -116,7 +106,16 @@ public class ContactsFragment extends Fragment implements ItemEventListener, Htt
     private ContactModel contactModel;
     private boolean hasPermission;
     private String permissionJumpUrl;
-    private String permissionNum;
+    private int permissionNum;
+
+    private RelativeLayout rl_contact_corp;
+    private RelativeLayout rl_contact_depart;
+    private RelativeLayout rl_contact_people;
+    private RelativeLayout rl_contact_invite;
+    private RelativeLayout rl_contact_chat;
+    private TextView tv_contact_msg_num;
+    private TextView tv_contact_corpname;
+    private TextView tv_contact_depart;
 
     @Override
     public void OnHttpResponse(int what, String result) {
@@ -127,15 +126,74 @@ public class ContactsFragment extends Fragment implements ItemEventListener, Htt
                     hasPermission = entity.getContent().getIsHas_permission();
                     if (hasPermission) {
                         permissionJumpUrl = entity.getContent().getRedirect_url();
-                        permissionNum = entity.getContent().getUn_approved_num();
-                        headContacts = ContactBeanData.contactList(mContext, ContactBeanData.TYPE_GROUP_PERMISSION);
-                        getHeadList();
+                        permissionNum = Integer.parseInt(entity.getContent().getUn_approved_num());
+                        rl_contact_people.setVisibility(View.GONE);
+                        rl_contact_invite.setVisibility(View.VISIBLE);
+                        if (permissionNum > 99) {
+                            tv_contact_msg_num.setText("99+");
+                        } else {
+                            tv_contact_msg_num.setText(permissionNum + "");
+                        }
                     } else {
-                        headContacts = ContactBeanData.contactList(mContext, ContactBeanData.TYPE_HOME);
-                        getHeadList();
+                        rl_contact_people.setVisibility(View.VISIBLE);
+                        rl_contact_invite.setVisibility(View.GONE);
                     }
                 }
                 break;
+        }
+    }
+
+    @Override
+    public void onClick(View v) {
+        Intent intent;
+        FamilyInfo info;
+        switch (v.getId()) {
+            case R.id.rl_contact_corp:
+                info = new FamilyInfo();
+                info.id = "0";
+                info.type = "org";
+                info.name = "";
+                intent = new Intent(mContext, HomeContactOrgActivity.class);
+                intent.putExtra(HomeContactOrgActivity.FAMILY_INFO, info);
+                startActivity(intent);
+                break;
+            case R.id.rl_contact_depart:
+                info = new FamilyInfo();
+                String corpId = Tools.getStringValue(mContext, Contants.storage.CORPID);//租户ID
+                if (!TextUtils.isEmpty(corpId)) {
+                    info.id = corpId;
+                } else {
+                    info.id = UserInfo.infoorgId;
+                }
+                if ("".equals(info.id)) {
+                    info.id = UserInfo.orgId;
+                }
+                info.type = "org";
+                info.name = UserInfo.familyName;
+                intent = new Intent(mContext, HomeContactOrgActivity.class);
+                intent.putExtra(HomeContactOrgActivity.FAMILY_INFO, info);
+                startActivity(intent);
+                break;
+            case R.id.rl_contact_people:
+                if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
+                    //申请权限
+                    ActivityCompat.requestPermissions(requireActivity(), new String[]{Manifest.permission.READ_CONTACTS}, REQUEST_PERMISSION);
+                } else {
+                    startActivity(new Intent(mContext, ContactsActivity.class));
+                }
+                break;
+            case R.id.rl_contact_invite:
+                LinkParseUtil.parse((Activity) mContext, permissionJumpUrl, "");
+                break;
+            case R.id.rl_contact_chat:
+                startActivity(new Intent(getContext(), GroupListActivity.class));
+                break;
+            case R.id.list_item_header_search_root:
+                intent = new Intent(getActivity(), GlobalSearchActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                startActivity(intent);
+                break;
+
         }
     }
 
@@ -166,10 +224,6 @@ public class ContactsFragment extends Fragment implements ItemEventListener, Htt
             EventBus.getDefault().register(this);
         }
         registerReceiver();
-        headContacts = ContactBeanData.contactList(mContext, ContactBeanData.TYPE_HOME);
-
-        orgName = Tools.getStringValue(mContext, Contants.storage.ORGNAME);
-        orgId = Tools.getStringValue(mContext, Contants.storage.ORGID);
     }
 
     @Override
@@ -187,14 +241,12 @@ public class ContactsFragment extends Fragment implements ItemEventListener, Htt
         contactModel = new ContactModel(mContext);
         initView(view);
 
-        getHeadList();
-
         getCacheList();//读取本地缓存列表
-
-        reqContacts();
 
         setListener();
         initGetPermission();
+        setInfo();
+        initShowRv();
     }
 
     private void initGetPermission() {
@@ -209,8 +261,21 @@ public class ContactsFragment extends Fragment implements ItemEventListener, Htt
         switch (message.what) {
             case Contants.EVENT.changeCorp:
                 initGetPermission();
+                initShowRv();
+                setInfo();
                 break;
 
+        }
+    }
+
+    private void initShowRv() {
+        String corpId = SharedPreferencesUtils.getInstance().getStringData(SpConstants.storage.CORPID, "");
+        if (Contants.APP.CORP_UUID.equals(corpId)) {
+            recyclerView.setVisibility(View.VISIBLE);
+            iv_main.setVisibility(View.VISIBLE);
+        } else {
+            recyclerView.setVisibility(View.GONE);
+            iv_main.setVisibility(View.GONE);
         }
     }
 
@@ -219,15 +284,20 @@ public class ContactsFragment extends Fragment implements ItemEventListener, Htt
      */
     private void initView(View view) {
         View header_item = view.findViewById(R.id.list_item_header_search_root);
-        header_item.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), GlobalSearchActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                startActivity(intent);
-            }
-        });
-
+        rl_contact_corp = view.findViewById(R.id.rl_contact_corp);
+        rl_contact_depart = view.findViewById(R.id.rl_contact_depart);
+        rl_contact_people = view.findViewById(R.id.rl_contact_people);
+        rl_contact_invite = view.findViewById(R.id.rl_contact_invite);
+        rl_contact_chat = view.findViewById(R.id.rl_contact_chat);
+        tv_contact_corpname = view.findViewById(R.id.tv_contact_corpname);
+        tv_contact_depart = view.findViewById(R.id.tv_contact_depart);
+        tv_contact_msg_num = view.findViewById(R.id.tv_contact_msg_num);
+        rl_contact_corp.setOnClickListener(this);
+        rl_contact_depart.setOnClickListener(this);
+        rl_contact_people.setOnClickListener(this);
+        rl_contact_invite.setOnClickListener(this);
+        rl_contact_chat.setOnClickListener(this);
+        header_item.setOnClickListener(this);
 
         recyclerView = view.findViewById(R.id.recycler_view);
         iv_main = view.findViewById(R.id.iv_main);
@@ -235,12 +305,22 @@ public class ContactsFragment extends Fragment implements ItemEventListener, Htt
 
         manager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(manager);
-        try {
-            adapter = new ContactAdapter(mContext, contactList, headContacts.size(), this);
-            recyclerView.setAdapter(adapter);
-            recyclerView.addItemDecoration(new StickyHeaderDecoration(adapter));
-        } catch (Exception e) {
-        }
+        recyclerView.setNestedScrollingEnabled(false);
+        adapter = new ContactAdapter(mContext, contactList, this);
+        recyclerView.setAdapter(adapter);
+        recyclerView.addItemDecoration(new StickyHeaderDecoration(adapter));
+
+
+    }
+
+    /**
+     * 设置架构和部门名称
+     */
+    private void setInfo() {
+        String corpName = SharedPreferencesUtils.getInstance().getStringData(SpConstants.storage.CORPNAME, "");
+        String orgName = SharedPreferencesUtils.getInstance().getStringData(SpConstants.storage.ORGNAME, "");
+        tv_contact_corpname.setText(corpName);
+        tv_contact_depart.setText(UserInfo.familyName);
     }
 
     @Override
@@ -252,9 +332,6 @@ public class ContactsFragment extends Fragment implements ItemEventListener, Htt
 
         if (!ListUtils.isEmpty(contactList)) {
             contactList.clear();
-        }
-        if (!ListUtils.isEmpty(familyList)) {
-            familyList.clear();
         }
         if (EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().unregister(this);
@@ -286,47 +363,6 @@ public class ContactsFragment extends Fragment implements ItemEventListener, Htt
         });
     }
 
-
-    private void getHeadList() {
-        Observable.create(new Observable.OnSubscribe<List<CNPinyin<ContactBean>>>() {
-            @Override
-            public void call(Subscriber<? super List<CNPinyin<ContactBean>>> subscriber) {
-                if (!subscriber.isUnsubscribed()) {
-                    //子线程查数据库，返回List<Contacts>
-                    List<CNPinyin<ContactBean>> list = CNPinyinFactory.createCNPinyinList(headContacts);
-                    subscriber.onNext(list);
-                    subscriber.onCompleted();
-                }
-            }
-        }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<List<CNPinyin<ContactBean>>>() {
-                    @Override
-                    public void onCompleted() {
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                    }
-
-                    @Override
-                    public void onNext(List<CNPinyin<ContactBean>> cnPinyins) {
-                        //回调业务数据
-                        if (hasPermission) {
-                            contactList.get(2).data.setRealname("↑##@@**3 新成员申请");
-                            contactList.get(2).data.setMsgNum(permissionNum);
-                            adapter.notifyDataSetChanged();
-                        } else {
-                            HeadList = cnPinyins;
-                            contactList.addAll(cnPinyins);
-                            contactList.get(2).data.setRealname("↑##@@**3 手机联系人");
-                            adapter.setData(contactList);
-                        }
-                    }
-                });
-
-    }
-
-
     private void getPinyinList(final List<ModifyContactsBean.ContentBean.DataBean> data) {
         subscription = Observable.create(new Observable.OnSubscribe<List<CNPinyin<ContactBean>>>() {
             @Override
@@ -354,9 +390,8 @@ public class ContactsFragment extends Fragment implements ItemEventListener, Htt
                     public void onNext(List<CNPinyin<ContactBean>> cnPinyins) {
                         //回调业务数据
                         contactList.clear();
-                        contactList.addAll(HeadList);
                         contactList.addAll(cnPinyins);
-                        adapter.notifyDataSetChanged();
+                        adapter.setData(contactList);
                     }
                 });
     }
@@ -379,30 +414,17 @@ public class ContactsFragment extends Fragment implements ItemEventListener, Htt
      */
     @Override
     public void onLongClick(final int pos, final ContactBean contact) {
-        if (pos == 0 || pos == 1 || pos == 2 || pos == 3) {
-        } else {
-            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-            builder.setMessage("是否删除常用联系人？");
-            builder.setPositiveButton(getString(R.string.hx_confirm),
-                    new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface arg0, int arg1) {
-                            deleteUser(pos, contact);
-                            arg0.dismiss();
-                        }
-                    });
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setMessage("是否删除常用联系人？");
+        builder.setPositiveButton(getString(R.string.hx_confirm),
+                (arg0, arg1) -> {
+                    deleteUser(pos, contact);
+                    arg0.dismiss();
+                });
 
-            builder.setNegativeButton(getString(R.string.hx_cancel),
-                    new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface arg0, int arg1) {
-                            arg0.dismiss();
-                        }
-                    });
-            builder.show();
-        }
-
-
+        builder.setNegativeButton(getString(R.string.hx_cancel),
+                (arg0, arg1) -> arg0.dismiss());
+        builder.show();
     }
 
     private void deleteUser(final int pos, ContactBean contact) {
@@ -424,76 +446,15 @@ public class ContactsFragment extends Fragment implements ItemEventListener, Htt
     }
 
     /**
-     * 固定头item的跳转
+     * item的跳转
      *
      * @param pos
      * @param item
      */
     private void itemFunction(int pos, ContactBean item) {
-        Intent intent;
-        FamilyInfo info;
-        switch (pos) {
-            case 0: //组织架构
-                if (familyList.size() > 0) {
-                    info = new FamilyInfo();
-                    info.id = "0";
-                    info.type = "org";
-                    info.name = "";
-                    intent = new Intent(mContext, HomeContactOrgActivity.class);
-                    intent.putExtra(HomeContactOrgActivity.FAMILY_INFO, info);
-                    startActivity(intent);
-                } else {
-                    if (StringUtils.isNotEmpty(orgId) && StringUtils.isNotEmpty(orgName)) {
-                        info = new FamilyInfo();
-                        info.id = orgId;
-                        info.type = "org";
-                        info.name = orgName;
-                        intent = new Intent(mContext, HomeContactOrgActivity.class);
-                        intent.putExtra(HomeContactOrgActivity.FAMILY_INFO, info);
-                        startActivity(intent);
-                    } else {
-                        ToastFactory.showToast(mContext, "正在获取组织架构，请稍后...");
-                    }
-                }
-                break;
-            case 1: //我的部门
-                info = new FamilyInfo();
-                String corpId = Tools.getStringValue(mContext, Contants.storage.CORPID);//租户ID
-                if (!TextUtils.isEmpty(corpId)) {
-                    info.id = corpId;
-                } else {
-                    info.id = UserInfo.infoorgId;
-                }
-                if ("".equals(info.id)) {
-                    info.id = UserInfo.orgId;
-                }
-                info.type = "org";
-                info.name = UserInfo.familyName;
-                intent = new Intent(mContext, HomeContactOrgActivity.class);
-                intent.putExtra(HomeContactOrgActivity.FAMILY_INFO, info);
-                startActivity(intent);
-                break;
-            case 2: //手机联系人
-                if (hasPermission) {
-                    LinkParseUtil.parse((Activity) mContext, permissionJumpUrl, "");
-                } else {
-                    if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
-                        //申请权限
-                        ActivityCompat.requestPermissions(requireActivity(), new String[]{Manifest.permission.READ_CONTACTS}, REQUEST_PERMISSION);
-                    } else {
-                        startActivity(new Intent(mContext, ContactsActivity.class));
-                    }
-                }
-                break;
-            case 3: //群聊
-                startActivity(new Intent(getContext(), GroupListActivity.class));
-                break;
-            default: //item
-                Intent i = new Intent(mContext, EmployeeDataActivity.class);
-                i.putExtra(EmployeeDataActivity.CONTACTS_ID, item.getUsername());
-                startActivity(i);
-                break;
-        }
+        Intent i = new Intent(mContext, EmployeeDataActivity.class);
+        i.putExtra(EmployeeDataActivity.CONTACTS_ID, item.getUsername());
+        startActivity(i);
     }
 
     /**
@@ -508,7 +469,10 @@ public class ContactsFragment extends Fragment implements ItemEventListener, Htt
             if (bean != null && bean.isSuccess()) {
                 List<ModifyContactsBean.ContentBean.DataBean> data = bean.getContent().getData();
                 if (data.size() != 0) {
-                    getPinyinList(data);
+                    String corpId = SharedPreferencesUtils.getInstance().getStringData(SpConstants.storage.CORPID, "");
+                    if (Contants.APP.CORP_UUID.equals(corpId)) {
+                        getPinyinList(data);
+                    }
                 }
             }
         }
@@ -520,76 +484,34 @@ public class ContactsFragment extends Fragment implements ItemEventListener, Htt
      */
     private void modifyContactsList() {
         String corpId = SharedPreferencesUtils.getInstance().getStringData(SpConstants.storage.CORPID, "");
-        if (!Contants.APP.CORP_UUID.equals(corpId)) {
-            return;
+        if (Contants.APP.CORP_UUID.equals(corpId)) {
+            String url = ColorsConfig.CONTACTS_MAIN_DATAS;
+            String userName = HuxinSdkManager.instance().getUserName();
+            final ContentValues params = new ContentValues();
+            params.put("owner", userName);
+            params.put("page", "1");
+            params.put("pagesize", "100");
+            ColorsConfig.commonParams(params);
+            OkHttpConnector.httpGet(mContext, url, params, new IGetListener() {
+                @Override
+                public void httpReqResult(String response) {
+                    ModifyContactsBean bean = GsonUtil.parse(response, ModifyContactsBean.class);
+                    if (bean != null && bean.isSuccess()) {
+                        List<ModifyContactsBean.ContentBean.DataBean> data = bean.getContent().getData();
+                        if (data.size() != 0) {
+                            AppUtils.setStringSharedPreferences(mContext, "contents", response);
+                            getPinyinList(data);
+                        }
+                    } else if (null != bean && bean.getCode() != 0) {
+                        if (bean.getContent().getData().size() == 0) {
+                            contactList.clear();
+                            adapter.notifyDataSetChanged();
+                        }
+                    }
+                }
+            });
         }
-        String url = ColorsConfig.CONTACTS_MAIN_DATAS;
-        String userName = HuxinSdkManager.instance().getUserName();
-
-        final ContentValues params = new ContentValues();
-        params.put("owner", userName);
-        params.put("page", "1");
-        params.put("pagesize", "100");
-        ColorsConfig.commonParams(params);
-        OkHttpConnector.httpGet(mContext, url, params, new IGetListener() {
-            @Override
-            public void httpReqResult(String response) {
-                ModifyContactsBean bean = GsonUtil.parse(response, ModifyContactsBean.class);
-                if (bean != null && bean.isSuccess()) {
-                    List<ModifyContactsBean.ContentBean.DataBean> data = bean.getContent().getData();
-                    if (data.size() != 0) {
-                        AppUtils.setStringSharedPreferences(mContext, "contents", response);
-                        getPinyinList(data);
-                    }
-                } else if (null != bean && bean.getCode() != 0) {
-                    if (bean.getContent().getData().size() == 0) {
-                        contactList.clear();
-                        contactList.addAll(HeadList);
-                        adapter.notifyDataSetChanged();
-                    }
-                }
-            }
-        });
     }
-
-
-    /**
-     * 开启加载数据
-     */
-    private void reqContacts() {
-        String url = ColorsConfig.CONTACTS_CHILD_DATAS;
-        String corpId = SharedPreferencesUtils.getInstance().getStringData(SpConstants.storage.CORPID, "");
-        ContentValues params = new ContentValues();
-        params.put("orgID", "0");//架构UUID编号,0取顶级架构
-        params.put("familyTypeId", "0");//族谱类型ID：0组织架构
-        params.put("status", 0);//状态，0正常，1禁用
-        params.put("corpId", corpId);
-        ColorsConfig.commonParams(params);
-
-        OkHttpConnector.httpGet(mContext, url, params, new IGetListener() {
-            @Override
-            public void httpReqResult(String response) {
-                ReqContactsBean bean = GsonUtil.parse(response, ReqContactsBean.class);
-                if (bean != null && bean.isSuccess()) {
-                    List<ReqContactsBean.ContentBean> lists = bean.getContent();
-                    familyList.clear();
-                    for (int i = 0; i < lists.size(); i++) {
-                        FamilyInfo familyInfo = new FamilyInfo();
-                        familyInfo.id = lists.get(i).getId();
-                        familyInfo.name = lists.get(i).getName();
-                        familyList.add(familyInfo);
-                    }
-                    if (familyList.size() > 0) {
-                        Tools.saveStringValue(mContext, Contants.storage.ORGNAME, familyList.get(0).name);
-                        Tools.saveStringValue(mContext, Contants.storage.ORGID, familyList.get(0).id);
-                        adapter.org_name = familyList.get(0).name;
-                    }
-                }
-            }
-        });
-
-    }
-
 
     private void registerReceiver() {
         mModifyContactsReceiver = new ModifyContactsReceiver();
@@ -601,6 +523,5 @@ public class ContactsFragment extends Fragment implements ItemEventListener, Htt
     private void unRegisterReceiver() {
         requireActivity().unregisterReceiver(mModifyContactsReceiver);
     }
-
 
 }

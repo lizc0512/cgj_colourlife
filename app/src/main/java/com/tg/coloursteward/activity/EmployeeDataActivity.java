@@ -120,8 +120,8 @@ public class EmployeeDataActivity extends BaseActivity implements HttpResponse, 
      * 加载名片
      */
     private void getData() {
-        contactModel.getEmployeeData(0, contactsID, contactsID, UserInfo.employeeAccount,
-                Tools.getStringValue(EmployeeDataActivity.this, Contants.storage.CORPID), this);
+        String corpId = spUtils.getStringData(SpConstants.storage.CORPID, "");
+        contactModel.getEmployeeData(0, contactsID, contactsID, UserInfo.employeeAccount, corpId, this);
         accessToken = Tools.getStringValue(EmployeeDataActivity.this, Contants.storage.APPAUTH);
     }
 

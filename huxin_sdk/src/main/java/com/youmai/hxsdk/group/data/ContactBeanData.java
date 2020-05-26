@@ -22,7 +22,6 @@ public class ContactBeanData {
 
     public static final int TYPE_HOME = 0x01;
     public static final int TYPE_GROUP_ADD = 0x02;
-    public static final int TYPE_GROUP_PERMISSION = 0x03;
 
 
     public static List<ContactBean> contactList(Context context, int type) {
@@ -32,8 +31,6 @@ public class ContactBeanData {
             names = context.getResources().getStringArray(R.array.names_home); //获取
         } else if (type == TYPE_GROUP_ADD) {
             names = context.getResources().getStringArray(R.array.names_group_add); //获取
-        } else if (type == TYPE_GROUP_PERMISSION) {
-            names = context.getResources().getStringArray(R.array.names_permission); //获取
         } else {
             names = context.getResources().getStringArray(R.array.names_home); //获取
         }

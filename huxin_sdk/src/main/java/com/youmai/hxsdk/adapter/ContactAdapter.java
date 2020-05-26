@@ -1,16 +1,12 @@
 package com.youmai.hxsdk.adapter;
 
 import android.content.Context;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -23,6 +19,9 @@ import com.youmai.hxsdk.stickyheader.StickyHeaderAdapter;
 import com.youmai.hxsdk.utils.GlideRoundTransform;
 
 import java.util.List;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * Created by yw on 2018/4/13.
@@ -37,15 +36,13 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     }
 
     private Context mContext;
-    private int mCollectIndex;
     private ItemEventListener itemEventListener;
     private List<CNPinyin<ContactBean>> cnPinyinList;
     public String org_name;
 
-    public ContactAdapter(Context context, List<CNPinyin<ContactBean>> cnPinyinList, int collectIndex, ItemEventListener listener) {
+    public ContactAdapter(Context context, List<CNPinyin<ContactBean>> cnPinyinList, ItemEventListener listener) {
         this.mContext = context.getApplicationContext();
         this.cnPinyinList = cnPinyinList;
-        this.mCollectIndex = collectIndex;
         this.itemEventListener = listener;
     }
 
@@ -103,55 +100,27 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                     e.printStackTrace();
                 }
             }
-            if (contact.getRealname().startsWith("↑##@@**") && position < mCollectIndex) {
-                contactHolder.tv_name.setText(contact.getRealname().substring(9));
-            } else {
-                contactHolder.tv_name.setText(contact.getRealname());
-            }
-            if (position == 2 && !TextUtils.isEmpty(contact.getMsgNum())) {
-                int num = Integer.parseInt(contact.getMsgNum());
-                contactHolder.tv_contact_msg_num.setVisibility(View.VISIBLE);
-                if (num > 0) {
-                    if (num > 99) {
-                        contactHolder.tv_contact_msg_num.setText("99+");
-                    } else {
-                        contactHolder.tv_contact_msg_num.setText(num + "");
-                    }
-                }
-            } else {
-                contactHolder.tv_contact_msg_num.setVisibility(View.GONE);
-            }
+            contactHolder.tv_name.setText(contact.getRealname());
         }
 
         //搜索框不处理
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (null != itemEventListener) {
-                    itemEventListener.onItemClick(position, contact);
-                }
+        holder.itemView.setOnClickListener(v -> {
+            if (null != itemEventListener) {
+                itemEventListener.onItemClick(position, contact);
             }
         });
 
-
-        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                if (null != itemEventListener) {
-                    itemEventListener.onLongClick(position, contact);
-                }
-                return true;
+        holder.itemView.setOnLongClickListener(v -> {
+            if (null != itemEventListener) {
+                itemEventListener.onLongClick(position, contact);
             }
+            return true;
         });
     }
 
     @Override
     public long getHeaderId(int childAdapterPosition) {
-        if (childAdapterPosition < mCollectIndex) {
-            return '↑';
-        } else {
-            return cnPinyinList.get(childAdapterPosition).getFirstChar();
-        }
+        return cnPinyinList.get(childAdapterPosition).getFirstChar();
     }
 
     @Override
@@ -176,7 +145,6 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 .inflate(R.layout.item_header, parent, false));
     }
 
-
     class HeaderHolder extends RecyclerView.ViewHolder {
         private TextView tv_header;
 
@@ -185,7 +153,6 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             tv_header = (TextView) itemView.findViewById(R.id.tv_header);
         }
     }
-
 
     class ContactHolder extends RecyclerView.ViewHolder {
         private ImageView iv_header;
@@ -203,32 +170,4 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             tv_contact_msg_num = itemView.findViewById(R.id.tv_contact_msg_num);
         }
     }
-
-
-    /**
-     * 默认功能的头像
-     *
-     * @param position
-     * @return
-     */
-    int defaultIcon(int position) {
-        int icon = -1;
-        switch (position) {
-            case 0:
-                icon = R.drawable.contacts_org;
-                break;
-            case 1:
-                icon = R.drawable.contacts_department;
-                break;
-            case 2:
-                icon = R.drawable.contacts_phone_list;
-                break;
-            case 3:
-                icon = R.drawable.contacts_groupchat;
-                break;
-        }
-        return icon;
-    }
-
-
 }

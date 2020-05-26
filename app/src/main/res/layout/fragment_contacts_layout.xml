@@ -1,0 +1,294 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/hx_color_white"
+    android:focusable="true"
+    android:focusableInTouchMode="true">
+
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/size_44dp"
+        android:layout_marginLeft="15dp"
+        android:gravity="fill_vertical"
+        android:text="通讯录"
+        android:textColor="@color/color_445056"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/tv_title"
+        android:fillViewport="true"
+        android:scrollbars="none">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:id="@+id/list_item_header_search_root"
+                    android:layout_width="match_parent"
+                    android:layout_height="30dp"
+                    android:layout_marginLeft="12dp"
+                    android:layout_marginRight="12dp"
+                    android:background="@drawable/contacts_search_bg"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="18dp"
+                        android:layout_height="18dp"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="8dp"
+                        android:src="@drawable/input_icon_search" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="5dp"
+                        android:hint="搜索"
+                        android:textColorHint="@color/color_contact"
+                        android:textSize="14dp" />
+
+                </LinearLayout>
+
+                <RelativeLayout
+                    android:id="@+id/rl_contact_corp"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/size_50dp"
+                    android:layout_marginTop="@dimen/size_10dp">
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginLeft="10dp"
+                        android:background="@color/black_contact_line" />
+
+                    <ImageView
+                        android:id="@+id/iv_header"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="13dp"
+                        android:src="@drawable/contacts_icon_organizational" />
+
+                    <TextView
+                        android:id="@+id/tv_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="12dp"
+                        android:layout_toRightOf="@+id/iv_header"
+                        android:text="组织架构"
+                        android:textColor="@color/black_contact_tv"
+                        android:textSize="16dp" />
+
+                    <TextView
+                        android:id="@+id/tv_contact_corpname"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="30dp"
+                        android:textColor="@color/black_contact_tit"
+                        android:textSize="14dp"
+                        tools:text="xxx" />
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/rl_contact_depart"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/size_50dp">
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginLeft="10dp"
+                        android:background="@color/black_contact_line" />
+
+                    <ImageView
+                        android:id="@+id/iv_header_depart"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="13dp"
+                        android:src="@drawable/contacts_icon_department" />
+
+                    <TextView
+                        android:id="@+id/tv_name_depart"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="12dp"
+                        android:layout_toRightOf="@+id/iv_header_depart"
+                        android:text="我的部门"
+                        android:textColor="@color/black_contact_tv"
+                        android:textSize="16dp" />
+
+                    <TextView
+                        android:id="@+id/tv_contact_depart"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="30dp"
+                        android:textColor="@color/black_contact_tit"
+                        android:textSize="14dp"
+                        tools:text="xxx" />
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/rl_contact_people"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/size_50dp">
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginLeft="10dp"
+                        android:background="@color/black_contact_line" />
+
+                    <ImageView
+                        android:id="@+id/iv_header_people"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="13dp"
+                        android:src="@drawable/contacts_icon_address_list" />
+
+                    <TextView
+                        android:id="@+id/tv_name_people"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="12dp"
+                        android:layout_toRightOf="@+id/iv_header_people"
+                        android:text="手机联系人"
+                        android:textColor="@color/black_contact_tv"
+                        android:textSize="16dp" />
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/rl_contact_invite"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/size_50dp"
+                    android:visibility="gone">
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginLeft="10dp"
+                        android:background="@color/black_contact_line" />
+
+                    <ImageView
+                        android:id="@+id/iv_header_invite"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="13dp"
+                        android:src="@drawable/contacts_icon_address_list" />
+
+                    <TextView
+                        android:id="@+id/tv_name_invite"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="12dp"
+                        android:layout_toRightOf="@+id/iv_header_invite"
+                        android:text="新成员申请"
+                        android:textColor="@color/black_contact_tv"
+                        android:textSize="16dp" />
+
+                    <TextView
+                        android:id="@+id/tv_contact_msg_num"
+                        android:layout_width="22dp"
+                        android:layout_height="16dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_toRightOf="@id/tv_name_invite"
+                        android:background="@drawable/bg_contact_num"
+                        android:gravity="center"
+                        android:textColor="@color/hx_color_white"
+                        android:textSize="12sp"
+                        android:visibility="gone"
+                        tools:text="0" />
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/rl_contact_chat"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/size_52dp">
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginLeft="10dp"
+                        android:background="@color/black_contact_line" />
+
+                    <ImageView
+                        android:id="@+id/iv_chat"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="13dp"
+                        android:src="@drawable/contacts_icon_organizational" />
+
+                    <TextView
+                        android:id="@+id/tv_chat"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="12dp"
+                        android:layout_toRightOf="@+id/iv_chat"
+                        android:text="群聊"
+                        android:textColor="@color/black_contact_tv"
+                        android:textSize="16dp" />
+
+                </RelativeLayout>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recycler_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+            </LinearLayout>
+        </RelativeLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <com.youmai.hxsdk.widget.CharIndexView
+        android:id="@+id/iv_main"
+        android:layout_width="24dp"
+        android:layout_height="match_parent"
+        android:layout_below="@id/tv_title"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="45dp"
+        app:charTextColor="#000000"
+        app:indexTextColor="@color/hx_main_color"
+        app:indexTextSize="13sp" />
+
+    <TextView
+        android:id="@+id/tv_index"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_centerInParent="true"
+        android:background="@drawable/contacts_search_bg_index"
+        android:gravity="center"
+        android:text="A"
+        android:textColor="#ffffff"
+        android:textSize="52sp"
+        android:visibility="invisible" />
+
+</RelativeLayout>

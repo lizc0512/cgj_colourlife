@@ -39,6 +39,7 @@ import com.youmai.hxsdk.router.APath;
 import com.youmai.hxsdk.view.pickerview.OptionsPickerView;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -82,6 +83,9 @@ public class UserInfoActivity extends BaseActivity implements OnClickListener, H
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         userModel = new UserModel(this);
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this);
+        }
         initView();
         updateView();
     }
@@ -165,9 +169,6 @@ public class UserInfoActivity extends BaseActivity implements OnClickListener, H
             } else if (requestCode == 1001) {
                 String name = data.getStringExtra("companyName");
                 tv_user_company.setText(name);
-                spUtils.saveBooleanData(SpConstants.UserModel.ISREFRESHWORK, true);
-                spUtils.saveBooleanData(SpConstants.UserModel.ISREFRESHMINE, true);
-                spUtils.saveBooleanData(SpConstants.UserModel.ISREFRESHMINE, true);
                 initRefreshUserInfo();
                 Message msghome = new Message();
                 msghome.what = Contants.EVENT.changeCorp;
@@ -395,6 +396,30 @@ public class UserInfoActivity extends BaseActivity implements OnClickListener, H
                     }
                 }
                 break;
+        }
+    }
+
+    @Subscribe
+    public void onEvent(Object event) {
+        final Message message = (Message) event;
+        switch (message.what) {
+            case Contants.EVENT.changeCorp:
+                initRefresh();
+                break;
+
+        }
+    }
+
+    private void initRefresh() {
+        tv_user_part.setText(UserInfo.familyName);
+        tv_user_job.setText(UserInfo.jobName);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().unregister(this);
         }
     }
 }

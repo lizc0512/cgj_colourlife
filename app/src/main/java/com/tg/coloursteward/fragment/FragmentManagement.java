@@ -15,13 +15,6 @@ import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-import androidx.viewpager.widget.ViewPager;
-
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.adapter.CropListAdapter;
 import com.tg.coloursteward.adapter.MicroApplicationAdapter;
@@ -57,6 +50,7 @@ import com.youmai.hxsdk.config.ColorsConfig;
 import com.youmai.hxsdk.http.OkHttpConnector;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -65,6 +59,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import androidx.viewpager.widget.ViewPager;
 import cn.bingoogolapple.bgabanner.BGABanner;
 
 /**
@@ -98,6 +98,9 @@ public class FragmentManagement extends Fragment implements HttpResponse, View.O
         mView = inflater.inflate(R.layout.fragment_management_layout, container, false);
         microModel = new MicroModel(mActivity);
         cropUuid = SharedPreferencesUtils.getInstance().getStringData(SpConstants.storage.CORPID, "");
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this);
+        }
         initView();
         showCache();
         initData();
@@ -354,15 +357,8 @@ public class FragmentManagement extends Fragment implements HttpResponse, View.O
     @Override
     public void onResume() {
         super.onResume();
-        boolean isCorpRefresh = SharedPreferencesUtils.getInstance().getBooleanData(SpConstants.UserModel.ISREFRESHWORK, false);
-        if (isCorpRefresh) {
-            String uuid = SharedPreferencesUtils.getInstance().getStringData(SpConstants.storage.CORPID, "");
-            initLayout(uuid);
-            cropUuid = uuid;
-            SharedPreferencesUtils.getInstance().saveBooleanData(SpConstants.UserModel.ISREFRESHWORK, false);
-        } else {
-            initLayout(cropUuid);
-        }
+        String uuid = SharedPreferencesUtils.getInstance().getStringData(SpConstants.storage.CORPID, "");
+        initLayout(uuid);
         showFirstData = true;
     }
 
@@ -377,6 +373,9 @@ public class FragmentManagement extends Fragment implements HttpResponse, View.O
     @Override
     public void onDestroy() {
         super.onDestroy();
+        if (EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().unregister(this);
+        }
     }
 
     @Override
@@ -544,15 +543,17 @@ public class FragmentManagement extends Fragment implements HttpResponse, View.O
         cropListAdapter.setOnItemClickListener((adapter, view, position) -> {
             iv_miniservice_next.setImageDrawable(getResources().getDrawable(R.drawable.nav_icon_shaixuan_n));
             cropUuid = cropList.get(position).getUuid();
+            String cropName = cropList.get(position).getName();
             for (CropListEntity.ContentBean bean : cropList) {
                 bean.setIs_default("0");
             }
-            tv_miniservice_title.setText(cropList.get(position).getName());
+            tv_miniservice_title.setText(cropName);
             cropList.get(position).setIs_default("1");
             cropListAdapter.notifyDataSetChanged();
             initLayout(cropUuid);
             initRefreshUserInfo(cropUuid);
             SharedPreferencesUtils.getInstance().saveStringData(SpConstants.storage.CORPID, cropUuid);
+            SharedPreferencesUtils.getInstance().saveStringData(SpConstants.storage.CORPNAME, cropName);
             Message msghome = new Message();
             msghome.what = Contants.EVENT.changeCorp;
             EventBus.getDefault().post(msghome);
@@ -576,6 +577,23 @@ public class FragmentManagement extends Fragment implements HttpResponse, View.O
         String colorToken = SharedPreferencesUtils.getKey(mActivity, SpConstants.accessToken.accssToken);
         UserModel userModel = new UserModel(mActivity);
         userModel.getUserInfoByCorp(3, cropUuid, colorToken, true, this);
+    }
+
+    @Subscribe
+    public void onEvent(Object event) {
+        final Message message = (Message) event;
+        switch (message.what) {
+            case Contants.EVENT.changeCorp:
+                initRefresh();
+                break;
+
+        }
+    }
+
+    private void initRefresh() {
+        String cropUuid = SharedPreferencesUtils.getInstance().getStringData(SpConstants.storage.CORPID, "");
+        initRefreshUserInfo(cropUuid);
+        initLayout(cropUuid);
     }
 }
 

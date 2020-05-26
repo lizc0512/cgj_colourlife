@@ -2,8 +2,9 @@ package com.youmai.hxsdk.config;
 
 
 import android.content.ContentValues;
-import androidx.annotation.NonNull;
 import android.text.TextUtils;
+
+import androidx.annotation.NonNull;
 
 import com.youmai.hxsdk.HuxinSdkManager;
 import com.youmai.hxsdk.entity.AuthConfig;
@@ -59,6 +60,9 @@ public class ColorsConfig {
     private final static String SOCKET_URL[] = new String[]{"https://openapi-test.colourlife.com/v1/", "https://openapi-test.colourlife.com/v1/", "https://openapi.colourlife.com/v1/"};
 
 
+    private final static String ICESTAFF_URL[] = new String[]{"http://staff.ice.test.colourlife.com", "https://staff-ice.colourlife.com", "https://staff-ice.colourlife.com"};
+
+
     private static String getIceUpload() {
         return ICE_UPLOAD[AppConfig.LAUNCH_MODE];
     }
@@ -69,6 +73,10 @@ public class ColorsConfig {
 
     private static String getIceHost() {
         return SOCKET_URL[AppConfig.LAUNCH_MODE];
+    }
+
+    private static String getIceSTAFFHost() {
+        return ICESTAFF_URL[AppConfig.LAUNCH_MODE];
     }
 
 
@@ -91,6 +99,16 @@ public class ColorsConfig {
      * 主组织架构
      */
     public static final String CONTACTS_MAIN_DATAS = getIceHost() + "txl2/contacts";
+
+
+    /**
+     * 根据组织架构ID获取下级联系人
+     */
+    public static final String CONTACTS_All_DATAS = getIceSTAFFHost() + "/app/txl/contacts/childDatas";
+    /**
+     * 根据关键字查询联系人
+     */
+    public static final String CONTACTS_PEOPLE_DATAS = getIceSTAFFHost() + "/app/txl/contacts/search";
 
     /**
      * 子组织架构

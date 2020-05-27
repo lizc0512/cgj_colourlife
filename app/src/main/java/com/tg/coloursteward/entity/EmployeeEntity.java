@@ -79,6 +79,8 @@ public class EmployeeEntity {
         private String landline;
         private int status;
         private String accountUuid;
+        private String id;
+        private String avatar;
         private String corpId;
         private String sex;
         private String dr;
@@ -87,12 +89,37 @@ public class EmployeeEntity {
         private String salaryLevel;
         private String czyId;
         private String jobType;
+        private String jobName;
         private String jobUuid;
         private String orgUuid;
         private String orgName;
         private String createtime;
         private int isFavorite;
         private int Favoriteid;
+
+        public String getId() {
+            return id;
+        }
+
+        public void setId(String id) {
+            this.id = id;
+        }
+
+        public String getAvatar() {
+            return avatar;
+        }
+
+        public void setAvatar(String avatar) {
+            this.avatar = avatar;
+        }
+
+        public String getJobName() {
+            return jobName;
+        }
+
+        public void setJobName(String jobName) {
+            this.jobName = jobName;
+        }
 
         public String getUsername() {
             return username;

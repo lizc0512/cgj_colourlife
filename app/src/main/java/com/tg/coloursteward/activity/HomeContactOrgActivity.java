@@ -82,9 +82,9 @@ public class HomeContactOrgActivity extends BaseActivity {
         lin_contact_header = findViewById(R.id.lin_contact_header);
     }
 
-    private void initData(boolean isLoading) {
+    private void initData(boolean isLoading, String org_uuid) {
         String corp_id = spUtils.getStringData(SpConstants.storage.CORPID, "");
-        homeModel.getConatctSearch(0, id, corp_id, isLoading, this);
+        homeModel.getConatctSearch(0, id, corp_id, org_uuid, isLoading, this);
     }
 
     @Override
@@ -158,7 +158,7 @@ public class HomeContactOrgActivity extends BaseActivity {
 
             if (i == lenth - 1) {
                 id = info.id;
-                initData(true);
+                initData(true, id);
                 textView.setTextColor(getResources()
                         .getColor(R.color.form_edit));
             } else {

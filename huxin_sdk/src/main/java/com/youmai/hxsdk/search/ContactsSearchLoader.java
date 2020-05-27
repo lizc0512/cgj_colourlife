@@ -2,6 +2,7 @@ package com.youmai.hxsdk.search;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -26,9 +27,11 @@ public class ContactsSearchLoader extends AsyncTaskLoader {
 
     private String mQuery;
     private List<SearchContactBean> allList = new ArrayList<>();
+    private Context mContext;
 
     public ContactsSearchLoader(Context context) {
         super(context);
+        this.mContext = context;
     }
 
 
@@ -43,17 +46,10 @@ public class ContactsSearchLoader extends AsyncTaskLoader {
         if (TextUtils.isEmpty(mQuery)) {
             return allList;
         }
-
-        /*allList = SearchData.instance().searchContactsList(getContext());
-
-        if (TextUtils.isEmpty(mQuery)) {
-            return allList;
-        } else {
-            searchIce(mQuery, allList);
-        }*/
-
         allList.clear();
-        searchIce(mQuery, allList);
+        SharedPreferences sharedPreferences = mContext.getSharedPreferences("wisdomPark_map", 0);
+        String corpId = sharedPreferences.getString("corp_id", "");
+        searchIce(mContext, corpId, mQuery, allList);
 
         String finalQuery = mQuery;
         String queryUpper = mQuery.toUpperCase();
@@ -81,11 +77,7 @@ public class ContactsSearchLoader extends AsyncTaskLoader {
                 }
                 finalQuery = queryUpper;
 
-            } /*else if (bean.getDuoYinzi().find(queryUpper, findResult)) {
-                searchType = SearchContactBean.SEARCH_TYPE_WHOLE_SPECL;
-                finalQuery = queryUpper;
-                bean.setWholePinYinFindIndex(findResult);
-            }*/
+            }
 
 
             if (searchType != SearchContactBean.SEARCH_TYPE_NONE) {
@@ -102,15 +94,18 @@ public class ContactsSearchLoader extends AsyncTaskLoader {
     }
 
 
-    private void searchIce(String key, List<SearchContactBean> allList) {
+    private void searchIce(Context mContext, String corp_uuid, String key, List<SearchContactBean> allList) {
 
-        String url = ColorsConfig.CONTACTS_SEARCH;
+        String url = ColorsConfig.CONTACTS_PEOPLE_DATAS;
         ContentValues params = new ContentValues();
-        params.put("pagesize", "100");
+        params.put("corp_uuid", corp_uuid);
         params.put("keyword", key);
         ColorsConfig.commonParams(params);
-
-        String response = OkHttpConnector.doGet(null, url, params);
+        ContentValues header = new ContentValues();
+        SharedPreferences sharedPreferences = mContext.getSharedPreferences("park_cache_map", 0);
+        String color_token = sharedPreferences.getString("access_token2", "");
+        header.put("color-token", color_token);
+        String response = OkHttpConnector.doGet(header, url, params);
         SearchResult bean = GsonUtil.parse(response, SearchResult.class);
         if (bean != null && bean.isSuccess()) {
             List<SearchResult.ContentBean> list = bean.getContent();
@@ -127,8 +122,8 @@ public class ContactsSearchLoader extends AsyncTaskLoader {
 
                 SearchContactBean contact = new SearchContactBean();
 
-                String uuid = item.getAccountUuid();
-                String avatar = ColorsConfig.HEAD_ICON_URL + "avatar?uid=" + item.getUsername();
+                String uuid = item.getId();
+                String avatar =item.getAvatar();
                 contact.setIconUrl(avatar);
                 contact.setUsername(item.getUsername());
                 contact.setUuid(uuid);
@@ -137,9 +132,6 @@ public class ContactsSearchLoader extends AsyncTaskLoader {
                 contact.setSimplepinyin(ch.toString());
                 contact.setIndexPinyin(chStr);
                 contact.setPhoneNum(item.getOrgName());
-
-                //DuoYinZi duoYinZi = PinYinUtils.HanziToPinYin(hanzi);
-                //contact.setDuoYinzi(duoYinZi);
 
                 boolean isAdd = true;
                 for (SearchContactBean local : allList) {

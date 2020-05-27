@@ -2,14 +2,15 @@ package com.youmai.hxsdk.search;
 
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.util.Log;
+import android.view.View;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.loader.app.LoaderManager;
 import androidx.loader.content.Loader;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import android.util.Log;
-import android.view.View;
 
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.youmai.hxsdk.R;
@@ -41,7 +42,7 @@ public class ContactsSearchFragment<T extends Parcelable> extends SearchFragment
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        mRecyclerView = (RecyclerView) view.findViewById(R.id.global_search_recycler_view);
+        mRecyclerView = view.findViewById(R.id.global_search_recycler_view);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
         mGlobalSearchAdapter = new GlobalSearchAdapter(getActivity());
         mGlobalSearchAdapter.setGlobalSearchAdapterListener(this);
@@ -76,23 +77,19 @@ public class ContactsSearchFragment<T extends Parcelable> extends SearchFragment
     @NonNull
     @Override
     public Loader<List<T>> onCreateLoader(int id, @Nullable Bundle args) {
-        Log.d(TAG, "onCreateLoader");
         mLoader = new ContactsSearchLoader(getContext());
         mLoader.setQuery(getQueryString());
-
         return mLoader;
     }
 
     @Override
     public void onLoaderReset(@NonNull Loader loader) {
-        Log.d(TAG, "onLoaderReset");
         mGlobalSearchAdapter.setList(null);
     }
 
 
     @Override
     public void onLoadFinished(@NonNull Loader<List<T>> loader, List<T> data) {
-        Log.d(TAG, "onLoadFinished");
         mGlobalSearchAdapter.setList(data);
     }
 

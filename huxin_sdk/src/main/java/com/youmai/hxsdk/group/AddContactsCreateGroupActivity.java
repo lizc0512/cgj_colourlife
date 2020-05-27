@@ -6,10 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -17,6 +13,11 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.fragment.app.FragmentTransaction;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.youmai.hxsdk.HuxinSdkManager;
@@ -213,7 +214,10 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
         setListener();
 
         //读取本地缓存列表
-        getCacheList();
+        String corpId = AppUtils.getAPPStringSharedPreferences(this, "corp_id", "");
+        if (corpId.equals(ColorsConfig.CORP_UUID)) {
+            getCacheList();
+        }
     }
 
 
@@ -590,7 +594,7 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
         params.put("page", "1");
         params.put("pagesize", "100");
         ColorsConfig.commonParams(params);
-        OkHttpConnector.httpGet(AddContactsCreateGroupActivity.this, url, params, new IGetListener() {
+        OkHttpConnector.httpGet(AddContactsCreateGroupActivity.this, null, url, params, new IGetListener() {
             @Override
             public void httpReqResult(String response) {
                 dismissProgressDialog();

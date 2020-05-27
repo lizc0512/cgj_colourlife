@@ -33,7 +33,7 @@ public class ColorsConfig {
     /**
      * 租户ID
      */
-    public static final String CORP_UUID = "a8c58297436f433787725a94f780a3c9";
+    public static final String CORP_UUID = "a8c58297436f433787725a94f780a3c9"; //彩生活租户ID
 
 
     private static final String SECRET[] = new String[]{"IGXGh8BKPwjEtbcXD2KN", "IGXGh8BKPwjEtbcXD2KN", "TYHpsLtHeFXYRTekJbVv"};
@@ -60,7 +60,8 @@ public class ColorsConfig {
     private final static String SOCKET_URL[] = new String[]{"https://openapi-test.colourlife.com/v1/", "https://openapi-test.colourlife.com/v1/", "https://openapi.colourlife.com/v1/"};
 
 
-    private final static String ICESTAFF_URL[] = new String[]{"http://staff.ice.test.colourlife.com", "https://staff-ice.colourlife.com", "https://staff-ice.colourlife.com"};
+    private final static String ICECGJBY_URL[] = new String[]{"https://cgj-backyard-test.colourlife.com",
+            "https://cgj-backyard-test.colourlife.com", "https://cgj-backyard.colourlife.com"};
 
 
     private static String getIceUpload() {
@@ -75,8 +76,8 @@ public class ColorsConfig {
         return SOCKET_URL[AppConfig.LAUNCH_MODE];
     }
 
-    private static String getIceSTAFFHost() {
-        return ICESTAFF_URL[AppConfig.LAUNCH_MODE];
+    private static String getCgjByHost() {
+        return ICECGJBY_URL[AppConfig.LAUNCH_MODE];
     }
 
 
@@ -104,11 +105,11 @@ public class ColorsConfig {
     /**
      * 根据组织架构ID获取下级联系人
      */
-    public static final String CONTACTS_All_DATAS = getIceSTAFFHost() + "/app/txl/contacts/childDatas";
+    public static final String CONTACTS_All_DATAS = getCgjByHost() + "/app/txl/contacts/childDatas";
     /**
      * 根据关键字查询联系人
      */
-    public static final String CONTACTS_PEOPLE_DATAS = getIceSTAFFHost() + "/app/txl/contacts/search";
+    public static final String CONTACTS_PEOPLE_DATAS = getCgjByHost() + "/app/txl/contacts/search";
 
     /**
      * 子组织架构
@@ -118,7 +119,7 @@ public class ColorsConfig {
     /**
      * 搜索联系人
      */
-    public static final String CONTACTS_SEARCH = getIceHost() + "txl2/contacts/search";
+    public static final String CONTACTS_SEARCH = getIceHost() + "/app/txl/contacts/search";
 
     /**
      * 删除联系人

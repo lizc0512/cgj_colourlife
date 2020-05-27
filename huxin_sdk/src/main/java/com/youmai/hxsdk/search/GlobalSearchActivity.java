@@ -2,12 +2,13 @@ package com.youmai.hxsdk.search;
 
 import android.content.Context;
 import android.os.Bundle;
-import androidx.fragment.app.FragmentTransaction;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
+
+import androidx.fragment.app.FragmentTransaction;
 
 import com.youmai.hxsdk.R;
 import com.youmai.hxsdk.activity.SdkBaseActivity;
@@ -19,7 +20,6 @@ import com.youmai.hxsdk.widget.SearchEditText;
 public class GlobalSearchActivity extends SdkBaseActivity implements View.OnClickListener {
 
     private ContactsSearchFragment mContactsSearchFragment;
-    //private AppsSearchFragment mAppsSearchFragment;
 
     private SearchEditText mSearchEditText;
     private TextView mBtnBackMain;
@@ -60,13 +60,6 @@ public class GlobalSearchActivity extends SdkBaseActivity implements View.OnClic
                     mContactsSearchFragment.setQueryString(queryStr);
                     mContactsSearchFragment.reset();
                 }
-                /*if (mAppsSearchFragment != null) {
-                    if (mAppsSearchFragment.isHidden()) {
-                        transaction.show(mAppsSearchFragment);
-                    }
-                    mAppsSearchFragment.setQueryString(queryStr);
-                    mAppsSearchFragment.reset();
-                }*/
                 transaction.commit();
             }
         });

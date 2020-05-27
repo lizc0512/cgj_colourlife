@@ -2,15 +2,17 @@ package com.youmai.hxsdk.group.fragment;
 
 import android.app.ProgressDialog;
 import android.content.ContentValues;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 
 import com.youmai.hxsdk.R;
 import com.youmai.hxsdk.config.ColorsConfig;
@@ -94,12 +96,19 @@ public class AddContactByDepartmentFragment extends Fragment {
     }
 
     private void loadDataForNet(String orgId) {
-        String url = ColorsConfig.CONTACTS_CHILD_DATAS;
+        String url = ColorsConfig.CONTACTS_All_DATAS;
         ContentValues params = new ContentValues();
-        params.put("orgID", orgId);
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("wisdomPark_map", 0);
+        String corpId = sharedPreferences.getString("corp_id", "");
+        params.put("org_uuid", orgId);
+        params.put("corp_uuid", corpId);
         ColorsConfig.commonParams(params);
         showProgressDialog();
-        OkHttpConnector.httpGet(getContext(), url, params, new IGetListener() {
+        ContentValues headers = new ContentValues();
+        SharedPreferences sp = getActivity().getSharedPreferences("park_cache_map", 0);
+        String color_token = sp.getString("access_token2", "");
+        headers.put("color-token", color_token);
+        OkHttpConnector.httpGet(getContext(), headers, url, params, new IGetListener() {
             @Override
             public void httpReqResult(String response) {
                 try {

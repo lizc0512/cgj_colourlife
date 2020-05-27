@@ -17,6 +17,15 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.activity.EmployeeDataActivity;
 import com.tg.coloursteward.activity.HomeContactOrgActivity;
@@ -60,14 +69,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import rx.Observable;
 import rx.Subscriber;
 import rx.Subscription;
@@ -492,7 +493,7 @@ public class ContactsFragment extends Fragment implements ItemEventListener, Htt
             params.put("page", "1");
             params.put("pagesize", "100");
             ColorsConfig.commonParams(params);
-            OkHttpConnector.httpGet(mContext, url, params, new IGetListener() {
+            OkHttpConnector.httpGet(mContext, null, url, params, new IGetListener() {
                 @Override
                 public void httpReqResult(String response) {
                     ModifyContactsBean bean = GsonUtil.parse(response, ModifyContactsBean.class);

@@ -81,9 +81,9 @@ public class OkHttpConnector {
         httpGet_net(context, header, url, params, request);
     }
 
-    public static void httpGet(Context context, String url, ContentValues params,
+    public static void httpGet(Context context,ContentValues headers, String url, ContentValues params,
                                IGetListener request) {
-        httpGet_net(context, null, url, params, request);
+        httpGet_net(context, headers, url, params, request);
     }
 
 

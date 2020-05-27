@@ -41,7 +41,7 @@ public class HomeModel extends BaseModel {
     private String authUrl = "/auth";
     private String auth2Url = "/app/auth2";
     private String appAuthUrl = "/jqfw/app/auth";
-    private String contactSearchUrl = "/txl2/contacts/childDatas";
+    private String contactSearchUrl = "/app/txl/contacts/childDatas";
 
     public HomeModel(Context context) {
         super(context);
@@ -600,15 +600,16 @@ public class HomeModel extends BaseModel {
      * @param loading
      * @param httpResponse
      */
-    public void getConatctSearch(int what, String id, String corp_id, boolean loading, HttpResponse httpResponse) {
+    public void getConatctSearch(int what, String id, String corp_id, String org_uuid, boolean loading, HttpResponse httpResponse) {
         Map<String, Object> params = new HashMap<>();
         if (!id.equals("-1")) {
             params.put("orgID", id);
         }
-        params.put("corpId", corp_id);
+        params.put("corp_uuid", corp_id);
+        params.put("org_uuid", org_uuid);
         final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(
-                mContext, 4, contactSearchUrl), RequestMethod.GET);
-        request(what, request, RequestEncryptionUtils.getIceMap(mContext, params), new HttpListener<String>() {
+                mContext, 0, contactSearchUrl), RequestMethod.GET);
+        request(what, request, RequestEncryptionUtils.getNewSaftyMap(mContext, params), new HttpListener<String>() {
             @Override
             public void onSucceed(int what, Response<String> response) {
                 int responseCode = response.getHeaders().getResponseCode();

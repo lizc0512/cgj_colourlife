@@ -113,7 +113,11 @@ public class UserInfoActivity extends BaseActivity implements OnClickListener, H
         rl_usermobile_change.setOnClickListener(this);
         rl_user_company.setOnClickListener(this);
 
-        tv_user_name.setText(UserInfo.realname);
+        if (!TextUtils.isEmpty(UserInfo.realname)) {
+            tv_user_name.setText(UserInfo.realname);
+        } else {
+            tv_user_name.setText(UserInfo.mobile);
+        }
         tv_user_sex.setText(UserInfo.sex);
         tv_user_part.setText(UserInfo.familyName);
         tv_user_job.setText(UserInfo.jobName);

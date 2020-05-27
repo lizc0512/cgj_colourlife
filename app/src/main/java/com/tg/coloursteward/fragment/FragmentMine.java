@@ -17,6 +17,10 @@ import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.activity.MyBrowserActivity;
 import com.tg.coloursteward.adapter.FragmentMineAdapter;
@@ -45,10 +49,6 @@ import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * 个人中心
@@ -172,7 +172,11 @@ public class FragmentMine extends Fragment implements OnClickListener, HttpRespo
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mActivity);
         recyclerview.setLayoutManager(linearLayoutManager);
         recyclerview.setNestedScrollingEnabled(false);
-        tv_mine_name.setText(UserInfo.realname);
+        if (!TextUtils.isEmpty(UserInfo.realname)) {
+            tv_mine_name.setText(UserInfo.realname);
+        } else {
+            tv_mine_name.setText(UserInfo.mobile);
+        }
         initRefresh();
     }
 

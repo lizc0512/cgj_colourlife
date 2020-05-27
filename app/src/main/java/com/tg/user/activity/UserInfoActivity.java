@@ -25,6 +25,7 @@ import com.tg.coloursteward.baseModel.HttpResponse;
 import com.tg.coloursteward.baseModel.RequestEncryptionUtils;
 import com.tg.coloursteward.constant.Contants;
 import com.tg.coloursteward.constant.SpConstants;
+import com.tg.coloursteward.entity.CropListEntity;
 import com.tg.coloursteward.info.UserInfo;
 import com.tg.coloursteward.net.HttpTools;
 import com.tg.coloursteward.net.ResponseData;
@@ -78,6 +79,9 @@ public class UserInfoActivity extends BaseActivity implements OnClickListener, H
     private RelativeLayout rl_usermobile_change;
     private RelativeLayout rl_user_company;
     private UserModel userModel;
+    private List<CropListEntity.ContentBean> listCompany = new ArrayList<>();
+    private ImageView iv_company_arrow;
+    private boolean isCompanyNext = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,6 +113,7 @@ public class UserInfoActivity extends BaseActivity implements OnClickListener, H
         rl_usermobile_change = findViewById(R.id.rl_usermobile_change);
         tv_user_company = findViewById(R.id.tv_user_company);
         rl_user_company = findViewById(R.id.rl_user_company);
+        iv_company_arrow = findViewById(R.id.iv_company_arrow);
         rl_usersex_change.setOnClickListener(this);
         rl_usermobile_change.setOnClickListener(this);
         rl_user_company.setOnClickListener(this);
@@ -134,6 +139,17 @@ public class UserInfoActivity extends BaseActivity implements OnClickListener, H
         String company = spUtils.getStringData(SpConstants.storage.CORPNAME, "");
         tv_user_company.setText(company);
         freshImg();
+
+        try {
+            String result = spUtils.getStringData(SpConstants.storage.CORPDATA, "");
+            CropListEntity bean = GsonUtils.gsonToBean(result, CropListEntity.class);
+            listCompany.addAll(bean.getContent());
+            if (listCompany.size() < 1) {
+                iv_company_arrow.setVisibility(View.GONE);
+                isCompanyNext = false;
+            }
+        } catch (Exception e) {
+        }
     }
 
     private void freshImg() {
@@ -283,8 +299,10 @@ public class UserInfoActivity extends BaseActivity implements OnClickListener, H
                 startActivityForResult(intent, 100);
                 break;
             case R.id.rl_user_company:
-                Intent it = new Intent(this, ChangeCompanyActivity.class);
-                startActivityForResult(it, 1001);
+                if (isCompanyNext) {
+                    Intent it = new Intent(this, ChangeCompanyActivity.class);
+                    startActivityForResult(it, 1001);
+                }
                 break;
         }
     }

@@ -25,6 +25,12 @@ import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
 import com.jcodecraeer.xrecyclerview.progressindicator.AVLoadingIndicatorView;
 import com.tg.coloursteward.R;
@@ -69,12 +75,6 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 /**
  * 主页-沟通
  * A simple {@link Fragment} subclass.
@@ -112,7 +112,7 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, View.OnC
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.iv_contactfragment_scan:
-                PopWindowView popWindowView = PopWindowView.getInstance(mActivity, iv_contactfragment_scan);
+                PopWindowView popWindowView = new PopWindowView(mActivity, iv_contactfragment_scan);
                 popWindowView.showPopupWindow(iv_contactfragment_scan);
                 break;
             case R.id.rl_home_internet:

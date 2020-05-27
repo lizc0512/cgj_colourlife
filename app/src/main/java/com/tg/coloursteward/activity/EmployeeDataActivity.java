@@ -129,9 +129,12 @@ public class EmployeeDataActivity extends BaseActivity implements HttpResponse, 
         String corpId = spUtils.getStringData(SpConstants.storage.CORPID, "");
         if (Contants.APP.CORP_UUID.equals(corpId)) {
             cbCollect.setVisibility(View.VISIBLE);
+            rl_employee_money.setVisibility(View.VISIBLE);
         } else {
             cbCollect.setVisibility(View.GONE);
+            rl_employee_money.setVisibility(View.GONE);
         }
+
     }
 
     //给动态广播发送信息

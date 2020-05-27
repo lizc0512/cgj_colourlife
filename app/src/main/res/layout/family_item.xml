@@ -9,7 +9,7 @@
     <View
         android:id="@+id/catalog"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/size_20dp"
+        android:layout_height="@dimen/size_12dp"
         android:background="@color/base_color" />
 
     <RelativeLayout

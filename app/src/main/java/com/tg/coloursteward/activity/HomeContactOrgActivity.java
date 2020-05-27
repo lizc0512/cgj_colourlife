@@ -31,8 +31,9 @@ import java.util.List;
  *
  * @author Administrator
  */
-public class HomeContactOrgActivity extends BaseActivity {
+public class HomeContactOrgActivity extends BaseActivity implements OnClickListener {
     public static final String FAMILY_INFO = "familyInfo";
+    public static final String DEPARTNAME = "departName";
     private FamilyInfo info;
     private String id;
     // 组织标题
@@ -44,24 +45,19 @@ public class HomeContactOrgActivity extends BaseActivity {
     private boolean clickable = true;
     private HomeModel homeModel;
     private RecyclerView rv_home_contact;
-
-    @Override
-    protected boolean handClickEvent(View v) {
-        switch (v.getId()) {
-            case R.id.back_layout://左上角返回按钮点击处理事件
-                lin_back();
-                break;
-        }
-        return super.handClickEvent(v);
-    }
+    private String title;
+    private ImageView iv_base_back;
+    private TextView tv_base_title;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_home_contact_org);
         homeModel = new HomeModel(this);
         Intent intent = getIntent();
         if (intent != null) {
             info = (FamilyInfo) intent.getSerializableExtra(FAMILY_INFO);
+            title = intent.getStringExtra(DEPARTNAME);
         }
         id = info.id;
         initView();
@@ -74,12 +70,16 @@ public class HomeContactOrgActivity extends BaseActivity {
      */
     private void initView() {
         rv_home_contact = findViewById(R.id.rv_home_contact);
+        iv_base_back = findViewById(R.id.iv_base_back);
+        tv_base_title = findViewById(R.id.tv_base_title);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         rv_home_contact.setLayoutManager(layoutManager);
         adapter = new FamilyAdapter(this, familyList);
         rv_home_contact.setAdapter(adapter);
         // 组织标题
         lin_contact_header = findViewById(R.id.lin_contact_header);
+        iv_base_back.setOnClickListener(this);
+        tv_base_title.setText(title);
     }
 
     private void initData(boolean isLoading, String org_uuid) {
@@ -190,14 +190,21 @@ public class HomeContactOrgActivity extends BaseActivity {
 
     @Override
     public View getContentView() {
-        return getLayoutInflater().inflate(R.layout.activity_home_contact_org, null);
+        return null;
     }
 
     @Override
     public String getHeadTitle() {
-        headView.setListenerBack(singleListener);
-        return "通讯录";
+        return null;
     }
 
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.iv_base_back:
+                lin_back();
+                break;
+        }
+    }
 }
 

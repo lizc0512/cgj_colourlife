@@ -155,6 +155,7 @@ public class ContactsFragment extends Fragment implements ItemEventListener, Htt
                 info.type = "org";
                 info.name = "";
                 intent = new Intent(mContext, HomeContactOrgActivity.class);
+                intent.putExtra(HomeContactOrgActivity.DEPARTNAME, "组织架构");
                 intent.putExtra(HomeContactOrgActivity.FAMILY_INFO, info);
                 startActivity(intent);
                 break;
@@ -173,6 +174,7 @@ public class ContactsFragment extends Fragment implements ItemEventListener, Htt
                 info.name = UserInfo.familyName;
                 intent = new Intent(mContext, HomeContactOrgActivity.class);
                 intent.putExtra(HomeContactOrgActivity.FAMILY_INFO, info);
+                intent.putExtra(HomeContactOrgActivity.DEPARTNAME, "我的部门");
                 startActivity(intent);
                 break;
             case R.id.rl_contact_people:
@@ -267,6 +269,12 @@ public class ContactsFragment extends Fragment implements ItemEventListener, Htt
                 break;
 
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        tv_contact_depart.setText(UserInfo.familyName);
     }
 
     private void initShowRv() {

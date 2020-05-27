@@ -21,7 +21,6 @@ import com.alibaba.android.arouter.facade.annotation.Route;
 import com.hjq.permissions.OnPermission;
 import com.hjq.permissions.XXPermissions;
 import com.tg.coloursteward.R;
-import com.tg.coloursteward.adapter.EmployeePhoneAdapter;
 import com.tg.coloursteward.base.BaseActivity;
 import com.tg.coloursteward.baseModel.HttpResponse;
 import com.tg.coloursteward.constant.Contants;
@@ -29,16 +28,10 @@ import com.tg.coloursteward.constant.SpConstants;
 import com.tg.coloursteward.entity.ContactsEntity;
 import com.tg.coloursteward.entity.EmployeeEntity;
 import com.tg.coloursteward.fragment.ContactsFragment;
-import com.tg.coloursteward.info.EmployeePhoneInfo;
-import com.tg.coloursteward.info.UserInfo;
 import com.tg.coloursteward.model.ContactModel;
-import com.tg.coloursteward.net.GetTwoRecordListener;
-import com.tg.coloursteward.net.HttpTools;
-import com.tg.coloursteward.serice.AuthAppService;
 import com.tg.coloursteward.util.GlideUtils;
 import com.tg.coloursteward.util.GsonUtils;
 import com.tg.coloursteward.util.MicroAuthTimeUtils;
-import com.tg.coloursteward.util.StringUtils;
 import com.tg.coloursteward.util.ToastUtil;
 import com.tg.coloursteward.util.Tools;
 import com.tg.coloursteward.view.dialog.ToastFactory;
@@ -49,11 +42,6 @@ import com.youmai.hxsdk.db.bean.EmployeeBean;
 import com.youmai.hxsdk.db.helper.CacheEmployeeHelper;
 import com.youmai.hxsdk.router.APath;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -71,7 +59,6 @@ public class EmployeeDataActivity extends BaseActivity implements HttpResponse, 
     private RelativeLayout rl_employee_msg;
     private RelativeLayout rl_employee_call;
     private EmployeeBean item;
-    private EmployeePhoneInfo info;
     private TextView tvName, tvJob, tvBranch;
     private ImageView ivHead;
     private ImageView ivSex;
@@ -83,11 +70,6 @@ public class EmployeeDataActivity extends BaseActivity implements HttpResponse, 
     private TextView tv_employee_email;
     private TextView tv_employee_emailcopy;
     private TextView tv_employee_company;
-    private View footView;
-    private ArrayList<EmployeePhoneInfo> PhoneList = new ArrayList<EmployeePhoneInfo>();
-    private EmployeePhoneAdapter adapter;
-    private AuthAppService authAppService;//2.0授权
-    private String accessToken;
     private static String personCode;
     private ContactModel contactModel;
 
@@ -100,19 +82,8 @@ public class EmployeeDataActivity extends BaseActivity implements HttpResponse, 
         if (intent != null) {
             contactsID = intent.getStringExtra(CONTACTS_ID);
         }
-        String expireTime = Tools.getStringValue(EmployeeDataActivity.this, Contants.storage.APPAUTHTIME);
-        Date dt = new Date();
-        Long time = dt.getTime();
-        if (StringUtils.isNotEmpty(expireTime)) {
-            if (Long.parseLong(expireTime) * 1000 <= time) {//token过期
-                getAuthAppInfo();
-            } else {
-                getData();
-            }
-        } else {
-            getAuthAppInfo();
-        }
         initView();
+        getData();
 
     }
 
@@ -121,42 +92,7 @@ public class EmployeeDataActivity extends BaseActivity implements HttpResponse, 
      */
     private void getData() {
         String corpId = spUtils.getStringData(SpConstants.storage.CORPID, "");
-        contactModel.getEmployeeData(0, contactsID, contactsID, UserInfo.employeeAccount, corpId, this);
-        accessToken = Tools.getStringValue(EmployeeDataActivity.this, Contants.storage.APPAUTH);
-    }
-
-    /**
-     * 获取token(2.0)
-     * sectet
-     */
-    private void getAuthAppInfo() {
-        if (authAppService == null) {
-            authAppService = new AuthAppService(EmployeeDataActivity.this);
-        }
-        authAppService.getAppAuth(new GetTwoRecordListener<String, String>() {
-            @Override
-            public void onFinish(String jsonString, String data2, String data3) {
-                int code = HttpTools.getCode(jsonString);
-                if (code == 0) {
-                    JSONObject content = HttpTools.getContentJSONObject(jsonString);
-                    if (content.length() > 0) {
-                        try {
-                            accessToken = content.getString("accessToken");
-                            String expireTime = content.getString("expireTime");
-                            Tools.saveStringValue(EmployeeDataActivity.this, Contants.storage.APPAUTH, accessToken);
-                            Tools.saveStringValue(EmployeeDataActivity.this, Contants.storage.APPAUTHTIME, expireTime);
-                            getData();
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
-            }
-
-            @Override
-            public void onFailed(String Message) {
-            }
-        });
+        contactModel.getEmployeeData(0, contactsID, contactsID, corpId, this);
     }
 
     /**
@@ -190,6 +126,12 @@ public class EmployeeDataActivity extends BaseActivity implements HttpResponse, 
         tv_employee_emailcopy.setOnClickListener(this);
         String corpName = spUtils.getStringData(SpConstants.storage.CORPNAME, "");
         tv_employee_company.setText(corpName);
+        String corpId = spUtils.getStringData(SpConstants.storage.CORPID, "");
+        if (Contants.APP.CORP_UUID.equals(corpId)) {
+            cbCollect.setVisibility(View.VISIBLE);
+        } else {
+            cbCollect.setVisibility(View.GONE);
+        }
     }
 
     //给动态广播发送信息
@@ -231,24 +173,27 @@ public class EmployeeDataActivity extends BaseActivity implements HttpResponse, 
                     EmployeeEntity employeeEntity = GsonUtils.gsonToBean(result, EmployeeEntity.class);
                     if (employeeEntity.getContent() != null && employeeEntity.getContent().size() > 0) {
                         item = new EmployeeBean();
-                        item.setIsFavorite(String.valueOf(employeeEntity.getContent().get(0).getIsFavorite()));
-                        item.setUid(employeeEntity.getContent().get(0).getAccountUuid());
+                        if (!TextUtils.isEmpty(String.valueOf(employeeEntity.getContent().get(0).getIsFavorite()))) {
+                            item.setIsFavorite(String.valueOf(employeeEntity.getContent().get(0).getIsFavorite()));
+                        }
+                        item.setUid(employeeEntity.getContent().get(0).getId());
                         item.setUsername(employeeEntity.getContent().get(0).getUsername());
                         item.setRealname(employeeEntity.getContent().get(0).getName());
-                        item.setAvatar("http://avatar.ice.colourlife.com/avatar?uid=" + employeeEntity.getContent().get(0).getUsername());
-                        if (employeeEntity.getContent().get(0).getSex().equals("1") || employeeEntity.getContent().get(0).getSex().equals("男")) {
-                            item.setSex("男");// 1男2女,
+                        item.setAvatar(employeeEntity.getContent().get(0).getAvatar());
+                        if (employeeEntity.getContent().get(0).getSex().equals("1")) {
+                            item.setSex("男");// 1男2,0女,
                         } else {
-                            item.setSex("女");// 1男2女,
+                            item.setSex("女");// 1男2,0女,
                         }
                         item.setEmail(employeeEntity.getContent().get(0).getEmail());
                         item.setMobile(employeeEntity.getContent().get(0).getMobile());
-                        item.setJobName(employeeEntity.getContent().get(0).getJobType());
+                        item.setJobName(employeeEntity.getContent().get(0).getJobName());
                         item.setOrgName(employeeEntity.getContent().get(0).getOrgName());
-                        item.setLandline(employeeEntity.getContent().get(0).getLandline());
                         item.setName(employeeEntity.getContent().get(0).getName());
-                        item.setFavoriteid(String.valueOf(employeeEntity.getContent().get(0).getFavoriteid()));
-                        personCode = item.getFavoriteid();
+                        if (!TextUtils.isEmpty(String.valueOf(employeeEntity.getContent().get(0).getFavoriteid()))) {
+                            item.setFavoriteid(String.valueOf(employeeEntity.getContent().get(0).getFavoriteid()));
+                            personCode = item.getFavoriteid();
+                        }
                     }
                 }
                 if (item != null) {

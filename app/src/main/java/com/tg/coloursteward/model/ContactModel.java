@@ -27,7 +27,7 @@ import java.util.Map;
  * @class describe
  */
 public class ContactModel extends BaseModel {
-    private String idCardUrl = "/txl2/contacts/search";
+    private String idCardUrl = "/app/txl/contacts/search";
     private String collextUrl = "/txl2/contacts";
     private String cloudPermissionUrl = "/app/cloud/apply";
 
@@ -44,13 +44,12 @@ public class ContactModel extends BaseModel {
      * @param username
      * @param httpResponse
      */
-    public void getEmployeeData(int what, String contactsID, String username, String owner, String corpId, HttpResponse httpResponse) {
+    public void getEmployeeData(int what, String contactsID, String username, String corpId, HttpResponse httpResponse) {
         Map<String, Object> params = new HashMap<>();
         params.put("keyword", contactsID);
         params.put("username", username);
-        params.put("owner", owner);
-        params.put("corpId", corpId);
-        final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 4, idCardUrl), RequestMethod.GET);
+        params.put("corp_uuid", corpId);
+        final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 0, idCardUrl), RequestMethod.GET);
         request(what, request, RequestEncryptionUtils.getIceMap(mContext, params), new HttpListener<String>() {
             @Override
             public void onSucceed(int what, Response<String> response) {

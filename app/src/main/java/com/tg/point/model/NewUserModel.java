@@ -37,39 +37,6 @@ public class NewUserModel extends BaseModel {
         super(context);
     }
 
-    /****获取短信或语音验证码**/
-    public void getSmsCode(int what, String mobile, int work_type, int sms_type, final HttpResponse newHttpResponse) {
-        Map<String, Object> params = new HashMap<String, Object>();
-        params.put("mobile", mobile);
-        params.put("work_type", work_type);
-        params.put("sms_type", sms_type);
-        params.put("device_uuid", TokenUtils.getUUID(mContext));
-        final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 13, sendCodeUrl), RequestMethod.POST);
-        request(what, request, params, new HttpListener<String>() {
-            @Override
-            public void onSucceed(int what, Response<String> response) {
-                int responseCode = response.getHeaders().getResponseCode();
-                String result = response.get();
-                if (responseCode == RequestEncryptionUtils.responseSuccess) {
-                    int resultCode = showSuccesResultMessage(result);
-                    if (resultCode == 0) {
-                        newHttpResponse.OnHttpResponse(what, result);
-                    } else {
-                        newHttpResponse.OnHttpResponse(what, "");
-                    }
-                } else {
-                    newHttpResponse.OnHttpResponse(what, "");
-                    showErrorCodeMessage(responseCode, response);
-                }
-            }
-
-            @Override
-            public void onFailed(int what, Response<String> response) {
-                newHttpResponse.OnHttpResponse(what, "");
-                showExceptionMessage(what, response);
-            }
-        }, true, true);
-    }
 
     /**
      * 提交实名认证

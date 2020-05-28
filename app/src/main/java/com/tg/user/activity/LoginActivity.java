@@ -591,7 +591,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
             public Map<String, String> gt3CaptchaApi1() {
                 Map<String, Object> map = new HashMap<String, Object>();
                 map.put("device_uuid", TokenUtils.getUUID(LoginActivity.this));
-                Map<String, String> stringMap = TokenUtils.getStringMap(TokenUtils.getNewSaftyMap(LoginActivity.this, map));
+                Map<String, String> stringMap = RequestEncryptionUtils.getStringMap(RequestEncryptionUtils.getNewSaftyMap(LoginActivity.this, map));
                 return stringMap;
             }
 
@@ -621,7 +621,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
             public Map<String, String> gt3SecondResult() {
                 Map<String, Object> objectMap = new HashMap<String, Object>();
                 objectMap.put("device_uuid", TokenUtils.getUUID(LoginActivity.this));
-                Map<String, String> stringMap = TokenUtils.getStringMap(TokenUtils.getNewSaftyMap(LoginActivity.this, objectMap));
+                Map<String, String> stringMap = RequestEncryptionUtils.getStringMap(RequestEncryptionUtils.getNewSaftyMap(LoginActivity.this, objectMap));
                 return stringMap;
             }
 

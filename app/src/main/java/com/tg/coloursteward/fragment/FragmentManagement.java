@@ -15,12 +15,20 @@ import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import androidx.viewpager.widget.ViewPager;
+
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.adapter.CropListAdapter;
 import com.tg.coloursteward.adapter.MicroApplicationAdapter;
 import com.tg.coloursteward.adapter.MicroViewpagerAdapter;
 import com.tg.coloursteward.adapter.MicroVpItemAdapter;
 import com.tg.coloursteward.baseModel.HttpResponse;
+import com.tg.coloursteward.baseModel.RequestEncryptionUtils;
 import com.tg.coloursteward.constant.Contants;
 import com.tg.coloursteward.constant.SpConstants;
 import com.tg.coloursteward.entity.CropLayoutEntity;
@@ -37,7 +45,6 @@ import com.tg.coloursteward.util.GsonUtils;
 import com.tg.coloursteward.util.LinkParseUtil;
 import com.tg.coloursteward.util.MicroAuthTimeUtils;
 import com.tg.coloursteward.util.SharedPreferencesUtils;
-import com.tg.coloursteward.util.TokenUtils;
 import com.tg.coloursteward.util.Tools;
 import com.tg.coloursteward.view.MicroViewPager;
 import com.tg.coloursteward.view.MyGridLayoutManager;
@@ -59,12 +66,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-import androidx.viewpager.widget.ViewPager;
 import cn.bingoogolapple.bgabanner.BGABanner;
 
 /**
@@ -333,13 +334,15 @@ public class FragmentManagement extends Fragment implements HttpResponse, View.O
             setMicroVpItem(cacheItem, rv_micro_vp);
         }
         Map<String, Object> map = new HashMap();
-        Map<String, String> mapparams = TokenUtils.getStringMap(TokenUtils.getNewSaftyMap(mActivity, map));
+        Map<String, String> mapparams = RequestEncryptionUtils.getStringMap(RequestEncryptionUtils.getNewSaftyMap(mActivity, map));
         ContentValues params = new ContentValues();
         params.put("uuid", uuid);
         params.put("nonce_str", mapparams.get("nonce_str"));
         params.put("native_type", mapparams.get("native_type"));
         params.put("version", mapparams.get("version"));
         params.put("signature", mapparams.get("signature"));
+        String corpId = SharedPreferencesUtils.getInstance().getStringData(SpConstants.storage.CORPID, "");
+        params.put("corp_id", corpId);
         ColorsConfig.commonParams(params);
         ContentValues header = new ContentValues();
         String colorToken = SharedPreferencesUtils.getKey(mActivity, SpConstants.accessToken.accssToken);

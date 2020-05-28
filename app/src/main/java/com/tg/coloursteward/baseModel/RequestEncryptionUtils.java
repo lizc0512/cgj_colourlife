@@ -15,7 +15,6 @@ import com.tg.coloursteward.util.TokenUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.net.URLEncoder;
 import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -69,15 +68,13 @@ public class RequestEncryptionUtils {
             finalUrl = Contants.URl.URL_LEKAI + urlString;//乐开管家
         } else if (type == 12) {
             finalUrl = Contants.URl.TOKEN_ADDRESS + urlString;//彩之云授权接口
-        } else if (type == 13) {
-            finalUrl = Contants.URl.USERINFO_ADDRESS + urlString;//彩之云用户接口
         } else if (type == 16) {
             finalUrl = Contants.URl.ACCOUNT_ADDRESS + urlString;//新版彩钱包
         } else if (type == 17) {
             finalUrl = Contants.URl.DELIVERY_HOME_ADDRESS + urlString;//彩快递
-        }else if (type==18){
+        } else if (type == 18) {
             finalUrl = Contants.URl.DELIVERY_NUMBER_ADDRESS + urlString;//快递单号查询信息
-        }else if (type==19){
+        } else if (type == 19) {
             finalUrl = Contants.URl.DELIVERY_COMPANY_ADDRESS + urlString;//快递公司相关信息
         }
         return finalUrl;
@@ -167,6 +164,8 @@ public class RequestEncryptionUtils {
         paramsMap.put("device_uuid", TokenUtils.getUUID(context));
         paramsMap.put("native_type", 1);//客户端标识，1：安卓，2：苹果
         paramsMap.put("version", BuildConfig.VERSION_NAME);
+        String corpId = SharedPreferencesUtils.getInstance().getStringData(SpConstants.storage.CORPID, "");
+        paramsMap.put("corp_id", corpId);
         String buff = "";
         try {
             List<Map.Entry<String, Object>> infoIds = new ArrayList<Map.Entry<String, Object>>(paramsMap.entrySet());
@@ -194,45 +193,6 @@ public class RequestEncryptionUtils {
                 }
             }
             buff = setMD5(buf.toString() + "secret=" + Contants.APP.secertKey).toUpperCase();
-            paramsMap.put("signature", buff);
-        } catch (Exception e) {
-            return paramsMap;
-        }
-        return paramsMap;
-    }
-
-    /***4.0新接口的安全加密以后的请求参数Map**/
-    public static Map<String, Object> getCzySaftyMap(Context context, Map<String, Object> paramsMap) {
-        paramsMap.put("nonce_str", getRandomNonceStr());
-        paramsMap.put("device_uuid", TokenUtils.getUUID(context));
-        paramsMap.put("native_type", 1);//客户端标识，1：安卓，2：苹果
-        paramsMap.put("version", BuildConfig.VERSION_NAME);
-        String buff = "";
-        try {
-            List<Map.Entry<String, Object>> infoIds = new ArrayList<Map.Entry<String, Object>>(paramsMap.entrySet());
-            // 对所有传入参数按照字段名的 ASCII 码从小到大排序（字典序）
-            Collections.sort(infoIds, new Comparator<Map.Entry<String, Object>>() {
-
-                @Override
-                public int compare(Map.Entry<String, Object> o1, Map.Entry<String, Object> o2) {
-                    return (o1.getKey()).toString().compareTo((o2.getKey()).toString());
-                }
-            });
-            // 构造URL 键值对的格式
-            StringBuilder buf = new StringBuilder();
-            for (Map.Entry<String, Object> item : infoIds) {
-                if (null != item && !TextUtils.isEmpty(item.getValue().toString())) {
-                    String key = item.getKey();
-                    String val = item.getValue().toString();
-                    val = URLEncoder.encode(val, "utf-8");
-                    val = val.replace(" ", "%20");
-                    val = val.replace("*", "%2A");
-                    val = val.replace("+", "%2B");
-                    buf.append(key + "=" + val);
-                    buf.append("&");
-                }
-            }
-            buff = setMD5(buf.toString() + "secret=" + Contants.APP.czySecertKey).toUpperCase();
             paramsMap.put("signature", buff);
         } catch (Exception e) {
             return paramsMap;

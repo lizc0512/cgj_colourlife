@@ -13,35 +13,25 @@ import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.provider.Settings;
-import androidx.core.app.ActivityCompat;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 
-import com.tg.coloursteward.BuildConfig;
+import androidx.core.app.ActivityCompat;
+
 import com.tg.coloursteward.constant.Contants;
-import com.youmai.hxsdk.config.ColorsConfig;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.FileReader;
-import java.io.Reader;
 import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
-import java.net.URLEncoder;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.Random;
 import java.util.UUID;
 
 import cn.jpush.android.api.JPushInterface;
@@ -248,27 +238,6 @@ public class TokenUtils {
         return null;
     }
 
-    public static String loadFileAsString(String fileName) throws Exception {
-        FileReader reader = new FileReader(fileName);
-        String text = loadReaderAsString(reader);
-        reader.close();
-        if (TextUtils.isEmpty(text)) {
-            text = "";
-        }
-        return text;
-    }
-
-    public static String loadReaderAsString(Reader reader) throws Exception {
-        StringBuilder builder = new StringBuilder();
-        char[] buffer = new char[4096];
-        int readLength = reader.read(buffer);
-        while (readLength >= 0) {
-            builder.append(buffer, 0, readLength);
-            readLength = reader.read(buffer);
-        }
-        return builder.toString();
-    }
-
     /**
      * 获取唯一的UUID
      */
@@ -378,173 +347,6 @@ public class TokenUtils {
             }
         }
         return ProvidersName;
-    }
-
-    /***4.0新接口的安全加密以后的请求参数Map**/
-    public static Map<String, Object> getNewSaftyMap(Context context, Map<String, Object> paramsMap) {
-        String version = BuildConfig.VERSION_NAME;
-        paramsMap.put("nonce_str", getRandomNonceStr());
-        paramsMap.put("native_type", 1);//客户端标识，1：安卓，2：苹果
-        paramsMap.put("version", version);
-        String buff = "";
-        try {
-            List<Map.Entry<String, Object>> infoIds = new ArrayList<Map.Entry<String, Object>>(paramsMap.entrySet());
-            // 对所有传入参数按照字段名的 ASCII 码从小到大排序（字典序）
-            Collections.sort(infoIds, new Comparator<Map.Entry<String, Object>>() {
-
-                @Override
-                public int compare(Map.Entry<String, Object> o1, Map.Entry<String, Object> o2) {
-                    return (o1.getKey()).toString().compareTo((o2.getKey()).toString());
-                }
-            });
-            // 构造URL 键值对的格式
-            StringBuilder buf = new StringBuilder();
-            for (Map.Entry<String, Object> item : infoIds) {
-                if (null != item && !TextUtils.isEmpty(item.getValue().toString())) {
-                    String key = item.getKey();
-                    String val = item.getValue().toString();
-                    val = URLEncoder.encode(val, "utf-8");
-                    val = val.replace(" ", "%20");
-                    val = val.replace("*", "%2A");
-                    val = val.replace("+", "%2B");
-                    buf.append(key + "=" + val);
-                    buf.append("&");
-                }
-            }
-            buff = setMD5(buf.toString() + "secret=" + Contants.APP.secertKey).toUpperCase();
-            paramsMap.put("signature", buff);
-        } catch (Exception e) {
-            return paramsMap;
-        }
-        return paramsMap;
-    }
-
-    /***4.0生成8位随机数算法*/
-    private static String getRandomNonceStr() {
-        String base = "abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXZY";
-        Random random = new Random();
-        StringBuffer sb = new StringBuffer();
-        for (int i = 0; i < 16; i++) {
-            int number = random.nextInt(base.length());
-            sb.append(base.charAt(number));
-        }
-        return sb.toString();
-    }
-
-    /***md5加密***/
-    public static String setMD5(String string) {
-        MessageDigest md5;
-        StringBuilder sb = new StringBuilder();
-        try {
-            md5 = MessageDigest.getInstance("MD5");
-            md5.update(string.getBytes("UTF-8"));
-            byte[] b = md5.digest();
-            for (byte aB : b) {
-                int temp = 0xFF & aB;
-                String s = Integer.toHexString(temp);
-                if (temp <= 0x0F) {
-                    s = "0" + s;
-                }
-                sb.append(s);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return sb.toString();
-    }
-
-    public static Map<String, String> getStringMap(Map<String, Object> paramsMap) {
-        Iterator<String> it = paramsMap.keySet().iterator();
-        Map<String, String> stringMap = new HashMap<>();
-        while (it.hasNext()) {
-            String key = it.next();
-            String value = String.valueOf(paramsMap.get(key));
-            stringMap.put(key, value);
-        }
-        return stringMap;
-    }
-
-    /**
-     * 审批-金融平台未读审批参数加密
-     *
-     * @return
-     */
-    public static Map<String, Object> getNewBalance(Context context, Map<String, Object> paramsMap) {
-        String map = null;
-        paramsMap.put("cmdno", getRandomNonceStr());
-        paramsMap.put("ver", "300");
-        String buff = "";
-        try {
-            List<Map.Entry<String, Object>> infoIds = new ArrayList<Map.Entry<String, Object>>(paramsMap.entrySet());
-            // 对所有传入参数按照字段名的 ASCII 码从小到大排序（字典序）
-            Collections.sort(infoIds, new Comparator<Map.Entry<String, Object>>() {
-                @Override
-                public int compare(Map.Entry<String, Object> o1, Map.Entry<String, Object> o2) {
-                    return (o1.getKey()).toString().compareTo((o2.getKey()).toString());
-                }
-            });
-            // 构造URL 键值对的格式
-            StringBuilder buf = new StringBuilder();
-            for (Map.Entry<String, Object> item : infoIds) {
-                if (null != item && !TextUtils.isEmpty(item.getValue().toString())) {
-                    String key = item.getKey();
-                    String val = item.getValue().toString();
-                    val = URLEncoder.encode(val, "utf-8");
-                    val = val.replace(" ", "%20");
-                    val = val.replace("*", "%2A");
-                    val = val.replace("+", "%2B");
-                    buf.append(key + "=" + val);
-                    buf.append("&");
-                }
-            }
-            buf.deleteCharAt(buf.length() - 1);
-            buff = setMD5(buf.toString() + ColorsConfig.getAppID());
-            paramsMap.put("fp", buff);
-        } catch (Exception e) {
-            return paramsMap;
-        }
-        return paramsMap;
-    }
-
-    public static boolean isMIUI() {
-        String manufacturer = Build.MANUFACTURER;
-        if ("xiaomi".equalsIgnoreCase(manufacturer)) {
-            return true;
-        }
-        return false;
-    }
-
-    public static boolean isEMUI() {
-        String manufacturer = Build.MANUFACTURER;
-        if ("HUAWEI".equalsIgnoreCase(manufacturer)) {
-            return true;
-        }
-        return false;
-    }
-
-    public static boolean isOPPO() {
-        String manufacturer = Build.MANUFACTURER;
-        if ("OPPO".equalsIgnoreCase(manufacturer)) {
-            return true;
-        }
-        return false;
-    }
-
-    public static boolean isVIVO() {
-        String manufacturer = Build.MANUFACTURER;
-        if ("vivo".equalsIgnoreCase(manufacturer)) {
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * 获取当前手机系统版本号
-     *
-     * @return 系统版本号
-     */
-    public static int getSystemVersion() {
-        return Integer.parseInt(Build.VERSION.RELEASE);
     }
 
 }

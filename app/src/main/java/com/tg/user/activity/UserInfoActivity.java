@@ -144,9 +144,12 @@ public class UserInfoActivity extends BaseActivity implements OnClickListener, H
             String result = spUtils.getStringData(SpConstants.storage.CORPDATA, "");
             CropListEntity bean = GsonUtils.gsonToBean(result, CropListEntity.class);
             listCompany.addAll(bean.getContent());
-            if (listCompany.size() < 1) {
-                iv_company_arrow.setVisibility(View.GONE);
+            if (listCompany.size() < 2) {
+                iv_company_arrow.setVisibility(View.INVISIBLE);
                 isCompanyNext = false;
+            } else {
+                iv_company_arrow.setVisibility(View.VISIBLE);
+                isCompanyNext = true;
             }
         } catch (Exception e) {
         }

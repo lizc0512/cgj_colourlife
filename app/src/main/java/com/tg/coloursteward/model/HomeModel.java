@@ -595,16 +595,12 @@ public class HomeModel extends BaseModel {
      * 组织架构-通讯录页面
      *
      * @param what
-     * @param id
      * @param corp_id
      * @param loading
      * @param httpResponse
      */
-    public void getConatctSearch(int what, String id, String corp_id, String org_uuid, boolean loading, HttpResponse httpResponse) {
+    public void getConatctSearch(int what, String corp_id, String org_uuid, boolean loading, HttpResponse httpResponse) {
         Map<String, Object> params = new HashMap<>();
-        if (!id.equals("-1")) {
-            params.put("orgID", id);
-        }
         params.put("corp_uuid", corp_id);
         params.put("org_uuid", org_uuid);
         final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(

@@ -84,7 +84,7 @@ public class HomeContactOrgActivity extends BaseActivity implements OnClickListe
 
     private void initData(boolean isLoading, String org_uuid) {
         String corp_id = spUtils.getStringData(SpConstants.storage.CORPID, "");
-        homeModel.getConatctSearch(0, id, corp_id, org_uuid, isLoading, this);
+        homeModel.getConatctSearch(0, corp_id, org_uuid, isLoading, this);
     }
 
     @Override
@@ -105,6 +105,11 @@ public class HomeContactOrgActivity extends BaseActivity implements OnClickListe
                             item.username = data.getString(i, "username");
                             item.avatar = data.getString(i, "avatar");
                             item.name = data.getString(i, "name");
+                            item.orgName = data.getString(i, "orgName");
+                            item.jobName = data.getString(i, "jobName");
+                            item.mobile = data.getString(i, "mobile");
+                            item.email = data.getString(i, "email");
+                            item.sex = data.getString(i, "sex");
                             if (item.type.equals("org")) {
                                 item.sortLetters = "O";
                             } else {
@@ -127,6 +132,7 @@ public class HomeContactOrgActivity extends BaseActivity implements OnClickListe
                                 } else if ("user".equals(type)) {
                                     Intent intent = new Intent(HomeContactOrgActivity.this, EmployeeDataActivity.class);
                                     intent.putExtra(EmployeeDataActivity.CONTACTS_ID, info.username);
+                                    intent.putExtra(EmployeeDataActivity.USERDATA, info);
                                     startActivity(intent);
                                 }
                             });

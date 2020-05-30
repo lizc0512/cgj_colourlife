@@ -40,7 +40,6 @@ public class UserInfo {
         UserInfo.jobName = "";
         UserInfo.familyName = "";
         UserInfo.orgId = "";//组织架构ID
-        UserInfo.infoorgId = "";//组织架构ID
         UserInfo.corp_id = "";
         UserInfo.salary_level = "";
         UserInfo.is_deleted = 0;

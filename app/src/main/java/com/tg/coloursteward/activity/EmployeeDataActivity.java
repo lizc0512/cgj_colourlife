@@ -11,8 +11,6 @@ import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -28,18 +26,18 @@ import com.tg.coloursteward.constant.SpConstants;
 import com.tg.coloursteward.entity.ContactsEntity;
 import com.tg.coloursteward.entity.EmployeeEntity;
 import com.tg.coloursteward.fragment.ContactsFragment;
+import com.tg.coloursteward.info.FamilyInfo;
 import com.tg.coloursteward.model.ContactModel;
 import com.tg.coloursteward.util.GlideUtils;
 import com.tg.coloursteward.util.GsonUtils;
 import com.tg.coloursteward.util.MicroAuthTimeUtils;
 import com.tg.coloursteward.util.ToastUtil;
-import com.tg.coloursteward.util.Tools;
 import com.tg.coloursteward.view.dialog.ToastFactory;
 import com.tg.point.activity.GivenPointAmountActivity;
 import com.tg.point.activity.MyPointActivity;
 import com.youmai.hxsdk.chatsingle.IMConnectionActivity;
-import com.youmai.hxsdk.db.bean.EmployeeBean;
-import com.youmai.hxsdk.db.helper.CacheEmployeeHelper;
+import com.youmai.hxsdk.db.bean.ContactBean;
+import com.youmai.hxsdk.entity.cn.SearchContactBean;
 import com.youmai.hxsdk.router.APath;
 
 import java.util.List;
@@ -52,13 +50,14 @@ import java.util.List;
 @Route(path = APath.EMPLOYEE_DATA_ACT)
 public class EmployeeDataActivity extends BaseActivity implements HttpResponse, OnClickListener {
     public final static String CONTACTS_ID = "contacts_id";
+    public final static String USERDATA = "user_data";
+    public final static String FAVORTORYDATA = "favortory_data";
     private String contactsID = "";
     private RelativeLayout rl_employee_email;
     private RelativeLayout rl_employee_money;
     private CheckBox cbCollect;
     private RelativeLayout rl_employee_msg;
     private RelativeLayout rl_employee_call;
-    private EmployeeBean item;
     private TextView tvName, tvJob, tvBranch;
     private ImageView ivHead;
     private ImageView ivSex;
@@ -72,6 +71,11 @@ public class EmployeeDataActivity extends BaseActivity implements HttpResponse, 
     private TextView tv_employee_company;
     private static String personCode;
     private ContactModel contactModel;
+    private FamilyInfo info;
+    private EmployeeEntity.ContentBean bean;
+    private String avatar;
+    private ContactBean item;
+    private SearchContactBean searchContactBean;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,10 +85,71 @@ public class EmployeeDataActivity extends BaseActivity implements HttpResponse, 
         Intent intent = getIntent();
         if (intent != null) {
             contactsID = intent.getStringExtra(CONTACTS_ID);
+
+            info = (FamilyInfo) intent.getSerializableExtra(USERDATA);
+            item = intent.getParcelableExtra(FAVORTORYDATA);
+            searchContactBean = intent.getParcelableExtra("serach_data");
         }
         initView();
-        getData();
+        if (null != info) {
+            setData(info);
+        } else if (null != item) {
+            setFavortoryData(item);
+        } else if (null != searchContactBean) {
+            setSearchData(searchContactBean);
+        } else {
+            getData();
+        }
+    }
 
+    private void setSearchData(SearchContactBean searchContactBean) {
+        tvJob.setText(info.jobName);
+        tv_employee_jobname.setText(info.jobName);
+        tvBranch.setText(searchContactBean.getPhoneNum());
+        tv_employee_depart.setText(searchContactBean.getPhoneNum());
+        tv_employee_phone.setText(info.mobile);
+        tv_employee_email.setText(info.email);
+        tvName.setText(searchContactBean.getDisplayName());
+        GlideUtils.loadImageDefaultDisplay(this, searchContactBean.getIconUrl(), ivHead, R.drawable.default_header, R.drawable.default_header);
+        if (info.sex.equals("1")) {
+            ivSex.setImageResource(R.drawable.employee_male);
+        } else {
+            ivSex.setImageResource(R.drawable.employee_female);
+        }
+    }
+
+    private void setFavortoryData(ContactBean item) {
+        getData();
+        if (!TextUtils.isEmpty(item.getFavoriteid())) {
+            cbCollect.setChecked(true);
+            personCode = item.getFavoriteid();
+        } else {
+            cbCollect.setChecked(false);
+        }
+        cbCollect.setChecked(true);
+        cbCollect.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                submit();//添加联系人
+            } else {
+                delete();
+            }
+        });
+    }
+
+    private void setData(FamilyInfo info) {
+        tvJob.setText(info.jobName);
+        tv_employee_jobname.setText(info.jobName);
+        tvBranch.setText(info.orgName);
+        tv_employee_depart.setText(info.orgName);
+        tv_employee_phone.setText(info.mobile);
+        tv_employee_email.setText(info.email);
+        tvName.setText(info.name);
+        GlideUtils.loadImageDefaultDisplay(this, info.avatar, ivHead, R.drawable.default_header, R.drawable.default_header);
+        if (info.sex.equals("1")) {
+            ivSex.setImageResource(R.drawable.employee_male);
+        } else {
+            ivSex.setImageResource(R.drawable.employee_female);
+        }
     }
 
     /**
@@ -92,7 +157,7 @@ public class EmployeeDataActivity extends BaseActivity implements HttpResponse, 
      */
     private void getData() {
         String corpId = spUtils.getStringData(SpConstants.storage.CORPID, "");
-        contactModel.getEmployeeData(0, contactsID, contactsID, corpId, this);
+        contactModel.getEmployeeData(0, contactsID, corpId, this);
     }
 
     /**
@@ -148,7 +213,7 @@ public class EmployeeDataActivity extends BaseActivity implements HttpResponse, 
      * 添加常用联系人
      */
     private void submit() {
-        contactModel.postCollectData(1, contactsID, item, this);
+        contactModel.postCollectData(1, contactsID, bean, this);
     }
 
     /**
@@ -174,69 +239,24 @@ public class EmployeeDataActivity extends BaseActivity implements HttpResponse, 
             case 0:
                 if (!TextUtils.isEmpty(result)) {
                     EmployeeEntity employeeEntity = GsonUtils.gsonToBean(result, EmployeeEntity.class);
-                    if (employeeEntity.getContent() != null && employeeEntity.getContent().size() > 0) {
-                        item = new EmployeeBean();
-                        if (!TextUtils.isEmpty(String.valueOf(employeeEntity.getContent().get(0).getIsFavorite()))) {
-                            item.setIsFavorite(String.valueOf(employeeEntity.getContent().get(0).getIsFavorite()));
-                        }
-                        item.setUid(employeeEntity.getContent().get(0).getId());
-                        item.setUsername(employeeEntity.getContent().get(0).getUsername());
-                        item.setRealname(employeeEntity.getContent().get(0).getName());
-                        item.setAvatar(employeeEntity.getContent().get(0).getAvatar());
-                        if (employeeEntity.getContent().get(0).getSex().equals("1")) {
-                            item.setSex("男");// 1男2,0女,
-                        } else {
-                            item.setSex("女");// 1男2,0女,
-                        }
-                        item.setEmail(employeeEntity.getContent().get(0).getEmail());
-                        item.setMobile(employeeEntity.getContent().get(0).getMobile());
-                        item.setJobName(employeeEntity.getContent().get(0).getJobName());
-                        item.setOrgName(employeeEntity.getContent().get(0).getOrgName());
-                        item.setName(employeeEntity.getContent().get(0).getName());
-                        if (!TextUtils.isEmpty(String.valueOf(employeeEntity.getContent().get(0).getFavoriteid()))) {
-                            item.setFavoriteid(String.valueOf(employeeEntity.getContent().get(0).getFavoriteid()));
-                            personCode = item.getFavoriteid();
-                        }
-                    }
-                }
-                if (item != null) {
-                    CacheEmployeeHelper.instance().insertOrUpdate(this, item);
+                    if (employeeEntity.getContent() != null) {
+                        bean = employeeEntity.getContent();
 
-                    tvName.setText(item.getRealname());
-                    try {
-                        if (item.getJobName().contains("(")) {
-                            int i = item.getJobName().indexOf("(");
-                            item.setJobName(item.getJobName().substring(0, i));
+                        tvJob.setText(bean.getJob_type());
+                        tv_employee_jobname.setText(bean.getJob_type());
+                        tvBranch.setText(bean.getOrg_name());
+                        tv_employee_depart.setText(bean.getOrg_name());
+                        tv_employee_phone.setText(bean.getMobile());
+                        tv_employee_email.setText(bean.getEmail());
+                        tvName.setText(bean.getName());
+                        avatar = Contants.Html5.HEAD_ICON_URL + "/avatar?uid=" + bean.getUsername();
+                        GlideUtils.loadImageDefaultDisplay(this, avatar, ivHead, R.drawable.default_header, R.drawable.default_header);
+                        if ("1".equals(bean.getGender())) {
+                            ivSex.setImageResource(R.drawable.employee_male);
+                        } else {
+                            ivSex.setImageResource(R.drawable.employee_female);
                         }
-                    } catch (Exception e) {
                     }
-                    tvJob.setText(item.getJobName());
-                    tv_employee_jobname.setText(item.getJobName());
-                    tvBranch.setText(item.getOrgName());
-                    tv_employee_depart.setText(item.getOrgName());
-                    tv_employee_phone.setText(item.getMobile());
-                    tv_employee_email.setText(item.getEmail());
-                    GlideUtils.loadImageDefaultDisplay(this, item.getAvatar(), ivHead, R.drawable.default_header, R.drawable.default_header);
-                    if (item.getSex().equals("女")) {
-                        ivSex.setImageResource(R.drawable.employee_female);
-                    } else {
-                        ivSex.setImageResource(R.drawable.employee_male);
-                    }
-                    if (item.getIsFavorite().equals("1")) {
-                        cbCollect.setChecked(true);
-                    } else {
-                        cbCollect.setChecked(false);
-                    }
-                    cbCollect.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-                        @Override
-                        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                            if (isChecked) {
-                                submit();//添加联系人
-                            } else {
-                                delete();
-                            }
-                        }
-                    });
                 }
                 break;
             case 1:
@@ -275,9 +295,10 @@ public class EmployeeDataActivity extends BaseActivity implements HttpResponse, 
                         .request(new OnPermission() {
                             @Override
                             public void hasPermission(List<String> granted, boolean isAll) {
-                                if (!TextUtils.isEmpty(item.getMobile())) {
+                                String phone = tv_employee_phone.getText().toString();
+                                if (!TextUtils.isEmpty(phone)) {
                                     Intent it = new Intent(Intent.ACTION_CALL);
-                                    Uri data = Uri.parse("tel:" + item.getMobile());
+                                    Uri data = Uri.parse("tel:" + phone);
                                     it.setData(data);
                                     startActivity(it);
                                 }
@@ -292,25 +313,36 @@ public class EmployeeDataActivity extends BaseActivity implements HttpResponse, 
 
                 break;
             case R.id.rl_employee_msg:// 发送IM消息
-                if (null != item) {
+                if (null != bean) {
                     Intent intent = new Intent(this, IMConnectionActivity.class);
-                    intent.putExtra(IMConnectionActivity.DST_UUID, item.getUid());
-                    intent.putExtra(IMConnectionActivity.DST_USERNAME, item.getUsername());
-                    intent.putExtra(IMConnectionActivity.DST_NAME, item.getRealname());
-                    intent.putExtra(IMConnectionActivity.DST_AVATAR, item.getAvatar());
+                    intent.putExtra(IMConnectionActivity.DST_UUID, bean.getAccount_uuid());
+                    intent.putExtra(IMConnectionActivity.DST_USERNAME, bean.getUsername());
+                    intent.putExtra(IMConnectionActivity.DST_NAME, bean.getName());
+                    intent.putExtra(IMConnectionActivity.DST_AVATAR, avatar);
+                    startActivity(intent);
+                } else if (null != info) {
+                    Intent intent = new Intent(this, IMConnectionActivity.class);
+                    intent.putExtra(IMConnectionActivity.DST_UUID, info.id);
+                    intent.putExtra(IMConnectionActivity.DST_USERNAME, info.username);
+                    intent.putExtra(IMConnectionActivity.DST_NAME, info.name);
+                    intent.putExtra(IMConnectionActivity.DST_AVATAR, info.avatar);
+                    startActivity(intent);
+                } else if (null != searchContactBean) {
+                    Intent intent = new Intent(this, IMConnectionActivity.class);
+                    intent.putExtra(IMConnectionActivity.DST_UUID, searchContactBean.getUsername());
+                    intent.putExtra(IMConnectionActivity.DST_USERNAME, searchContactBean.getUsername());
+                    intent.putExtra(IMConnectionActivity.DST_NAME, searchContactBean.getDisplayName());
+                    intent.putExtra(IMConnectionActivity.DST_AVATAR, searchContactBean.getIconUrl());
                     startActivity(intent);
                 }
                 break;
             case R.id.rl_employee_money:// 转账
-                if (null != item && !TextUtils.isEmpty(item.getUsername())) {
+                if (null != bean && !TextUtils.isEmpty(bean.getUsername())) {
                     Intent intent = new Intent(this, MyPointActivity.class);
                     intent.putExtra(GivenPointAmountActivity.TYPE, "cgj-cgj");
-                    intent.putExtra(GivenPointAmountActivity.GIVENMOBILE, item.getMobile());
+                    intent.putExtra(GivenPointAmountActivity.GIVENMOBILE, bean.getMobile());
                     startActivity(intent);
                 }
-                break;
-            case R.id.iv_call:
-                Tools.call(EmployeeDataActivity.this, item.getMobile());
                 break;
             case R.id.iv_close:
                 finish();

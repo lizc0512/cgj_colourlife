@@ -39,7 +39,6 @@ import com.tg.coloursteward.model.ContactModel;
 import com.tg.coloursteward.util.GsonUtils;
 import com.tg.coloursteward.util.LinkParseUtil;
 import com.tg.coloursteward.util.SharedPreferencesUtils;
-import com.tg.coloursteward.util.Tools;
 import com.tg.coloursteward.view.dialog.ToastFactory;
 import com.tg.im.activity.ContactsActivity;
 import com.youmai.hxsdk.HuxinSdkManager;
@@ -123,21 +122,26 @@ public class ContactsFragment extends Fragment implements ItemEventListener, Htt
         switch (what) {
             case 0:
                 if (!TextUtils.isEmpty(result)) {
-                    ContactPermissionEntity entity = GsonUtils.gsonToBean(result, ContactPermissionEntity.class);
-                    hasPermission = entity.getContent().getIsHas_permission();
-                    if (hasPermission) {
-                        permissionJumpUrl = entity.getContent().getRedirect_url();
-                        permissionNum = Integer.parseInt(entity.getContent().getUn_approved_num());
-                        rl_contact_people.setVisibility(View.GONE);
-                        rl_contact_invite.setVisibility(View.VISIBLE);
-                        if (permissionNum > 99) {
-                            tv_contact_msg_num.setText("99+");
+                    try {
+                        ContactPermissionEntity entity = GsonUtils.gsonToBean(result, ContactPermissionEntity.class);
+                        hasPermission = entity.getContent().getIsHas_permission();
+                        if (hasPermission) {
+                            permissionJumpUrl = entity.getContent().getRedirect_url();
+                            permissionNum = Integer.parseInt(entity.getContent().getUn_approved_num());
+                            rl_contact_people.setVisibility(View.GONE);
+                            rl_contact_invite.setVisibility(View.VISIBLE);
+                            if (permissionNum > 99) {
+                                tv_contact_msg_num.setText("99+");
+                                tv_contact_msg_num.setVisibility(View.VISIBLE);
+                            } else {
+                                tv_contact_msg_num.setText(permissionNum + "");
+                                tv_contact_msg_num.setVisibility(View.VISIBLE);
+                            }
                         } else {
-                            tv_contact_msg_num.setText(permissionNum + "");
+                            rl_contact_people.setVisibility(View.VISIBLE);
+                            rl_contact_invite.setVisibility(View.GONE);
                         }
-                    } else {
-                        rl_contact_people.setVisibility(View.VISIBLE);
-                        rl_contact_invite.setVisibility(View.GONE);
+                    } catch (Exception e) {
                     }
                 }
                 break;
@@ -161,15 +165,8 @@ public class ContactsFragment extends Fragment implements ItemEventListener, Htt
                 break;
             case R.id.rl_contact_depart:
                 info = new FamilyInfo();
-                String corpId = Tools.getStringValue(mContext, Contants.storage.CORPID);//租户ID
-                if (!TextUtils.isEmpty(corpId)) {
-                    info.id = corpId;
-                } else {
-                    info.id = UserInfo.infoorgId;
-                }
-                if ("".equals(info.id)) {
-                    info.id = UserInfo.orgId;
-                }
+                String org_uuid = SharedPreferencesUtils.getInstance().getStringData(Contants.storage.CORPID, "");//租户ID
+                info.id = UserInfo.orgId;
                 info.type = "org";
                 info.name = UserInfo.familyName;
                 intent = new Intent(mContext, HomeContactOrgActivity.class);
@@ -463,6 +460,7 @@ public class ContactsFragment extends Fragment implements ItemEventListener, Htt
     private void itemFunction(int pos, ContactBean item) {
         Intent i = new Intent(mContext, EmployeeDataActivity.class);
         i.putExtra(EmployeeDataActivity.CONTACTS_ID, item.getUsername());
+        i.putExtra(EmployeeDataActivity.FAVORTORYDATA, item);
         startActivity(i);
     }
 
@@ -471,9 +469,7 @@ public class ContactsFragment extends Fragment implements ItemEventListener, Htt
      */
     private void getCacheList() {
         String json = AppUtils.getStringSharedPreferences(mContext, "contents", "");
-        if (TextUtils.isEmpty(json)) {
-            modifyContactsList();
-        } else {
+        if (!TextUtils.isEmpty(json)) {
             ModifyContactsBean bean = GsonUtil.parse(json, ModifyContactsBean.class);
             if (bean != null && bean.isSuccess()) {
                 List<ModifyContactsBean.ContentBean.DataBean> data = bean.getContent().getData();
@@ -485,6 +481,7 @@ public class ContactsFragment extends Fragment implements ItemEventListener, Htt
                 }
             }
         }
+        modifyContactsList();
     }
 
 

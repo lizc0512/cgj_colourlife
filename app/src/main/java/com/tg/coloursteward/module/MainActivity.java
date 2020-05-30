@@ -913,7 +913,6 @@ public class MainActivity extends BaseActivity implements HttpResponse {
                             Tools.savetokenUserInfo(MainActivity.this, result);
                             int status = data.getInt("status");
                             String corpId = data.getString("corp_id");
-                            UserInfo.infoorgId = data.getString("org_uuid");
                             UserInfo.employeeAccount = data.getString("username");
                             Tools.saveStringValue(MainActivity.this, Contants.storage.CORPID, corpId);//租户ID
                             if (status == 0) {//账号正常

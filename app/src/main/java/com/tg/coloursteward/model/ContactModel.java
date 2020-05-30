@@ -6,12 +6,12 @@ import com.tg.coloursteward.baseModel.BaseModel;
 import com.tg.coloursteward.baseModel.HttpListener;
 import com.tg.coloursteward.baseModel.HttpResponse;
 import com.tg.coloursteward.baseModel.RequestEncryptionUtils;
+import com.tg.coloursteward.entity.EmployeeEntity;
 import com.tg.coloursteward.info.UserInfo;
 import com.yanzhenjie.nohttp.NoHttp;
 import com.yanzhenjie.nohttp.RequestMethod;
 import com.yanzhenjie.nohttp.rest.Request;
 import com.yanzhenjie.nohttp.rest.Response;
-import com.youmai.hxsdk.db.bean.EmployeeBean;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -28,6 +28,7 @@ import java.util.Map;
  */
 public class ContactModel extends BaseModel {
     private String idCardUrl = "/app/txl/contacts/search";
+    private String userInfoDetailUrl = "/app/txl/contacts/detail";
     private String collextUrl = "/txl2/contacts";
     private String cloudPermissionUrl = "/app/cloud/apply";
 
@@ -40,16 +41,14 @@ public class ContactModel extends BaseModel {
      * 加载个人名片信息
      *
      * @param what
-     * @param contactsID
      * @param username
      * @param httpResponse
      */
-    public void getEmployeeData(int what, String contactsID, String username, String corpId, HttpResponse httpResponse) {
+    public void getEmployeeData(int what, String username, String corpId, HttpResponse httpResponse) {
         Map<String, Object> params = new HashMap<>();
-        params.put("keyword", contactsID);
         params.put("username", username);
         params.put("corp_uuid", corpId);
-        final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 0, idCardUrl), RequestMethod.GET);
+        final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 0, userInfoDetailUrl), RequestMethod.GET);
         request(what, request, RequestEncryptionUtils.getIceMap(mContext, params), new HttpListener<String>() {
             @Override
             public void onSucceed(int what, Response<String> response) {
@@ -80,19 +79,18 @@ public class ContactModel extends BaseModel {
      * @param item
      * @param httpResponse 添加收藏联系人
      */
-    public void postCollectData(int what, String contactsID, EmployeeBean item, HttpResponse httpResponse) {
+    public void postCollectData(int what, String contactsID, EmployeeEntity.ContentBean item, HttpResponse httpResponse) {
         Map<String, Object> params = new HashMap<>();
         params.put("name", item.getName());//联系人姓名
-        params.put("uid", item.getUid());//联系人OA帐号
+        params.put("uid", item.getAccount_uuid());//
         params.put("username", contactsID);//联系人OA帐号
         params.put("owner", UserInfo.employeeAccount);//所有者OA帐号
-        params.put("jobName", item.getJobName());
-        params.put("sex", item.getSex());
+        params.put("jobName", item.getJob_type());
+        params.put("sex", item.getGender());
         params.put("email", item.getEmail());
-        params.put("qq", item.getQq());
         params.put("phone_number", item.getMobile());
         params.put("groupId", "0");//联系人组编号,默认0，常用联系人
-        params.put("enterprise_cornet", item.getEnterprise_cornet());//企业短号
+        params.put("enterprise_cornet", "");//企业短号
         final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 4, collextUrl), RequestMethod.POST);
         request(what, request, RequestEncryptionUtils.getIceMap(mContext, params), new HttpListener<String>() {
             @Override

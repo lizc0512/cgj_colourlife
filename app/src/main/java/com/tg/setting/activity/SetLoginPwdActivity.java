@@ -9,6 +9,7 @@ import android.widget.TextView;
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.base.BaseActivity;
 import com.tg.coloursteward.constant.SpConstants;
+import com.tg.coloursteward.net.MD5;
 import com.tg.coloursteward.util.ToastUtil;
 import com.tg.coloursteward.view.ClearEditText;
 import com.tg.coloursteward.view.dialog.DialogFactory;
@@ -87,7 +88,7 @@ public class SetLoginPwdActivity extends BaseActivity implements View.OnClickLis
                 if (!TextUtils.isEmpty(pwd)) {
                     if (!TextUtils.isEmpty(comfirm)) {
                         if (pwd.equals(comfirm)) {
-                            settingModel.postLoginPwd(0, comfirm, this);
+                            settingModel.postLoginPwd(0, MD5.getMd5Value(comfirm).toLowerCase(), this);
                         } else {
                             ToastUtil.showShortToast(this, "两次输入的密码不一致");
                         }

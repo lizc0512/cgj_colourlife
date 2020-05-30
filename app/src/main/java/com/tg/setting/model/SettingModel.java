@@ -145,7 +145,7 @@ public class SettingModel extends BaseModel {
         Map<String, Object> params = new HashMap<>();
         params.put("password", password);
         final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(
-                mContext, 0, setLoginPwdUrl), RequestMethod.POST);
+                mContext, 5, setLoginPwdUrl), RequestMethod.POST);
         request(what, request, RequestEncryptionUtils.getNewSaftyMap(mContext, params), new HttpListener<String>() {
             @Override
             public void onSucceed(int what, Response<String> response) {

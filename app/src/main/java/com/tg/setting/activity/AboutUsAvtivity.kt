@@ -45,9 +45,9 @@ class AboutUsAvtivity : BaseActivity(), View.OnClickListener {
 
     override fun onClick(v: View) {
         when (v.id) {
-            R.id.rl_about_introduce -> LinkParseUtil.parse(this, "https://www.baidu.com", "");
-            R.id.rl_about_privacy -> LinkParseUtil.parse(this, "https://www.baidu.com", "");
-            R.id.rl_about_agreement -> LinkParseUtil.parse(this, "https://www.baidu.com", "");
+            R.id.rl_about_introduce -> LinkParseUtil.parse(this, "", "");
+            R.id.rl_about_privacy -> LinkParseUtil.parse(this, "https://mapp.colourlife.com/xieyi/yinsi.html", "");
+            R.id.rl_about_agreement -> LinkParseUtil.parse(this, "https://mapp.colourlife.com/xieyi/fuwuxieyi.html", "");
         }
     }
 }

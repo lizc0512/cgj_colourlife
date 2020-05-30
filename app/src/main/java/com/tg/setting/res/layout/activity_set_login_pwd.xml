@@ -28,6 +28,7 @@
         android:layout_marginRight="@dimen/size_38dp"
         android:background="@null"
         android:hint="请输入密码"
+        android:inputType="textPassword"
         android:maxLength="16"
         android:singleLine="true"
         android:textSize="@dimen/font_14sp" />
@@ -58,6 +59,7 @@
         android:layout_marginRight="@dimen/size_38dp"
         android:background="@null"
         android:hint="请再次输入密码"
+        android:inputType="textPassword"
         android:maxLength="16"
         android:singleLine="true"
         android:textSize="@dimen/font_14sp" />

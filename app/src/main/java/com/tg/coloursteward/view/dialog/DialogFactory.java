@@ -270,6 +270,7 @@ public class DialogFactory {
             dialogActivity = activity;
             DisplayMetrics metrics = Tools.getDisplayMetrics(activity);
             dialog = new AlertDialog.Builder(activity).create();
+            dialog.setCanceledOnTouchOutside(false);
             Window window = dialog.getWindow();
             dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
             dialog.show();

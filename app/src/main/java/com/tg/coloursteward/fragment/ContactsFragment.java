@@ -133,6 +133,8 @@ public class ContactsFragment extends Fragment implements ItemEventListener, Htt
                             if (permissionNum > 99) {
                                 tv_contact_msg_num.setText("99+");
                                 tv_contact_msg_num.setVisibility(View.VISIBLE);
+                            } else if (permissionNum < 1) {
+                                tv_contact_msg_num.setVisibility(View.GONE);
                             } else {
                                 tv_contact_msg_num.setText(permissionNum + "");
                                 tv_contact_msg_num.setVisibility(View.VISIBLE);

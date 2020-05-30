@@ -76,10 +76,13 @@ public class ContactBeanData {
 
             String hanzi = dataBean.getName();
             contact.setRealname(hanzi);
+            contact.setSex(dataBean.getSex());
             contact.setUsername(dataBean.getUsername());//联系人用户名
             contact.setAvatar(dataBean.getIcon());//头像
             contact.setEmail(dataBean.getEmail());//邮箱
+            contact.setMobile(dataBean.getMobile());//
             contact.setJobName(dataBean.getJobName());//岗位名称
+            contact.setEnterprise_cornet(dataBean.getEnterprise_cornet());
             contact.setOrgID(String.valueOf(dataBean.getFamily()));//组织架构uuid
             contact.setFavoriteid(String.valueOf(dataBean.getFavoriteid()));
             String accountUuid = data.get(i).getAccountUuid();

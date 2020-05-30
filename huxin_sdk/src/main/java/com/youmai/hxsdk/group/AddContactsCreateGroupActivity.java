@@ -653,6 +653,7 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
     @Override
     public void onItemClick(int pos, ContactBean contact) {
         int type = contact.getUiType();
+        String orgId = HuxinSdkManager.instance().getOrgId();
         if (type == SearchContactAdapter.TYPE.ORGANIZATION_TYPE.ordinal()) {
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 
@@ -661,10 +662,10 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
             }
 
             if (departmentFragment.isVisible()) {
-                departmentFragment.setMap(ColorsConfig.ColorLifeAppId, mTotalMap, mGroupMap);
+                departmentFragment.setMap(orgId, mTotalMap, mGroupMap);
             } else {
                 transaction.show(departmentFragment);
-                departmentFragment.setMap(ColorsConfig.ColorLifeAppId, mTotalMap, mGroupMap);
+                departmentFragment.setMap(orgId, mTotalMap, mGroupMap);
             }
 
             transaction.commit();
@@ -673,8 +674,6 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
 
         } else if (type == SearchContactAdapter.TYPE.DEPARTMENT_TYPE.ordinal()) {
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            String orgId = HuxinSdkManager.instance().getOrgId();
-
             if (searchGroupFragment.isVisible()) {
                 transaction.hide(searchGroupFragment);
             }

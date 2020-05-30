@@ -13,9 +13,11 @@ public class ModifyContactsBean {
     private int code;
     private String message;
     private ContentBean content;
+
     public boolean isSuccess() {
         return code == 0;
     }
+
     public int getCode() {
         return code;
     }
@@ -90,7 +92,8 @@ public class ModifyContactsBean {
             private String mobile;
             private String jobName;
             private String enterprise_cornet;
-            private int family;
+            private String family;
+            private String orgName;
             private String username;
             private String icon;
 
@@ -166,11 +169,11 @@ public class ModifyContactsBean {
                 this.enterprise_cornet = enterprise_cornet;
             }
 
-            public int getFamily() {
+            public String getFamily() {
                 return family;
             }
 
-            public void setFamily(int family) {
+            public void setFamily(String family) {
                 this.family = family;
             }
 

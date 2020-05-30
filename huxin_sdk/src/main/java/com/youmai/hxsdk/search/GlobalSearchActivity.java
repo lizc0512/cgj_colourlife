@@ -2,7 +2,6 @@ package com.youmai.hxsdk.search;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
@@ -44,14 +43,14 @@ public class GlobalSearchActivity extends SdkBaseActivity implements View.OnClic
 
     private void initView() {
 
-        mBtnBackMain = (TextView) findViewById(R.id.global_search_bar_back);
+        mBtnBackMain = findViewById(R.id.global_search_bar_back);
         mBtnBackMain.setOnClickListener(this);
 
-        mSearchEditText = (SearchEditText) findViewById(R.id.global_search_bar);
-        mSearchEditText.addTextChangedListener(new SearchEditText.MiddleTextWatcher() {
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                String queryStr = s.toString();
+        mSearchEditText = findViewById(R.id.global_search_bar);
+        mSearchEditText.setOnEditorActionListener((v, actionId, event) -> {
+            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                hideSoftKeyboard();
+                String queryStr = mSearchEditText.getText().toString().trim();
                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                 if (mContactsSearchFragment != null) {
                     if (mContactsSearchFragment.isHidden()) {
@@ -61,20 +60,11 @@ public class GlobalSearchActivity extends SdkBaseActivity implements View.OnClic
                     mContactsSearchFragment.reset();
                 }
                 transaction.commit();
+                return true;
             }
+            return false;
         });
-        mSearchEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                    hideSoftKeyboard();
-                    return true;
-                }
-                return false;
-            }
-        });
-
-        mBtnBack = (TextView) findViewById(R.id.global_search_bar_cancel);
+        mBtnBack = findViewById(R.id.global_search_bar_cancel);
         mBtnBack.setOnClickListener(this);
     }
 

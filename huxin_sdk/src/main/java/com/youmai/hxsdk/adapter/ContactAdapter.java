@@ -8,20 +8,19 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.youmai.hxsdk.R;
 import com.youmai.hxsdk.db.bean.ContactBean;
 import com.youmai.hxsdk.entity.cn.CNPinyin;
-import com.youmai.hxsdk.group.adapter.SearchContactAdapter;
 import com.youmai.hxsdk.stickyheader.StickyHeaderAdapter;
 import com.youmai.hxsdk.utils.GlideRoundTransform;
 
 import java.util.List;
-
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * Created by yw on 2018/4/13.
@@ -75,35 +74,25 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
         if (holder instanceof ContactHolder) {
             final ContactHolder contactHolder = (ContactHolder) holder;
-            if (contact.getUiType() != SearchContactAdapter.TYPE.CONTACT_TYPE.ordinal()) {
-                Glide.with(mContext).load(contact.getResId()).apply(new RequestOptions()
-                        .placeholder(R.drawable.color_default_header)
-                        .error(R.drawable.color_default_header))
+            contactHolder.cb_collect.setVisibility(View.GONE);
+            contactHolder.tv_user_name.setVisibility(View.GONE);
+            try {
+                Glide.with(mContext)
+                        .load(contact.getAvatar())
+                        .apply(new RequestOptions()
+                                .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
+                                .centerCrop()
+                                .transform(new GlideRoundTransform())
+                                .placeholder(R.drawable.color_default_header)
+                                .error(R.drawable.color_default_header))
                         .into(contactHolder.iv_header);
-                contactHolder.cb_collect.setVisibility(View.GONE);
-                contactHolder.tv_user_name.setVisibility(View.VISIBLE);
-                contactHolder.tv_user_name.setText(contact.getOrgName());
-            } else {
-                contactHolder.cb_collect.setVisibility(View.GONE);
-                contactHolder.tv_user_name.setVisibility(View.GONE);
-                try {
-                    Glide.with(mContext)
-                            .load(contact.getAvatar())
-                            .apply(new RequestOptions()
-                                    .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
-                                    .centerCrop()
-                                    .transform(new GlideRoundTransform())
-                                    .placeholder(R.drawable.color_default_header)
-                                    .error(R.drawable.color_default_header))
-                            .into(contactHolder.iv_header);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
             contactHolder.tv_name.setText(contact.getRealname());
         }
 
-        //搜索框不处理
+
         holder.itemView.setOnClickListener(v -> {
             if (null != itemEventListener) {
                 itemEventListener.onItemClick(position, contact);

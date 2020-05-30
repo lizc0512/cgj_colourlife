@@ -3,6 +3,9 @@ package com.youmai.hxsdk.group.fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.util.Log;
+import android.view.View;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.loader.app.LoaderManager;
@@ -10,8 +13,6 @@ import androidx.loader.content.Loader;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import android.util.Log;
-import android.view.View;
 
 import com.youmai.hxsdk.R;
 import com.youmai.hxsdk.db.bean.ContactBean;
@@ -86,7 +87,7 @@ public class AddContactsSearchFragment<T extends Parcelable> extends SearchFragm
     @NonNull
     @Override
     public Loader<ArrayList<T>> onCreateLoader(int id, @Nullable Bundle args) {
-        mLoader = new ContactsSearchLoader(getContext());
+        mLoader = new ContactsSearchLoader(getActivity());
         mLoader.setQuery(getQueryString());
         return mLoader;
     }

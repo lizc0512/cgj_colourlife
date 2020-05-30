@@ -77,7 +77,7 @@ public class ContactsSearchFragment<T extends Parcelable> extends SearchFragment
     @NonNull
     @Override
     public Loader<List<T>> onCreateLoader(int id, @Nullable Bundle args) {
-        mLoader = new ContactsSearchLoader(getContext());
+        mLoader = new ContactsSearchLoader(getActivity());
         mLoader.setQuery(getQueryString());
         return mLoader;
     }
@@ -101,6 +101,7 @@ public class ContactsSearchFragment<T extends Parcelable> extends SearchFragment
         ARouter.getInstance().build(APath.EMPLOYEE_DATA_ACT)
                 .withString("contacts_id", username)
                 .withString("contacts_uuid", user_uuid)
+                .withParcelable("serach_data", (SearchContactBean) item)
                 .navigation(getContext());
     }
 

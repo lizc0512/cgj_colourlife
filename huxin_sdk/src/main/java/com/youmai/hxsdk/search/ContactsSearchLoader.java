@@ -1,8 +1,11 @@
 package com.youmai.hxsdk.search;
 
+import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Handler;
+import android.os.Message;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -28,6 +31,7 @@ public class ContactsSearchLoader extends AsyncTaskLoader {
     private String mQuery;
     private List<SearchContactBean> allList = new ArrayList<>();
     private Context mContext;
+    private ProgressDialog mProgressDialog;
 
     public ContactsSearchLoader(Context context) {
         super(context);
@@ -105,7 +109,9 @@ public class ContactsSearchLoader extends AsyncTaskLoader {
         SharedPreferences sharedPreferences = mContext.getSharedPreferences("park_cache_map", 0);
         String color_token = sharedPreferences.getString("access_token2", "");
         header.put("color-token", color_token);
+        updateDate.sendEmptyMessage(0);
         String response = OkHttpConnector.doGet(header, url, params);
+        updateDate.sendEmptyMessage(1);
         SearchResult bean = GsonUtil.parse(response, SearchResult.class);
         if (bean != null && bean.isSuccess()) {
             List<SearchResult.ContentBean> list = bean.getContent();
@@ -123,7 +129,7 @@ public class ContactsSearchLoader extends AsyncTaskLoader {
                 SearchContactBean contact = new SearchContactBean();
 
                 String uuid = item.getId();
-                String avatar =item.getAvatar();
+                String avatar = item.getAvatar();
                 contact.setIconUrl(avatar);
                 contact.setUsername(item.getUsername());
                 contact.setUuid(uuid);
@@ -132,7 +138,6 @@ public class ContactsSearchLoader extends AsyncTaskLoader {
                 contact.setSimplepinyin(ch.toString());
                 contact.setIndexPinyin(chStr);
                 contact.setPhoneNum(item.getOrgName());
-
                 boolean isAdd = true;
                 for (SearchContactBean local : allList) {
                     if (local.getUuid().equals(uuid)) {
@@ -145,6 +150,38 @@ public class ContactsSearchLoader extends AsyncTaskLoader {
                 }
 
             }
+        }
+    }
+
+    Handler updateDate = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case 0:
+                    showProgressDialog();
+                    break;
+                case 1:
+                    dismissProgressDialog();
+                    break;
+            }
+        }
+    };
+
+    private void showProgressDialog() {
+        if (mProgressDialog == null) {
+            mProgressDialog = new ProgressDialog(mContext);
+            mProgressDialog.setMessage("正在请求，请稍后...");
+            mProgressDialog.setCancelable(true);
+            mProgressDialog.setCanceledOnTouchOutside(true);
+        }
+        if (!mProgressDialog.isShowing()) {
+            mProgressDialog.show();
+        }
+    }
+
+    private void dismissProgressDialog() {
+        if (mProgressDialog != null && mProgressDialog.isShowing()) {
+            mProgressDialog.dismiss();
         }
     }
 

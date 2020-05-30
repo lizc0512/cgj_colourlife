@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
@@ -92,6 +93,7 @@ public class FragmentManagement extends Fragment implements HttpResponse, View.O
     private SwipeRefreshLayout sr_micro;
     private boolean TryAgain = true;
     private DeliveryModel deliveryModel;
+    private RelativeLayout rl_fragment_nodata;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -146,6 +148,7 @@ public class FragmentManagement extends Fragment implements HttpResponse, View.O
 
     private void initView() {
         sr_micro = mView.findViewById(R.id.sr_micro);
+        rl_fragment_nodata = mView.findViewById(R.id.rl_fragment_nodata);
         ll_micro_addView = mView.findViewById(R.id.ll_micro_addView);
         iv_miniservice_next = mView.findViewById(R.id.iv_miniservice_next);
         tv_miniservice_title = mView.findViewById(R.id.tv_miniservice_title);
@@ -510,7 +513,12 @@ public class FragmentManagement extends Fragment implements HttpResponse, View.O
                     initViewpager(cropLayoutEntity.getContent().get(i));
                     break;
                 case "3":
-                    initApplication(cropLayoutEntity.getContent().get(i));
+                    if (cropLayoutEntity.getContent().get(i).getContent().size() < 1) {
+                        rl_fragment_nodata.setVisibility(View.VISIBLE);
+                    } else {
+                        initApplication(cropLayoutEntity.getContent().get(i));
+                        rl_fragment_nodata.setVisibility(View.GONE);
+                    }
                     break;
             }
         }

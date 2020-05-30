@@ -116,6 +116,12 @@ public class EmployeeDataActivity extends BaseActivity implements HttpResponse, 
         } else {
             ivSex.setImageResource(R.drawable.employee_female);
         }
+        if ("0".equals(searchContactBean.getFavoriteid())) {
+            cbCollect.setVisibility(View.GONE);
+        } else {
+            cbCollect.setVisibility(View.VISIBLE);
+            personCode = searchContactBean.getFavoriteid();
+        }
     }
 
     private void setFavortoryData(ContactBean item) {

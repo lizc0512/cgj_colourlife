@@ -25,6 +25,7 @@ public class SearchContactBean implements Comparable<SearchContactBean>, Parcela
     private String phoneNum; // 岗位
     private String jobName; // 职位
     private String mobile; // 手机
+    private String Favoriteid; // 手机
     private String email; //
     private String sex; //
     private String wholePinyin = "#"; // 全拼
@@ -61,6 +62,7 @@ public class SearchContactBean implements Comparable<SearchContactBean>, Parcela
         this.phoneNum = bean.getPhoneNum();
         this.email = bean.getEmail();
         this.mobile = bean.getMobile();
+        this.Favoriteid = bean.getFavoriteid();
         this.sex = bean.getSex();
         this.jobName =bean.getJobName();
         this.wholePinyin = bean.getWholePinyin();
@@ -171,6 +173,14 @@ public class SearchContactBean implements Comparable<SearchContactBean>, Parcela
 
     public String getEmail() {
         return email;
+    }
+
+    public String getFavoriteid() {
+        return Favoriteid;
+    }
+
+    public void setFavoriteid(String favoriteid) {
+        Favoriteid = favoriteid;
     }
 
     public void setEmail(String email) {
@@ -304,6 +314,7 @@ public class SearchContactBean implements Comparable<SearchContactBean>, Parcela
                 ", phoneNum='" + phoneNum + '\'' +
                 ", email='" + email + '\'' +
                 ", mobile='" + mobile + '\'' +
+                ", Favoriteid='" + Favoriteid + '\'' +
                 ", sex='" + sex + '\'' +
                 ", jobName='" + jobName + '\'' +
                 ", wholePinyin='" + wholePinyin + '\'' +
@@ -340,6 +351,7 @@ public class SearchContactBean implements Comparable<SearchContactBean>, Parcela
         dest.writeString(this.phoneNum);
         dest.writeString(this.email);
         dest.writeString(this.mobile);
+        dest.writeString(this.Favoriteid);
         dest.writeString(this.sex);
         dest.writeString(this.jobName);
         dest.writeString(this.wholePinyin);
@@ -369,6 +381,7 @@ public class SearchContactBean implements Comparable<SearchContactBean>, Parcela
         this.phoneNum = in.readString();
         this.email = in.readString();
         this.mobile = in.readString();
+        this.Favoriteid = in.readString();
         this.sex = in.readString();
         this.jobName = in.readString();
         this.wholePinyin = in.readString();

@@ -93,8 +93,8 @@ public class ContactsSearchLoader extends AsyncTaskLoader {
                 resList.add(searchBean);
             }
         }
-        allList.clear();
-        return resList;
+//        allList.clear();
+        return allList;
     }
 
 
@@ -142,6 +142,7 @@ public class ContactsSearchLoader extends AsyncTaskLoader {
                 contact.setMobile(item.getMobile());
                 contact.setEmail(item.getEmail());
                 contact.setSex(item.getSex());
+                contact.setFavoriteid(item.getFavoriteid());
                 boolean isAdd = true;
                 for (SearchContactBean local : allList) {
                     if (local.getUuid().equals(uuid)) {

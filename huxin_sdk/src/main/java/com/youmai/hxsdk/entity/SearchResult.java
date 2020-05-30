@@ -93,7 +93,7 @@ public class SearchResult {
         private String jobName;
         private String createtime;
         private int isFavorite;
-        private int Favoriteid;
+        private String Favoriteid;
 
         public String getJobName() {
             return jobName;
@@ -287,11 +287,11 @@ public class SearchResult {
             this.isFavorite = isFavorite;
         }
 
-        public int getFavoriteid() {
+        public String getFavoriteid() {
             return Favoriteid;
         }
 
-        public void setFavoriteid(int Favoriteid) {
+        public void setFavoriteid(String Favoriteid) {
             this.Favoriteid = Favoriteid;
         }
     }

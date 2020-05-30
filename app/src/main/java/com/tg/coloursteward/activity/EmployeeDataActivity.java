@@ -103,15 +103,15 @@ public class EmployeeDataActivity extends BaseActivity implements HttpResponse, 
     }
 
     private void setSearchData(SearchContactBean searchContactBean) {
-        tvJob.setText(info.jobName);
-        tv_employee_jobname.setText(info.jobName);
+        tvJob.setText(searchContactBean.getJobName());
+        tv_employee_jobname.setText(searchContactBean.getJobName());
         tvBranch.setText(searchContactBean.getPhoneNum());
         tv_employee_depart.setText(searchContactBean.getPhoneNum());
-        tv_employee_phone.setText(info.mobile);
-        tv_employee_email.setText(info.email);
+        tv_employee_phone.setText(searchContactBean.getMobile());
+        tv_employee_email.setText(searchContactBean.getEmail());
         tvName.setText(searchContactBean.getDisplayName());
         GlideUtils.loadImageDefaultDisplay(this, searchContactBean.getIconUrl(), ivHead, R.drawable.default_header, R.drawable.default_header);
-        if (info.sex.equals("1")) {
+        if (searchContactBean.getSex().equals("1")) {
             ivSex.setImageResource(R.drawable.employee_male);
         } else {
             ivSex.setImageResource(R.drawable.employee_female);
@@ -329,7 +329,7 @@ public class EmployeeDataActivity extends BaseActivity implements HttpResponse, 
                     startActivity(intent);
                 } else if (null != searchContactBean) {
                     Intent intent = new Intent(this, IMConnectionActivity.class);
-                    intent.putExtra(IMConnectionActivity.DST_UUID, searchContactBean.getUsername());
+                    intent.putExtra(IMConnectionActivity.DST_UUID, searchContactBean.getUuid());
                     intent.putExtra(IMConnectionActivity.DST_USERNAME, searchContactBean.getUsername());
                     intent.putExtra(IMConnectionActivity.DST_NAME, searchContactBean.getDisplayName());
                     intent.putExtra(IMConnectionActivity.DST_AVATAR, searchContactBean.getIconUrl());

@@ -90,9 +90,18 @@ public class SearchResult {
         private String jobUuid;
         private String orgUuid;
         private String orgName;
+        private String jobName;
         private String createtime;
         private int isFavorite;
         private int Favoriteid;
+
+        public String getJobName() {
+            return jobName;
+        }
+
+        public void setJobName(String jobName) {
+            this.jobName = jobName;
+        }
 
         public String getId() {
             return id;

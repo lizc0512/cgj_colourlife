@@ -138,6 +138,10 @@ public class ContactsSearchLoader extends AsyncTaskLoader {
                 contact.setSimplepinyin(ch.toString());
                 contact.setIndexPinyin(chStr);
                 contact.setPhoneNum(item.getOrgName());
+                contact.setJobName(item.getJobName());
+                contact.setMobile(item.getMobile());
+                contact.setEmail(item.getEmail());
+                contact.setSex(item.getSex());
                 boolean isAdd = true;
                 for (SearchContactBean local : allList) {
                     if (local.getUuid().equals(uuid)) {

@@ -22,7 +22,11 @@ public class SearchContactBean implements Comparable<SearchContactBean>, Parcela
 
     private int contactId; //id
     private String displayName;//姓名
-    private String phoneNum; // 电话号码
+    private String phoneNum; // 岗位
+    private String jobName; // 职位
+    private String mobile; // 手机
+    private String email; //
+    private String sex; //
     private String wholePinyin = "#"; // 全拼
     private String wholeT9;//全拼对应T9
     private String simplepinyin;//简拼
@@ -55,6 +59,10 @@ public class SearchContactBean implements Comparable<SearchContactBean>, Parcela
         this.contactId = bean.getContactId();
         this.displayName = bean.getDisplayName();
         this.phoneNum = bean.getPhoneNum();
+        this.email = bean.getEmail();
+        this.mobile = bean.getMobile();
+        this.sex = bean.getSex();
+        this.jobName =bean.getJobName();
         this.wholePinyin = bean.getWholePinyin();
         this.wholeT9 = bean.getWholeT9();
         this.simplepinyin = bean.getSimplepinyin();
@@ -147,6 +155,38 @@ public class SearchContactBean implements Comparable<SearchContactBean>, Parcela
 
     public void setPhoneNum(String phoneNum) {
         this.phoneNum = phoneNum;
+    }
+
+    public String getSex() {
+        return sex;
+    }
+
+    public void setSex(String sex) {
+        this.sex = sex;
+    }
+
+    public String getMobile() {
+        return mobile;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setMobile(String mobile) {
+        this.mobile = mobile;
+    }
+
+    public String getJobName() {
+        return jobName;
+    }
+
+    public void setJobName(String jobName) {
+        this.jobName = jobName;
     }
 
     public String getWholePinyin() {
@@ -262,6 +302,10 @@ public class SearchContactBean implements Comparable<SearchContactBean>, Parcela
                 "contactId=" + contactId +
                 ", displayName='" + displayName + '\'' +
                 ", phoneNum='" + phoneNum + '\'' +
+                ", email='" + email + '\'' +
+                ", mobile='" + mobile + '\'' +
+                ", sex='" + sex + '\'' +
+                ", jobName='" + jobName + '\'' +
                 ", wholePinyin='" + wholePinyin + '\'' +
                 ", wholeT9='" + wholeT9 + '\'' +
                 ", simplepinyin='" + simplepinyin + '\'' +
@@ -294,6 +338,10 @@ public class SearchContactBean implements Comparable<SearchContactBean>, Parcela
         dest.writeInt(this.contactId);
         dest.writeString(this.displayName);
         dest.writeString(this.phoneNum);
+        dest.writeString(this.email);
+        dest.writeString(this.mobile);
+        dest.writeString(this.sex);
+        dest.writeString(this.jobName);
         dest.writeString(this.wholePinyin);
         dest.writeString(this.wholeT9);
         dest.writeString(this.simplepinyin);
@@ -319,6 +367,10 @@ public class SearchContactBean implements Comparable<SearchContactBean>, Parcela
         this.contactId = in.readInt();
         this.displayName = in.readString();
         this.phoneNum = in.readString();
+        this.email = in.readString();
+        this.mobile = in.readString();
+        this.sex = in.readString();
+        this.jobName = in.readString();
         this.wholePinyin = in.readString();
         this.wholeT9 = in.readString();
         this.simplepinyin = in.readString();

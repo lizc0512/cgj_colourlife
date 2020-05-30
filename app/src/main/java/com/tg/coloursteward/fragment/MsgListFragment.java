@@ -228,9 +228,6 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, View.OnC
                 mMessageAdapter.addPushMsgItem(bean);
             }
             initUnreadList();
-            rl_home_nomsg.setVisibility(View.GONE);
-        } else {
-            rl_home_nomsg.setVisibility(View.VISIBLE);
         }
     }
 
@@ -649,6 +646,11 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, View.OnC
 
     private void initUnreadList() {
         List<ExCacheMsgBean> list = mMessageAdapter.getMsgList();
+        if (list.size() > 0) {
+            rl_home_nomsg.setVisibility(View.GONE);
+        } else {
+            rl_home_nomsg.setVisibility(View.VISIBLE);
+        }
         unReadListPosition.clear();
         for (int i = 0; i < list.size(); i++) {
             ExCacheMsgBean item = list.get(i);

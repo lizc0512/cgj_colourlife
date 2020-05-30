@@ -14,8 +14,10 @@ import androidx.core.content.ContextCompat
 import com.tg.coloursteward.R
 import com.tg.coloursteward.base.BaseActivity
 import com.tg.coloursteward.baseModel.HttpResponse
+import com.tg.coloursteward.constant.Contants
 import com.tg.coloursteward.net.MD5
 import com.tg.coloursteward.util.GsonUtils
+import com.tg.coloursteward.util.LinkParseUtil
 import com.tg.coloursteward.util.ToastUtil
 import com.tg.coloursteward.view.dialog.DialogFactory
 import com.tg.user.entity.CheckRegisterEntity
@@ -176,6 +178,7 @@ class RegisterActivity : BaseActivity(), View.OnClickListener, HttpResponse {
         iv_register_showpwd.setOnClickListener(this)
         btn_register_next.setOnClickListener(this)
         btn_register_getcode.setOnClickListener(this)
+        tv_register_agree.setOnClickListener(this)
         et_register_phone.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
             }
@@ -230,6 +233,9 @@ class RegisterActivity : BaseActivity(), View.OnClickListener, HttpResponse {
                     isShowPwd = true
                 }
                 et_register_pwd.setSelection(et_register_pwd.text.toString().length)
+            }
+            R.id.tv_register_agree -> {
+                LinkParseUtil.parse(this, Contants.URl.agreement, "");
             }
         }
     }

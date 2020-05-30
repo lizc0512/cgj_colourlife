@@ -125,8 +125,8 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/size_20dp"
             android:layout_centerVertical="true"
-            android:layout_toLeftOf="@id/iv_register_showpwd"
             android:layout_marginRight="@dimen/size_20dp"
+            android:layout_toLeftOf="@id/iv_register_showpwd"
             android:background="@null"
             android:hint="@string/user_register_pwd"
             android:inputType="textPassword"
@@ -162,4 +162,25 @@
         android:textSize="@dimen/font_16sp"
         app:layout_constraintTop_toBottomOf="@id/tv_register_account" />
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/size_30dp"
+        android:gravity="center_horizontal"
+        app:layout_constraintTop_toBottomOf="@id/btn_register_next">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="注册即同意"
+            android:textSize="@dimen/font_12sp" />
+
+        <TextView
+            android:id="@+id/tv_register_agree"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="《彩管家APP注册协议》"
+            android:textColor="@color/blue_text_color"
+            android:textSize="@dimen/font_12sp" />
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

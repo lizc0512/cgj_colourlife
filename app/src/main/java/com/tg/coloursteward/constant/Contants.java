@@ -33,6 +33,9 @@ public interface Contants {
 //                + "cNWRg0XWVtm90XpbTqfKiXzGDHI9W8aULYZ3of/JJ9lyCyjqjigyCdLBPtQ27gOu"
 //                + "boDzQuieR2ywPHawzQIDAQAB";
 //        int SAVENOHTTPRECORD = 0;
+//        String introduce = "http://mapp.colourlife.com/introduce/introduce.html";
+//        String privacy = "http://mapp.colourlife.com/xieyi/yinsi.html";
+//        String agreement = "http://mapp.colourlife.com/xieyi/fuwuxieyi.html";
 
         ////////////////  测试地址   ///////////////////////////////////
         String URL_ICETEST = "https://openapi-test.colourlife.com/v1";//
@@ -58,6 +61,9 @@ public interface Contants {
                 "Tf2jYeV+ni5F1o0w3Fag4OOD1YHCRUCXIsFy+iJYmuPf5vMkZrkoiJmKBfkaIzNlrJZzHzq+LsPQNCF86p1nLsuHbkWNvy" +
                 "jOEPn/CUryP2Kxme4S+eEqLIeNwp70VOaMuPmRoEZxMDAgvc6Z0DWsVdQIDAQAB";
         int SAVENOHTTPRECORD = 1;
+        String introduce = "http://mapp-czytest.colourlife.com/introduce/introduce.html";
+        String privacy = "http://mapp-czytest.colourlife.com/xieyi/yinsi.html";
+        String agreement = "http://mapp-czytest.colourlife.com/xieyi/fuwuxieyi.html";
 
     }
 

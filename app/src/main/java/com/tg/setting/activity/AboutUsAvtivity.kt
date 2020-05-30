@@ -5,6 +5,7 @@ import android.view.View
 import com.tg.coloursteward.BuildConfig
 import com.tg.coloursteward.R
 import com.tg.coloursteward.base.BaseActivity
+import com.tg.coloursteward.constant.Contants
 import com.tg.coloursteward.util.LinkParseUtil
 import kotlinx.android.synthetic.main.activity_about_us.*
 
@@ -45,9 +46,9 @@ class AboutUsAvtivity : BaseActivity(), View.OnClickListener {
 
     override fun onClick(v: View) {
         when (v.id) {
-            R.id.rl_about_introduce -> LinkParseUtil.parse(this, "", "");
-            R.id.rl_about_privacy -> LinkParseUtil.parse(this, "https://mapp.colourlife.com/xieyi/yinsi.html", "");
-            R.id.rl_about_agreement -> LinkParseUtil.parse(this, "https://mapp.colourlife.com/xieyi/fuwuxieyi.html", "");
+            R.id.rl_about_introduce -> LinkParseUtil.parse(this, Contants.URl.introduce, "");
+            R.id.rl_about_privacy -> LinkParseUtil.parse(this, Contants.URl.privacy, "");
+            R.id.rl_about_agreement -> LinkParseUtil.parse(this, Contants.URl.agreement, "");
         }
     }
 }

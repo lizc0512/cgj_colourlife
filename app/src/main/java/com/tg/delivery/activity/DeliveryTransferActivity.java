@@ -172,6 +172,7 @@ public class DeliveryTransferActivity extends BaseActivity {
             } else {
                 ToastUtil.showShortToast(currentActivity, "请输入运单号");
             }
+            SoftKeyboardUtils.hideSoftKeyboard(currentActivity,ed_input_code);
             hideBottomUIMenu();
         });
         tv_define_delivery.setOnClickListener(view -> {

@@ -227,6 +227,7 @@ public class DeliveryScannerActivity extends BaseActivity implements View.OnClic
                 }
             }
             hideBottomUIMenu();
+            SoftKeyboardUtils.hideSoftKeyboard(currentActivity,ed_input_code);
         });
         tv_define_delivery.setOnClickListener(view -> {
             if (fastClick()) {

@@ -7,8 +7,13 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.hardware.Camera;
+import android.media.AudioManager;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
@@ -20,6 +25,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -45,7 +51,7 @@ import java.util.List;
 /**
  * 扫码派件
  */
-public class DeliveryTransferActivity extends BaseActivity {
+public class DeliveryTransferActivity extends BaseActivity implements View.OnClickListener {
     private EditText ed_input_code;
     private TextView tv_define;
     private TextView tv_choice_num;
@@ -57,6 +63,7 @@ public class DeliveryTransferActivity extends BaseActivity {
 
     private Activity currentActivity;
     private String courierNumber = "";
+    private Camera currentCamera;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -141,13 +148,12 @@ public class DeliveryTransferActivity extends BaseActivity {
     }
 
     private void initView(View rootView) {
-        ImageView iv_base_location = rootView.findViewById(R.id.iv_base_location);
-        iv_base_location.setOnClickListener(view -> {
+        ImageView iv_base_back = rootView.findViewById(R.id.iv_base_back);
+        iv_base_back.setOnClickListener(view -> {
             currentActivity.finish();
             finish();
         });
         TextView tv_base_title = rootView.findViewById(R.id.tv_base_title);
-        iv_base_location.setVisibility(View.VISIBLE);
         tv_base_title.setVisibility(View.VISIBLE);
         tv_base_title.setText("交接快件");
         ed_input_code = rootView.findViewById(R.id.ed_input_code);
@@ -157,39 +163,51 @@ public class DeliveryTransferActivity extends BaseActivity {
         rv_delivery_infor = rootView.findViewById(R.id.rv_delivery_infor);
         tv_define_delivery.setText("接收快件");
         tv_define.setOnClickListener(view -> {
-            courierNumber = ed_input_code.getText().toString().trim();
-            if (!TextUtils.isEmpty(courierNumber)) {
-                //根据订单号 查询手机 //表示用户输入新增
-                if (deliveryInforList.size() > 50) {
-                    ToastUtil.showShortToast(currentActivity, "运单号最大只能录入50个");
-                } else {
-                    if (!includeDelivery(courierNumber)) {
-                        getDeliverStatus();
+            if (fastClick()) {
+                courierNumber = ed_input_code.getText().toString().trim();
+                if (!TextUtils.isEmpty(courierNumber)) {
+                    //根据订单号 查询手机 //表示用户输入新增
+                    if (deliveryInforList.size() >= 50) {
+                        ToastUtil.showShortToast(currentActivity, "运单最多只能录入50个");
                     } else {
-                        ToastUtil.showShortToast(currentActivity, "运单号已录入,请勿重复录入");
+                        if (!includeDelivery(courierNumber)) {
+                            getDeliverStatus();
+                        } else {
+                            if (editPosition == -1) {
+                                ToastUtil.showShortToast(currentActivity, "运单已录入,请勿重复录入");
+                            } else {
+                                //是一样的 编辑状态改为不是编辑
+                                playBeepSoundAndVibrate();
+                                ed_input_code.setText("");
+                                deliveryNumberListAdapter.setEditStatus(-1);
+                                deliveryNumberListAdapter.notifyDataSetChanged();
+                            }
+                        }
                     }
+                } else {
+                    ToastUtil.showShortToast(currentActivity, "运单号不能为空,请先输入运单号");
                 }
-            } else {
-                ToastUtil.showShortToast(currentActivity, "请输入运单号");
             }
+
             SoftKeyboardUtils.showSoftKeyboard(currentActivity);
             hideBottomUIMenu();
         });
         tv_define_delivery.setOnClickListener(view -> {
-            if (deliveryInforList.size() > 0) {
-                List<String> deliveryNumberList = new ArrayList<>();
-                for (DeliveryInforEntity.ContentBean dataBean : deliveryInforList) {
-                    String courierNumber = dataBean.getCourierNumber();
-                    deliveryNumberList.add(courierNumber);
+            if (fastClick()) {
+                if (deliveryInforList.size() > 0) {
+                    List<String> deliveryNumberList = new ArrayList<>();
+                    for (DeliveryInforEntity.ContentBean dataBean : deliveryInforList) {
+                        String courierNumber = dataBean.getCourierNumber();
+                        deliveryNumberList.add(courierNumber);
+                    }
+                    if (null == deliveryModel) {
+                        deliveryModel = new DeliveryModel(currentActivity);
+                    }
+                    deliveryModel.submitDeliveryCourierNumbers(2, GsonUtils.gsonString(deliveryNumberList), "3", UserInfo.mobile, UserInfo.realname, "", -1, DeliveryTransferActivity.this);
+                } else {
+                    ToastUtil.showShortToast(currentActivity, "暂无运单可交接");
                 }
-                if (null == deliveryModel) {
-                    deliveryModel = new DeliveryModel(currentActivity);
-                }
-                deliveryModel.submitDeliveryCourierNumbers(2, GsonUtils.gsonString(deliveryNumberList), "3", UserInfo.mobile, UserInfo.realname, "", -1, DeliveryTransferActivity.this);
-            } else {
-                ToastUtil.showShortToast(currentActivity, "暂无运单进行交接");
             }
-
         });
         String scannerCache = spUtils.getStringData("transDeliveryList", "");
         if (!TextUtils.isEmpty(scannerCache)) {
@@ -269,12 +287,14 @@ public class DeliveryTransferActivity extends BaseActivity {
 
     public void useCamareSdk(boolean boolkeep) {
         ISCardScanActivity.setListener(new ISCardScanActivity.OnCardResultListener() {
+            @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
             public void updatePreviewUICallBack(Activity activity,
                                                 RelativeLayout rootView, final Camera camera) {// 支持简单自定义相机页面，在相机页面上添加一层ui
                 // TODO Auto-generated method stub
-                if(currentActivity==null){
+                if (currentActivity == null) {
                     currentActivity = activity;
+                    currentCamera = camera;
                     RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(
                             RelativeLayout.LayoutParams.WRAP_CONTENT,
                             RelativeLayout.LayoutParams.WRAP_CONTENT);
@@ -286,6 +306,8 @@ public class DeliveryTransferActivity extends BaseActivity {
                     initView(view);
                     rootView.addView(view, lp);
                 }
+//                AudioManager audioManager = (AudioManager) activity.getSystemService(Context.AUDIO_SERVICE);
+//                audioManager.adjustStreamVolume(AudioManager.STREAM_MUSIC, AudioManager.ADJUST_MUTE, AudioManager.FLAG_PLAY_SOUND);//设为静音
                 hideBottomUIMenu();
             }
 
@@ -305,14 +327,19 @@ public class DeliveryTransferActivity extends BaseActivity {
             @Override
             public void resultSuccessKeepPreviewCallback(final String result,
                                                          final String comment, int type) {
-                if (deliveryInforList.size() > 50) {
-                    ToastUtil.showShortToast(currentActivity, "运单号最大只能录入50个");
+                setTouchFocus();
+                if (deliveryInforList.size() >= 50) {
+                    ToastUtil.showShortToast(currentActivity, "运单最多只能录入50个");
                 } else {
-                    if (!includeDelivery(result) || !result.equals(courierNumber)) {
-                        courierNumber = result;
-                        getDeliverStatus();
-                    } else {
-                        ToastUtil.showShortToast(currentActivity, "运单号已录入,请勿重复录入");
+                    long nowCurrentTime = System.currentTimeMillis();
+                    if (nowCurrentTime - scannCurrentTime >= 1500) {
+                        scannCurrentTime = nowCurrentTime;
+                        if (!includeDelivery(result) || !result.equals(courierNumber)) {
+                            courierNumber = result;
+                            getDeliverStatus();
+                        } else {
+                            ToastUtil.showShortToast(currentActivity, "运单已录入,请勿重复扫描");
+                        }
                     }
                 }
             }
@@ -320,25 +347,57 @@ public class DeliveryTransferActivity extends BaseActivity {
         Intent intent = new Intent(this, ISCardScanActivity.class);
         intent.putExtra(ISCardScanActivity.EXTRA_KEY_APP_KEY, Contants.APP.APP_KEY);
         intent.putExtra(ISCardScanActivity.EXTRA_KEY_BOOL_CONTIUE_AUTOFOCUS,
-                true);// true 表示参数自动对焦模式 false 采用默认的定时对焦
+                false);// true 表示参数自动对焦模式 false 采用默认的定时对焦
         intent.putExtra(ISCardScanActivity.EXTRA_KEY_BOOL_BAR, false);// 是否开启同时识别
         intent.putExtra(ISCardScanActivity.EXTRA_KEY_BOOL_KEEP_PREVIEW, boolkeep);// true连续预览识别
         // false
         // 单次识别则结束
-        intent.putExtra(ISCardScanActivity.EXTRA_KEY_PREVIEW_HEIGHT, false ? 1f : 70f);// 预览框高度 根据是否同时识别 变化预览框高度
+        intent.putExtra(ISCardScanActivity.EXTRA_KEY_PREVIEW_HEIGHT, false ? 1f : 85f);// 预览框高度 根据是否同时识别 变化预览框高度
         // 单位dp
         // 一定使用float数值否则设置无效
         intent.putExtra(ISCardScanActivity.EXTRA_KEY_PREVIEW_MATCH_LEFT, 15f);// 预览框左边距
         // 单位dp
         // 一定使用float数值否则设置无效
-        intent.putExtra(ISCardScanActivity.EXTRA_KEY_PREVIEW_MATCH_TOP, 70f);// 预览框上边距
+        intent.putExtra(ISCardScanActivity.EXTRA_KEY_PREVIEW_MATCH_TOP, 75f);// 预览框上边距
         intent.putExtra(ISCardScanActivity.EXTRA_KEY_SHOW_CLOSE, false);// true打开闪光灯和关闭按钮
         intent.putExtra(ISCardScanActivity.EXTRA_KEY_COLOR_MATCH, 0xffffffff);// 指定SDK相机模块ISCardScanActivity四边框角线条,检测到身份证图片后的颜色
         intent.putExtra(ISCardScanActivity.EXTRA_KEY_COLOR_NORMAL, 0xffffffff);// 指定SDK相机模块ISCardScanActivity四边框角线条颜色，正常显示颜色
+        intent.putExtra(ISCardScanActivity.EXTRA_KEY_BOOL_OPEN_VOICE, false);// 是否开启提示音
         startActivity(intent);
     }
 
+    private void setTouchFocus() {
+        if (currentCamera != null) {
+            String focusMode = "auto";
+            try {
+                Camera.Parameters params = currentCamera.getParameters();
+                List<String> modes = params.getSupportedFocusModes();
+                if (modes.contains("continuous-picture")) {
+                    params.setFocusMode("continuous-picture");
+                } else if (modes.contains("fixed")) {
+                    params.setFocusMode("fixed");
+                } else if (modes.contains("infinity")) {
+                    params.setFocusMode("infinity");
+                } else {
+                    params.setFocusMode((String) modes.get(0));
+                }
+                params.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
+                currentCamera.cancelAutoFocus();
+                currentCamera.setParameters(params);
+                currentCamera.autoFocus(new Camera.AutoFocusCallback() {
+                    @Override
+                    public void onAutoFocus(boolean b, Camera camera) {
+
+                    }
+                });
+            } catch (Exception e) {
+
+            }
+        }
+    }
+
     private DeliveryModel deliveryModel;
+    private long scannCurrentTime;
 
     private void getDeliverInfor() {
         if (null == deliveryModel) {
@@ -363,9 +422,9 @@ public class DeliveryTransferActivity extends BaseActivity {
                         DeliveryStateEntity deliveryStateEntity = GsonUtils.gsonToBean(result, DeliveryStateEntity.class);
                         String status = deliveryStateEntity.getContent();
                         if ("1".equals(status)) {
-                            ToastUtil.showShortToast(currentActivity, "运单已经派送,请勿重复扫描");
+                            ToastUtil.showShortToast(currentActivity, "运单已派送,请勿重复扫描");
                         } else if ("0".equals(status)) {
-                            ToastUtil.showShortToast(currentActivity, "该运单在系统中未找到,请确认是否录入系统");
+                            ToastUtil.showShortToast(currentActivity, "运单未录入，请先录入系统");
                         } else {
                             getDeliverInfor();
                         }
@@ -388,6 +447,7 @@ public class DeliveryTransferActivity extends BaseActivity {
                                 } else {
                                     deliveryInforList.set(editPosition, dataBean);
                                 }
+                                playBeepSoundAndVibrate();
                                 editPosition = -1;
                                 ed_input_code.setText("");
                                 deliveryNumberListAdapter.setEditStatus(-1);
@@ -395,7 +455,7 @@ public class DeliveryTransferActivity extends BaseActivity {
                                 spUtils.saveStringData("transDeliveryList", GsonUtils.gsonString(deliveryInforList));
                                 showTotalNum();
                             } else {
-                                ToastUtil.showShortToast(currentActivity, "运单号已录入,请勿重复录入");
+                                ToastUtil.showShortToast(currentActivity, "运单已录入,请勿重复录入");
                             }
                         }
                     } catch (Exception e) {
@@ -413,5 +473,20 @@ public class DeliveryTransferActivity extends BaseActivity {
                 break;
         }
         hideBottomUIMenu();
+    }
+    private void playBeepSoundAndVibrate() {
+        Vibrator vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
+        vibrator.vibrate(200L);
+        Uri uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        Ringtone rt = RingtoneManager.getRingtone(this, uri);
+        rt.play();
+    }
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.iv_base_back:
+                finish();
+                break;
+        }
     }
 }

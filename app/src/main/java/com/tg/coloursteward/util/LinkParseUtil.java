@@ -15,7 +15,7 @@ import com.tg.coloursteward.activity.PublicAccountActivity;
 import com.tg.delivery.activity.DeliveryManagerActivity;
 import com.tg.delivery.activity.DeliveryScannerActivity;
 import com.tg.delivery.activity.DeliveryTransferActivity;
-import com.tg.delivery.activity.WarehousingActivity;
+import com.tg.delivery.activity.NewWarehousingActivity;
 import com.tg.money.activity.GroupAccountDetailsActivity;
 import com.tg.money.activity.GroupBounsActivity;
 import com.tg.money.activity.TransactionRecordsActivity;
@@ -105,18 +105,18 @@ public class LinkParseUtil {
                         context.startActivity(it);
                         context.overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
                     } else if (name.equals("expressEnter")) {//快递入仓
-                        it = new Intent(context, WarehousingActivity.class);
+                        it = new Intent(context, NewWarehousingActivity.class);
                         context.startActivity(it);
                         context.overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
-                    } else if (name.equals("expressDis")){
+                    } else if (name.equals("expressDis")) {
                         it = new Intent(context, DeliveryScannerActivity.class);
                         context.startActivity(it);
                         context.overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
-                    }  else if (name.equals("expressTransfer")){
+                    } else if (name.equals("expressTransfer")) {
                         it = new Intent(context, DeliveryTransferActivity.class);
                         context.startActivity(it);
                         context.overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
-                    }  else {
+                    } else {
                         ToastUtil.showShortToast(context, "请升级到最新版本体验");
                         return;
                     }

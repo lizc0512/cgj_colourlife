@@ -8,6 +8,7 @@ import com.tg.coloursteward.baseModel.HttpListener;
 import com.tg.coloursteward.baseModel.HttpResponse;
 import com.tg.coloursteward.baseModel.RequestEncryptionUtils;
 import com.tg.coloursteward.constant.SpConstants;
+import com.tg.coloursteward.info.UserInfo;
 import com.tg.coloursteward.util.SharedPreferencesUtils;
 import com.yanzhenjie.nohttp.NoHttp;
 import com.yanzhenjie.nohttp.RequestMethod;
@@ -37,6 +38,7 @@ public class DeliveryModel extends BaseModel {
     private String deliveryCommitUrl = "/trusteeship/addExpressTrusteeship";//新增快递托管记录录单
     private String deliveryCheckOrderUrl = "/trusteeship/checkSignCourierNumber";//判断签收快递单号是否存在,是否有效,返回收件人信息
     private String deliveryUserInfoUrl = "/property/getLandInfor";//获取用户登陆信息
+    private String deliveryUserPermissionUrl = "/property/getLandInforIos";//判断是否有权限
     private String deliverySmsTemplateUrl = "/smsUserTemplate/selectSmsUserTemplateListByInfo";
     private String deliverySearchUrl = "/courierCompany/fuzzyQueryCourierCompany";//模糊搜索
 
@@ -111,6 +113,8 @@ public class DeliveryModel extends BaseModel {
     public void getDeliverySmsTemplateList(int what, final HttpResponse newHttpResponse) {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("colorToken", SharedPreferencesUtils.getKey(mContext, SpConstants.accessToken.accssToken));
+        params.put("communityUuid",SharedPreferencesUtils.getInstance().getStringData(SpConstants.storage.DELIVERYUUID,""));
+        params.put("smsUserPhone", UserInfo.mobile);
         Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 18, deliverySmsTemplateUrl),
                 RequestMethod.GET);
         request(what, request, RequestEncryptionUtils.getNewSaftyMap(mContext, params), new HttpListener<String>() {
@@ -133,7 +137,7 @@ public class DeliveryModel extends BaseModel {
             public void onFailed(int what, Response<String> response) {
                 showExceptionMessage(what, response);
             }
-        }, true, false);
+        }, true, true);
     }
 
 
@@ -338,6 +342,43 @@ public class DeliveryModel extends BaseModel {
                     }
                 } else {
                     showErrorCodeMessage(response);
+                }
+            }
+
+            @Override
+            public void onFailed(int what, Response<String> response) {
+                showExceptionMessage(what, response);
+            }
+        }, true, isLoading);
+    }
+
+    /**
+     * 判断用户是否有权限进入快递管理
+     *
+     * @param what
+     * @param accessToken
+     * @param newHttpResponse
+     */
+    public void getDeliveryInfo(int what, String accessToken, boolean isLoading, final HttpResponse newHttpResponse) {
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("colorToken", accessToken);
+        Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 19, deliveryUserPermissionUrl),
+                RequestMethod.GET);
+        request(what, request, RequestEncryptionUtils.getNewSaftyMap(mContext, params), new HttpListener<String>() {
+            @Override
+            public void onSucceed(int what, Response<String> response) {
+                int responseCode = response.getHeaders().getResponseCode();
+                String result = response.get();
+                if (responseCode == RequestEncryptionUtils.responseSuccess) {
+                    int resultCode = showSuccesResultMessage(result);
+                    if (resultCode == 0) {
+                        newHttpResponse.OnHttpResponse(what, result);
+                    }else{
+                        newHttpResponse.OnHttpResponse(what, "");
+                    }
+                } else {
+                    showErrorCodeMessage(response);
+                    newHttpResponse.OnHttpResponse(what, "");
                 }
             }
 

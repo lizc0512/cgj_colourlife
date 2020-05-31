@@ -1,5 +1,6 @@
 package com.tg.delivery.activity;
 
+import android.Manifest;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -12,6 +13,8 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.hjq.permissions.OnPermission;
+import com.hjq.permissions.XXPermissions;
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.base.BaseActivity;
 import com.tg.coloursteward.constant.SpConstants;
@@ -19,8 +22,8 @@ import com.tg.coloursteward.util.GlideUtils;
 import com.tg.coloursteward.util.GsonUtils;
 import com.tg.coloursteward.util.MicroAuthTimeUtils;
 import com.tg.coloursteward.util.SharedPreferencesUtils;
+import com.tg.coloursteward.util.ToastUtil;
 import com.tg.coloursteward.view.MyGridLayoutManager;
-import com.tg.delivery.adapter.DeliveryAreaAdapter;
 import com.tg.delivery.adapter.DeliveryManagerAdapter;
 import com.tg.delivery.entity.DeliveryHomeEntity;
 import com.tg.delivery.entity.DeliveryUserInfoEntitiy;
@@ -42,7 +45,6 @@ public class DeliveryManagerActivity extends BaseActivity {
     private TextView tv_deliery_area;
     private List<DeliveryUserInfoEntitiy.ContentBean.CommunityBean> listInfo = new ArrayList<>();
     private RecyclerView rv_delivery_area;
-    private DeliveryAreaAdapter areaAdapter;
     private RelativeLayout rl_delivery_nomsg;
     private RelativeLayout view_tips;
     private boolean isHaveArea;
@@ -83,21 +85,29 @@ public class DeliveryManagerActivity extends BaseActivity {
         });
 
         String name = spUtils.getStringData(SpConstants.storage.DELIVERYNAME, "");
-        String uuid = spUtils.getStringData(SpConstants.storage.DELIVERYUUID, "");
+        String show = spUtils.getStringData(SpConstants.storage.DELIVERYSHOW, "");
         if (!TextUtils.isEmpty(name)) {
             tv_deliery_area.setText(name);
             isHaveArea = true;
+        }
+        if ("2".equals(show)) {
+            rv_delivery.setVisibility(View.GONE);
+            view_tips.setVisibility(View.GONE);
+            rl_delivery_nomsg.setVisibility(View.VISIBLE);
         } else {
-
+            rv_delivery.setVisibility(View.VISIBLE);
+            view_tips.setVisibility(View.VISIBLE);
+            rl_delivery_nomsg.setVisibility(View.GONE);
         }
     }
 
     private void setAreaData(int position) {
         spUtils.saveStringData(SpConstants.storage.DELIVERYNAME, listInfo.get(position).getCommunityName());
         spUtils.saveStringData(SpConstants.storage.DELIVERYUUID, listInfo.get(position).getCommunityUuid());
+        spUtils.saveStringData(SpConstants.storage.DELIVERYSHOW, listInfo.get(position).getPilotPlot());
         rv_delivery_area.setVisibility(View.GONE);
         tv_deliery_area.setText(listInfo.get(position).getCommunityName());
-        if (listInfo.get(position).getPilotPlot().equals("2")) {//1是试点小区，2 是非试点小区
+        if (null != listInfo.get(position).getPilotPlot() && listInfo.get(position).getPilotPlot().equals("2")) {//1是试点小区，2 是非试点小区
             rv_delivery.setVisibility(View.GONE);
             view_tips.setVisibility(View.GONE);
             rl_delivery_nomsg.setVisibility(View.VISIBLE);
@@ -241,7 +251,21 @@ public class DeliveryManagerActivity extends BaseActivity {
                 if (null == mMicroAuthTimeUtils) {
                     mMicroAuthTimeUtils = new MicroAuthTimeUtils();
                 }
-                mMicroAuthTimeUtils.IsAuthTime(DeliveryManagerActivity.this, url, auth_type, "");
+                XXPermissions.with(this)
+                        .constantRequest()
+                        .permission(Manifest.permission.CAMERA)
+                        .request(new OnPermission() {
+                            @Override
+                            public void hasPermission(List<String> granted, boolean isAll) {
+                                mMicroAuthTimeUtils.IsAuthTime(DeliveryManagerActivity.this, url, auth_type, "");
+                            }
+
+                            @Override
+                            public void noPermission(List<String> denied, boolean quick) {
+                                ToastUtil.showShortToast(DeliveryManagerActivity.this, "请在程序管理中，打开彩管家的拍照权限");
+                                XXPermissions.gotoPermissionSettings(DeliveryManagerActivity.this);
+                            }
+                        });
             });
         }
     }

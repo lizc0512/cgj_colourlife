@@ -59,11 +59,11 @@ public class DeliveryManagerAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         if (viewType == item_micro_application_title) {
             View view = LayoutInflater.from(context).inflate(R.layout.item_delivery_title, null);
-            DeliveryManagerAdapter.TinyServerFragmentViewHolder_two holder_two = new DeliveryManagerAdapter.TinyServerFragmentViewHolder_two(view);
+            TinyServerFragmentViewHolder_two holder_two = new TinyServerFragmentViewHolder_two(view);
             return holder_two;
         } else if (viewType == item_micro_application_content) {
             View view = LayoutInflater.from(context).inflate(R.layout.item_delivery_content, null);
-            DeliveryManagerAdapter.TinyServerFragmentViewHolder_three holder_three = new DeliveryManagerAdapter.TinyServerFragmentViewHolder_three(view);
+            TinyServerFragmentViewHolder_three holder_three = new TinyServerFragmentViewHolder_three(view);
             return holder_three;
         }
         return null;
@@ -81,11 +81,11 @@ public class DeliveryManagerAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        if (holder instanceof DeliveryManagerAdapter.TinyServerFragmentViewHolder_two) {
-            DeliveryManagerAdapter.TinyServerFragmentViewHolder_two holder_two = (DeliveryManagerAdapter.TinyServerFragmentViewHolder_two) holder;
+        if (holder instanceof TinyServerFragmentViewHolder_two) {
+            TinyServerFragmentViewHolder_two holder_two = (TinyServerFragmentViewHolder_two) holder;
             holder_two.showTitle.setText(list.get(position).getItem_name());
-        } else if (holder instanceof DeliveryManagerAdapter.TinyServerFragmentViewHolder_three) {
-            DeliveryManagerAdapter.TinyServerFragmentViewHolder_three holder_three = (DeliveryManagerAdapter.TinyServerFragmentViewHolder_three) holder;
+        } else if (holder instanceof TinyServerFragmentViewHolder_three) {
+            TinyServerFragmentViewHolder_three holder_three = (TinyServerFragmentViewHolder_three) holder;
             Glide.with(context)
                     .applyDefaultRequestOptions(new RequestOptions()
                             .diskCacheStrategy(DiskCacheStrategy.ALL)

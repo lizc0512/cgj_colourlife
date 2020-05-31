@@ -63,7 +63,7 @@ public class DeliveryConfirmActivity extends BaseActivity {
     private int finishType = 1;
     private int templateTotal;
     private int jumpWeb = 0;
-    private String smsTemplateId="";
+    private String smsTemplateId = "";
     private int smsContentLength;
     private ArrayList<Integer> lengthsList;
     private int currentTemplatePos = 0;
@@ -108,8 +108,8 @@ public class DeliveryConfirmActivity extends BaseActivity {
                     }, view1 -> {
                         message_sb.setOpened(false);
                     }, "您未设置短信内容，请先设置？", null, null);
-                }else{
-                    if (templateMsgList.size()>0){
+                } else {
+                    if (templateMsgList.size() > 0) {
                         smsTemplateId = templateMsgList.get(currentTemplatePos).getSmsUserTemplateId();
                     }
                 }
@@ -134,14 +134,16 @@ public class DeliveryConfirmActivity extends BaseActivity {
         deliveryMsgTemplateAdapter.setOnItemClickListener(var1 -> {
             currentTemplatePos = var1;
             deliveryMsgTemplateAdapter.setClickPos(var1);
-            DeliverySmsTemplateEntity.ContentBean.ListBean.ChildListBean  listBean = templateMsgList.get(var1);
+            DeliverySmsTemplateEntity.ContentBean.ListBean.ChildListBean listBean = templateMsgList.get(var1);
             smsTemplateId = listBean.getSmsUserTemplateId();
             smsContentLength = listBean.getSmsContentLength();
             showMssageCount();
         });
         deliveryModel = new DeliveryModel(DeliveryConfirmActivity.this);
         btn_confirm_delivery.setOnClickListener(view -> {
-            deliveryModel.submitDeliveryCourierNumbers(0, courierNumbers, "2", UserInfo.mobile, UserInfo.realname, smsTemplateId, finishType, DeliveryConfirmActivity.this);
+            if (fastClick()) {
+                deliveryModel.submitDeliveryCourierNumbers(0, courierNumbers, "2", UserInfo.mobile, UserInfo.realname, smsTemplateId, finishType, DeliveryConfirmActivity.this);
+            }
         });
         deliveryModel.getDeliverySmsTemplateList(1, DeliveryConfirmActivity.this);
     }
@@ -198,33 +200,37 @@ public class DeliveryConfirmActivity extends BaseActivity {
                     DeliverySmsTemplateEntity.ContentBean contentBean = deliverySmsTemplateEntity.getContent();
                     if (null != contentBean) {
                         List<DeliverySmsTemplateEntity.ContentBean.ListBean> beanList = contentBean.getList();
-                        if (null!=beanList&&beanList.size()>0){
-                                for (DeliverySmsTemplateEntity.ContentBean.ListBean  listBean:beanList){
-                                    List<DeliverySmsTemplateEntity.ContentBean.ListBean.ChildListBean>  childListBeanList=    listBean.getChildList();
-                                    if (null!=childListBeanList&&childListBeanList.size()>0){
-                                        for (int j=0;j<childListBeanList.size();j++){
-                                            DeliverySmsTemplateEntity.ContentBean.ListBean.ChildListBean childListBean=  childListBeanList.get(j);
-                                            StringBuffer sb=new StringBuffer();
-                                            sb.append("模板");
-                                            sb.append(" ");
-                                            sb.append(listBean.getSmsTemplateId());
-                                            sb.append("-");
-                                            sb.append(j+1);
-                                            childListBean.setShowSmsTemplatePlace(sb.toString());
-                                            templateMsgList.add(childListBean);
-                                        }
+                        if (null != beanList && beanList.size() > 0) {
+                            for (DeliverySmsTemplateEntity.ContentBean.ListBean listBean : beanList) {
+                                List<DeliverySmsTemplateEntity.ContentBean.ListBean.ChildListBean> childListBeanList = listBean.getChildList();
+                                if (null != childListBeanList && childListBeanList.size() > 0) {
+                                    for (int j = 0; j < childListBeanList.size(); j++) {
+                                        DeliverySmsTemplateEntity.ContentBean.ListBean.ChildListBean childListBean = childListBeanList.get(j);
+                                        StringBuffer sb = new StringBuffer();
+                                        sb.append("模板");
+                                        sb.append(" ");
+                                        sb.append(listBean.getSmsTemplateId());
+                                        sb.append("-");
+                                        sb.append(j + 1);
+                                        childListBean.setShowSmsTemplatePlace(sb.toString());
+                                        templateMsgList.add(childListBean);
                                     }
                                 }
+                            }
                         }
                         templateTotal = templateMsgList.size();
-                        if (templateTotal> 0) {
-                            DeliverySmsTemplateEntity.ContentBean.ListBean.ChildListBean  childListBean=   templateMsgList.get(0);
-                            if (message_sb.isOpened()){
-                                smsTemplateId=childListBean.getSmsUserTemplateId();
+                        if (templateTotal > 0) {
+                            DeliverySmsTemplateEntity.ContentBean.ListBean.ChildListBean childListBean = templateMsgList.get(0);
+                            if (message_sb.isOpened()) {
+                                smsTemplateId = childListBean.getSmsUserTemplateId();
                             }
                             smsContentLength = childListBean.getSmsContentLength();
                             showMssageCount();
                             deliveryMsgTemplateAdapter.notifyDataSetChanged();
+                        } else {
+                            if (message_sb.isOpened()) {
+                                message_sb.setOpened(false);
+                            }
                         }
                     }
                 } catch (Exception e) {

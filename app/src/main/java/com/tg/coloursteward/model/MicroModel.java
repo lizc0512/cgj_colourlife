@@ -115,7 +115,7 @@ public class MicroModel extends BaseModel {
      * @param what
      * @param httpResponse 获取用户租户列表
      */
-    public void getCropList(int what, final HttpResponse httpResponse) {
+    public void getCropList(int what, boolean showTips, final HttpResponse httpResponse) {
         Map<String, Object> params = new HashMap<>();
         final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 0, cropListUrl), RequestMethod.GET);
         request(what, request, RequestEncryptionUtils.getNewSaftyMap(mContext, params), new HttpListener<String>() {
@@ -124,7 +124,12 @@ public class MicroModel extends BaseModel {
                 int responseCode = response.getHeaders().getResponseCode();
                 String result = response.get();
                 if (responseCode == RequestEncryptionUtils.responseSuccess) {
-                    int code = showSuccesResultMessageTheme(result);
+                    int code = -1;
+                    if (showTips) {
+                        code = showSuccesResultMessage(result);
+                    } else {
+                        code = showSuccesResultMessageTheme(result);
+                    }
                     if (code == 0) {
                         httpResponse.OnHttpResponse(what, result);
                         SharedPreferencesUtils.getInstance().saveStringData(SpConstants.storage.CORPDATA, result);

@@ -143,7 +143,7 @@ public class FragmentManagement extends Fragment implements HttpResponse, View.O
     }
 
     public void initData() {
-        microModel.getCropList(0, this);
+        microModel.getCropList(0,false, this);
     }
 
     private void initView() {

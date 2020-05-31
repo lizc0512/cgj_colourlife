@@ -687,7 +687,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
      * 获取租户信息接口
      */
     private void getCorpId() {
-        microModel.getCropList(13, this);
+        microModel.getCropList(13, true, this);
     }
 
     /**

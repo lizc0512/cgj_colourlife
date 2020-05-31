@@ -226,7 +226,6 @@ public class DeliveryScannerActivity extends BaseActivity implements View.OnClic
                     ToastUtil.showShortToast(currentActivity, "运单号不能为空,请先输入运单号");
                 }
             }
-            SoftKeyboardUtils.showSoftKeyboard(currentActivity);
             hideBottomUIMenu();
         });
         tv_define_delivery.setOnClickListener(view -> {

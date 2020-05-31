@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -82,12 +83,12 @@ public class WareHouseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             mHolder.tv_warehouse_name.setText(list.get(position).getCourierCompany());
 
             if (editPos == position) {
-                mHolder.itemView.setBackgroundResource(R.drawable.bg_delivery_item_select);
+                mHolder.rl_warehouse_item.setBackgroundResource(R.drawable.bg_delivery_item_select);
                 mHolder.iv_warehouse_item_del.setVisibility(View.GONE);
                 mHolder.iv_warehouse_item_edit.setVisibility(View.GONE);
                 mHolder.iv_warehouse_cancel.setVisibility(View.VISIBLE);
             } else {
-                mHolder.itemView.setBackgroundResource(R.drawable.bg_delivery_item_default);
+                mHolder.rl_warehouse_item.setBackgroundResource(R.drawable.bg_delivery_item_default);
                 mHolder.iv_warehouse_item_del.setVisibility(View.VISIBLE);
                 mHolder.iv_warehouse_item_edit.setVisibility(View.VISIBLE);
                 mHolder.iv_warehouse_cancel.setVisibility(View.GONE);
@@ -120,6 +121,7 @@ public class WareHouseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         private TextView tv_warehouse_name;
         private ImageView iv_warehouse_item_del;
         private ImageView iv_warehouse_item_edit;
+        private RelativeLayout rl_warehouse_item;
 
         public WareHouseViewHolder(View itemView) {
             super(itemView);
@@ -129,6 +131,7 @@ public class WareHouseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             tv_warehouse_name = itemView.findViewById(R.id.tv_warehouse_name);
             iv_warehouse_item_del = itemView.findViewById(R.id.iv_warehouse_item_del);
             iv_warehouse_item_edit = itemView.findViewById(R.id.iv_warehouse_item_edit);
+            rl_warehouse_item = itemView.findViewById(R.id.rl_warehouse_item);
         }
     }
 

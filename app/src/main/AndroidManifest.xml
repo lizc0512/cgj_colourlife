@@ -4,7 +4,12 @@
     package="com.tg.coloursteward">
 
     <uses-sdk tools:overrideLibrary="com.intelspace.library,cn.sharesdk.onekeyshare" />
-
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="true" />
+    <uses-feature
+        android:name="android.hardware.camera.autofocus"
+        android:required="true" />
     <permission
         android:name="com.tg.coloursteward.permission.JPUSH_MESSAGE"
         android:protectionLevel="signature" /> <!-- Required -->
@@ -405,6 +410,9 @@
             android:screenOrientation="portrait" />
         <activity
             android:name="com.tg.user.activity.ChangeCompanyActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.tg.delivery.activity.NewWarehousingActivity"
             android:screenOrientation="portrait" />
     </application>
 

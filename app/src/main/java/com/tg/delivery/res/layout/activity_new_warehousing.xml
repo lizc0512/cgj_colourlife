@@ -2,8 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:fitsSystemWindows="true">
+    android:layout_height="match_parent">
 
     <include
         android:id="@+id/top_view"
@@ -13,20 +12,61 @@
         android:id="@+id/tv_code"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/top_view"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="@dimen/size_130dp"
-        android:text="请扫描条形码"
+        android:layout_marginTop="180dp"
+        android:text="将扫描内容放入扫描框内"
         android:textColor="@color/white"
         android:textSize="@dimen/font_14sp" />
 
-    <View
+    <RelativeLayout
+        android:id="@+id/bottom_warehousing_layout"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/size_100dp"
-        android:layout_below="@id/tv_code"
-        android:layout_marginTop="@dimen/size_65dp"
-        android:background="@drawable/bg_warehouse_rucang" />
+        android:layout_height="@dimen/size_48dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/white">
 
+        <TextView
+            android:id="@+id/tv_block"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/size_40dp"
+            android:text="共计"
+            android:textColor="@color/color_666666"
+            android:textSize="@dimen/font_14sp" />
+
+        <TextView
+            android:id="@+id/tv_warehouse_allnum"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/size_10dp"
+            android:layout_toRightOf="@id/tv_block"
+            android:text="0"
+            android:textColor="@color/color_597EF7"
+            android:textSize="@dimen/font_14sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/size_10dp"
+            android:layout_toRightOf="@id/tv_warehouse_allnum"
+            android:text="个"
+            android:textColor="@color/color_666666"
+            android:textSize="@dimen/font_14sp" />
+
+        <TextView
+            android:id="@+id/tv_warehouse_commit"
+            android:layout_width="@dimen/size_165dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/delivery_btn_blue_selector"
+            android:gravity="center"
+            android:text="确认录入"
+            android:textColor="@color/white"
+            android:textSize="@dimen/font_14sp" />
+    </RelativeLayout>
 
     <LinearLayout
         android:id="@+id/ll_warehouse_info"
@@ -34,7 +74,7 @@
         android:layout_height="@dimen/size_150dp"
         android:layout_below="@id/tv_code"
         android:layout_marginLeft="@dimen/size_15dp"
-        android:layout_marginTop="@dimen/size_14dp"
+        android:layout_marginTop="@dimen/size_15dp"
         android:layout_marginRight="@dimen/size_15dp"
         android:background="@drawable/bg_delivery_manager"
         android:orientation="vertical">
@@ -81,7 +121,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/size_34dp"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="@dimen/size_10dp"
+                    android:layout_marginLeft="@dimen/size_18dp"
                     android:layout_marginRight="@dimen/size_100dp"
                     android:background="@null"
                     android:gravity="center_vertical"
@@ -180,7 +220,9 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/ll_warehouse_info"
+        android:layout_below="@id/tv_code"
+        android:layout_above="@id/bottom_warehousing_layout"
+        android:layout_marginTop="165dp"
         android:background="@drawable/bg_warehouse_rucang">
 
         <androidx.recyclerview.widget.RecyclerView
@@ -190,7 +232,6 @@
             android:layout_marginLeft="@dimen/size_15dp"
             android:layout_marginTop="@dimen/size_10dp"
             android:layout_marginRight="@dimen/size_15dp"
-            android:layout_marginBottom="@dimen/size_60dp"
             tools:listitem="@layout/item_warehouse_content" />
 
     </RelativeLayout>
@@ -205,53 +246,6 @@
         android:background="@drawable/bg_delivery_area"
         android:visibility="gone" />
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/size_48dp"
-        android:layout_alignParentBottom="true"
-        android:background="@color/white">
 
-        <TextView
-            android:id="@+id/tv_block"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="@dimen/size_40dp"
-            android:text="共计"
-            android:textColor="@color/color_666666"
-            android:textSize="@dimen/font_14sp" />
-
-        <TextView
-            android:id="@+id/tv_warehouse_allnum"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="@dimen/size_10dp"
-            android:layout_toRightOf="@id/tv_block"
-            android:text="0"
-            android:textColor="@color/color_597EF7"
-            android:textSize="@dimen/font_14sp" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="@dimen/size_10dp"
-            android:layout_toRightOf="@id/tv_warehouse_allnum"
-            android:text="个"
-            android:textColor="@color/color_666666"
-            android:textSize="@dimen/font_14sp" />
-
-        <TextView
-            android:id="@+id/tv_warehouse_commit"
-            android:layout_width="@dimen/size_165dp"
-            android:layout_height="match_parent"
-            android:layout_alignParentRight="true"
-            android:background="@drawable/delivery_btn_blue_selector"
-            android:gravity="center"
-            android:text="确认录入"
-            android:textColor="@color/white"
-            android:textSize="@dimen/font_14sp" />
-    </RelativeLayout>
 
 </RelativeLayout>

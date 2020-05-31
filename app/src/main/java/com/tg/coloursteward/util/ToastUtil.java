@@ -14,6 +14,10 @@ public class ToastUtil {
 
     private static Toast toast;//实现不管我们触发多少次Toast调用，都只会持续一次Toast显示的时长
     private static Boolean isshow = true;
+    private static Toast onlyToast;
+    private static long oneTime = 0;
+    private static long twoTime = 0;
+    private static CharSequence info = "";
 
     /**
      * 短时间显示Toast【居下】
@@ -26,6 +30,35 @@ public class ToastUtil {
         }
     }
 
+    /***显示*/
+    public static void onlyShowToast(Context context, CharSequence text) {
+        show(context, text, Toast.LENGTH_SHORT);
+    }
+
+    private static void show(Context context, CharSequence text, int duration) {
+        try {
+            if (onlyToast == null) {
+                onlyToast = Toast.makeText(context, text, duration);
+                onlyToast.show();
+                oneTime = System.currentTimeMillis();
+            } else {
+                twoTime = System.currentTimeMillis();
+                if (info.equals(text)) {
+                    if (twoTime - oneTime > 2500) {
+                        onlyToast.show();
+                    }
+                } else {
+                    info = text;
+                    onlyToast.setText(text);
+                    onlyToast.show();
+                }
+            }
+            oneTime = twoTime;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     /**
      * 短时间显示Toast【居中】
      *
@@ -33,11 +66,7 @@ public class ToastUtil {
      */
     public static void showShortToastCenter(Context context, String msg) {
         if (null != context && !TextUtils.isEmpty(msg) && isshow == true) {
-            if (toast == null) {
-                toast = Toast.makeText(context, msg, Toast.LENGTH_SHORT);
-            } else {
-                toast.setText(msg);
-            }
+            Toast toast = Toast.makeText(context, msg, Toast.LENGTH_SHORT);
             toast.setGravity(Gravity.CENTER, 0, 0);
             toast.show();
         }

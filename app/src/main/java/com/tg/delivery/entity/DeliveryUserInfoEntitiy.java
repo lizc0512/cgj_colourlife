@@ -63,7 +63,6 @@ public class DeliveryUserInfoEntitiy {
         private String appFunction;
         private String recent;
         private String dataUrl;
-        private List<CommunityBean> community;
 
         public String getDataUrl() {
             return dataUrl;
@@ -72,6 +71,8 @@ public class DeliveryUserInfoEntitiy {
         public void setDataUrl(String dataUrl) {
             this.dataUrl = dataUrl;
         }
+
+        private List<CommunityBean> community;
 
         public String getName() {
             return name;

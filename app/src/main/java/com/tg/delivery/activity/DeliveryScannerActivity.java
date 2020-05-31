@@ -202,7 +202,6 @@ public class DeliveryScannerActivity extends BaseActivity {
             } else {
                 ToastUtil.showShortToast(currentActivity, "请输入运单号");
             }
-            SoftKeyboardUtils.showSoftKeyboard(currentActivity);
             hideBottomUIMenu();
         });
         tv_define_delivery.setOnClickListener(view -> {

@@ -117,29 +117,8 @@ public class UserInfoActivity extends BaseActivity implements OnClickListener, H
         rl_usersex_change.setOnClickListener(this);
         rl_usermobile_change.setOnClickListener(this);
         rl_user_company.setOnClickListener(this);
-
-        if (!TextUtils.isEmpty(UserInfo.realname)) {
-            tv_user_name.setText(UserInfo.realname);
-        } else {
-            tv_user_name.setText(UserInfo.mobile);
-        }
-        tv_user_sex.setText(UserInfo.sex);
-        tv_user_part.setText(UserInfo.familyName);
-        tv_user_job.setText(UserInfo.jobName);
-        if (!TextUtils.isEmpty(UserInfo.mobile)) {
-            tv_user_mobile.setText(UserInfo.mobile);
-        } else {
-            tv_user_mobile.setText("未绑定");
-        }
-        if (!TextUtils.isEmpty(email)) {
-            et_user_email.setText(email);
-        } else {
-            et_user_email.setHint("< 未绑定 >");
-        }
-        String company = spUtils.getStringData(SpConstants.storage.CORPNAME, "");
-        tv_user_company.setText(company);
+        initRefresh();
         freshImg();
-
         try {
             String result = spUtils.getStringData(SpConstants.storage.CORPDATA, "");
             CropListEntity bean = GsonUtils.gsonToBean(result, CropListEntity.class);
@@ -436,8 +415,39 @@ public class UserInfoActivity extends BaseActivity implements OnClickListener, H
     }
 
     private void initRefresh() {
-        tv_user_part.setText(UserInfo.familyName);
-        tv_user_job.setText(UserInfo.jobName);
+        String partName = UserInfo.familyName;
+        String jobName = UserInfo.jobName;
+        String phone = UserInfo.mobile;
+        String email = UserInfo.email;
+        String name = UserInfo.realname;
+        if (!TextUtils.isEmpty(name)) {
+            tv_user_name.setText(name);
+        } else {
+            tv_user_name.setText(phone);
+        }
+        if (!TextUtils.isEmpty(partName)) {
+            tv_user_part.setText(partName);
+        } else {
+            tv_user_part.setText("暂无部门");
+        }
+        if (!TextUtils.isEmpty(jobName)) {
+            tv_user_job.setText(jobName);
+        } else {
+            tv_user_job.setText("暂无职位");
+        }
+        if (!TextUtils.isEmpty(phone)) {
+            tv_user_mobile.setText(phone);
+        } else {
+            tv_user_mobile.setText("未绑定");
+        }
+        if (!TextUtils.isEmpty(email)) {
+            et_user_email.setText(email);
+        } else {
+            et_user_email.setHint("< 未绑定 >");
+        }
+        String company = spUtils.getStringData(SpConstants.storage.CORPNAME, "");
+        tv_user_company.setText(company);
+        tv_user_sex.setText(UserInfo.sex);
     }
 
     @Override

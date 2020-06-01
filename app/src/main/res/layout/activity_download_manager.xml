@@ -3,7 +3,7 @@
     android:id="@+id/rl_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/base_color" >
+    android:background="@color/base_color">
 
     <com.baoyz.swipemenulistview.SwipeMenuListView
         android:id="@+id/download_listview"
@@ -18,7 +18,7 @@
         android:layout_height="300dp"
         android:layout_alignParentLeft="true"
         android:layout_marginTop="66dp"
-        android:visibility="gone" >
+        android:visibility="gone">
 
         <TextView
             android:id="@+id/textView1"
@@ -27,7 +27,7 @@
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="75dp"
-            android:text="暂无数据"
+            android:text="暂无下载"
             android:textColor="@color/form_edit"
             android:textSize="20sp" />
 

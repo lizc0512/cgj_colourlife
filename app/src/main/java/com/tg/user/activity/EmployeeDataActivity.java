@@ -1,4 +1,4 @@
-package com.tg.coloursteward.activity;
+package com.tg.user.activity;
 
 import android.Manifest;
 import android.content.ClipData;
@@ -103,10 +103,22 @@ public class EmployeeDataActivity extends BaseActivity implements HttpResponse, 
     }
 
     private void setSearchData(SearchContactBean searchContactBean) {
-        tvJob.setText(searchContactBean.getJobName());
-        tv_employee_jobname.setText(searchContactBean.getJobName());
-        tvBranch.setText(searchContactBean.getPhoneNum());
-        tv_employee_depart.setText(searchContactBean.getPhoneNum());
+        String job = searchContactBean.getJobName();
+        String part = searchContactBean.getPhoneNum();
+        if (!TextUtils.isEmpty(job)) {
+            tvJob.setText(job);
+            tv_employee_jobname.setText(job);
+        } else {
+            tvJob.setText("暂无职位");
+            tv_employee_jobname.setText("暂无职位");
+        }
+        if (!TextUtils.isEmpty(part)) {
+            tvBranch.setText(part);
+            tv_employee_depart.setText(part);
+        } else {
+            tvBranch.setText("暂无部门");
+            tv_employee_depart.setText("暂无部门");
+        }
         tv_employee_phone.setText(searchContactBean.getMobile());
         tv_employee_email.setText(searchContactBean.getEmail());
         tvName.setText(searchContactBean.getDisplayName());
@@ -143,10 +155,22 @@ public class EmployeeDataActivity extends BaseActivity implements HttpResponse, 
     }
 
     private void setData(FamilyInfo info) {
-        tvJob.setText(info.jobName);
-        tv_employee_jobname.setText(info.jobName);
-        tvBranch.setText(info.orgName);
-        tv_employee_depart.setText(info.orgName);
+        String job = info.jobName;
+        String part = info.orgName;
+        if (!TextUtils.isEmpty(job)) {
+            tvJob.setText(job);
+            tv_employee_jobname.setText(job);
+        } else {
+            tvJob.setText("暂无职位");
+            tv_employee_jobname.setText("暂无职位");
+        }
+        if (!TextUtils.isEmpty(part)) {
+            tvBranch.setText(part);
+            tv_employee_depart.setText(part);
+        } else {
+            tvBranch.setText("暂无部门");
+            tv_employee_depart.setText("暂无部门");
+        }
         tv_employee_phone.setText(info.mobile);
         tv_employee_email.setText(info.email);
         tvName.setText(info.name);
@@ -247,11 +271,22 @@ public class EmployeeDataActivity extends BaseActivity implements HttpResponse, 
                     EmployeeEntity employeeEntity = GsonUtils.gsonToBean(result, EmployeeEntity.class);
                     if (employeeEntity.getContent() != null) {
                         bean = employeeEntity.getContent();
-
-                        tvJob.setText(bean.getJob_type());
-                        tv_employee_jobname.setText(bean.getJob_type());
-                        tvBranch.setText(bean.getOrg_name());
-                        tv_employee_depart.setText(bean.getOrg_name());
+                        String job = bean.getJob_type();
+                        String part = bean.getOrg_name();
+                        if (!TextUtils.isEmpty(job)) {
+                            tvJob.setText(job);
+                            tv_employee_jobname.setText(job);
+                        } else {
+                            tvJob.setText("暂无职位");
+                            tv_employee_jobname.setText("暂无职位");
+                        }
+                        if (!TextUtils.isEmpty(part)) {
+                            tvBranch.setText(part);
+                            tv_employee_depart.setText(part);
+                        } else {
+                            tvBranch.setText("暂无部门");
+                            tv_employee_depart.setText("暂无部门");
+                        }
                         tv_employee_phone.setText(bean.getMobile());
                         tv_employee_email.setText(bean.getEmail());
                         tvName.setText(bean.getName());

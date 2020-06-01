@@ -237,7 +237,7 @@
                         android:layout_marginBottom="@dimen/size_8dp"
                         android:textColor="@color/color_25282e"
                         android:textSize="@dimen/font_14sp"
-                        android:text="暂无部门" />
+                        android:text="暂无职位" />
 
                 </RelativeLayout>
 

@@ -27,7 +27,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.tg.coloursteward.R;
-import com.tg.coloursteward.activity.EmployeeDataActivity;
+import com.tg.user.activity.EmployeeDataActivity;
 import com.tg.coloursteward.activity.HomeContactOrgActivity;
 import com.tg.coloursteward.baseModel.HttpResponse;
 import com.tg.coloursteward.constant.Contants;

@@ -56,7 +56,6 @@
         android:usesCleartextTraffic="true"
         tools:replace="android:allowBackup,android:theme,android:label">
         <activity android:name="com.tg.setting.activity.SetLoginPwdActivity"></activity>
-        <activity android:name="com.tg.delivery.activity.DeliveryHandoverActivity" />
         <activity android:name="com.tg.delivery.activity.WarehousingActivity" />
         <activity
             android:name="com.tg.delivery.activity.DeliveryManagerActivity"
@@ -206,7 +205,7 @@
         <activity android:name="com.tg.setting.activity.AboutUsAvtivity" /> <!-- 修改密码 -->
         <activity android:name="com.tg.setting.activity.ModifiedPasswordActivity" /> <!-- 获取手机通讯录 -->
         <activity android:name="com.tg.im.activity.ContactsActivity" /> <!-- 员工名片 -->
-        <activity android:name=".activity.EmployeeDataActivity" /> <!-- 新建门禁 -->
+        <activity android:name="com.tg.user.activity.EmployeeDataActivity" /> <!-- 新建门禁 -->
         <activity
             android:name="com.tg.setting.activity.KeyAddDoorActivity"
             android:screenOrientation="portrait"

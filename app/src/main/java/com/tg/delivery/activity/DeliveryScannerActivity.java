@@ -227,7 +227,6 @@ public class DeliveryScannerActivity extends BaseActivity implements View.OnClic
                 }
             }
             hideBottomUIMenu();
-            SoftKeyboardUtils.hideSoftKeyboard(currentActivity,ed_input_code);
         });
         tv_define_delivery.setOnClickListener(view -> {
             if (fastClick()) {
@@ -395,7 +394,7 @@ public class DeliveryScannerActivity extends BaseActivity implements View.OnClic
         intent.putExtra(ISCardScanActivity.EXTRA_KEY_BOOL_KEEP_PREVIEW, boolkeep);// true连续预览识别
         // false
         // 单次识别则结束
-        intent.putExtra(ISCardScanActivity.EXTRA_KEY_PREVIEW_HEIGHT, false ? 1f : 85f);// 预览框高度 根据是否同时识别 变化预览框高度
+        intent.putExtra(ISCardScanActivity.EXTRA_KEY_PREVIEW_HEIGHT, false ? 1f : 90f);// 预览框高度 根据是否同时识别 变化预览框高度
         // 单位dp
         // 一定使用float数值否则设置无效
         intent.putExtra(ISCardScanActivity.EXTRA_KEY_PREVIEW_MATCH_LEFT, 15f);// 预览框左边距
@@ -413,30 +412,30 @@ public class DeliveryScannerActivity extends BaseActivity implements View.OnClic
     private void setTouchFocus(){
         if (currentCamera != null) {
             String focusMode = "auto";
-           try {
-               Camera.Parameters params = currentCamera.getParameters();
-               List<String> modes = params.getSupportedFocusModes();
-               if (modes.contains("continuous-picture")) {
-                   params.setFocusMode("continuous-picture");
-               } else if (modes.contains("fixed")) {
-                   params.setFocusMode("fixed");
-               } else if (modes.contains("infinity")) {
-                   params.setFocusMode("infinity");
-               } else {
-                   params.setFocusMode((String)modes.get(0));
-               }
-               params.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
-               currentCamera.cancelAutoFocus();
-               currentCamera.setParameters(params);
-               currentCamera.autoFocus(new Camera.AutoFocusCallback() {
-                   @Override
-                   public void onAutoFocus(boolean b, Camera camera) {
+            try {
+                Camera.Parameters params = currentCamera.getParameters();
+                List<String> modes = params.getSupportedFocusModes();
+                if (modes.contains("continuous-picture")) {
+                    params.setFocusMode("continuous-picture");
+                } else if (modes.contains("fixed")) {
+                    params.setFocusMode("fixed");
+                } else if (modes.contains("infinity")) {
+                    params.setFocusMode("infinity");
+                } else {
+                    params.setFocusMode((String)modes.get(0));
+                }
+                params.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
+                currentCamera.cancelAutoFocus();
+                currentCamera.setParameters(params);
+                currentCamera.autoFocus(new Camera.AutoFocusCallback() {
+                    @Override
+                    public void onAutoFocus(boolean b, Camera camera) {
 
-                   }
-               });
-           }catch (Exception e){
-               
-           }
+                    }
+                });
+            }catch (Exception e){
+
+            }
 
         }
     }

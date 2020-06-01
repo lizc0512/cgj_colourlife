@@ -79,7 +79,7 @@ import java.util.Set;
 import java.util.concurrent.ArrayBlockingQueue;
 
 public class NewWarehousingActivity extends BaseActivity implements
-        Camera.PreviewCallback, Camera.AutoFocusCallback, View.OnClickListener {
+        Camera.PreviewCallback, Camera.AutoFocusCallback {
     // private static final String TAG = "PreviewActivity";
 
     public static final String EXTRA_KEY_APP_KEY = "EXTRA_KEY_APP_KEY";
@@ -456,8 +456,13 @@ public class NewWarehousingActivity extends BaseActivity implements
                                     et_warehouse_phone.setSelection(et_warehouse_phone.getText().toString().length());
                                     SoftKeyboardUtils.hideSystemSoftKeyboard(NewWarehousingActivity.this, et_warehouse_phone);
                                     String num = et_warehouse_num.getText().toString().trim();
-                                    if (num.equals(readyCheckNum)) {//运单号是否经过检验了
-                                        setData(NewWarehousingActivity.this);
+                                    if (isEditHaveRepeat(num, isEditItemPostion)) {//编辑的运单号是否等于输入框运单号
+                                        editPhone = et_warehouse_phone.getText().toString().trim();
+                                        UpdateData();
+                                    } else {//跟list中其他数据重复,则提示
+                                        if (num.equals(readyCheckNum)) {//运单号是否经过检验了
+                                            setData(NewWarehousingActivity.this);
+                                        }
                                     }
                                 } else {
                                     ToastUtil.showShortToastCenter(NewWarehousingActivity.this, "请先扫码运单号");
@@ -1188,8 +1193,8 @@ public class NewWarehousingActivity extends BaseActivity implements
 
     int[] borderLeftAndRight = new int[4];// 预览框的左右坐标---竖屏的时候
 
-    float borderHeightVar = 100;// 预览框的高度值，如果需要改变为屏幕高度的比例值，需要初始化的时候重新赋值
-    float borderHeightFromTop = 90;// 预览框离顶点的距离，也可以变为屏幕高度和预览宽高度的差值，需要初始化的时候重新赋值
+    float borderHeightVar = 90;// 预览框的高度值，如果需要改变为屏幕高度的比例值，需要初始化的时候重新赋值
+    float borderHeightFromTop = 105;// 预览框离顶点的距离，也可以变为屏幕高度和预览宽高度的差值，需要初始化的时候重新赋值
 
     public Map<String, Float> getPositionWithArea(int newWidth, int newHeight) {
 
@@ -1235,8 +1240,8 @@ public class NewWarehousingActivity extends BaseActivity implements
     }
 
     int[] phoneLeftAndRight = new int[4];// 预览框的左右坐标---竖屏的时候
-    float phoneHeightVar = 80;// 预览框的高度值，如果需要改变为屏幕高度的比例值，需要初始化的时候重新赋值
-    float phoneHeightFromTop = 80;// 预览框离顶点的距离，也可以变为屏幕高度和预览宽高度的差值，需要初始化的时候重新赋值
+    float phoneHeightVar = 55;// 预览框的高度值，如果需要改变为屏幕高度的比例值，需要初始化的时候重新赋值
+    float phoneHeightFromTop = 120;// 预览框离顶点的距离，也可以变为屏幕高度和预览宽高度的差值，需要初始化的时候重新赋值
 
     public Map<String, Float> getPhoneWithArea(int newWidth, int newHeight) {
 
@@ -1328,6 +1333,7 @@ public class NewWarehousingActivity extends BaseActivity implements
         rv_warehouse_delivery_company.setLayoutManager(layoutManagerCompany);
         TextView tv_base_title = view.findViewById(R.id.tv_base_title);
         tv_base_title.setText("快件入仓");
+        iv_base_back.setOnClickListener(v -> NewWarehousingActivity.this.finish());
         iv_delivery_next.setOnClickListener(v -> {
             if (isShowCompay) {
                 if (null != companyList && companyList.size() > 0) {
@@ -1494,6 +1500,7 @@ public class NewWarehousingActivity extends BaseActivity implements
                     setNum();
                     spUtils.saveStringData(SpConstants.UserModel.WAREHOUSECACHE, "");
                     setTransPhoneCode(0);
+                    isEditItemStatus = false;
                 }
                 break;
             case 2:
@@ -1710,14 +1717,6 @@ public class NewWarehousingActivity extends BaseActivity implements
         deliveryModel.getDeliveryCompany(0, this);
     }
 
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.iv_base_back:
-                finish();
-                break;
-        }
-    }
 
     private void soundPlay() {
         Uri uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
@@ -1730,7 +1729,7 @@ public class NewWarehousingActivity extends BaseActivity implements
      */
     private boolean delayScan() {
         long nowCurrentTime = System.currentTimeMillis();
-        if (nowCurrentTime - scannCurrentTime >= 1500) {
+        if (nowCurrentTime - scannCurrentTime >= 1800) {
             scannCurrentTime = nowCurrentTime;
             return true;
         }

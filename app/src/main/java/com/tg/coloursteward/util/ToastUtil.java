@@ -67,7 +67,7 @@ public class ToastUtil {
     public static void showShortToastCenter(Context context, String msg) {
         if (null != context && !TextUtils.isEmpty(msg) && isshow == true) {
             Toast toast = Toast.makeText(context, msg, Toast.LENGTH_SHORT);
-            toast.setGravity(Gravity.CENTER, 0, 0);
+            toast.setGravity(Gravity.BOTTOM, 0, 300);
             toast.show();
         }
     }

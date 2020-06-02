@@ -507,6 +507,7 @@ public class FragmentManagement extends Fragment implements HttpResponse, View.O
         if (sr_micro.isRefreshing()) {
             sr_micro.setRefreshing(false);
         }
+        rl_fragment_nodata.setVisibility(View.VISIBLE);
         CropLayoutEntity cropLayoutEntity = new CropLayoutEntity();
         cropLayoutEntity = GsonUtils.gsonToBean(result, CropLayoutEntity.class);
         ll_micro_addView.removeAllViews();
@@ -523,8 +524,8 @@ public class FragmentManagement extends Fragment implements HttpResponse, View.O
                     if (cropLayoutEntity.getContent().get(i).getContent().size() < 1) {
                         rl_fragment_nodata.setVisibility(View.VISIBLE);
                     } else {
-                        initApplication(cropLayoutEntity.getContent().get(i));
                         rl_fragment_nodata.setVisibility(View.GONE);
+                        initApplication(cropLayoutEntity.getContent().get(i));
                     }
                     break;
             }

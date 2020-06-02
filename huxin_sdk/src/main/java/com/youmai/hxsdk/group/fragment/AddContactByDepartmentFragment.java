@@ -19,7 +19,6 @@ import com.youmai.hxsdk.config.ColorsConfig;
 import com.youmai.hxsdk.db.bean.ContactBean;
 import com.youmai.hxsdk.group.AddContactsCreateGroupActivity;
 import com.youmai.hxsdk.group.adapter.DepartAdapter;
-import com.youmai.hxsdk.http.IGetListener;
 import com.youmai.hxsdk.http.OkHttpConnector;
 
 import org.json.JSONArray;
@@ -102,45 +101,41 @@ public class AddContactByDepartmentFragment extends Fragment {
         String corpId = sharedPreferences.getString("corp_id", "");
         params.put("org_uuid", orgId);
         params.put("corp_uuid", corpId);
-        ColorsConfig.commonParams(params);
         showProgressDialog();
         ContentValues headers = new ContentValues();
         SharedPreferences sp = getActivity().getSharedPreferences("park_cache_map", 0);
         String color_token = sp.getString("access_token2", "");
         headers.put("color-token", color_token);
-        OkHttpConnector.httpGet(getContext(), headers, url, params, new IGetListener() {
-            @Override
-            public void httpReqResult(String response) {
-                try {
-                    dismissProgressDialog();
-                    JSONObject json = new JSONObject(response);
-                    int code = json.optInt("code");
-                    if (code == 0) {
-                        JSONArray array = json.getJSONArray("content");
-                        List<ContactBean> list = new ArrayList<>();
-                        ContactBean item;
-                        for (int i = 0; i < array.length(); i++) {
-                            JSONObject obj = array.getJSONObject(i);
-                            obj.optString("id");
+        OkHttpConnector.httpGet_net(getActivity(), headers, url,
+                params, response -> {
+                    try {
+                        dismissProgressDialog();
+                        JSONObject json = new JSONObject(response);
+                        int code = json.optInt("code");
+                        if (code == 0) {
+                            JSONArray array = json.getJSONArray("content");
+                            List<ContactBean> list = new ArrayList<>();
+                            ContactBean item;
+                            for (int i = 0; i < array.length(); i++) {
+                                JSONObject obj = array.getJSONObject(i);
+                                obj.optString("id");
 
-                            item = new ContactBean();
-                            item.setUsername(obj.optString("username"));
-                            item.setAvatar(obj.optString("avatar"));
-                            item.setRealname(obj.optString("name"));
-                            item.setUuid(obj.optString("id"));
-                            item.setOrgType(obj.optString("type"));
-                            list.add(item);
+                                item = new ContactBean();
+                                item.setUsername(obj.optString("username"));
+                                item.setAvatar(obj.optString("avatar"));
+                                item.setRealname(obj.optString("name"));
+                                item.setUuid(obj.optString("id"));
+                                item.setOrgType(obj.optString("type"));
+                                list.add(item);
 
+                            }
+                            mAdapter.setDataList(list);
                         }
-                        mAdapter.setDataList(list);
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-
+                });
     }
 
     public void setMap(String orgId, Map<String, ContactBean> totalMap,

@@ -41,34 +41,6 @@
 
     </RelativeLayout>
 
-    <RelativeLayout
-        android:id="@+id/rl_fragment_nodata"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:visibility="gone">
-
-        <TextView
-            android:id="@+id/tv_tip"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="您暂未订购应用服务，请前往物业云市场购买"
-            android:textColor="@color/color_333b46"
-            android:textSize="@dimen/font_16sp" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/tv_tip"
-            android:layout_marginTop="@dimen/size_5dp"
-            android:gravity="center"
-            android:textIsSelectable="true"
-            android:text="物业云市场访问地址：https://cloud.colourlife.com"
-            android:textColor="@color/color_abb7c0"
-            android:textSize="@dimen/font_14sp" />
-    </RelativeLayout>
-
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/sr_micro"
         android:layout_width="match_parent"
@@ -87,6 +59,36 @@
                 android:orientation="vertical" />
         </androidx.core.widget.NestedScrollView>
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+    <RelativeLayout
+        android:id="@+id/rl_fragment_nodata"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:paddingTop="@dimen/size_140dp"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/tv_tip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:text="您暂未订购应用服务，请前往物业云市场购买"
+            android:textColor="@color/color_333b46"
+            android:textSize="@dimen/font_16sp" />
+
+        <TextView
+            android:id="@+id/tv_fragment_cloudurl"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/size_40dp"
+            android:layout_below="@id/tv_tip"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
+            android:text="物业云市场访问地址：https://cloud.colourlife.com"
+            android:textColor="@color/color_abb7c0"
+            android:textSize="@dimen/font_14sp" />
+    </RelativeLayout>
+
 </RelativeLayout>
 
 

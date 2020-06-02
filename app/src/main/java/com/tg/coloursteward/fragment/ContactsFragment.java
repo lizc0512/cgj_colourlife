@@ -27,7 +27,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.tg.coloursteward.R;
-import com.tg.user.activity.EmployeeDataActivity;
 import com.tg.coloursteward.activity.HomeContactOrgActivity;
 import com.tg.coloursteward.baseModel.HttpResponse;
 import com.tg.coloursteward.constant.Contants;
@@ -41,6 +40,7 @@ import com.tg.coloursteward.util.LinkParseUtil;
 import com.tg.coloursteward.util.SharedPreferencesUtils;
 import com.tg.coloursteward.view.dialog.ToastFactory;
 import com.tg.im.activity.ContactsActivity;
+import com.tg.user.activity.EmployeeDataActivity;
 import com.youmai.hxsdk.HuxinSdkManager;
 import com.youmai.hxsdk.adapter.ContactAdapter;
 import com.youmai.hxsdk.adapter.ContactAdapter.ItemEventListener;
@@ -266,6 +266,9 @@ public class ContactsFragment extends Fragment implements ItemEventListener, Htt
                 initShowRv();
                 setInfo();
                 break;
+            case Contants.EVENT.changeOrg:
+                setInfo();
+                break;
 
         }
     }
@@ -276,6 +279,9 @@ public class ContactsFragment extends Fragment implements ItemEventListener, Htt
         tv_contact_depart.setText(UserInfo.familyName);
     }
 
+    /**
+     * 非彩生活租户不展示收藏联系人
+     */
     private void initShowRv() {
         String corpId = SharedPreferencesUtils.getInstance().getStringData(SpConstants.storage.CORPID, "");
         if (Contants.APP.CORP_UUID.equals(corpId)) {

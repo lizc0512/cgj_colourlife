@@ -329,6 +329,9 @@ public class FragmentMine extends Fragment implements OnClickListener, HttpRespo
             case Contants.EVENT.changeCorp:
                 initRefresh();
                 break;
+            case Contants.EVENT.changeOrg:
+                initRefresh();
+                break;
 
         }
     }

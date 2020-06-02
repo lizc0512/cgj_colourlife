@@ -466,6 +466,9 @@ public class FragmentManagement extends Fragment implements HttpResponse, View.O
                         }
                     } catch (Exception e) {
                     }
+                    Message msghome = new Message();
+                    msghome.what = Contants.EVENT.changeOrg;
+                    EventBus.getDefault().post(msghome);
                 }
                 break;
         }

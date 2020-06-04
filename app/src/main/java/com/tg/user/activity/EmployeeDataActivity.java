@@ -128,12 +128,20 @@ public class EmployeeDataActivity extends BaseActivity implements HttpResponse, 
         } else {
             ivSex.setImageResource(R.drawable.employee_female);
         }
-        if ("0".equals(searchContactBean.getFavoriteid())) {
-            cbCollect.setVisibility(View.GONE);
-        } else {
-            cbCollect.setVisibility(View.VISIBLE);
+        String favoriteId = searchContactBean.getFavoriteid();
+        if (!TextUtils.isEmpty(favoriteId) && !"0".equals(favoriteId)) {
+            cbCollect.setChecked(true);
             personCode = searchContactBean.getFavoriteid();
+        } else {
+            cbCollect.setChecked(false);
         }
+        cbCollect.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                serachSubmit(searchContactBean);//添加联系人
+            } else {
+                delete();
+            }
+        });
     }
 
     private void setFavortoryData(ContactBean item) {
@@ -237,6 +245,14 @@ public class EmployeeDataActivity extends BaseActivity implements HttpResponse, 
         Intent intent = new Intent(ContactsFragment.BROADCAST_INTENT_FILTER);
         intent.putExtra(ContactsFragment.ACTION, status);
         sendBroadcast(intent);
+    }
+
+    /**
+     * 添加常用联系人
+     */
+    private void serachSubmit(SearchContactBean bean) {
+        contactModel.postSearchCollectData(1, contactsID, bean.getDisplayName(), bean.getUuid(),
+                bean.getJobName(), bean.getSex(), bean.getEmail(), bean.getMobile(), this);
     }
 
     /**
@@ -382,6 +398,17 @@ public class EmployeeDataActivity extends BaseActivity implements HttpResponse, 
                     Intent intent = new Intent(this, MyPointActivity.class);
                     intent.putExtra(GivenPointAmountActivity.TYPE, "cgj-cgj");
                     intent.putExtra(GivenPointAmountActivity.GIVENMOBILE, bean.getMobile());
+                    startActivity(intent);
+                } else if (null != info) {
+                    Intent intent = new Intent(this, MyPointActivity.class);
+                    intent.putExtra(IMConnectionActivity.DST_UUID, info.id);
+                    intent.putExtra(GivenPointAmountActivity.TYPE, "cgj-cgj");
+                    intent.putExtra(GivenPointAmountActivity.GIVENMOBILE, info.mobile);
+                    startActivity(intent);
+                } else if (null != searchContactBean) {
+                    Intent intent = new Intent(this, MyPointActivity.class);
+                    intent.putExtra(GivenPointAmountActivity.TYPE, "cgj-cgj");
+                    intent.putExtra(GivenPointAmountActivity.GIVENMOBILE, searchContactBean.getMobile());
                     startActivity(intent);
                 }
                 break;

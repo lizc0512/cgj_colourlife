@@ -118,6 +118,49 @@ public class ContactModel extends BaseModel {
 
     /**
      * @param what
+     * @param contactsID
+     * @param httpResponse 添加收藏联系人
+     */
+    public void postSearchCollectData(int what, String contactsID, String name, String uid, String jobName, String sex, String email,
+                                      String mobile, HttpResponse httpResponse) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("username", contactsID);//联系人OA帐号
+        params.put("name", name);//联系人姓名
+        params.put("uid", uid);//
+        params.put("owner", UserInfo.employeeAccount);//所有者OA帐号
+        params.put("jobName", jobName);
+        params.put("sex", sex);
+        params.put("email", email);
+        params.put("phone_number", mobile);
+        params.put("groupId", "0");//联系人组编号,默认0，常用联系人
+        params.put("enterprise_cornet", "");//企业短号
+        final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 4, collextUrl), RequestMethod.POST);
+        request(what, request, RequestEncryptionUtils.getIceMap(mContext, params), new HttpListener<String>() {
+            @Override
+            public void onSucceed(int what, Response<String> response) {
+                int responseCode = response.getHeaders().getResponseCode();
+                String result = response.get();
+                if (responseCode == RequestEncryptionUtils.responseSuccess) {
+                    int code = showSuccesResultMessageTheme(result);
+                    if (code == 0) {
+                        httpResponse.OnHttpResponse(what, result);
+                    } else {
+                        showErrorCodeMessage(response);
+                    }
+                } else {
+                    showErrorCodeMessage(response);
+                }
+            }
+
+            @Override
+            public void onFailed(int what, Response<String> response) {
+                showExceptionMessage(what, response);
+            }
+        }, true, false);
+    }
+
+    /**
+     * @param what
      * @param personCode
      * @param httpResponse 取消收藏联系人
      */

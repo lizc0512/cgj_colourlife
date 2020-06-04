@@ -37,6 +37,7 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -80,12 +81,6 @@ import java.util.concurrent.ArrayBlockingQueue;
 
 public class NewWarehousingActivity extends BaseActivity implements
         Camera.PreviewCallback, Camera.AutoFocusCallback {
-    // private static final String TAG = "PreviewActivity";
-
-    public static final String EXTRA_KEY_APP_KEY = "EXTRA_KEY_APP_KEY";
-    public static final String EXTRA_KEY_RESULT_DATA = "EXTRA_KEY_RESULT_DATA";
-    public static final String EXTRA_KEY_RESULT_TYPE = "EXTRA_KEY_RESULT_TYPE";
-    public static final String EXTRA_KEY_BOOL_BAR = "EXTRA_KEY_BOOL_BAR";
 
     private DetectThread mDetectThread = null;
     private Preview mPreview = null;
@@ -112,7 +107,6 @@ public class NewWarehousingActivity extends BaseActivity implements
     private RecyclerView rv_warehouse;
     private RecyclerView rv_warehouse_delivery_company;
     private WareHouseAdapter adapter;
-    private String tempOrderNum = "";
     private TextView tv_warehouse_allnum;
     private RelativeLayout rl_warehouse_card;
     private TextView tv_warehouse_commit;
@@ -124,13 +118,10 @@ public class NewWarehousingActivity extends BaseActivity implements
     private boolean isShowCompay = true;
     private boolean isSelectCompany = false;
     private boolean isSelectOrderNum = false;
-    private String tempResult = "";
-    private String tempPhoneResult = "";
     private int editPosition = -1;
     private String editPhone;
     private String editOrderNum;
     private String editCompany;
-    private boolean isCheckOrderFinish;
     private int isEditItemPostion;//处理编辑状态的Item位置
     private boolean isEditItemStatus;//是否是编辑状态
     private boolean isClickCompany = false;
@@ -143,33 +134,8 @@ public class NewWarehousingActivity extends BaseActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         mDensity = getResources().getDisplayMetrics().density;
-
-        if (checkDeviceHasNavigationBar(this)) {
-            if (Build.VERSION.SDK_INT > 11 && Build.VERSION.SDK_INT < 19) { // lower api
-                View v = this.getWindow().getDecorView();
-                v.setSystemUiVisibility(View.GONE);
-            } else if (Build.VERSION.SDK_INT >= 19) {
-                //for new api versions.
-                View decorView = this.getWindow().getDecorView();
-                int uiOptions = View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                        | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
-                decorView.setSystemUiVisibility(uiOptions);
-            }
-        }
-
-        // 隐藏当前Activity界面的导航栏, 隐藏后,点击屏幕又会显示出来.
-//        View decorView = getWindow().getDecorView();
-//        int uiOptions = View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-//                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-//                | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-//                | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION // hide nav bar
-//                | View.SYSTEM_UI_FLAG_FULLSCREEN;// hide status bar
-//
-//        decorView.setSystemUiVisibility(uiOptions);
 
         mImageFolder = this.getFilesDir().getPath();
         File file = new File(mImageFolder);
@@ -449,7 +415,6 @@ public class NewWarehousingActivity extends BaseActivity implements
                         if (isSelectCompany) {
                             String etPhone = et_warehouse_num.getText().toString().trim();
                             if (!etPhone.equals(phone)) {
-                                tempPhoneResult = phone;
                                 if (isSelectOrderNum && !TextUtils.isEmpty(et_warehouse_num.getText().toString().trim())) {
                                     soundPlay();
                                     et_warehouse_phone.setText(phone);
@@ -483,7 +448,6 @@ public class NewWarehousingActivity extends BaseActivity implements
                             if (!num.equals(barcode)) {
                                 if (!isHaveRepeat(barcode)) {
                                     soundPlay();
-                                    tempResult = barcode;
                                     editCompany = et_warehouse_company.getText().toString().trim();
                                     editPhone = et_warehouse_phone.getText().toString().trim();
                                     editOrderNum = barcode;
@@ -1314,6 +1278,7 @@ public class NewWarehousingActivity extends BaseActivity implements
         mPreview.setTransPhoneCodeVisible(derectorType);
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private void initView(View view) {
         iv_base_back = view.findViewById(R.id.iv_base_back);
         ImageView iv_delivery_next = view.findViewById(R.id.iv_delivery_next);
@@ -1343,8 +1308,6 @@ public class NewWarehousingActivity extends BaseActivity implements
                     companyAdapter.setDelCallBack((position, url, auth_type) -> runOnUiThread(() -> {
                         isSelectCompany = true;
                         isClickCompany = true;
-                        tempResult = "";
-                        tempPhoneResult = "";
                         et_warehouse_num.requestFocus();
                         rv_warehouse_delivery_company.setVisibility(View.GONE);
                         et_warehouse_company.setText(companyList.get(position));
@@ -1359,44 +1322,14 @@ public class NewWarehousingActivity extends BaseActivity implements
                 isShowCompay = true;
             }
         });
-        et_warehouse_num.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                String num = s.toString();
-                if (num.length() == 0) {
-                    tempResult = "";
-                }
-            }
+        et_warehouse_num.setOnTouchListener((v, event) -> {
+            setTransPhoneCode(0);
+            return false;
         });
-        et_warehouse_phone.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                String phone = s.toString();
-                if (phone.length() == 0) {
-                } else {
-                }
-
-            }
+        et_warehouse_phone.setOnTouchListener((v, event) -> {
+            setTransPhoneCode(1);
+            return false;
         });
-
         et_warehouse_company.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -1511,8 +1444,6 @@ public class NewWarehousingActivity extends BaseActivity implements
                     readyCheckNum = editOrderNum;
                     checkPhoneContent();
                     setTransPhoneCode(1);
-                } else {
-                    isCheckOrderFinish = true;
                 }
                 break;
             case 3:
@@ -1538,8 +1469,6 @@ public class NewWarehousingActivity extends BaseActivity implements
                         companyAdapter.setDelCallBack((position, url, auth_type) ->
                                 runOnUiThread(() -> {
                                     isSelectCompany = true;
-                                    tempResult = "";
-                                    tempPhoneResult = "";
                                     rv_warehouse_delivery_company.setVisibility(View.GONE);
                                     isClickCompany = true;
                                     SoftKeyboardUtils.hideSoftKeyboard(this, et_warehouse_company);

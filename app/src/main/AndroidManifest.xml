@@ -412,6 +412,7 @@
             android:screenOrientation="portrait" />
         <activity
             android:name="com.tg.delivery.activity.NewWarehousingActivity"
+            android:windowSoftInputMode="adjustPan|stateAlwaysHidden"
             android:screenOrientation="portrait" />
     </application>
 

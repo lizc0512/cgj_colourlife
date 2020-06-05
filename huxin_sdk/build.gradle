@@ -22,7 +22,7 @@ dependencies {
 
     api 'com.google.protobuf:protobuf-java:3.4.0'
     api 'com.qiniu:qiniu-android-sdk:7.3.12'
-    api 'org.greenrobot:greendao:3.2.2'
+    api 'org.greenrobot:greendao:3.3.0'
     api 'com.google.zxing:core:3.3.3'
     api 'com.jcodecraeer:xrecyclerview:1.5.9'
 

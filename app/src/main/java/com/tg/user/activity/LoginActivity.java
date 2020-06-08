@@ -14,6 +14,7 @@ import android.text.InputFilter;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewTreeObserver;
@@ -27,8 +28,10 @@ import android.widget.TextView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
-import com.geetest.gt3unbindsdk.Bind.GT3GeetestBindListener;
-import com.geetest.gt3unbindsdk.Bind.GT3GeetestUtilsBind;
+import com.geetest.sdk.GT3ConfigBean;
+import com.geetest.sdk.GT3ErrorBean;
+import com.geetest.sdk.GT3GeetestUtils;
+import com.geetest.sdk.GT3Listener;
 import com.hjq.permissions.OnPermission;
 import com.hjq.permissions.XXPermissions;
 import com.tg.coloursteward.BuildConfig;
@@ -52,7 +55,6 @@ import com.tg.coloursteward.util.NumberUtils;
 import com.tg.coloursteward.util.SharedPreferencesUtils;
 import com.tg.coloursteward.util.SoftKeyboardUtils;
 import com.tg.coloursteward.util.ToastUtil;
-import com.tg.coloursteward.util.TokenUtils;
 import com.tg.coloursteward.util.Tools;
 import com.tg.coloursteward.view.CircleImageView;
 import com.tg.coloursteward.view.dialog.DialogFactory;
@@ -105,7 +107,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
     private TextView tv_forget_pawd;
     private Button btn_login;
     private ImageView iv_login_byczy;
-    private GT3GeetestUtilsBind gt3GeetestUtils;
     private UserModel userModel;
     private UserCzyModel userCzyModel;
     private String account;
@@ -126,6 +127,8 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
     private ImageView iv_wx_login;
     private String openid;
     private String unionid;
+    private GT3GeetestUtils gt3GeetestUtils;
+    private GT3ConfigBean gt3ConfigBean;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -135,7 +138,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
         userCzyModel = new UserCzyModel(this);
         microModel = new MicroModel(this);
         tintManager.setStatusBarTintColor(this.getResources().getColor(R.color.transparent)); //设置状态栏的颜色
-        gt3GeetestUtils = new GT3GeetestUtilsBind(LoginActivity.this);
+        gt3GeetestUtils = new GT3GeetestUtils(this);
         initView();
         initPermission();
         userModel.getTs(5, this);
@@ -512,6 +515,9 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        if (null != gt3GeetestUtils) {
+            gt3GeetestUtils.destory();
+        }
         cancelTimeCount();
     }
 
@@ -571,93 +577,75 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
      * 极验登录
      */
     private void loginGt() {
-        gt3GeetestUtils.getGeetest(LoginActivity.this, Contants.APP.captchaURL, Contants.APP.validateURL, null, new GT3GeetestBindListener() {
+        // 配置bean文件，也可在oncreate初始化
+        gt3ConfigBean = new GT3ConfigBean();
+        // 设置验证模式，1：bind，2：unbind
+        gt3ConfigBean.setPattern(1);
+        // 设置点击灰色区域是否消失，默认不消失
+        gt3ConfigBean.setCanceledOnTouchOutside(true);
+        // 设置语言，如果为null则使用系统默认语言
+        gt3ConfigBean.setLang(null);
+        // 设置加载webview超时时间，单位毫秒，默认10000，仅且webview加载静态文件超时，不包括之前的http请求
+        gt3ConfigBean.setTimeout(10000);
+        // 设置webview请求超时(用户点选或滑动完成，前端请求后端接口)，单位毫秒，默认10000
+        gt3ConfigBean.setWebviewTimeout(10000);
+        gt3ConfigBean.setListener(new GT3Listener() {
+            /**
+             * 验证码加载完成
+             * @param s 加载时间和版本等信息，为json格式
+             */
             @Override
-            public void gt3CloseDialog(int i) {
-                super.gt3CloseDialog(i);
+            public void onStatistics(String s) {
+                Log.e("TAG", "GT3BaseListener-->onDialogReady-->" + s);
             }
 
             @Override
-            public void gt3DialogReady() {
-                super.gt3DialogReady();
+            public void onClosed(int i) {
+
             }
 
+            /**
+             * 验证结果
+             * @param s
+             */
             @Override
-            public void gt3FirstResult(JSONObject jsonObject) {
-                super.gt3FirstResult(jsonObject);
-            }
-
-            @Override
-            public Map<String, String> gt3CaptchaApi1() {
-                Map<String, Object> map = new HashMap<String, Object>();
-                map.put("device_uuid", TokenUtils.getUUID(LoginActivity.this));
-                Map<String, String> stringMap = RequestEncryptionUtils.getStringMap(RequestEncryptionUtils.getNewSaftyMap(LoginActivity.this, map));
-                return stringMap;
-            }
-
-            @Override
-            public boolean gt3SetIsCustom() {
-                return true;
-            }
-
-            @Override
-            public void gt3GetDialogResult(boolean status, String result) {
-                if (status) {
-                    //利用异步进行解析这result进行二次验证，结果成功后调用gt3GeetestUtils.gt3TestFinish()方法调用成功后的动画，然后在gt3DialogSuccess执行成功之后的结果
-                    JSONObject res_json = null;
-                    Map<String, Object> validateParams = new HashMap<>();
-                    try {
-                        res_json = new JSONObject(result);
-                        userModel.postGt(0, res_json.getString("geetest_challenge"), res_json.getString("geetest_validate")
-                                , res_json.getString("geetest_seccode"), LoginActivity.this);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-
+            public void onDialogResult(String s) {
+                super.onDialogResult(s);
+                JSONObject res_json = null;
+                try {
+                    res_json = new JSONObject(s);
+                    userCzyModel.postGeetVerify(17, res_json.getString("geetest_challenge"), res_json.getString("geetest_validate")
+                            , res_json.getString("geetest_seccode"), LoginActivity.this);
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
             }
 
+            /**
+             *  验证成功回调
+             * @param s
+             */
             @Override
-            public Map<String, String> gt3SecondResult() {
-                Map<String, Object> objectMap = new HashMap<String, Object>();
-                objectMap.put("device_uuid", TokenUtils.getUUID(LoginActivity.this));
-                Map<String, String> stringMap = RequestEncryptionUtils.getStringMap(RequestEncryptionUtils.getNewSaftyMap(LoginActivity.this, objectMap));
-                return stringMap;
+            public void onSuccess(String s) {
+                Log.e("TAG", "GT3BaseListener-->onSuccess-->" + s);
             }
 
             @Override
-            public void gt3DialogSuccessResult(String result) {
-                if (!TextUtils.isEmpty(result)) {
-                    try {
-                        JSONObject jobj = new JSONObject(result);
-                        String content = jobj.getString("content");
-                        JSONObject jsonObject = new JSONObject(content);
-                        int code = jsonObject.getInt("status");
-                        if (code == 1) {
-                            gt3GeetestUtils.gt3TestFinish();
-                        } else {
-                            gt3GeetestUtils.gt3TestClose();
-                        }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                } else {
-                    gt3GeetestUtils.gt3TestClose();
-                }
+            public void onFailed(GT3ErrorBean gt3ErrorBean) {
+                Log.e("TAG", "GT3BaseListener-->onFailed-->" + gt3ErrorBean.toString());
             }
 
+            /**
+             *  api1回调
+             */
             @Override
-            public void gt3DialogOnError(String s) {
-                if ("205".equals(s)) {
-                    gt3GeetestUtils.gt3TestFinish();
-                    login(account, getPawdMD5(), loginType);
-                } else {
-                    gt3GeetestUtils.cancelAllTask();
-                }
+            public void onButtonClick() {
+                userCzyModel.getGeetStart(16, LoginActivity.this);
             }
         });
-        //设置是否可以点击屏幕边缘关闭验证码
-        gt3GeetestUtils.setDialogTouch(true);
+        gt3GeetestUtils.init(gt3ConfigBean);
+        // 开启验证
+        gt3GeetestUtils.startCustomFlow();
     }
 
     private void login(String accout, String pwdMD5, String loginType) {
@@ -719,27 +707,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
     @Override
     public void OnHttpResponse(int what, String result) {
         switch (what) {
-            case 0:
-                if (!TextUtils.isEmpty(result)) {
-                    try {
-                        JiYanTwoCheckEntity entity = new JiYanTwoCheckEntity();
-                        entity = GsonUtils.gsonToBean(result, JiYanTwoCheckEntity.class);
-                        if (entity.getContent().getStatus() == 1) {//验证通过
-                            gt3GeetestUtils.gt3TestFinish();
-                            login(account, getPawdMD5(), loginType);
-                        } else {
-                            gt3GeetestUtils.gt3TestClose();
-                            ToastUtil.showShortToast(LoginActivity.this, "极验验证失败,请稍后重试");
-                        }
-                    } catch (Exception e) {
-                        gt3GeetestUtils.gt3TestFinish();
-                        login(account, getPawdMD5(), loginType);
-                    }
-                } else {
-                    gt3GeetestUtils.gt3TestClose();
-                    ToastUtil.showShortToast(LoginActivity.this, "极验获取数据异常,请稍后重试");
-                }
-                break;
             case 3:
                 if (!TextUtils.isEmpty(result)) {
                     SingleDeviceLogin singleDeviceLogin = GsonUtils.gsonToBean(result, SingleDeviceLogin.class);
@@ -920,6 +887,39 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
+                }
+                break;
+            case 16:
+                JSONObject jsonObject = null;
+                if (!TextUtils.isEmpty(result)) {
+                    try {
+                        jsonObject = new JSONObject(result);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+                gt3ConfigBean.setApi1Json(jsonObject);
+                gt3GeetestUtils.getGeetest();
+                break;
+            case 17:
+                if (!TextUtils.isEmpty(result)) {
+                    try {
+                        JiYanTwoCheckEntity entity = new JiYanTwoCheckEntity();
+                        entity = GsonUtils.gsonToBean(result, JiYanTwoCheckEntity.class);
+                        if (entity.getContent().getStatus() == 1) {//验证通过
+                            gt3GeetestUtils.showSuccessDialog();
+                            login(account, getPawdMD5(), loginType);
+                        } else {
+                            gt3GeetestUtils.showFailedDialog();
+                            ToastUtil.showShortToast(LoginActivity.this, "极验验证失败,请稍后重试");
+                        }
+                    } catch (Exception e) {
+                        gt3GeetestUtils.showSuccessDialog();
+                        login(account, getPawdMD5(), loginType);
+                    }
+                } else {
+                    gt3GeetestUtils.showFailedDialog();
+                    ToastUtil.showShortToast(LoginActivity.this, "极验获取数据异常,请稍后重试");
                 }
                 break;
         }

@@ -35,6 +35,8 @@ public class UserCzyModel extends BaseModel {
     private String sendCodeUrl = "/app/smsCode";
     private String bindwxUrl = "/app/bind/wechat";
     private String registerUrl = "/app/register";
+    private String geetStartUrl = "/app/home/captcha/start";
+    private String geetVerifyUrl = "/app/home/login/verify";
 
     public UserCzyModel() {
     }
@@ -196,6 +198,70 @@ public class UserCzyModel extends BaseModel {
                 if (responseCode == RequestEncryptionUtils.responseSuccess) {
                     int resultCode = showSuccesResultMessage(result);
                     if (resultCode == 0) {
+                        newHttpResponse.OnHttpResponse(what, result);
+                    }
+                } else {
+                    showErrorCodeMessage(responseCode, response);
+                }
+            }
+
+            @Override
+            public void onFailed(int what, Response<String> response) {
+                showExceptionMessage(what, response);
+            }
+        }, true, true);
+    }
+
+    /**
+     * 极验第一次认证，获取参数
+     *
+     * @param what
+     * @param newHttpResponse
+     */
+    public void getGeetStart(int what, final HttpResponse newHttpResponse) {
+        Map<String, Object> params = new HashMap<String, Object>();
+        final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 0, geetStartUrl), RequestMethod.GET);
+        request(what, request, RequestEncryptionUtils.getNewSaftyMap(mContext, params), new HttpListener<String>() {
+            @Override
+            public void onSucceed(int what, Response<String> response) {
+                int responseCode = response.getHeaders().getResponseCode();
+                String result = response.get();
+                if (responseCode == RequestEncryptionUtils.responseSuccess) {
+                    newHttpResponse.OnHttpResponse(what, result);
+                } else {
+                    showErrorCodeMessage(responseCode, response);
+                    newHttpResponse.OnHttpResponse(what, "");
+                }
+            }
+
+            @Override
+            public void onFailed(int what, Response<String> response) {
+                showExceptionMessage(what, response);
+                newHttpResponse.OnHttpResponse(what, "");
+            }
+        }, true, true);
+    }
+
+    /**
+     * 极验第二次认证
+     *
+     * @param what
+     * @param newHttpResponse
+     */
+    public void postGeetVerify(int what, String geetest_challenge, String geetest_validate, String geetest_seccode, final HttpResponse newHttpResponse) {
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("geetest_challenge", geetest_challenge);
+        params.put("geetest_validate", geetest_validate);
+        params.put("geetest_seccode", geetest_seccode);
+        final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 0, geetVerifyUrl), RequestMethod.POST);
+        request(what, request, RequestEncryptionUtils.getNewSaftyMap(mContext, params), new HttpListener<String>() {
+            @Override
+            public void onSucceed(int what, Response<String> response) {
+                int responseCode = response.getHeaders().getResponseCode();
+                String result = response.get();
+                if (responseCode == RequestEncryptionUtils.responseSuccess) {
+                    int code = showSuccesResultMessage(result);
+                    if (code == 0) {
                         newHttpResponse.OnHttpResponse(what, result);
                     }
                 } else {

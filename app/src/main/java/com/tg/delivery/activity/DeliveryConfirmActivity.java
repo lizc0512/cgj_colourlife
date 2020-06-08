@@ -69,6 +69,7 @@ public class DeliveryConfirmActivity extends BaseActivity {
     private String finishType;
     private int templateTotal;
     private int jumpWeb = 0;
+    private int jumpAddress = 0;
     private String smsTemplateId = "";
     private int smsContentLength;
     private ArrayList<Integer> lengthsList;
@@ -150,17 +151,18 @@ public class DeliveryConfirmActivity extends BaseActivity {
         });
         deliveryModel = new DeliveryModel(DeliveryConfirmActivity.this);
         btn_confirm_delivery.setOnClickListener(view -> {
-            if (TextUtils.isEmpty(deliveryAddress)){
+            if (TextUtils.isEmpty(deliveryAddress)) {
                 DialogFactory.getInstance().showDialog(DeliveryConfirmActivity.this, v -> {
+                    jumpAddress = 1;
                     LinkParseUtil.parse(DeliveryConfirmActivity.this, Contants.URl.DELIVERY_ADDRESS_URL, "");
                 }, null, "您未添加地址，请先添加地址？", null, null);
-            }else{
+            } else {
                 if (fastClick()) {
-                    deliveryModel.submitDeliveryCourierNumbers(0, courierNumbers,deliveryAddress, "2", UserInfo.mobile, UserInfo.realname, smsTemplateId, finishType, DeliveryConfirmActivity.this);
+                    deliveryModel.submitDeliveryCourierNumbers(0, courierNumbers, deliveryAddress, "2", UserInfo.mobile, UserInfo.realname, smsTemplateId, finishType, DeliveryConfirmActivity.this);
                 }
             }
         });
-        deliveryModel.getDeliveryDefaultAddresses(2,DeliveryConfirmActivity.this);
+        deliveryModel.getDeliveryDefaultAddresses(2, DeliveryConfirmActivity.this);
         deliveryModel.getDeliverySmsTemplateList(1, DeliveryConfirmActivity.this);
     }
 
@@ -171,6 +173,10 @@ public class DeliveryConfirmActivity extends BaseActivity {
         if (jumpWeb == 1) {
             deliveryModel.getDeliverySmsTemplateList(1, DeliveryConfirmActivity.this);
             jumpWeb = 0;
+        }
+        if (jumpAddress == 1) {
+            jumpAddress = 0;
+            deliveryModel.getDeliveryDefaultAddresses(2, DeliveryConfirmActivity.this);
         }
     }
 
@@ -255,22 +261,23 @@ public class DeliveryConfirmActivity extends BaseActivity {
                 break;
             case 2:
                 try {
-                    DeliveryAddressEntity  deliveryAddressEntity=GsonUtils.gsonToBean(result,DeliveryAddressEntity.class);
-                    DeliveryAddressEntity.ContentBean  contentBean=deliveryAddressEntity.getContent();
-                    if (null==contentBean){
+                    DeliveryAddressEntity deliveryAddressEntity = GsonUtils.gsonToBean(result, DeliveryAddressEntity.class);
+                    DeliveryAddressEntity.ContentBean contentBean = deliveryAddressEntity.getContent();
+                    if (null == contentBean) {
                         DialogFactory.getInstance().showDialog(DeliveryConfirmActivity.this, v -> {
+                            jumpAddress = 1;
                             LinkParseUtil.parse(DeliveryConfirmActivity.this, Contants.URl.DELIVERY_ADDRESS_URL, "");
 
                         }, null, "您未添加地址，请先添加地址？", null, null);
-                    }else{
-                        String isDefault=contentBean.getIsDefault();
-                        if ("1".equals(isDefault)){
+                    } else {
+                        String isDefault = contentBean.getIsDefault();
+                        if ("1".equals(isDefault)) {
                             tv_delivery_default.setVisibility(View.VISIBLE);
-                        }else{
+                        } else {
                             tv_delivery_default.setVisibility(View.GONE);
                         }
-                        finishType=contentBean.getSendType();
-                        switch (finishType){
+                        finishType = contentBean.getSendType();
+                        switch (finishType) {
                             case "1":
                                 tv_delivery_default.setText("自提点 ");
                                 break;
@@ -284,10 +291,10 @@ public class DeliveryConfirmActivity extends BaseActivity {
                                 tv_delivery_default.setText("其他");
                                 break;
                         }
-                        deliveryAddress=contentBean.getSendAddress();
+                        deliveryAddress = contentBean.getSendAddress();
                         tv_delivery_address.setText(deliveryAddress);
                     }
-                }catch (Exception e){
+                } catch (Exception e) {
 
                 }
 

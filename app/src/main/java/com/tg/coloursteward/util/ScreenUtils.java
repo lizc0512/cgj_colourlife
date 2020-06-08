@@ -1,10 +1,13 @@
 package com.tg.coloursteward.util;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Build;
+import android.util.DisplayMetrics;
 import android.view.View;
+import android.view.WindowManager;
 
-public  class ScreenUtils {
+public class ScreenUtils {
 
     public static void hideBottomUIMenu(Activity activity) {
         //隐藏虚拟按键，并且全屏
@@ -23,4 +26,18 @@ public  class ScreenUtils {
         }
     }
 
+    public static int getWindowWidth(Context context) {
+        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        DisplayMetrics dm = new DisplayMetrics();
+        wm.getDefaultDisplay().getMetrics(dm);
+        return dm.widthPixels;       // 屏幕宽度（像素）
+    }
+
+
+    public static int getWindowHeight(Context context) {
+        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        DisplayMetrics dm = new DisplayMetrics();
+        wm.getDefaultDisplay().getMetrics(dm);
+        return dm.heightPixels;       // 屏幕高度（像素）
+    }
 }

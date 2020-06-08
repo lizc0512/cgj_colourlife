@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.Message;
 import android.text.SpannableString;
 import android.text.Spanned;
+import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
 import android.view.View;
 import android.widget.Button;
@@ -25,6 +26,7 @@ import com.tg.coloursteward.util.ToastUtil;
 import com.tg.coloursteward.view.dialog.DialogFactory;
 import com.tg.delivery.adapter.DeliveryAddressListAdapter;
 import com.tg.delivery.adapter.DeliveryMsgTemplateAdapter;
+import com.tg.delivery.entity.DeliveryAddressEntity;
 import com.tg.delivery.entity.DeliverySmsTemplateEntity;
 import com.tg.delivery.model.DeliveryModel;
 import com.tg.delivery.utils.SwitchButton;
@@ -49,6 +51,9 @@ public class DeliveryConfirmActivity extends BaseActivity {
     private TextView tv_choice_num;
     private TextView tv_sms_num;
     private RecyclerView rv_delivery_address;
+    private TextView tv_delivery_position;
+    private TextView tv_delivery_default;
+    private TextView tv_delivery_address;
     private SwitchButton message_sb;
     private RecyclerView rv_message_list;
     private Button btn_confirm_delivery;
@@ -56,11 +61,12 @@ public class DeliveryConfirmActivity extends BaseActivity {
     private List<DeliverySmsTemplateEntity.ContentBean.ListBean.ChildListBean> templateMsgList = new ArrayList<>();
 
     private String courierNumbers;
+    private String deliveryAddress;
     private int courierTotal;
 
 
     private DeliveryModel deliveryModel;
-    private int finishType = 1;
+    private String finishType;
     private int templateTotal;
     private int jumpWeb = 0;
     private String smsTemplateId = "";
@@ -75,6 +81,9 @@ public class DeliveryConfirmActivity extends BaseActivity {
         tv_choice_num = findViewById(R.id.tv_choice_num);
         tv_sms_num = findViewById(R.id.tv_sms_num);
         rv_delivery_address = findViewById(R.id.rv_delivery_address);
+        tv_delivery_position = findViewById(R.id.tv_delivery_position);
+        tv_delivery_default = findViewById(R.id.tv_delivery_default);
+        tv_delivery_address = findViewById(R.id.tv_delivery_address);
         message_sb = findViewById(R.id.message_sb);
         rv_message_list = findViewById(R.id.rv_message_list);
         btn_confirm_delivery = findViewById(R.id.btn_confirm_delivery);
@@ -93,7 +102,7 @@ public class DeliveryConfirmActivity extends BaseActivity {
         deliveryAddressListAdapter = new DeliveryAddressListAdapter(DeliveryConfirmActivity.this, addressList);
         rv_delivery_address.setAdapter(deliveryAddressListAdapter);
         deliveryAddressListAdapter.setOnItemClickListener(var1 -> {
-            finishType = var1 + 1;
+            finishType = String.valueOf(var1 + 1);
             deliveryAddressListAdapter.setClickPos(var1);
         });
         message_sb.setOnStateChangedListener(new SwitchButton.OnStateChangedListener() {
@@ -141,10 +150,17 @@ public class DeliveryConfirmActivity extends BaseActivity {
         });
         deliveryModel = new DeliveryModel(DeliveryConfirmActivity.this);
         btn_confirm_delivery.setOnClickListener(view -> {
-            if (fastClick()) {
-                deliveryModel.submitDeliveryCourierNumbers(0, courierNumbers, "2", UserInfo.mobile, UserInfo.realname, smsTemplateId, finishType, DeliveryConfirmActivity.this);
+            if (TextUtils.isEmpty(deliveryAddress)){
+                DialogFactory.getInstance().showDialog(DeliveryConfirmActivity.this, v -> {
+                    LinkParseUtil.parse(DeliveryConfirmActivity.this, Contants.URl.DELIVERY_ADDRESS_URL, "");
+                }, null, "您未添加地址，请先添加地址？", null, null);
+            }else{
+                if (fastClick()) {
+                    deliveryModel.submitDeliveryCourierNumbers(0, courierNumbers,deliveryAddress, "2", UserInfo.mobile, UserInfo.realname, smsTemplateId, finishType, DeliveryConfirmActivity.this);
+                }
             }
         });
+        deliveryModel.getDeliveryDefaultAddresses(2,DeliveryConfirmActivity.this);
         deliveryModel.getDeliverySmsTemplateList(1, DeliveryConfirmActivity.this);
     }
 
@@ -236,6 +252,45 @@ public class DeliveryConfirmActivity extends BaseActivity {
                 } catch (Exception e) {
 
                 }
+                break;
+            case 2:
+                try {
+                    DeliveryAddressEntity  deliveryAddressEntity=GsonUtils.gsonToBean(result,DeliveryAddressEntity.class);
+                    DeliveryAddressEntity.ContentBean  contentBean=deliveryAddressEntity.getContent();
+                    if (null==contentBean){
+                        DialogFactory.getInstance().showDialog(DeliveryConfirmActivity.this, v -> {
+                            LinkParseUtil.parse(DeliveryConfirmActivity.this, Contants.URl.DELIVERY_ADDRESS_URL, "");
+
+                        }, null, "您未添加地址，请先添加地址？", null, null);
+                    }else{
+                        String isDefault=contentBean.getIsDefault();
+                        if ("1".equals(isDefault)){
+                            tv_delivery_default.setVisibility(View.VISIBLE);
+                        }else{
+                            tv_delivery_default.setVisibility(View.GONE);
+                        }
+                        finishType=contentBean.getSendType();
+                        switch (finishType){
+                            case "1":
+                                tv_delivery_default.setText("自提点 ");
+                                break;
+                            case "2":
+                                tv_delivery_default.setText("快递柜");
+                                break;
+                            case "3":
+                                tv_delivery_default.setText("家门口 ");
+                                break;
+                            default:
+                                tv_delivery_default.setText("其他");
+                                break;
+                        }
+                        deliveryAddress=contentBean.getSendAddress();
+                        tv_delivery_address.setText(deliveryAddress);
+                    }
+                }catch (Exception e){
+
+                }
+
                 break;
         }
     }

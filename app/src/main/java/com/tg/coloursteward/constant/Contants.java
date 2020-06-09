@@ -93,6 +93,7 @@ public interface Contants {
 
     interface EVENT {
         int changeCorp = 700;
+        int changeOrg = 800;
     }
 
     interface PARAMETER {

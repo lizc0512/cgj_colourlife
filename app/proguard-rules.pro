@@ -49,3 +49,12 @@
 #
 -keep class com.intsig.** {*;}
 #End
+
+# 极验 SDK 已做混淆处理，集成时请带上混淆规则，勿再次混淆 SDK
+-dontwarn com.geetest.sdk.**
+-keep class com.geetest.sdk.**{*;}
+
+# 腾讯 x5 SDK 已做混淆处理，集成时请带上混淆规则，勿再次混淆 SDK
+-dontwarn com.tencent.**
+-keep class com.tencent.**{*;}
+

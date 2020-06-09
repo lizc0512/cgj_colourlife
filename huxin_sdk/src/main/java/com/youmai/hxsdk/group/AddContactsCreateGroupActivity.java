@@ -654,7 +654,7 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
     public void onItemClick(int pos, ContactBean contact) {
         int type = contact.getUiType();
         String orgId = HuxinSdkManager.instance().getOrgId();
-        if (type == SearchContactAdapter.TYPE.ORGANIZATION_TYPE.ordinal()) {
+        if (type == SearchContactAdapter.TYPE.ORGANIZATION_TYPE.ordinal()) {//组织架构
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 
             if (searchGroupFragment.isVisible()) {
@@ -672,7 +672,7 @@ public class AddContactsCreateGroupActivity extends SdkBaseActivity
             contactView.setVisibility(View.GONE);
 
 
-        } else if (type == SearchContactAdapter.TYPE.DEPARTMENT_TYPE.ordinal()) {
+        } else if (type == SearchContactAdapter.TYPE.DEPARTMENT_TYPE.ordinal()) {//我的部门
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
             if (searchGroupFragment.isVisible()) {
                 transaction.hide(searchGroupFragment);

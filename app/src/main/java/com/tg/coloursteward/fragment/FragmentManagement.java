@@ -46,6 +46,7 @@ import com.tg.coloursteward.util.GsonUtils;
 import com.tg.coloursteward.util.LinkParseUtil;
 import com.tg.coloursteward.util.MicroAuthTimeUtils;
 import com.tg.coloursteward.util.SharedPreferencesUtils;
+import com.tg.coloursteward.util.StringUtils;
 import com.tg.coloursteward.util.Tools;
 import com.tg.coloursteward.view.MicroViewPager;
 import com.tg.coloursteward.view.MyGridLayoutManager;
@@ -94,6 +95,7 @@ public class FragmentManagement extends Fragment implements HttpResponse, View.O
     private boolean TryAgain = true;
     private DeliveryModel deliveryModel;
     private RelativeLayout rl_fragment_nodata;
+    private TextView tv_fragment_cloudurl;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -143,11 +145,12 @@ public class FragmentManagement extends Fragment implements HttpResponse, View.O
     }
 
     public void initData() {
-        microModel.getCropList(0,false, this);
+        microModel.getCropList(0, false, this);
     }
 
     private void initView() {
         sr_micro = mView.findViewById(R.id.sr_micro);
+        tv_fragment_cloudurl = mView.findViewById(R.id.tv_fragment_cloudurl);
         rl_fragment_nodata = mView.findViewById(R.id.rl_fragment_nodata);
         ll_micro_addView = mView.findViewById(R.id.ll_micro_addView);
         iv_miniservice_next = mView.findViewById(R.id.iv_miniservice_next);
@@ -157,6 +160,10 @@ public class FragmentManagement extends Fragment implements HttpResponse, View.O
         tv_miniservice_title.setOnClickListener(this);
         sr_micro.setOnRefreshListener(() ->
                 initLayout(cropUuid));
+        tv_fragment_cloudurl.setOnLongClickListener(v -> {
+            StringUtils.copyText(mActivity, "地址已复制", tv_fragment_cloudurl.getText().toString().substring(10));
+            return false;
+        });
     }
 
     /**
@@ -459,6 +466,9 @@ public class FragmentManagement extends Fragment implements HttpResponse, View.O
                         }
                     } catch (Exception e) {
                     }
+                    Message msghome = new Message();
+                    msghome.what = Contants.EVENT.changeOrg;
+                    EventBus.getDefault().post(msghome);
                 }
                 break;
         }
@@ -500,6 +510,7 @@ public class FragmentManagement extends Fragment implements HttpResponse, View.O
         if (sr_micro.isRefreshing()) {
             sr_micro.setRefreshing(false);
         }
+        rl_fragment_nodata.setVisibility(View.VISIBLE);
         CropLayoutEntity cropLayoutEntity = new CropLayoutEntity();
         cropLayoutEntity = GsonUtils.gsonToBean(result, CropLayoutEntity.class);
         ll_micro_addView.removeAllViews();
@@ -516,8 +527,8 @@ public class FragmentManagement extends Fragment implements HttpResponse, View.O
                     if (cropLayoutEntity.getContent().get(i).getContent().size() < 1) {
                         rl_fragment_nodata.setVisibility(View.VISIBLE);
                     } else {
-                        initApplication(cropLayoutEntity.getContent().get(i));
                         rl_fragment_nodata.setVisibility(View.GONE);
+                        initApplication(cropLayoutEntity.getContent().get(i));
                     }
                     break;
             }

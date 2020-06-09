@@ -1,5 +1,10 @@
 package com.tg.coloursteward.util;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
+import android.text.TextUtils;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -120,4 +125,16 @@ public class StringUtils {
         return result;
     }
 
+    public static void copyText(Context context, String tip, String word) {
+        if (!TextUtils.isEmpty(word)) {
+            //获取剪贴板管理器：
+            ClipboardManager cm = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+            // 创建普通字符型ClipData
+            ClipData mClipData = ClipData.newPlainText("Label", word);
+            // 将ClipData内容放到系统剪贴板里。
+            cm.setPrimaryClip(mClipData);
+            ToastUtil.showShortToast(context, tip);
+        }
+
+    }
 }

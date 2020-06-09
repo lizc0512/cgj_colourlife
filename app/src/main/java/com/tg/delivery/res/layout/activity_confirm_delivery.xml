@@ -40,31 +40,10 @@
             android:background="@color/line_color" />
     </RelativeLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/white"
-        android:visibility="gone"
-        android:orientation="horizontal">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/size_15dp"
-            android:layout_marginTop="15dp"
-            android:text="派送至"
-            android:textColor="@color/color_25282e"
-            android:textSize="@dimen/font_14sp" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_delivery_address"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/size_15dp" />
-
-    </LinearLayout>
 
     <RelativeLayout
+        android:id="@+id/delivery_address_layout"
         android:layout_width="match_parent"
         android:layout_height="95dp"
         android:background="@color/white">
@@ -88,7 +67,6 @@
             android:layout_alignBottom="@id/tv_delivery_title"
             android:layout_marginLeft="10dp"
             android:textStyle="bold"
-            android:text="自提点"
             android:layout_height="wrap_content"/>
 
         <TextView
@@ -113,7 +91,6 @@
             android:textSize="@dimen/font_14sp"
             android:layout_marginTop="20dp"
             android:layout_below="@id/tv_delivery_position"
-            android:text="彩网测试小区物业管理处"
             android:layout_height="wrap_content"/>
 
         <ImageView

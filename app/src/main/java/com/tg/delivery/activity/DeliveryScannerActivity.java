@@ -158,7 +158,6 @@ public class DeliveryScannerActivity extends BaseActivity implements View.OnClic
         });
         /*************************** init recog appkey ******START ***********************/
         expScannerCardUtil = new ExpScannerCardUtil();
-        Intent intent = getIntent();
         final String appkey = Contants.APP.APP_KEY;
         new AsyncTask<Void, Void, Integer>() {
             @Override

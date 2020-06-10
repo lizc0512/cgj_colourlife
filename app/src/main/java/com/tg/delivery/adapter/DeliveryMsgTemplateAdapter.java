@@ -31,7 +31,7 @@ import java.util.List;
 public class DeliveryMsgTemplateAdapter extends RecyclerView.Adapter<DeliveryMsgTemplateAdapter.DefaultViewHolder> {
 
     private Context activity;
-    private List<DeliverySmsTemplateEntity.ContentBean.ListBean.ChildListBean> templateMsgList;
+    private List<DeliverySmsTemplateEntity.ContentBean.ListBean> templateMsgList;
     private OnItemClickListener onClickListener;
     private int clickPos = 0;
 
@@ -40,7 +40,7 @@ public class DeliveryMsgTemplateAdapter extends RecyclerView.Adapter<DeliveryMsg
         notifyDataSetChanged();
     }
 
-    public DeliveryMsgTemplateAdapter(Activity activity, List<DeliverySmsTemplateEntity.ContentBean.ListBean.ChildListBean> templateMsgList) {
+    public DeliveryMsgTemplateAdapter(Activity activity, List<DeliverySmsTemplateEntity.ContentBean.ListBean> templateMsgList) {
         this.activity = activity;
         this.templateMsgList = templateMsgList;
 
@@ -79,9 +79,9 @@ public class DeliveryMsgTemplateAdapter extends RecyclerView.Adapter<DeliveryMsg
 
     @Override
     public void onBindViewHolder(@NonNull DefaultViewHolder defaultViewHolder, int position) {
-        DeliverySmsTemplateEntity.ContentBean.ListBean.ChildListBean listBean = templateMsgList.get(position);
-        defaultViewHolder.tv_sms_title.setText(listBean.getShowSmsTemplatePlace());
-        String sms_template_content = listBean.getSmsUserTemplateContent();
+        DeliverySmsTemplateEntity.ContentBean.ListBean listBean = templateMsgList.get(position);
+        defaultViewHolder.tv_sms_title.setText("模版"+listBean.getSmsTemplateId());
+        String sms_template_content = listBean.getSmsTemplateContent();
         defaultViewHolder.tv_sms_content.setText(toSBC(sms_template_content));
         if (clickPos == position) {
             defaultViewHolder.iv_sms_choice.setImageResource(R.drawable.sms_template_choice);

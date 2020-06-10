@@ -55,7 +55,7 @@ public class DeliveryConfirmActivity extends BaseActivity {
     private SwitchButton message_sb;
     private RecyclerView rv_message_list;
     private Button btn_confirm_delivery;
-    private List<DeliverySmsTemplateEntity.ContentBean.ListBean.ChildListBean> templateMsgList = new ArrayList<>();
+    private List<DeliverySmsTemplateEntity.ContentBean.ListBean> templateMsgList = new ArrayList<>();
 
     private String courierNumbers;
     private String deliveryAddress;
@@ -98,18 +98,8 @@ public class DeliveryConfirmActivity extends BaseActivity {
             @Override
             public void toggleToOn(View view) {
                 message_sb.setOpened(true);
-                if (templateTotal == 0) {
-                    DialogFactory.getInstance().showDialog(DeliveryConfirmActivity.this, v -> {
-                        jumpWeb = 1;
-                        LinkParseUtil.parse(DeliveryConfirmActivity.this, Contants.URl.SMS_TEMPLATE_URL, "");
-
-                    }, view1 -> {
-                        message_sb.setOpened(false);
-                    }, "您未设置短信内容，请先设置？", null, null);
-                } else {
-                    if (templateMsgList.size() > 0) {
-                        smsTemplateId = templateMsgList.get(currentTemplatePos).getSmsUserTemplateId();
-                    }
+                if (templateMsgList.size() > 0) {
+                    smsTemplateId = templateMsgList.get(currentTemplatePos).getSmsTemplateId();
                 }
                 rv_message_list.setVisibility(View.VISIBLE);
                 tv_sms_num.setVisibility(View.VISIBLE);
@@ -132,10 +122,10 @@ public class DeliveryConfirmActivity extends BaseActivity {
         deliveryMsgTemplateAdapter.setOnItemClickListener(var1 -> {
             currentTemplatePos = var1;
             deliveryMsgTemplateAdapter.setClickPos(var1);
-            DeliverySmsTemplateEntity.ContentBean.ListBean.ChildListBean listBean = templateMsgList.get(var1);
-            smsTemplateId = listBean.getSmsUserTemplateId();
-            smsContentLength = listBean.getSmsContentLength();
-            showMssageCount();
+            DeliverySmsTemplateEntity.ContentBean.ListBean listBean = templateMsgList.get(var1);
+            smsTemplateId = listBean.getSmsTemplateId();
+            smsContentLength = listBean.getSmsTemplateContent().length();
+            showMessageCount();
         });
         deliveryModel = new DeliveryModel(DeliveryConfirmActivity.this);
         btn_confirm_delivery.setOnClickListener(view -> {
@@ -209,56 +199,34 @@ public class DeliveryConfirmActivity extends BaseActivity {
                     DeliverySmsTemplateEntity deliverySmsTemplateEntity = GsonUtils.gsonToBean(result, DeliverySmsTemplateEntity.class);
                     DeliverySmsTemplateEntity.ContentBean contentBean = deliverySmsTemplateEntity.getContent();
                     if (null != contentBean) {
-                        List<DeliverySmsTemplateEntity.ContentBean.ListBean> beanList = contentBean.getList();
-                        if (null != beanList && beanList.size() > 0) {
-                            for (DeliverySmsTemplateEntity.ContentBean.ListBean listBean : beanList) {
-                                List<DeliverySmsTemplateEntity.ContentBean.ListBean.ChildListBean> childListBeanList = listBean.getChildList();
-                                if (null != childListBeanList && childListBeanList.size() > 0) {
-                                    for (int j = 0; j < childListBeanList.size(); j++) {
-                                        DeliverySmsTemplateEntity.ContentBean.ListBean.ChildListBean childListBean = childListBeanList.get(j);
-                                        StringBuffer sb = new StringBuffer();
-                                        sb.append("模板");
-                                        sb.append(" ");
-                                        sb.append(listBean.getSmsTemplateId());
-                                        sb.append("-");
-                                        sb.append(j + 1);
-                                        childListBean.setShowSmsTemplatePlace(sb.toString());
-                                        templateMsgList.add(childListBean);
-                                    }
-                                }
-                            }
-                        }
+                        templateMsgList.addAll(contentBean.getList());
                         templateTotal = templateMsgList.size();
                         if (templateTotal > 0) {
-                            DeliverySmsTemplateEntity.ContentBean.ListBean.ChildListBean childListBean = templateMsgList.get(0);
+                            DeliverySmsTemplateEntity.ContentBean.ListBean listBean = templateMsgList.get(0);
                             if (message_sb.isOpened()) {
-                                smsTemplateId = childListBean.getSmsUserTemplateId();
+                                smsTemplateId = listBean.getSmsTemplateId();
                             }
-                            smsContentLength = childListBean.getSmsContentLength();
-                            showMssageCount();
+                            smsContentLength = listBean.getSmsTemplateContent().length();
+                            showMessageCount();
                             deliveryMsgTemplateAdapter.notifyDataSetChanged();
-                        } else {
-                            if (message_sb.isOpened()) {
-                                message_sb.setOpened(false);
-                            }
                         }
                     }
                 } catch (Exception e) {
-
+                    ToastUtil.showShortToast(DeliveryConfirmActivity.this,e.getMessage());
                 }
                 break;
             case 2:
                 try {
                     DeliveryAddressEntity deliveryAddressEntity = GsonUtils.gsonToBean(result, DeliveryAddressEntity.class);
                     List<DeliveryAddressEntity.ContentBean> contentBeanList = deliveryAddressEntity.getContent();
-                    if (contentBeanList==null||contentBeanList.size()==0){
+                    if (contentBeanList == null || contentBeanList.size() == 0) {
                         DialogFactory.getInstance().showDialog(DeliveryConfirmActivity.this, v -> {
                             jumpAddress = 1;
                             LinkParseUtil.parse(DeliveryConfirmActivity.this, Contants.URl.DELIVERY_ADDRESS_URL, "");
 
                         }, null, "您未添加地址，请先添加地址？", null, null);
-                    }else{
-                        DeliveryAddressEntity.ContentBean  contentBean=contentBeanList.get(0);
+                    } else {
+                        DeliveryAddressEntity.ContentBean contentBean = contentBeanList.get(0);
                         String isDefault = contentBean.getIsDefault();
                         if ("1".equals(isDefault)) {
                             tv_delivery_default.setVisibility(View.VISIBLE);
@@ -268,13 +236,13 @@ public class DeliveryConfirmActivity extends BaseActivity {
                         finishType = contentBean.getSendType();
                         switch (finishType) {
                             case "1":
-                                tv_delivery_position.setText("自提点 ");
+                                tv_delivery_position.setText("自提点");
                                 break;
                             case "2":
                                 tv_delivery_position.setText("快递柜");
                                 break;
                             case "3":
-                                tv_delivery_position.setText("家门口 ");
+                                tv_delivery_position.setText("家门口");
                                 break;
                             default:
                                 tv_delivery_position.setText("其他");
@@ -292,7 +260,7 @@ public class DeliveryConfirmActivity extends BaseActivity {
     }
 
 
-    private void showMssageCount() {
+    private void showMessageCount() {
         int totalMsgNumber = 0;
         for (int i = 0; i < lengthsList.size(); i++) {
             int singleLength = lengthsList.get(i) + smsContentLength;

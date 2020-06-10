@@ -25,7 +25,7 @@ public interface Contants {
 //        String DELIVERY_HOME_ADDRESS = "https://gexpressbackend-czy.colourlife.com";
 //        String DELIVERY_NUMBER_ADDRESS = "https://kdbackend-czy.colourlife.com"; //快单号
 //        String DELIVERY_COMPANY_ADDRESS = "https://gexpressbackend-czy.colourlife.com";//快递公司
-//        String DELIVERY_ADDRESS_URL = "https://gexpress-czytest.colourlife.com/new_express/#/pages/address/address";//快递地址url
+//        String DELIVERY_ADDRESS_URL = "https://gexpress-czytest.colourlife.com/new_express/#/pages/address/address?type=selected";//快递地址url
 //        String environment = "release";
 //        String cqj_appid = "327494513335603200";
 //        String TOKEN_ADDRESS = "https://oauth2czy.colourlife.com";
@@ -53,11 +53,10 @@ public interface Contants {
         String DELIVERY_HOME_ADDRESS = "https://gexpressbackend-czytest.colourlife.com";
         String DELIVERY_NUMBER_ADDRESS = "https://kdbackend-czytest.colourlife.com"; //快单号
         String DELIVERY_COMPANY_ADDRESS = "https://gexpressbackend-czytest.colourlife.com";//快递公司
-        String DELIVERY_ADDRESS_URL = "https://gexpress-czytest.colourlife.com/new_express/#/pages/address/address";//快递地址url
+        String DELIVERY_ADDRESS_URL = "https://gexpress-czytest.colourlife.com/new_express/#/pages/address/address?type=selected";//快递地址url
         String environment = "debug";
         String cqj_appid = "323521861252157440";
         String TOKEN_ADDRESS = "http://oauth2-czytest.colourlife.com";
-        String USERINFO_ADDRESS = "http://user.czytest.colourlife.com/app";
         String publicKeyString = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDZDqnWph9LxtD0zgtGAYT" +
                 "Tf2jYeV+ni5F1o0w3Fag4OOD1YHCRUCXIsFy+iJYmuPf5vMkZrkoiJmKBfkaIzNlrJZzHzq+LsPQNCF86p1nLsuHbkWNvy" +
                 "jOEPn/CUryP2Kxme4S+eEqLIeNwp70VOaMuPmRoEZxMDAgvc6Z0DWsVdQIDAQAB";

@@ -123,7 +123,7 @@ public class DeliveryManagerActivity extends BaseActivity {
         boolean isLoading = true;
         String cacheData = spUtils.getStringData(SpConstants.storage.DELIVERYAREA, "");
         if (!TextUtils.isEmpty(cacheData)) {
-            initSetData(cacheData);
+            initSetUserInfo(cacheData);
             isLoading = false;
         }
         deliveryModel.postDeliveryUserInfo(1, colorToken, isLoading, this);

@@ -25,7 +25,7 @@ public interface Contants {
 //        String DELIVERY_HOME_ADDRESS = "https://gexpressbackend-czy.colourlife.com";
 //        String DELIVERY_NUMBER_ADDRESS = "https://kdbackend-czy.colourlife.com"; //快单号
 //        String DELIVERY_COMPANY_ADDRESS = "https://gexpressbackend-czy.colourlife.com";//快递公司
-//        String DELIVERY_ADDRESS_URL = "https://gexpress-czytest.colourlife.com/new_express/#/pages/address/address?type=selected";//快递地址url
+//        String DELIVERY_ADDRESS_URL = "https://gexpress-czytest.colourlife.com/new_express/#/pages/address/address";//快递地址url
 //        String environment = "release";
 //        String cqj_appid = "327494513335603200";
 //        String TOKEN_ADDRESS = "https://oauth2czy.colourlife.com";
@@ -53,7 +53,7 @@ public interface Contants {
         String DELIVERY_HOME_ADDRESS = "https://gexpressbackend-czytest.colourlife.com";
         String DELIVERY_NUMBER_ADDRESS = "https://kdbackend-czytest.colourlife.com"; //快单号
         String DELIVERY_COMPANY_ADDRESS = "https://gexpressbackend-czytest.colourlife.com";//快递公司
-        String DELIVERY_ADDRESS_URL = "https://gexpress-czytest.colourlife.com/new_express/#/pages/address/address?type=selected";//快递地址url
+        String DELIVERY_ADDRESS_URL = "https://gexpress-czytest.colourlife.com/new_express/#/pages/address/address";//快递地址url
         String environment = "debug";
         String cqj_appid = "323521861252157440";
         String TOKEN_ADDRESS = "http://oauth2-czytest.colourlife.com";
@@ -71,22 +71,11 @@ public interface Contants {
     interface APP {
         String CORP_UUID = "a8c58297436f433787725a94f780a3c9"; //彩生活租户ID
         String APP_KEY = "Q9PDXKXJbBCHDWF0CFS8MLeX";//合合 SDK识别key
-        String captchaURL = URl.URL_NEW + "/app/home/captcha/start";
-        String validateURL = URl.URL_NEW + "/app/home/login/verify";
         /***彩管家4.0加密的秘钥***/
         String secertKey = "gbiwgbiwkgnkwgnkjbkkrthmnjwjgeh";
-        /***彩之云4.0加密的秘钥***/
-        String czySecertKey = "oy4x7fSh5RI4BNc78UoV4fN08eO5C4pj0daM0B8M";
         String buglyKeyId = "b3dcc32611";
-        String czyClient_secret = "oy4x7fSh5RI4BNc78UoV4fN08eO5C4pj0daM0B8M";
         String WEIXIN_APP_ID = "wx2cd55a3733a9aa2e";
         String LICENSE_KEY = "5C96AA97189FB29346817D34BCCE17ADC5E5CB755341DEB2DE0F7F105924EE6B9441AAB0E7EFA35ADE2C722F4B2C3904B92E33EFE403AEADDB51CF477ABD6639D4923580A907CEC1D64F04AE245A6C8C22D96E0882E5C49D61E5DD8EAF262FCCE633";
-    }
-
-    interface LOGO {
-        //首页消息更新
-        int CLEAR_HOMELIST = 30;
-        int UPDATE_HOMELIST = 35;
     }
 
     interface EVENT {
@@ -156,9 +145,7 @@ public interface Contants {
         String ALIAS = "alias";//ALIAS
         String Tags = "tags";//Tags
         String PUBLIC_LIST = "public_list";//对公账户搜索历史列表
-        String JTJJB = "jtjjb";//对公账户搜索历史列表
         String DEVICE_TOKEN = "device_token";//设备唯一token
-        String LOGOIN_PHONE = "login_phone";//登录手机号
         String LATITUDE = "str_latitude";//纬度
         String LONGITUDE = "str_longitude";//经度
         String FRAGMENTMINE = "fragmentmine";//我的页面

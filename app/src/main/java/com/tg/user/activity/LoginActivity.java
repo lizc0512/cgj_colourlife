@@ -15,7 +15,6 @@ import android.text.InputType;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.animation.AnimationUtils;
@@ -58,12 +57,11 @@ import com.tg.coloursteward.util.ToastUtil;
 import com.tg.coloursteward.util.Tools;
 import com.tg.coloursteward.view.CircleImageView;
 import com.tg.coloursteward.view.dialog.DialogFactory;
-import com.tg.user.entity.CheckWhiteEntity;
 import com.tg.user.entity.JiYanTwoCheckEntity;
 import com.tg.user.entity.OauthUserEntity;
 import com.tg.user.entity.SendCodeEntity;
 import com.tg.user.entity.SingleDeviceLogin;
-import com.tg.user.model.UserCzyModel;
+import com.tg.user.model.UserLoginModel;
 import com.tg.user.model.UserModel;
 import com.tg.user.oauth.OAuth2ServiceUpdate;
 import com.tg.user.view.CustomDialog;
@@ -108,7 +106,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
     private Button btn_login;
     private ImageView iv_login_byczy;
     private UserModel userModel;
-    private UserCzyModel userCzyModel;
+    private UserLoginModel userLoginModel;
     private String account;
     private String password;
     private OAuth2ServiceUpdate auth2ServiceUpdate;
@@ -135,7 +133,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_login);
         userModel = new UserModel(this);
-        userCzyModel = new UserCzyModel(this);
+        userLoginModel = new UserLoginModel(this);
         microModel = new MicroModel(this);
         tintManager.setStatusBarTintColor(this.getResources().getColor(R.color.transparent)); //设置状态栏的颜色
         gt3GeetestUtils = new GT3GeetestUtils(this);
@@ -380,7 +378,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                 }
                 break;
             case R.id.btn_get_code:
-                userCzyModel.getSmsCode(6, account, 3, 1, true, this);//找回密码获取短信验证码
+                userLoginModel.getSmsCode(6, account, 3, 1, true, this);//找回密码获取短信验证码
                 break;
             case R.id.tv_register:
                 Intent register = new Intent(this, RegisterActivity.class);
@@ -614,7 +612,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                 JSONObject res_json = null;
                 try {
                     res_json = new JSONObject(s);
-                    userCzyModel.postGeetVerify(17, res_json.getString("geetest_challenge"), res_json.getString("geetest_validate")
+                    userLoginModel.postGeetVerify(17, res_json.getString("geetest_challenge"), res_json.getString("geetest_validate")
                             , res_json.getString("geetest_seccode"), LoginActivity.this);
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -640,7 +638,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
              */
             @Override
             public void onButtonClick() {
-                userCzyModel.getGeetStart(16, LoginActivity.this);
+                userLoginModel.getGeetStart(16, LoginActivity.this);
             }
         });
         gt3GeetestUtils.init(gt3ConfigBean);
@@ -714,17 +712,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                     spUtils.saveStringData(SpConstants.storage.DEVICE_TOKEN, device_token);
                 }
                 break;
-            case 4:
-                if (!TextUtils.isEmpty(result)) {
-                    JSONObject json = HttpTools.getContentJSONObject(result);
-                    try {
-                        int skin_code = json.getInt("skin_code");
-                        spUtils.saveStringData(SpConstants.storage.SKINCODE, String.valueOf(skin_code));
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-                break;
             case 5:
                 if (!TextUtils.isEmpty(result)) {
                     String difference = HttpTools.getContentString(result);
@@ -765,41 +752,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
-                    }
-                }
-                break;
-            case 9:
-                if (!TextUtils.isEmpty(result)) {
-                    czyAccessToken = result;
-                    loginGt();
-                }
-                break;
-            case 10:
-                if (!TextUtils.isEmpty(result)) {
-                    CheckWhiteEntity checkWhiteEntity = new CheckWhiteEntity();
-                    checkWhiteEntity = GsonUtils.gsonToBean(result, CheckWhiteEntity.class);
-                    String isWhite = checkWhiteEntity.getContent().getIs_white();
-                    hotLine = checkWhiteEntity.getContent().getHotLine();
-                    if (TextUtils.isEmpty(hotLine)) {
-                        hotLine = "1010-1778";
-                    }
-                    if ("1".equals(isWhite) || "0".equals(isWhite)) {
-                        userCzyModel.getAuthToken(9, account, password, "1", this);
-                    } else if ("5".equals(isWhite)) {
-                        showReviewDialog("更换手机号审核中");
-                    } else {
-                        isSmsLogin = !isSmsLogin;
-                        ToastUtil.showShortToast(LoginActivity.this, "您的账号长时间未登录，请使用验证码登录");
-                        if (!NumberUtils.IsPhoneNumber(account)) {
-                            edit_account.setText("");
-                        }
-                        edit_password.setVisibility(View.GONE);
-                        edit_account.setHint("请输入手机号码");
-                        sms_login_layout.setVisibility(View.VISIBLE);
-                        sms_login_layout.startAnimation(AnimationUtils.loadAnimation(LoginActivity.this, R.anim.push_right_alpha));
-                        tv_login_smscode.setText("账号密码登录");
-                        edit_account.setInputType(InputType.TYPE_CLASS_NUMBER); //输入类型
-                        edit_account.setFilters(new InputFilter[]{new InputFilter.LengthFilter(11)});
                     }
                 }
                 break;
@@ -949,39 +901,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                 setLogin();
             }
         }
-    }
-
-    private void showReviewDialog(String tips) {
-        reviewDialog = new CustomDialog(LoginActivity.this, R.style.custom_dialog_theme);
-        reviewDialog.show();
-        reviewDialog.setCancelable(false);
-        reviewDialog.dialog_content.setText(tips);
-        reviewDialog.dialog_line.setVisibility(View.VISIBLE);
-        reviewDialog.dialog_button_ok.setGravity(Gravity.CENTER_HORIZONTAL);
-        reviewDialog.dialog_button_cancel.setText(getResources().getString(R.string.message_define));
-        reviewDialog.dialog_button_ok.setText(getResources().getString(R.string.user_contact_service));
-        reviewDialog.dialog_button_cancel.setOnClickListener(v -> reviewDialog.dismiss());
-        reviewDialog.dialog_button_ok.setOnClickListener(v -> {
-            XXPermissions.with(LoginActivity.this)
-                    .permission(Manifest.permission.CALL_PHONE)
-                    .request(new OnPermission() {
-                        @Override
-                        public void hasPermission(List<String> granted, boolean isAll) {
-                            Intent dialIntent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + hotLine));//跳转到拨号界面，同时传递电话号码
-                            startActivity(dialIntent);
-                        }
-
-                        @Override
-                        public void noPermission(List<String> denied, boolean quick) {
-                            ToastUtil.showShortToast(LoginActivity.this, "需要您到设置里打开拨号权限");
-                        }
-                    });
-            reviewDialog.dismiss();
-        });
-    }
-
-    private void getSkin(String corpId) {
-        userModel.postSkin(4, corpId, this);
     }
 
     private void singleDevicelogin() {

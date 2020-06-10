@@ -75,7 +75,6 @@ public class SharedPreferencesTools {
         Tools.saveStringValue(con, Contants.storage.ORGNAME, "");//组织架构名称
         Tools.saveStringValue(con, Contants.storage.ORGID, "");//组织架构ID
         Tools.saveStringValue(con, Contants.storage.PUBLIC_LIST, "");//对公账户搜索历史列表
-        Tools.saveLinkManList(con, "");//收藏联系人
         Tools.setBooleanValue(con, Contants.storage.ALIAS, false);
         Tools.setBooleanValue(con, Contants.storage.Tags, false);
         Tools.saveStringValue(con, Contants.storage.DEVICE_TOKEN, "");//我的饭票奖金包缓存

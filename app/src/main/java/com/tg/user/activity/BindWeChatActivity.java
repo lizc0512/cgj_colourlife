@@ -15,7 +15,7 @@ import com.tg.coloursteward.util.GsonUtils;
 import com.tg.coloursteward.util.ToastUtil;
 import com.tg.coloursteward.view.ClearEditText;
 import com.tg.user.entity.SendCodeEntity;
-import com.tg.user.model.UserCzyModel;
+import com.tg.user.model.UserLoginModel;
 
 /**
  * @name lizc 微信绑定手机号页面
@@ -33,7 +33,7 @@ public class BindWeChatActivity extends BaseActivity implements View.OnClickList
     private TextView tv_bindwx_done;
     private ClearEditText et_bindwx_phone;
     private ClearEditText et_bindwx_code;
-    private UserCzyModel userCzyModel;
+    private UserLoginModel userLoginModel;
     private String openid;
     private String unionid;
     private MyTimeCount myTimeCount = null;
@@ -43,7 +43,7 @@ public class BindWeChatActivity extends BaseActivity implements View.OnClickList
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        userCzyModel = new UserCzyModel(this);
+        userLoginModel = new UserLoginModel(this);
         initView();
     }
 
@@ -77,7 +77,7 @@ public class BindWeChatActivity extends BaseActivity implements View.OnClickList
         switch (v.getId()) {
             case R.id.tv_get_code:
                 if (!TextUtils.isEmpty(phone)) {
-                    userCzyModel.getSmsCode(0, phone, 6, 1, true, this);//找回密码获取短信验证码
+                    userLoginModel.getSmsCode(0, phone, 6, 1, true, this);//找回密码获取短信验证码
                 } else {
                     ToastUtil.showShortToast(this, "手机号不能为空");
                 }
@@ -85,7 +85,7 @@ public class BindWeChatActivity extends BaseActivity implements View.OnClickList
             case R.id.tv_bindwx_done:
                 if (!TextUtils.isEmpty(phone)) {
                     if (!TextUtils.isEmpty(code)) {
-                        userCzyModel.postBindWeChat(1, openid, unionid, phone, code, this);
+                        userLoginModel.postBindWeChat(1, openid, unionid, phone, code, this);
                     } else {
                         ToastUtil.showShortToast(this, "验证码不能为空");
                     }

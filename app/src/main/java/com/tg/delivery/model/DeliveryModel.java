@@ -40,6 +40,7 @@ public class DeliveryModel extends BaseModel {
     private String deliveryUserInfoUrl = "/property/getLandInfor";//获取用户登陆信息
     private String deliveryUserPermissionUrl = "/property/getLandInforIos";//判断是否有权限
     private String deliverySmsTemplateUrl = "/smsUserTemplate/selectSmsUserTemplateListByInfo";
+    private String deliveryDefaultAddressesUrl = "/address/defaultAddresses";//获取默认地址的
     private String deliverySearchUrl = "/courierCompany/fuzzyQueryCourierCompany";//模糊搜索
 
     public DeliveryModel(Context context) {
@@ -109,6 +110,35 @@ public class DeliveryModel extends BaseModel {
         }, true, true);
     }
 
+    public void getDeliveryDefaultAddresses(int what, final HttpResponse newHttpResponse) {
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("communityUuid",SharedPreferencesUtils.getInstance().getStringData(SpConstants.storage.DELIVERYUUID,""));
+        params.put("mobile", UserInfo.mobile);
+        Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 18, deliveryDefaultAddressesUrl),
+                RequestMethod.GET);
+        request(what, request, RequestEncryptionUtils.getNewSaftyMap(mContext, params), new HttpListener<String>() {
+            @Override
+            public void onSucceed(int what, Response<String> response) {
+                int responseCode = response.getHeaders().getResponseCode();
+                String result = response.get();
+                if (responseCode == RequestEncryptionUtils.responseSuccess) {
+                    int resultCode = showSuccesResultMessage(result);
+                    if (resultCode == 0) {
+                        newHttpResponse.OnHttpResponse(what, result);
+                    }
+                } else {
+                    showErrorCodeMessage(response);
+
+                }
+            }
+
+            @Override
+            public void onFailed(int what, Response<String> response) {
+                showExceptionMessage(what, response);
+            }
+        }, true, true);
+    }
+
 
     public void getDeliverySmsTemplateList(int what, final HttpResponse newHttpResponse) {
         Map<String, Object> params = new HashMap<String, Object>();
@@ -141,7 +171,7 @@ public class DeliveryModel extends BaseModel {
     }
 
 
-    public void submitDeliveryCourierNumbers(int what, String courierNumbers, String sendStatus, String loginMobile, String name, String SMSTemplate, int finishType, final HttpResponse newHttpResponse) {
+    public void submitDeliveryCourierNumbers(int what, String courierNumbers,String deliveryAddress, String sendStatus, String loginMobile, String name, String SMSTemplate, String finishType, final HttpResponse newHttpResponse) {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("courierNumbers", courierNumbers);
         params.put("sendStatus", sendStatus);
@@ -149,8 +179,9 @@ public class DeliveryModel extends BaseModel {
         params.put("name", name);
         String colorToken = SharedPreferencesUtils.getKey(mContext, SpConstants.accessToken.accssToken);
         params.put("colorToken", colorToken);
-        if (finishType != -1) {
+        if (TextUtils.isEmpty(finishType)) {
             params.put("finishType", finishType);
+            params.put("sendAddress", deliveryAddress);
         }
         if (!TextUtils.isEmpty(SMSTemplate)) {
             params.put("SMSTemplate", SMSTemplate);

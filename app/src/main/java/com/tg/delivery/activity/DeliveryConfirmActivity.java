@@ -6,12 +6,13 @@ import android.os.Bundle;
 import android.os.Message;
 import android.text.SpannableString;
 import android.text.Spanned;
+import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
 import android.view.View;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -23,8 +24,8 @@ import com.tg.coloursteward.util.GsonUtils;
 import com.tg.coloursteward.util.LinkParseUtil;
 import com.tg.coloursteward.util.ToastUtil;
 import com.tg.coloursteward.view.dialog.DialogFactory;
-import com.tg.delivery.adapter.DeliveryAddressListAdapter;
 import com.tg.delivery.adapter.DeliveryMsgTemplateAdapter;
+import com.tg.delivery.entity.DeliveryAddressEntity;
 import com.tg.delivery.entity.DeliverySmsTemplateEntity;
 import com.tg.delivery.model.DeliveryModel;
 import com.tg.delivery.utils.SwitchButton;
@@ -44,25 +45,28 @@ public class DeliveryConfirmActivity extends BaseActivity {
     public static final String COURIERNUMBERS = "couriernumbers";
     public static final String COURIERSIZE = "couriersize";
     public static final String COURIERLENGTHLIST = "courierlengthlist";
-    private DeliveryAddressListAdapter deliveryAddressListAdapter;
     private DeliveryMsgTemplateAdapter deliveryMsgTemplateAdapter;
     private TextView tv_choice_num;
     private TextView tv_sms_num;
-    private RecyclerView rv_delivery_address;
+    private RelativeLayout delivery_address_layout;
+    private TextView tv_delivery_position;
+    private TextView tv_delivery_default;
+    private TextView tv_delivery_address;
     private SwitchButton message_sb;
     private RecyclerView rv_message_list;
     private Button btn_confirm_delivery;
-    private List<String> addressList = new ArrayList<>();
     private List<DeliverySmsTemplateEntity.ContentBean.ListBean.ChildListBean> templateMsgList = new ArrayList<>();
 
     private String courierNumbers;
+    private String deliveryAddress;
     private int courierTotal;
 
 
     private DeliveryModel deliveryModel;
-    private int finishType = 1;
+    private String finishType;
     private int templateTotal;
     private int jumpWeb = 0;
+    private int jumpAddress = 0;
     private String smsTemplateId = "";
     private int smsContentLength;
     private ArrayList<Integer> lengthsList;
@@ -74,7 +78,14 @@ public class DeliveryConfirmActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         tv_choice_num = findViewById(R.id.tv_choice_num);
         tv_sms_num = findViewById(R.id.tv_sms_num);
-        rv_delivery_address = findViewById(R.id.rv_delivery_address);
+        delivery_address_layout = findViewById(R.id.delivery_address_layout);
+        delivery_address_layout.setOnClickListener(v -> {
+            jumpAddress = 1;
+            LinkParseUtil.parse(DeliveryConfirmActivity.this, Contants.URl.DELIVERY_ADDRESS_URL, "");
+        });
+        tv_delivery_position = findViewById(R.id.tv_delivery_position);
+        tv_delivery_default = findViewById(R.id.tv_delivery_default);
+        tv_delivery_address = findViewById(R.id.tv_delivery_address);
         message_sb = findViewById(R.id.message_sb);
         rv_message_list = findViewById(R.id.rv_message_list);
         btn_confirm_delivery = findViewById(R.id.btn_confirm_delivery);
@@ -83,19 +94,6 @@ public class DeliveryConfirmActivity extends BaseActivity {
         courierTotal = intent.getIntExtra(COURIERSIZE, 0);
         lengthsList = intent.getIntegerArrayListExtra(COURIERLENGTHLIST);
         showTotalNum();
-        addressList.add("自提点");
-        addressList.add("家门口");
-        addressList.add("快递柜");
-        addressList.add("其他");
-
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(DeliveryConfirmActivity.this, 3);
-        rv_delivery_address.setLayoutManager(gridLayoutManager);
-        deliveryAddressListAdapter = new DeliveryAddressListAdapter(DeliveryConfirmActivity.this, addressList);
-        rv_delivery_address.setAdapter(deliveryAddressListAdapter);
-        deliveryAddressListAdapter.setOnItemClickListener(var1 -> {
-            finishType = var1 + 1;
-            deliveryAddressListAdapter.setClickPos(var1);
-        });
         message_sb.setOnStateChangedListener(new SwitchButton.OnStateChangedListener() {
             @Override
             public void toggleToOn(View view) {
@@ -141,10 +139,18 @@ public class DeliveryConfirmActivity extends BaseActivity {
         });
         deliveryModel = new DeliveryModel(DeliveryConfirmActivity.this);
         btn_confirm_delivery.setOnClickListener(view -> {
-            if (fastClick()) {
-                deliveryModel.submitDeliveryCourierNumbers(0, courierNumbers, "2", UserInfo.mobile, UserInfo.realname, smsTemplateId, finishType, DeliveryConfirmActivity.this);
+            if (TextUtils.isEmpty(deliveryAddress)) {
+                DialogFactory.getInstance().showDialog(DeliveryConfirmActivity.this, v -> {
+                    jumpAddress = 1;
+                    LinkParseUtil.parse(DeliveryConfirmActivity.this, Contants.URl.DELIVERY_ADDRESS_URL, "");
+                }, null, "您未添加地址，请先添加地址？", null, null);
+            } else {
+                if (fastClick()) {
+                    deliveryModel.submitDeliveryCourierNumbers(0, courierNumbers, deliveryAddress, "2", UserInfo.mobile, UserInfo.realname, smsTemplateId, finishType, DeliveryConfirmActivity.this);
+                }
             }
         });
+        deliveryModel.getDeliveryDefaultAddresses(2, DeliveryConfirmActivity.this);
         deliveryModel.getDeliverySmsTemplateList(1, DeliveryConfirmActivity.this);
     }
 
@@ -155,6 +161,10 @@ public class DeliveryConfirmActivity extends BaseActivity {
         if (jumpWeb == 1) {
             deliveryModel.getDeliverySmsTemplateList(1, DeliveryConfirmActivity.this);
             jumpWeb = 0;
+        }
+        if (jumpAddress == 1) {
+            jumpAddress = 0;
+            deliveryModel.getDeliveryDefaultAddresses(2, DeliveryConfirmActivity.this);
         }
     }
 
@@ -233,6 +243,47 @@ public class DeliveryConfirmActivity extends BaseActivity {
                             }
                         }
                     }
+                } catch (Exception e) {
+
+                }
+                break;
+            case 2:
+                try {
+                    DeliveryAddressEntity deliveryAddressEntity = GsonUtils.gsonToBean(result, DeliveryAddressEntity.class);
+                    List<DeliveryAddressEntity.ContentBean> contentBeanList = deliveryAddressEntity.getContent();
+                    if (contentBeanList==null||contentBeanList.size()==0){
+                        DialogFactory.getInstance().showDialog(DeliveryConfirmActivity.this, v -> {
+                            jumpAddress = 1;
+                            LinkParseUtil.parse(DeliveryConfirmActivity.this, Contants.URl.DELIVERY_ADDRESS_URL, "");
+
+                        }, null, "您未添加地址，请先添加地址？", null, null);
+                    }else{
+                        DeliveryAddressEntity.ContentBean  contentBean=contentBeanList.get(0);
+                        String isDefault = contentBean.getIsDefault();
+                        if ("1".equals(isDefault)) {
+                            tv_delivery_default.setVisibility(View.VISIBLE);
+                        } else {
+                            tv_delivery_default.setVisibility(View.GONE);
+                        }
+                        finishType = contentBean.getSendType();
+                        switch (finishType) {
+                            case "1":
+                                tv_delivery_position.setText("自提点 ");
+                                break;
+                            case "2":
+                                tv_delivery_position.setText("快递柜");
+                                break;
+                            case "3":
+                                tv_delivery_position.setText("家门口 ");
+                                break;
+                            default:
+                                tv_delivery_position.setText("其他");
+                                break;
+                        }
+                        deliveryAddress = contentBean.getSendAddress();
+                        tv_delivery_address.setText(deliveryAddress);
+                    }
+
                 } catch (Exception e) {
 
                 }

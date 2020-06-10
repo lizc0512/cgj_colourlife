@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:background="@color/transparent"
     android:layout_width="match_parent"
+    android:fitsSystemWindows="true"
     android:layout_height="match_parent">
 
     <include
@@ -16,7 +17,7 @@
         android:textColor="@color/white"
         android:textSize="@dimen/sp_14"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="170dp" />
+        android:layout_marginTop="180dp" />
 
         <LinearLayout
             android:id="@+id/bottom_delivery_layout"
@@ -53,7 +54,7 @@
           android:layout_width="match_parent"
           android:layout_above="@id/bottom_delivery_layout"
           android:layout_below="@id/tv_scanner_notice"
-          android:layout_marginTop="@dimen/size_45dp"
+          android:layout_marginTop="@dimen/size_35dp"
           android:background="@color/color_F2F3F5"
           android:layout_height="match_parent">
           <androidx.recyclerview.widget.RecyclerView
@@ -70,7 +71,7 @@
         android:id="@+id/input_code_layout"
         android:layout_width="match_parent"
         android:background="@color/white"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="10dp"
         android:layout_marginLeft="15dp"
         android:layout_below="@id/tv_scanner_notice"
         android:layout_marginRight="15dp"

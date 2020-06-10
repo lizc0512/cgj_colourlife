@@ -36,6 +36,7 @@ import com.tg.coloursteward.base.BaseActivity;
 import com.tg.coloursteward.constant.Contants;
 import com.tg.coloursteward.info.UserInfo;
 import com.tg.coloursteward.util.GsonUtils;
+import com.tg.coloursteward.util.ScreenUtils;
 import com.tg.coloursteward.util.ToastUtil;
 import com.tg.delivery.adapter.DeliveryNumberListAdapter;
 import com.tg.delivery.entity.DeliveryInforEntity;
@@ -199,7 +200,7 @@ public class DeliveryTransferActivity extends BaseActivity implements View.OnCli
                     if (null == deliveryModel) {
                         deliveryModel = new DeliveryModel(currentActivity);
                     }
-                    deliveryModel.submitDeliveryCourierNumbers(2, GsonUtils.gsonString(deliveryNumberList), "3", UserInfo.mobile, UserInfo.realname, "", -1, DeliveryTransferActivity.this);
+                    deliveryModel.submitDeliveryCourierNumbers(2, GsonUtils.gsonString(deliveryNumberList), "","3", UserInfo.mobile, UserInfo.realname, "", "", DeliveryTransferActivity.this);
                 } else {
                     ToastUtil.showShortToast(currentActivity, "暂无运单可交接");
                 }
@@ -351,10 +352,15 @@ public class DeliveryTransferActivity extends BaseActivity implements View.OnCli
         intent.putExtra(ISCardScanActivity.EXTRA_KEY_PREVIEW_HEIGHT, false ? 1f : 90f);// 预览框高度 根据是否同时识别 变化预览框高度
         // 单位dp
         // 一定使用float数值否则设置无效
+
         intent.putExtra(ISCardScanActivity.EXTRA_KEY_PREVIEW_MATCH_LEFT, 15f);// 预览框左边距
         // 单位dp
         // 一定使用float数值否则设置无效
-        intent.putExtra(ISCardScanActivity.EXTRA_KEY_PREVIEW_MATCH_TOP, 75f);// 预览框上边距
+        if (ScreenUtils.getWindowWidth(DeliveryTransferActivity.this) > 1080) {
+            intent.putExtra(ISCardScanActivity.EXTRA_KEY_PREVIEW_MATCH_TOP, 55f);// 预览框上边距
+        } else {
+            intent.putExtra(ISCardScanActivity.EXTRA_KEY_PREVIEW_MATCH_TOP, 70f);// 预览框上边距
+        }
         intent.putExtra(ISCardScanActivity.EXTRA_KEY_SHOW_CLOSE, false);// true打开闪光灯和关闭按钮
         intent.putExtra(ISCardScanActivity.EXTRA_KEY_COLOR_MATCH, 0xffffffff);// 指定SDK相机模块ISCardScanActivity四边框角线条,检测到身份证图片后的颜色
         intent.putExtra(ISCardScanActivity.EXTRA_KEY_COLOR_NORMAL, 0xffffffff);// 指定SDK相机模块ISCardScanActivity四边框角线条颜色，正常显示颜色

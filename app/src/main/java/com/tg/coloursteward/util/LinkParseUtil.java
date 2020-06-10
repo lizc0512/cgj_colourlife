@@ -26,6 +26,8 @@ import com.tg.setting.activity.SettingActivity;
 import com.tg.user.activity.BindMobileActivity;
 import com.tg.user.activity.UserInfoActivity;
 
+import static com.tg.delivery.activity.DeliveryScannerActivity.OPERATETYPE;
+
 
 /**
  * 所有link解析 解析文档
@@ -108,12 +110,14 @@ public class LinkParseUtil {
                         it = new Intent(context, NewWarehousingActivity.class);
                         context.startActivity(it);
                         context.overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
-                    } else if (name.equals("expressDis")) {
+                    } else if (name.equals("expressDis")) {//派件
                         it = new Intent(context, DeliveryScannerActivity.class);
+                        it.putExtra(OPERATETYPE,0);
                         context.startActivity(it);
                         context.overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
-                    } else if (name.equals("expressTransfer")) {
-                        it = new Intent(context, DeliveryTransferActivity.class);
+                    } else if (name.equals("expressTransfer")) { //交接
+                        it = new Intent(context, DeliveryScannerActivity.class);
+                        it.putExtra(OPERATETYPE,1);
                         context.startActivity(it);
                         context.overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
                     } else {

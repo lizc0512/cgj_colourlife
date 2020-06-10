@@ -235,7 +235,7 @@ public class DeliveryConfirmActivity extends BaseActivity {
                     } else {
                         DeliveryAddressEntity.ContentBean contentBean = contentBeanList.get(0);
                         String isDefault = contentBean.getIsDefault();
-                        deliveryAddress = contentBean.getSendAddress();
+                        deliveryAddress = contentBean.getCommunityName() + contentBean.getSendAddress();
                         showAddress(isDefault, contentBean.getSendType());
                     }
 
@@ -278,7 +278,7 @@ public class DeliveryConfirmActivity extends BaseActivity {
                 String addressStr = (String) message.obj;
                 try {
                     JSONObject jsonObject = new JSONObject(addressStr);
-                    deliveryAddress = jsonObject.optString("sendAddress");
+                    deliveryAddress = jsonObject.optString("communityName") + jsonObject.optString("sendAddress");
                     showAddress(jsonObject.optString("isDefault"), jsonObject.optString("sendType"));
                 } catch (JSONException e) {
                     e.printStackTrace();

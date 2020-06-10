@@ -232,13 +232,15 @@ public class DeliveryConfirmActivity extends BaseActivity {
                             LinkParseUtil.parse(DeliveryConfirmActivity.this, Contants.URl.DELIVERY_ADDRESS_URL, "");
 
                         }, null, "您未添加地址，请先添加地址？", null, null);
+                        deliveryAddress = "";
+                        showAddress("", "");
                     } else {
                         DeliveryAddressEntity.ContentBean contentBean = contentBeanList.get(0);
                         String isDefault = contentBean.getIsDefault();
                         deliveryAddress = contentBean.getCommunityName() + contentBean.getSendAddress();
-                        showAddress(isDefault, contentBean.getSendType());
+                        finishType=contentBean.getSendType();
+                        showAddress(isDefault, finishType);
                     }
-
                 } catch (Exception e) {
 
                 }
@@ -262,7 +264,7 @@ public class DeliveryConfirmActivity extends BaseActivity {
             case "3":
                 tv_delivery_position.setText("家门口");
                 break;
-            default:
+            case "4":
                 tv_delivery_position.setText("其他");
                 break;
         }
@@ -279,7 +281,8 @@ public class DeliveryConfirmActivity extends BaseActivity {
                 try {
                     JSONObject jsonObject = new JSONObject(addressStr);
                     deliveryAddress = jsonObject.optString("communityName") + jsonObject.optString("sendAddress");
-                    showAddress(jsonObject.optString("isDefault"), jsonObject.optString("sendType"));
+                    finishType= jsonObject.optString("sendType");
+                    showAddress(jsonObject.optString("isDefault"), finishType);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

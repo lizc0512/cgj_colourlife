@@ -90,7 +90,10 @@
             android:textColor="@color/color_25282e"
             android:layout_alignLeft="@id/tv_delivery_position"
             android:textSize="@dimen/font_14sp"
-            android:layout_marginTop="20dp"
+            android:maxLines="2"
+            android:layout_marginRight="40dp"
+            android:ellipsize="end"
+            android:layout_marginTop="15dp"
             android:layout_below="@id/tv_delivery_position"
             android:layout_height="wrap_content"/>
 

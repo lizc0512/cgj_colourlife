@@ -62,7 +62,17 @@ public class DeliverySmsTemplateEntity extends BaseContentEntity {
              */
 
             private String smsTemplateId;
-            private List<ChildListBean> childList;
+
+            public String getSmsTemplateContent() {
+                return smsTemplateContent;
+            }
+
+            public void setSmsTemplateContent(String smsTemplateContent) {
+                this.smsTemplateContent = smsTemplateContent;
+            }
+
+            private String smsTemplateContent;
+
 
             public String getSmsTemplateId() {
                 return smsTemplateId;
@@ -70,96 +80,6 @@ public class DeliverySmsTemplateEntity extends BaseContentEntity {
 
             public void setSmsTemplateId(String smsTemplateId) {
                 this.smsTemplateId = smsTemplateId;
-            }
-
-            public List<ChildListBean> getChildList() {
-                return childList;
-            }
-
-            public void setChildList(List<ChildListBean> childList) {
-                this.childList = childList;
-            }
-
-            public static class ChildListBean {
-                /**
-                 * smsUserTemplatePhone :
-                 * updateAt : 1590306040000
-                 * smsTemplateId : 1
-                 * userName :
-                 * smsUserTemplateId : 42
-                 * userId :
-                 * createAt : 1590306040000
-                 * dr : 0
-                 * status : 0
-                 * smsUserTemplateContent : 【彩快递】您好，您的包裹##快递公司##运单号##已到达，请到b站取件
-                 * smsUserTemplatePlace : b站
-                 */
-
-                private String smsUserTemplatePhone;
-                private String userName;
-
-                public int getSmsContentLength() {
-                    return smsContentLength;
-                }
-
-                public void setSmsContentLength(int smsContentLength) {
-                    this.smsContentLength = smsContentLength;
-                }
-
-                private int smsContentLength;
-                private String smsUserTemplateId;
-                private String smsUserTemplateContent;
-
-                private String smsUserTemplatePlace;
-
-                public String getShowSmsTemplatePlace() {
-                    return showSmsTemplatePlace;
-                }
-
-                public void setShowSmsTemplatePlace(String showSmsTemplatePlace) {
-                    this.showSmsTemplatePlace = showSmsTemplatePlace;
-                }
-
-                private String showSmsTemplatePlace;
-
-                public String getSmsUserTemplatePhone() {
-                    return smsUserTemplatePhone;
-                }
-
-                public void setSmsUserTemplatePhone(String smsUserTemplatePhone) {
-                    this.smsUserTemplatePhone = smsUserTemplatePhone;
-                }
-
-                public String getUserName() {
-                    return userName;
-                }
-
-                public void setUserName(String userName) {
-                    this.userName = userName;
-                }
-
-                public String getSmsUserTemplateId() {
-                    return smsUserTemplateId;
-                }
-
-                public void setSmsUserTemplateId(String smsUserTemplateId) {
-                    this.smsUserTemplateId = smsUserTemplateId;
-                }
-                public String getSmsUserTemplateContent() {
-                    return smsUserTemplateContent;
-                }
-
-                public void setSmsUserTemplateContent(String smsUserTemplateContent) {
-                    this.smsUserTemplateContent = smsUserTemplateContent;
-                }
-
-                public String getSmsUserTemplatePlace() {
-                    return smsUserTemplatePlace;
-                }
-
-                public void setSmsUserTemplatePlace(String smsUserTemplatePlace) {
-                    this.smsUserTemplatePlace = smsUserTemplatePlace;
-                }
             }
         }
     }

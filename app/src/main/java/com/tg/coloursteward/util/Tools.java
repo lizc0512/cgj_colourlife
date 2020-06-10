@@ -5,24 +5,19 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.Bitmap.CompressFormat;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.BaseColumns;
 import android.provider.MediaStore;
 import android.provider.MediaStore.MediaColumns;
-import androidx.core.content.FileProvider;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
-import android.view.View;
-import android.view.inputmethod.InputMethodManager;
+
+import androidx.core.content.FileProvider;
 
 import com.tg.coloursteward.BuildConfig;
-import com.tg.coloursteward.R;
 import com.tg.coloursteward.constant.Contants;
 import com.tg.coloursteward.database.SharedPreferencesTools;
 import com.tg.coloursteward.info.UserInfo;
@@ -33,23 +28,15 @@ import com.youmai.hxsdk.HuxinSdkManager;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.Enumeration;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -74,18 +61,6 @@ public class Tools {
         return metrics;
     }
 
-    public static void call(Context context, String phoneNumber) {
-        Intent intent = new Intent(Intent.ACTION_DIAL);
-        intent.setData(Uri.parse("tel:" + phoneNumber));
-        context.startActivity(intent);
-    }
-
-    public static String getDateToString(long time) {
-        Date d = new Date(time);
-        SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd  HH:mm:ss");
-        return sf.format(d);
-    }
-
     public static String getSecondToString(long time) {
         Date d = new Date(time);
         SimpleDateFormat sf = new SimpleDateFormat("HH:mm");
@@ -98,10 +73,6 @@ public class Tools {
         return sf.format(d);
     }
 
-    public static long getCurrentMillis() {
-        return Calendar.getInstance().getTimeInMillis();
-    }
-
     public static long dateString2Millis(String date) {
         SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         try {
@@ -112,122 +83,6 @@ public class Tools {
             e.printStackTrace();
         }
         return 0;
-    }
-
-    public static Bitmap compressImage(Bitmap image) {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        image.compress(CompressFormat.PNG, 100, baos);//质量压缩方法，这里100表示不压缩，把压缩后的数据存放到baos中
-        int options = 100;
-        while (baos.toByteArray().length / 1024 > 100) {   //循环判断如果压缩后图片是否大于100kb,大于继续压缩
-            baos.reset();//重置baos即清空baos  
-            image.compress(CompressFormat.PNG, options, baos);//这里压缩options%，把压缩后的数据存放到baos中
-            options -= 10;//每次都减少10  
-        }
-        if (image != null && !image.isRecycled()) {
-            image.recycle();
-            image = null;
-        }
-        ByteArrayInputStream isBm = new ByteArrayInputStream(baos.toByteArray());//把压缩后的数据baos存放到ByteArrayInputStream�?  
-        Bitmap bitmap = BitmapFactory.decodeStream(isBm, null, null);//把ByteArrayInputStream数据生成图片  
-        return bitmap;
-    }
-
-    public static Bitmap getSmallBitmap(String path) {
-        BitmapFactory.Options newOpts = new BitmapFactory.Options();
-        //开始读入图片，此时把options.inJustDecodeBounds 设回true了
-        newOpts.inJustDecodeBounds = true;
-        Bitmap bitmap = BitmapFactory.decodeFile(path, newOpts);
-        newOpts.inJustDecodeBounds = false;
-        int w = newOpts.outWidth;
-        int h = newOpts.outHeight;
-        //现在主流手机比较多是800*480分辨率，所以高和宽我们设置为
-        float hh = mContext.getResources().getDimensionPixelSize(R.dimen.margin_90);
-        float ww = mContext.getResources().getDimensionPixelSize(R.dimen.margin_90);
-        //缩放比。由于是固定比例缩放，只用高或者宽其中一个数据进行计算即可
-        int be = 1;//be=1表示不缩放   
-        if (w >= h && w > ww) {//如果宽度大的话根据宽度固定大小缩放  
-            be = (int) (newOpts.outWidth / ww);
-        } else if (w < h && h > hh) {//如果高度高的话根据宽度固定大小缩放  
-            be = (int) (newOpts.outHeight / hh);
-        }
-        if (be <= 0) {
-            be = 1;
-        }
-        newOpts.inSampleSize = be;//设置缩放比例  
-        //重新读入图片，注意此时已经把options.inJustDecodeBounds 设回false了  
-        bitmap = BitmapFactory.decodeFile(path, newOpts);
-        return compressImage(bitmap);//压缩好比例大小后再进行质量压缩  
-    }
-
-    public static void compressImage(Context con, Bitmap image, String path) {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        image.compress(CompressFormat.PNG, 100, baos);//质量压缩方法，这里100表示不压缩，把压缩后的数据存放到baos中
-        int options = 100;
-        int len = baos.toByteArray().length;
-        while (len > 300 * 1024) {  //循环判断如果压缩后图片是否大于300kb,大于继续压缩
-            len = baos.toByteArray().length;
-            baos.reset();//重置baos即清空baos
-            options -= 10;//每次都减少10
-            if (options < 0) {
-                options = 0;
-            }
-            image.compress(CompressFormat.PNG, options, baos);
-        }
-        if (image != null && !image.isRecycled()) {
-            image.recycle();
-            image = null;
-        }
-        FileOutputStream stream = null;
-        try {
-            File file = new File(path);
-            if (!file.getParentFile().exists()) {
-                file.getParentFile().mkdirs();
-            }
-            stream = new FileOutputStream(file);
-            baos.writeTo(stream);
-        } catch (FileNotFoundException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        try {
-            baos.reset();
-            baos.close();
-            if (stream != null) {
-                stream.close();
-            }
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-    }
-
-    public static void saveImageToPath(Context con, String sPath, String oPath) {
-        BitmapFactory.Options newOpts = new BitmapFactory.Options();
-        //开始读入图片，此时把options.inJustDecodeBounds 设回true了  
-        newOpts.inJustDecodeBounds = true;
-        Bitmap bitmap = BitmapFactory.decodeFile(sPath, newOpts);
-        newOpts.inJustDecodeBounds = false;
-        int w = newOpts.outWidth;
-        int h = newOpts.outHeight;
-        float hh = 500f;
-        float ww = 500f;
-        int be = 1;
-        if (w >= h && w > ww) {
-            be = (int) (newOpts.outWidth / ww);
-        } else if (w < h && h > hh) {
-            be = (int) (newOpts.outHeight / hh);
-        }
-        if (be <= 0) {
-            be = 1;
-        }
-        newOpts.inSampleSize = be;
-        bitmap = BitmapFactory.decodeFile(sPath, newOpts);
-        int newW = newOpts.outWidth;
-        int newH = newOpts.outHeight;
-        compressImage(con, bitmap, oPath);//压缩好比例大小后再进行质量压缩
     }
 
     public static void saveUserInfo(Context context) {
@@ -466,9 +321,6 @@ public class Tools {
     }
 
     public static String getPathByUri(Context context, Uri contentUri) {
-        //file:///storage/emulated/0/DCIM/Camera/IMG20150524000853.jpg
-        //content://com.android.providers.media.documents/document/image:3951
-        //content://media/external/images/media/3951
         String filePath = null;
         String scheme = contentUri.getScheme();
         if ("file".equals(scheme)) {
@@ -483,36 +335,12 @@ public class Tools {
     }
 
     /**
-     * 隐藏键盘
-     *
-     * @param v
-     */
-    public static void hideKeyboard(final View v) {
-        Timer timer = new Timer();
-        timer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                InputMethodManager imm = (InputMethodManager) v.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-                if (imm.isActive()) {
-                    imm.hideSoftInputFromWindow(v.getApplicationWindowToken(), 0);
-                }
-            }
-        }, 10);
-    }
-
-    /**
      * 判断是否是正确手机号
      *
      * @param mobiles
      * @return
      */
     public static boolean checkTelephoneNumber(String mobiles) {
-         /*
-        移动：134、135、136、137、138、139、150、151、157(TD)、158、159、187、188
-	    联通：130、131、132、152、155、156、185、186 
-	    电信：133、153、180、189、（1349卫通） 
-	    总结起来就是第一位必定为1，第二位必定为3或5或8，其他位置的可以为0-9 
-	    */
         String telRegex = "[1][23456789]\\d{9}";//"[1]"代表第1位为数字1，"[34578]"代表第二位可以为3、5、8中的一个，"\\d{9}"代表后面是可以是0～9的数字，有9位。
         if (TextUtils.isEmpty(mobiles)) {
             return false;
@@ -542,45 +370,16 @@ public class Tools {
         return con.getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE);
     }
 
-    public static String getSysMapStringValue(Context con, String key) {
-        return getSysShare(con).getString(key, "");
-    }
-
-    public static boolean getSysMapBooleanValue(Context con, String key, boolean defValue) {
-        return getSysShare(con).getBoolean(key, defValue);
-    }
-
     public static void saveUserName(Context con, String userName) {
         getSysShare(con).edit().putString(KEY_USER_NAME, userName).commit();
     }
 
-    public static String getUserName(Context con) {
-        return getSysShare(con).getString(KEY_USER_NAME, "");
-    }
 
     public static void saveSysMap(Context con, String key, String value) {
         if (TextUtils.isEmpty(key)) {
             return;
         }
         getSysShare(con).edit().putString(key, value).commit();
-    }
-
-    public static void saveDateInfo(Context con, String time) {
-        getSysShare(con).edit().
-                putString("time", time).commit();
-    }
-
-    public static String getDateName(Context con) {
-        return getSysShare(con).getString("time", "");
-    }
-
-    public static String getElseName(Context con) {
-        return getSysShare(con).getString("else", "");
-    }
-
-    public static void saveElseInfo(Context con, String time) {
-        getSysShare(con).edit().
-                putString("else", time).commit();
     }
 
     public static Boolean setBooleanValue(Context context, String key,
@@ -624,35 +423,6 @@ public class Tools {
      */
     public static Boolean getMainStatus(Context context) {
         return Tools.getBooleanValue(context, "isMaincreate");
-    }
-
-    /**
-     * 保存收藏联系人列表
-     *
-     * @param con
-     * @return
-     */
-    public static String getLinkManList(Context con) {
-        return getSysShare(con).getString("link_man", "");
-    }
-
-    public static void saveLinkManList(Context con, String time) {
-        getSysShare(con).edit().
-                putString("link_man", time).commit();
-    }
-
-    /**
-     * 保存支付密码(加密前)
-     *
-     * @param con
-     */
-    public static void saveCaierPassWord(Context con, String pwd) {
-        getSysShare(con).edit().
-                putString("caierpwd", pwd).commit();
-    }
-
-    public static String getCaierPassWord(Context con) {
-        return getSysShare(con).getString("caierpwd", "");
     }
 
     /**
@@ -768,27 +538,6 @@ public class Tools {
         return getSysShare(con).getLong("refresh_token2time", System.currentTimeMillis());
     }
 
-    /**
-     * 验证数字
-     *
-     * @return 如果是符合格式的字符串, 返回 <b>true </b>,否则为 <b>false </b>
-     */
-    public static boolean IsIntNumber(String str) {
-        String regex = "^\\+?[0-9][0-9]*$";
-        return str.matches(regex);
-    }
-
-    private static String bytesToHexString(byte[] bytes) {
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < bytes.length; i++) {
-            String hex = Integer.toHexString(0xFF & bytes[i]);
-            if (hex.length() == 1) {
-                sb.append('0');
-            }
-            sb.append(hex);
-        }
-        return sb.toString();
-    }
 
     public static String getReallyFileName(String url) {
         String filename = "";

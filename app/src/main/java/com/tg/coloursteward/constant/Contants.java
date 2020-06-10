@@ -10,83 +10,71 @@ public interface Contants {
     interface URl {
 
         //////////////    正式地址   //////////////////////////////
-//        String URL_ICETEST = "https://openapi.colourlife.com/v1";//
-//        String URL_OAUTH2 = "https://oauth2-cgj.colourlife.com";
-//        String SINGLE_DEVICE = "https://single.colourlife.com";
-//        String URL_NEW = "https://cgj-backyard.colourlife.com";
-//        String URL_ICESTAFF = "https://staff-ice.colourlife.com";
-//        String CLIENT_SECRET = "t2o0a1xl2lOmoPi4tuHf5uw4VZloXGs7y1Kd0Yoq";
-//        String URL_QRCODE = "https://qrcode.colourlife.com";
-//        String URL_IMPUSH = "https://impush-cgj.colourlife.com";
-//        String VERSION_ADDRESS = "https://version.colourlife.com";
-//        String URL_H5OAUTH = "https://oauth-czy.colourlife.com";
-//        String URL_LEKAI = "https://lekaiadminapi-door.colourlife.com";
-//        String ACCOUNT_ADDRESS = "https://account-finance.colourlife.com/";//新版彩钱包
-//        String DELIVERY_HOME_ADDRESS = "https://gexpressbackend-czy.colourlife.com";
-//        String DELIVERY_NUMBER_ADDRESS = "https://kdbackend-czy.colourlife.com"; //快单号
-//        String DELIVERY_COMPANY_ADDRESS = "https://gexpressbackend-czy.colourlife.com";//快递公司
-//        String DELIVERY_ADDRESS_URL = "https://gexpress-czytest.colourlife.com/new_express/#/pages/address/address";//快递地址url
-//        String environment = "release";
-//        String cqj_appid = "327494513335603200";
-//        String TOKEN_ADDRESS = "https://oauth2czy.colourlife.com";
-//        String publicKeyString = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCTFnAR7ORLx0jGzf9Ux1We7yHvRi+kQXKSRmtgBjDCXQzakGm2mrb6EupCkDbUcj4BUs7S7zm/rICQuVNC9fujeJGj"
-//                + "cNWRg0XWVtm90XpbTqfKiXzGDHI9W8aULYZ3of/JJ9lyCyjqjigyCdLBPtQ27gOu"
-//                + "boDzQuieR2ywPHawzQIDAQAB";
-//        int SAVENOHTTPRECORD = 0;
-//        String introduce = "http://mapp.colourlife.com/introduce/introduce.html";
-//        String privacy = "http://mapp.colourlife.com/xieyi/yinsi.html";
-//        String agreement = "http://mapp.colourlife.com/xieyi/fuwuxieyi.html";
+        String URL_ICETEST = "https://openapi.colourlife.com/v1";//
+        String URL_OAUTH2 = "https://oauth2-cgj.colourlife.com";
+        String SINGLE_DEVICE = "https://single.colourlife.com";
+        String URL_NEW = "https://cgj-backyard.colourlife.com";
+        String URL_ICESTAFF = "https://staff-ice.colourlife.com";
+        String CLIENT_SECRET = "t2o0a1xl2lOmoPi4tuHf5uw4VZloXGs7y1Kd0Yoq";
+        String URL_QRCODE = "https://qrcode.colourlife.com";
+        String URL_IMPUSH = "https://impush-cgj.colourlife.com";
+        String VERSION_ADDRESS = "https://version.colourlife.com";
+        String URL_H5OAUTH = "https://oauth-czy.colourlife.com";
+        String URL_LEKAI = "https://lekaiadminapi-door.colourlife.com";
+        String ACCOUNT_ADDRESS = "https://account-finance.colourlife.com/";//新版彩钱包
+        String DELIVERY_HOME_ADDRESS = "https://gexpressbackend-czy.colourlife.com";
+        String DELIVERY_NUMBER_ADDRESS = "https://kdbackend-czy.colourlife.com"; //快单号
+        String DELIVERY_COMPANY_ADDRESS = "https://gexpressbackend-czy.colourlife.com";//快递公司
+        String DELIVERY_ADDRESS_URL = "https://gexpress-czytest.colourlife.com/new_express/#/pages/address/address";//快递地址url
+        String environment = "release";
+        String cqj_appid = "327494513335603200";
+        String TOKEN_ADDRESS = "https://oauth2czy.colourlife.com";
+        String publicKeyString = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCTFnAR7ORLx0jGzf9Ux1We7yHvRi+kQXKSRmtgBjDCXQzakGm2mrb6EupCkDbUcj4BUs7S7zm/rICQuVNC9fujeJGj"
+                + "cNWRg0XWVtm90XpbTqfKiXzGDHI9W8aULYZ3of/JJ9lyCyjqjigyCdLBPtQ27gOu"
+                + "boDzQuieR2ywPHawzQIDAQAB";
+        int SAVENOHTTPRECORD = 0;
+        String introduce = "http://mapp.colourlife.com/introduce/introduce.html";
+        String privacy = "http://mapp.colourlife.com/xieyi/yinsi.html";
+        String agreement = "http://mapp.colourlife.com/xieyi/fuwuxieyi.html";
 
         ////////////////  测试地址   ///////////////////////////////////
-        String URL_ICETEST = "https://openapi-test.colourlife.com/v1";//
-        String URL_OAUTH2 = "https://oauth2-cgj-test.colourlife.com";
-        String SINGLE_DEVICE = "https://single-czytest.colourlife.com";
-        String URL_NEW = "https://cgj-backyard-test.colourlife.com";
-        String URL_ICESTAFF = "http://staff.ice.test.colourlife.com";
-        String CLIENT_SECRET = "xlsfrQS5R49upmfZbhlsrUzAt9HDA5K4ptLYsqK5";
-        String URL_QRCODE = "http://qrcode-czytest.colourlife.com";
-        String URL_IMPUSH = "https://impush-cgj-test.colourlife.com";
-        String VERSION_ADDRESS = "https://version-czytest.colourlife.com";
-        String URL_H5OAUTH = "https://oauth-czytest.colourlife.com";
-        String URL_LEKAI = "https://lekaiadminapi-doortest.colourlife.com";
-        String ACCOUNT_ADDRESS = "https://account-finance-test.colourlife.com";//新版彩钱包
-        String DELIVERY_HOME_ADDRESS = "https://gexpressbackend-czytest.colourlife.com";
-        String DELIVERY_NUMBER_ADDRESS = "https://kdbackend-czytest.colourlife.com"; //快单号
-        String DELIVERY_COMPANY_ADDRESS = "https://gexpressbackend-czytest.colourlife.com";//快递公司
-        String DELIVERY_ADDRESS_URL = "https://gexpress-czytest.colourlife.com/new_express/#/pages/address/address";//快递地址url
-        String environment = "debug";
-        String cqj_appid = "323521861252157440";
-        String TOKEN_ADDRESS = "http://oauth2-czytest.colourlife.com";
-        String USERINFO_ADDRESS = "http://user.czytest.colourlife.com/app";
-        String publicKeyString = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDZDqnWph9LxtD0zgtGAYT" +
-                "Tf2jYeV+ni5F1o0w3Fag4OOD1YHCRUCXIsFy+iJYmuPf5vMkZrkoiJmKBfkaIzNlrJZzHzq+LsPQNCF86p1nLsuHbkWNvy" +
-                "jOEPn/CUryP2Kxme4S+eEqLIeNwp70VOaMuPmRoEZxMDAgvc6Z0DWsVdQIDAQAB";
-        int SAVENOHTTPRECORD = 1;
-        String introduce = "http://mapp-czytest.colourlife.com/introduce/introduce.html";
-        String privacy = "http://mapp-czytest.colourlife.com/xieyi/yinsi.html";
-        String agreement = "http://mapp-czytest.colourlife.com/xieyi/fuwuxieyi.html";
+//        String URL_ICETEST = "https://openapi-test.colourlife.com/v1";//
+//        String URL_OAUTH2 = "https://oauth2-cgj-test.colourlife.com";
+//        String SINGLE_DEVICE = "https://single-czytest.colourlife.com";
+//        String URL_NEW = "https://cgj-backyard-test.colourlife.com";
+//        String URL_ICESTAFF = "http://staff.ice.test.colourlife.com";
+//        String CLIENT_SECRET = "xlsfrQS5R49upmfZbhlsrUzAt9HDA5K4ptLYsqK5";
+//        String URL_QRCODE = "http://qrcode-czytest.colourlife.com";
+//        String URL_IMPUSH = "https://impush-cgj-test.colourlife.com";
+//        String VERSION_ADDRESS = "https://version-czytest.colourlife.com";
+//        String URL_H5OAUTH = "https://oauth-czytest.colourlife.com";
+//        String URL_LEKAI = "https://lekaiadminapi-doortest.colourlife.com";
+//        String ACCOUNT_ADDRESS = "https://account-finance-test.colourlife.com";//新版彩钱包
+//        String DELIVERY_HOME_ADDRESS = "https://gexpressbackend-czytest.colourlife.com";
+//        String DELIVERY_NUMBER_ADDRESS = "https://kdbackend-czytest.colourlife.com"; //快单号
+//        String DELIVERY_COMPANY_ADDRESS = "https://gexpressbackend-czytest.colourlife.com";//快递公司
+//        String DELIVERY_ADDRESS_URL = "https://gexpress-czytest.colourlife.com/new_express/#/pages/address/address";//快递地址url
+//        String environment = "debug";
+//        String cqj_appid = "323521861252157440";
+//        String TOKEN_ADDRESS = "http://oauth2-czytest.colourlife.com";
+//        String publicKeyString = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDZDqnWph9LxtD0zgtGAYT" +
+//                "Tf2jYeV+ni5F1o0w3Fag4OOD1YHCRUCXIsFy+iJYmuPf5vMkZrkoiJmKBfkaIzNlrJZzHzq+LsPQNCF86p1nLsuHbkWNvy" +
+//                "jOEPn/CUryP2Kxme4S+eEqLIeNwp70VOaMuPmRoEZxMDAgvc6Z0DWsVdQIDAQAB";
+//        int SAVENOHTTPRECORD = 1;
+//        String introduce = "http://mapp-czytest.colourlife.com/introduce/introduce.html";
+//        String privacy = "http://mapp-czytest.colourlife.com/xieyi/yinsi.html";
+//        String agreement = "http://mapp-czytest.colourlife.com/xieyi/fuwuxieyi.html";
 
     }
 
     interface APP {
         String CORP_UUID = "a8c58297436f433787725a94f780a3c9"; //彩生活租户ID
         String APP_KEY = "Q9PDXKXJbBCHDWF0CFS8MLeX";//合合 SDK识别key
-        String captchaURL = URl.URL_NEW + "/app/home/captcha/start";
-        String validateURL = URl.URL_NEW + "/app/home/login/verify";
         /***彩管家4.0加密的秘钥***/
         String secertKey = "gbiwgbiwkgnkwgnkjbkkrthmnjwjgeh";
-        /***彩之云4.0加密的秘钥***/
-        String czySecertKey = "oy4x7fSh5RI4BNc78UoV4fN08eO5C4pj0daM0B8M";
         String buglyKeyId = "b3dcc32611";
-        String czyClient_secret = "oy4x7fSh5RI4BNc78UoV4fN08eO5C4pj0daM0B8M";
         String WEIXIN_APP_ID = "wx2cd55a3733a9aa2e";
         String LICENSE_KEY = "5C96AA97189FB29346817D34BCCE17ADC5E5CB755341DEB2DE0F7F105924EE6B9441AAB0E7EFA35ADE2C722F4B2C3904B92E33EFE403AEADDB51CF477ABD6639D4923580A907CEC1D64F04AE245A6C8C22D96E0882E5C49D61E5DD8EAF262FCCE633";
-    }
-
-    interface LOGO {
-        //首页消息更新
-        int CLEAR_HOMELIST = 30;
-        int UPDATE_HOMELIST = 35;
     }
 
     interface EVENT {
@@ -156,9 +144,7 @@ public interface Contants {
         String ALIAS = "alias";//ALIAS
         String Tags = "tags";//Tags
         String PUBLIC_LIST = "public_list";//对公账户搜索历史列表
-        String JTJJB = "jtjjb";//对公账户搜索历史列表
         String DEVICE_TOKEN = "device_token";//设备唯一token
-        String LOGOIN_PHONE = "login_phone";//登录手机号
         String LATITUDE = "str_latitude";//纬度
         String LONGITUDE = "str_longitude";//经度
         String FRAGMENTMINE = "fragmentmine";//我的页面

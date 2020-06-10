@@ -61,7 +61,7 @@ import com.tg.user.entity.JiYanTwoCheckEntity;
 import com.tg.user.entity.OauthUserEntity;
 import com.tg.user.entity.SendCodeEntity;
 import com.tg.user.entity.SingleDeviceLogin;
-import com.tg.user.model.UserCzyModel;
+import com.tg.user.model.UserLoginModel;
 import com.tg.user.model.UserModel;
 import com.tg.user.oauth.OAuth2ServiceUpdate;
 import com.tg.user.view.CustomDialog;
@@ -106,7 +106,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
     private Button btn_login;
     private ImageView iv_login_byczy;
     private UserModel userModel;
-    private UserCzyModel userCzyModel;
+    private UserLoginModel userLoginModel;
     private String account;
     private String password;
     private OAuth2ServiceUpdate auth2ServiceUpdate;
@@ -133,7 +133,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_login);
         userModel = new UserModel(this);
-        userCzyModel = new UserCzyModel(this);
+        userLoginModel = new UserLoginModel(this);
         microModel = new MicroModel(this);
         tintManager.setStatusBarTintColor(this.getResources().getColor(R.color.transparent)); //设置状态栏的颜色
         gt3GeetestUtils = new GT3GeetestUtils(this);
@@ -378,7 +378,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                 }
                 break;
             case R.id.btn_get_code:
-                userCzyModel.getSmsCode(6, account, 3, 1, true, this);//找回密码获取短信验证码
+                userLoginModel.getSmsCode(6, account, 3, 1, true, this);//找回密码获取短信验证码
                 break;
             case R.id.tv_register:
                 Intent register = new Intent(this, RegisterActivity.class);
@@ -612,7 +612,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                 JSONObject res_json = null;
                 try {
                     res_json = new JSONObject(s);
-                    userCzyModel.postGeetVerify(17, res_json.getString("geetest_challenge"), res_json.getString("geetest_validate")
+                    userLoginModel.postGeetVerify(17, res_json.getString("geetest_challenge"), res_json.getString("geetest_validate")
                             , res_json.getString("geetest_seccode"), LoginActivity.this);
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -638,7 +638,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
              */
             @Override
             public void onButtonClick() {
-                userCzyModel.getGeetStart(16, LoginActivity.this);
+                userLoginModel.getGeetStart(16, LoginActivity.this);
             }
         });
         gt3GeetestUtils.init(gt3ConfigBean);

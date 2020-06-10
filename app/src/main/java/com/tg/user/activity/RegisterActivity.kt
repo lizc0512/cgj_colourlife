@@ -22,7 +22,7 @@ import com.tg.coloursteward.util.ToastUtil
 import com.tg.coloursteward.view.dialog.DialogFactory
 import com.tg.user.entity.CheckRegisterEntity
 import com.tg.user.entity.SendCodeEntity
-import com.tg.user.model.UserCzyModel
+import com.tg.user.model.UserLoginModel
 import kotlinx.android.synthetic.main.activity_register.*
 import kotlinx.android.synthetic.main.base_actionbar.*
 
@@ -40,7 +40,7 @@ class RegisterActivity : BaseActivity(), View.OnClickListener, HttpResponse {
     var phone = ""
     var password = ""
     var code: String? = null
-    var userCzyModel = UserCzyModel()
+    var userLoginModel = UserLoginModel()
     var countStart: Int = 0
     var isRegister: Boolean = false
     var isPassword: Boolean = false
@@ -159,14 +159,14 @@ class RegisterActivity : BaseActivity(), View.OnClickListener, HttpResponse {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register)
-        userCzyModel = UserCzyModel(this)
+        userLoginModel = UserLoginModel(this)
         initView()
     }
 
     fun setRegister() {
         password = et_register_pwd.text.toString().trim();
         if (!TextUtils.isEmpty(password) && password.length > 7) {
-            userCzyModel.postRegister(3, phone, code, MD5.getMd5Value(password).toLowerCase(), this)
+            userLoginModel.postRegister(3, phone, code, MD5.getMd5Value(password).toLowerCase(), this)
         } else {
             ToastUtil.showShortToast(this, "请输入不少于8位数的登陆密码")
         }
@@ -201,7 +201,7 @@ class RegisterActivity : BaseActivity(), View.OnClickListener, HttpResponse {
     fun getCode() {
         phone = et_register_phone.text.toString().trim();
         if (!TextUtils.isEmpty(phone)) {
-            userCzyModel.getSmsCode(1, phone, 1, 1, true, this)
+            userLoginModel.getSmsCode(1, phone, 1, 1, true, this)
         } else {
             ToastUtil.showShortToast(this, "手机号不能为空")
         }

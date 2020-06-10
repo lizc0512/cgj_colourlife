@@ -259,9 +259,6 @@ public class SettingActivity extends BaseActivity implements OnClickListener, Ht
             case 2:
                 if (!TextUtils.isEmpty(result)) {
                     ToastUtil.showShortToast(this, "清空成功");
-                    Message msghome = new Message();
-                    msghome.what = Contants.LOGO.CLEAR_HOMELIST;
-                    EventBus.getDefault().post(msghome);
                 }
                 break;
             case 3:

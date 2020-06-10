@@ -119,6 +119,7 @@ import com.yanzhenjie.nohttp.BasicBinary;
 import com.yanzhenjie.nohttp.FileBinary;
 import com.youmai.hxsdk.group.AddContactsCreateGroupActivity;
 
+import org.greenrobot.eventbus.EventBus;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -143,6 +144,8 @@ import cn.sharesdk.framework.PlatformActionListener;
 import cn.sharesdk.onekeyshare.OnekeyShare;
 import cn.sharesdk.wechat.friends.Wechat;
 import cn.sharesdk.wechat.moments.WechatMoments;
+
+import static com.tg.coloursteward.constant.UserMessageConstant.DELIVERY_SELECT_ADDRESS;
 
 /**
  * 浏览器BaseActivity
@@ -1258,6 +1261,14 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
                 e.printStackTrace();
             }
             return json;
+        }
+        @JavascriptInterface
+        public void  cgjExpressAddressInfo(String address){
+            Message  message=Message.obtain();
+            message.what=DELIVERY_SELECT_ADDRESS;
+            message.obj=address;
+            EventBus.getDefault().post(message);
+            finish();
         }
     }
 

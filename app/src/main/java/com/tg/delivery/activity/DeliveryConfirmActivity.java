@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.base.BaseActivity;
 import com.tg.coloursteward.constant.Contants;
+import com.tg.coloursteward.constant.UserMessageConstant;
 import com.tg.coloursteward.info.UserInfo;
 import com.tg.coloursteward.util.GsonUtils;
 import com.tg.coloursteward.util.LinkParseUtil;
@@ -31,6 +32,9 @@ import com.tg.delivery.model.DeliveryModel;
 import com.tg.delivery.utils.SwitchButton;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -76,6 +80,9 @@ public class DeliveryConfirmActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (!EventBus.getDefault().isRegistered(DeliveryConfirmActivity.this)) {
+            EventBus.getDefault().register(DeliveryConfirmActivity.this);
+        }
         tv_choice_num = findViewById(R.id.tv_choice_num);
         tv_sms_num = findViewById(R.id.tv_sms_num);
         delivery_address_layout = findViewById(R.id.delivery_address_layout);
@@ -212,7 +219,7 @@ public class DeliveryConfirmActivity extends BaseActivity {
                         }
                     }
                 } catch (Exception e) {
-                    ToastUtil.showShortToast(DeliveryConfirmActivity.this,e.getMessage());
+                    ToastUtil.showShortToast(DeliveryConfirmActivity.this, e.getMessage());
                 }
                 break;
             case 2:
@@ -228,34 +235,63 @@ public class DeliveryConfirmActivity extends BaseActivity {
                     } else {
                         DeliveryAddressEntity.ContentBean contentBean = contentBeanList.get(0);
                         String isDefault = contentBean.getIsDefault();
-                        if ("1".equals(isDefault)) {
-                            tv_delivery_default.setVisibility(View.VISIBLE);
-                        } else {
-                            tv_delivery_default.setVisibility(View.GONE);
-                        }
-                        finishType = contentBean.getSendType();
-                        switch (finishType) {
-                            case "1":
-                                tv_delivery_position.setText("自提点");
-                                break;
-                            case "2":
-                                tv_delivery_position.setText("快递柜");
-                                break;
-                            case "3":
-                                tv_delivery_position.setText("家门口");
-                                break;
-                            default:
-                                tv_delivery_position.setText("其他");
-                                break;
-                        }
                         deliveryAddress = contentBean.getSendAddress();
-                        tv_delivery_address.setText(deliveryAddress);
+                        showAddress(isDefault, contentBean.getSendType());
                     }
 
                 } catch (Exception e) {
 
                 }
                 break;
+        }
+    }
+
+    private void showAddress(String isDefault, String finishType) {
+        if ("1".equals(isDefault)) {
+            tv_delivery_default.setVisibility(View.VISIBLE);
+        } else {
+            tv_delivery_default.setVisibility(View.GONE);
+        }
+        switch (finishType) {
+            case "1":
+                tv_delivery_position.setText("自提点");
+                break;
+            case "2":
+                tv_delivery_position.setText("快递柜");
+                break;
+            case "3":
+                tv_delivery_position.setText("家门口");
+                break;
+            default:
+                tv_delivery_position.setText("其他");
+                break;
+        }
+        tv_delivery_address.setText(deliveryAddress);
+    }
+
+    @Subscribe
+    public void onEvent(Object event) {
+        final Message message = (Message) event;
+        switch (message.what) {
+            case UserMessageConstant.DELIVERY_SELECT_ADDRESS:
+                jumpAddress = 0;
+                String addressStr = (String) message.obj;
+                try {
+                    JSONObject jsonObject = new JSONObject(addressStr);
+                    deliveryAddress = jsonObject.optString("sendAddress");
+                    showAddress(jsonObject.optString("isDefault"), jsonObject.optString("sendType"));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                break;
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (EventBus.getDefault().isRegistered(DeliveryConfirmActivity.this)) {
+            EventBus.getDefault().unregister(DeliveryConfirmActivity.this);
         }
     }
 

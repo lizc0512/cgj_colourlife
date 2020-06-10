@@ -75,6 +75,7 @@
             android:textColor="@color/white"
             android:layout_toRightOf="@id/tv_delivery_position"
             android:textSize="@dimen/font_11sp"
+            android:visibility="gone"
             android:gravity="center"
             android:layout_alignBottom="@id/tv_delivery_title"
             android:layout_marginLeft="5dp"

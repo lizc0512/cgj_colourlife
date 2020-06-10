@@ -146,7 +146,7 @@ repositories {
 dependencies {
     implementation fileTree(include: '*.jar', dir: 'libs')
     implementation project(':huxin_sdk')
-    implementation(name: 'gt3geetest_sdk', ext: 'aar')
+    implementation(name: 'geetest_sensebot_android_v4.2.1_20200421', ext: 'aar')
     implementation(name: 'keyboard_sdk_src-release', ext: 'aar')
     implementation 'com.flyco.banner:FlycoBanner_Lib:2.0.2@aar'
     implementation 'cn.jiguang.sdk:jpush:3.1.3'

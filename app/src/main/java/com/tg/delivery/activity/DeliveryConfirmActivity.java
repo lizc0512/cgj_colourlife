@@ -10,7 +10,7 @@ import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
 import android.view.View;
 import android.widget.Button;
-import android.widget.RelativeLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -52,7 +52,7 @@ public class DeliveryConfirmActivity extends BaseActivity {
     private DeliveryMsgTemplateAdapter deliveryMsgTemplateAdapter;
     private TextView tv_choice_num;
     private TextView tv_sms_num;
-    private RelativeLayout delivery_address_layout;
+    private LinearLayout delivery_address_layout;
     private TextView tv_delivery_position;
     private TextView tv_delivery_default;
     private TextView tv_delivery_address;

@@ -332,7 +332,6 @@ public class ContactsFragment extends Fragment implements ItemEventListener, Htt
      */
     private void setInfo() {
         String corpName = SharedPreferencesUtils.getInstance().getStringData(SpConstants.storage.CORPNAME, "");
-        String orgName = SharedPreferencesUtils.getInstance().getStringData(SpConstants.storage.ORGNAME, "");
         tv_contact_corpname.setText(corpName);
         tv_contact_depart.setText(UserInfo.familyName);
     }

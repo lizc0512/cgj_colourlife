@@ -64,6 +64,7 @@
             android:textColor="@color/color_25282e"
             android:layout_toRightOf="@id/tv_delivery_title"
             android:textSize="@dimen/font_14sp"
+            android:maxLength="10"
             android:layout_alignBottom="@id/tv_delivery_title"
             android:layout_marginLeft="10dp"
             android:textStyle="bold"
@@ -80,7 +81,6 @@
             android:layout_alignBottom="@id/tv_delivery_title"
             android:layout_marginLeft="5dp"
             android:background="@drawable/bg_position_default"
-            android:textStyle="bold"
             android:text="默认"
             android:layout_height="wrap_content"/>
 

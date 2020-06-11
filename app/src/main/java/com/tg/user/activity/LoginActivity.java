@@ -205,7 +205,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
             boolean loginOut = intent.getBooleanExtra("login_out", false);
             extras = intent.getStringExtra(MainActivity.KEY_EXTRAS);
             if (loginOut) {
-                exitClearAllData(true);
+                exitClearAllData(LoginActivity.this,true);
             }
 
             String account = intent.getStringExtra(ACCOUNT);
@@ -648,7 +648,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
 
     private void login(String accout, String pwdMD5, String loginType) {
         SoftKeyboardUtils.hideSoftKeyboard(LoginActivity.this, edit_account);
-        exitClearAllData(true);
+        exitClearAllData(LoginActivity.this,true);
         if (null == auth2ServiceUpdate) {
             auth2ServiceUpdate = new OAuth2ServiceUpdate(LoginActivity.this, loginType);
         } else {

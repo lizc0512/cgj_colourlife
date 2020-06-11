@@ -105,7 +105,7 @@ public class ModifiedPasswordActivity extends BaseActivity implements HttpRespon
         switch (what) {
             case 1:
                 if (!TextUtils.isEmpty(result)) {
-                    exitClearAllData(false);
+                    exitClearAllData(ModifiedPasswordActivity.this,false);
                     String message = HttpTools.getMessageString(result);
                     ToastFactory.showToast(ModifiedPasswordActivity.this, message);
                     ModifiedPasswordActivity.this.finish();

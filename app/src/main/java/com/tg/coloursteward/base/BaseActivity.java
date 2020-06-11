@@ -17,12 +17,15 @@ import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.view.Window;
 import android.view.WindowManager;
+import android.webkit.CookieManager;
+import android.webkit.WebStorage;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.ViewCompat;
 
+import com.tencent.smtt.sdk.WebView;
 import com.tg.coloursteward.BuildConfig;
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.application.CityPropertyApplication;
@@ -42,6 +45,7 @@ import com.tg.coloursteward.util.TokenUtils;
 import com.tg.coloursteward.util.Tools;
 import com.tg.coloursteward.view.ActivityHeaderView;
 import com.tg.coloursteward.view.SystemBarTintManager;
+import com.tg.coloursteward.view.X5WebView;
 import com.tg.user.activity.LoginActivity;
 import com.tg.user.model.UserModel;
 import com.youmai.hxsdk.HuxinSdkManager;
@@ -51,6 +55,7 @@ import com.youmai.hxsdk.http.OkHttpConnector;
 import com.youmai.hxsdk.utils.AppUtils;
 import com.youmai.hxsdk.utils.GsonUtil;
 
+import java.io.File;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -497,10 +502,13 @@ public abstract class BaseActivity extends AppCompatActivity implements HttpResp
     /**
      * 退出登录，清空一切数据操作
      */
-    protected void exitClearAllData(boolean isLoginActivity) {
+    protected void exitClearAllData(Activity activity, boolean isLoginActivity) {
         singleDevicelogout();
         //清空缓存
         UserInfo.initClear();
+        WebView webView = new WebView(activity);
+        webView.clearCache(true);
+        clearCache();
         SharedPreferencesTools.clearUserId(this);
         SharedPreferencesTools.clearCache(this);
         SharedPreferencesTools.clearAllData(this);
@@ -509,6 +517,28 @@ public abstract class BaseActivity extends AppCompatActivity implements HttpResp
             CityPropertyApplication.gotoLoginActivity(this);
         }
         HuxinSdkManager.instance().loginOut();
+    }
+
+    private void clearCache() {
+        deleteDatabase("webviewCache.db");
+        deleteDatabase("webview.db");
+        WebStorage.getInstance().deleteAllData(); //清空WebView的localStorage
+        File file = getCacheDir().getAbsoluteFile();//删除缓存
+        deleteFile(file);
+    }
+
+    public void deleteFile(File file) {
+        if (file.exists()) {
+            if (file.isFile()) {
+                file.delete();
+            } else if (file.isDirectory()) {
+                File files[] = file.listFiles();
+                for (int i = 0; i < files.length; i++) {
+                    deleteFile(files[i]);
+                }
+            }
+            file.delete();
+        }
     }
 
     /**

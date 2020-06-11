@@ -2513,5 +2513,7 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
 
             }
         });
+
     }
+
 }

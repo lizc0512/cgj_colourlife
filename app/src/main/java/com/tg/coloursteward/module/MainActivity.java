@@ -927,7 +927,7 @@ public class MainActivity extends BaseActivity implements HttpResponse {
                                 }
                             } else {
                                 ToastFactory.showToast(MainActivity.this, "账号异常，请及时联系管理员");
-                                exitClearAllData(false);
+                                exitClearAllData(MainActivity.this,false);
                             }
                         }
                     } catch (Exception e) {

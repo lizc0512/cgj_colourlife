@@ -507,6 +507,7 @@ public abstract class BaseActivity extends AppCompatActivity implements HttpResp
         //清空缓存
         UserInfo.initClear();
         WebView webView = new WebView(activity);
+        webView.loadUrl("javascript:localStorage.clear()");
         webView.clearCache(true);
         clearCache();
         SharedPreferencesTools.clearUserId(this);

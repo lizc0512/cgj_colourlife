@@ -171,7 +171,7 @@ public class DeliveryModel extends BaseModel {
     }
 
 
-    public void submitDeliveryCourierNumbers(int what, String courierNumbers,String deliveryAddress, String sendStatus, String loginMobile, String name, String SMSTemplate, String finishType, final HttpResponse newHttpResponse) {
+    public void submitDeliveryCourierNumbers(int what, String courierNumbers,String deliveryId, String sendStatus, String loginMobile, String name, String SMSTemplate, String finishType, final HttpResponse newHttpResponse) {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("courierNumbers", courierNumbers);
         params.put("sendStatus", sendStatus);
@@ -179,9 +179,9 @@ public class DeliveryModel extends BaseModel {
         params.put("name", name);
         String colorToken = SharedPreferencesUtils.getKey(mContext, SpConstants.accessToken.accssToken);
         params.put("colorToken", colorToken);
-        if (TextUtils.isEmpty(finishType)) {
+        if (!TextUtils.isEmpty(deliveryId)) {
             params.put("finishType", finishType);
-            params.put("sendAddress", deliveryAddress);
+            params.put("sendAddress", deliveryId);
         }
         if (!TextUtils.isEmpty(SMSTemplate)) {
             params.put("SMSTemplate", SMSTemplate);

@@ -62,7 +62,7 @@ public class DeliveryConfirmActivity extends BaseActivity {
     private List<DeliverySmsTemplateEntity.ContentBean.ListBean> templateMsgList = new ArrayList<>();
 
     private String courierNumbers;
-    private String deliveryAddress;
+    private String deliveryId;
     private int courierTotal;
 
 
@@ -136,14 +136,14 @@ public class DeliveryConfirmActivity extends BaseActivity {
         });
         deliveryModel = new DeliveryModel(DeliveryConfirmActivity.this);
         btn_confirm_delivery.setOnClickListener(view -> {
-            if (TextUtils.isEmpty(deliveryAddress)) {
+            if (TextUtils.isEmpty(deliveryId)) {
                 DialogFactory.getInstance().showDialog(DeliveryConfirmActivity.this, v -> {
                     jumpAddress = 1;
                     LinkParseUtil.parse(DeliveryConfirmActivity.this, Contants.URl.DELIVERY_ADDRESS_URL, "");
                 }, null, "您未添加地址，请先添加地址？", null, null);
             } else {
                 if (fastClick()) {
-                    deliveryModel.submitDeliveryCourierNumbers(0, courierNumbers, deliveryAddress, "2", UserInfo.mobile, UserInfo.realname, smsTemplateId, finishType, DeliveryConfirmActivity.this);
+                    deliveryModel.submitDeliveryCourierNumbers(0, courierNumbers, deliveryId, "2", UserInfo.mobile, UserInfo.realname, smsTemplateId, finishType, DeliveryConfirmActivity.this);
                 }
             }
         });
@@ -232,14 +232,16 @@ public class DeliveryConfirmActivity extends BaseActivity {
                             LinkParseUtil.parse(DeliveryConfirmActivity.this, Contants.URl.DELIVERY_ADDRESS_URL, "");
 
                         }, null, "您未添加地址，请先添加地址？", null, null);
-                        deliveryAddress = "";
-                        showAddress("", "");
+                        deliveryId = "";
+                        finishType="";
+                        showAddress("","");
                     } else {
                         DeliveryAddressEntity.ContentBean contentBean = contentBeanList.get(0);
                         String isDefault = contentBean.getIsDefault();
-                        deliveryAddress = contentBean.getCommunityName() + contentBean.getSendAddress();
+                        String deliveryAddress = contentBean.getCommunityName() + contentBean.getSendAddress();
                         finishType=contentBean.getSendType();
-                        showAddress(isDefault, finishType);
+                        deliveryId=contentBean.getId();
+                        showAddress(isDefault,deliveryAddress);
                     }
                 } catch (Exception e) {
 
@@ -248,7 +250,7 @@ public class DeliveryConfirmActivity extends BaseActivity {
         }
     }
 
-    private void showAddress(String isDefault, String finishType) {
+    private void showAddress(String isDefault,String deliveryAddress ) {
         if ("1".equals(isDefault)) {
             tv_delivery_default.setVisibility(View.VISIBLE);
         } else {
@@ -280,9 +282,10 @@ public class DeliveryConfirmActivity extends BaseActivity {
                 String addressStr = (String) message.obj;
                 try {
                     JSONObject jsonObject = new JSONObject(addressStr);
-                    deliveryAddress = jsonObject.optString("communityName") + jsonObject.optString("sendAddress");
+                    String deliveryAddress = jsonObject.optString("communityName") + jsonObject.optString("sendAddress");
                     finishType= jsonObject.optString("sendType");
-                    showAddress(jsonObject.optString("isDefault"), finishType);
+                    deliveryId=jsonObject.optString("id");
+                    showAddress(jsonObject.optString("isDefault"),deliveryAddress);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

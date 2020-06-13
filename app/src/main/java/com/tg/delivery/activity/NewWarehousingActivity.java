@@ -1367,44 +1367,46 @@ public class NewWarehousingActivity extends BaseActivity implements
             }
         });
         tv_warehouse_done.setOnClickListener(v -> {
-            editPhone = et_warehouse_phone.getText().toString().trim();
-            editOrderNum = et_warehouse_num.getText().toString().trim();
-            editCompany = et_warehouse_company.getText().toString().trim();
-            SoftKeyboardUtils.hideSystemSoftKeyboard(this, et_warehouse_num);
-            if (isSelectCompany) {
-                if (!TextUtils.isEmpty(editOrderNum)) {
-                    if (!TextUtils.isEmpty(editPhone)) {
-                        if (!TextUtils.isEmpty(editCompany)) {
-                            if (isEditItemStatus) {
-                                if (isHaveRepeat(editOrderNum)) {//listitem中是否包含了当前运单号
-                                    if (isEditHaveRepeat(editOrderNum, isEditItemPostion)) {//编辑的运单号是否等于输入框运单号
-                                        UpdateData();
-                                    } else {//跟list中其他数据重复,则提示
+            if (fastClick()){
+                editPhone = et_warehouse_phone.getText().toString().trim();
+                editOrderNum = et_warehouse_num.getText().toString().trim();
+                editCompany = et_warehouse_company.getText().toString().trim();
+                SoftKeyboardUtils.hideSystemSoftKeyboard(this, et_warehouse_num);
+                if (isSelectCompany) {
+                    if (!TextUtils.isEmpty(editOrderNum)) {
+                        if (!TextUtils.isEmpty(editPhone)) {
+                            if (!TextUtils.isEmpty(editCompany)) {
+                                if (isEditItemStatus) {
+                                    if (isHaveRepeat(editOrderNum)) {//listitem中是否包含了当前运单号
+                                        if (isEditHaveRepeat(editOrderNum, isEditItemPostion)) {//编辑的运单号是否等于输入框运单号
+                                            UpdateData();
+                                        } else {//跟list中其他数据重复,则提示
+                                            ToastUtil.showShortToastCenter(this, "请勿重复输入运单号");
+                                        }
+                                    } else {//不包含表示为全新运单号,直接修改
+                                        checkOrderNum(3, editOrderNum, editCompany);
+                                    }
+                                } else {
+                                    if (!isHaveRepeat(editOrderNum)) {
+                                        checkOrderNum(3, editOrderNum, editCompany);
+                                    } else {
                                         ToastUtil.showShortToastCenter(this, "请勿重复输入运单号");
                                     }
-                                } else {//不包含表示为全新运单号,直接修改
-                                    checkOrderNum(3, editOrderNum, editCompany);
                                 }
                             } else {
-                                if (!isHaveRepeat(editOrderNum)) {
-                                    checkOrderNum(3, editOrderNum, editCompany);
-                                } else {
-                                    ToastUtil.showShortToastCenter(this, "请勿重复输入运单号");
-                                }
+                                etCompanyFocus();
                             }
                         } else {
-                            etCompanyFocus();
+                            ToastUtil.showShortToast(this, "请输入手机号");
+                            et_warehouse_phone.requestFocus();
                         }
                     } else {
-                        ToastUtil.showShortToast(this, "请输入手机号");
-                        et_warehouse_phone.requestFocus();
+                        ToastUtil.showShortToast(this, "请输入运单号");
+                        et_warehouse_num.requestFocus();
                     }
                 } else {
-                    ToastUtil.showShortToast(this, "请输入运单号");
-                    et_warehouse_num.requestFocus();
+                    etCompanyFocus();
                 }
-            } else {
-                etCompanyFocus();
             }
         });
         String cache = spUtils.getStringData(SpConstants.UserModel.WAREHOUSECACHE, "");

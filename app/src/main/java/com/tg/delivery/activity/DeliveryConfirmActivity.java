@@ -273,6 +273,9 @@ public class DeliveryConfirmActivity extends BaseActivity {
             case "4":
                 tv_delivery_position.setText("其他");
                 break;
+            default:
+                tv_delivery_position.setText("");
+                break;
         }
         tv_delivery_address.setText(deliveryAddress);
     }
@@ -291,6 +294,7 @@ public class DeliveryConfirmActivity extends BaseActivity {
                     deliveryId=jsonObject.optString("id");
                     showAddress(jsonObject.optString("isDefault"),deliveryAddress);
                 } catch (JSONException e) {
+                    jumpAddress=1;
                     e.printStackTrace();
                 }
                 break;

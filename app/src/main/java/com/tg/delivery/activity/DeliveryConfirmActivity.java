@@ -57,6 +57,7 @@ public class DeliveryConfirmActivity extends BaseActivity {
     private TextView tv_delivery_default;
     private TextView tv_delivery_address;
     private SwitchButton message_sb;
+    private TextView tv_sms_notice;
     private RecyclerView rv_message_list;
     private Button btn_confirm_delivery;
     private List<DeliverySmsTemplateEntity.ContentBean.ListBean> templateMsgList = new ArrayList<>();
@@ -94,6 +95,7 @@ public class DeliveryConfirmActivity extends BaseActivity {
         tv_delivery_default = findViewById(R.id.tv_delivery_default);
         tv_delivery_address = findViewById(R.id.tv_delivery_address);
         message_sb = findViewById(R.id.message_sb);
+        tv_sms_notice = findViewById(R.id.tv_sms_notice);
         rv_message_list = findViewById(R.id.rv_message_list);
         btn_confirm_delivery = findViewById(R.id.btn_confirm_delivery);
         Intent intent = getIntent();
@@ -110,6 +112,7 @@ public class DeliveryConfirmActivity extends BaseActivity {
                 }
                 rv_message_list.setVisibility(View.VISIBLE);
                 tv_sms_num.setVisibility(View.VISIBLE);
+                tv_sms_notice.setVisibility(View.VISIBLE);
             }
 
             @Override
@@ -117,6 +120,7 @@ public class DeliveryConfirmActivity extends BaseActivity {
                 message_sb.setOpened(false);
                 rv_message_list.setVisibility(View.INVISIBLE);
                 tv_sms_num.setVisibility(View.GONE);
+                tv_sms_notice.setVisibility(View.GONE);
                 smsTemplateId = "";
             }
         });

@@ -143,10 +143,12 @@
     </LinearLayout>
 
     <TextView
+        android:id="@+id/tv_sms_notice"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/size_15dp"
         android:layout_marginRight="@dimen/size_15dp"
+        android:visibility="gone"
         android:layout_marginTop="@dimen/size_10dp"
         android:text=" 智能推送：已微信渠道推送通知不再发送短信"
         android:textColor="@color/color_FA6400"

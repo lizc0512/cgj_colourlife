@@ -1262,12 +1262,31 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
             }
             return json;
         }
+
         @JavascriptInterface
-        public void  cgjExpressAddressInfo(String address){
-            Message  message=Message.obtain();
-            message.what=DELIVERY_SELECT_ADDRESS;
-            message.obj=address;
-            EventBus.getDefault().post(message);
+        public void cgjExpressAddressInfo(String address) {
+            Intent intent = new Intent();
+            if (!TextUtils.isEmpty(address)) {
+                try {
+                    JSONObject jsonObject = new JSONObject(address);
+                    String deliveryAddress = jsonObject.optString("communityName") + jsonObject.optString("sendAddress");
+                    String finishType = jsonObject.optString("sendType");
+                    String deliveryId = jsonObject.optString("id");
+                    String isDefault = jsonObject.optString("isDefault");
+                    intent.putExtra("deliveryAddress", deliveryAddress);
+                    intent.putExtra("finishType", finishType);
+                    intent.putExtra("deliveryId", deliveryId);
+                    intent.putExtra("isDefault", isDefault);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    intent.putExtra("deliveryAddress", "");
+                    ToastUtil.showShortToast(MyBrowserActivity.this, address);
+                }
+            } else {
+                intent.putExtra("deliveryAddress", "");
+                ToastUtil.showShortToast(MyBrowserActivity.this, address);
+            }
+            setResult(200, intent);
             finish();
         }
     }

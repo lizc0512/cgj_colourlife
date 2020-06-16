@@ -42,6 +42,7 @@ public class DeliveryModel extends BaseModel {
     private String deliverySmsTemplateUrl = "/smsUserTemplate/selectSmsUserTemplateListByInfo";
     private String deliveryDefaultAddressesUrl = "/address/defaultAddresses";//获取默认地址的
     private String deliverySearchUrl = "/courierCompany/fuzzyQueryCourierCompany";//模糊搜索
+    private String inventoryUrl = "/stock/count";//数据盘点
 
     public DeliveryModel(Context context) {
         super(context);
@@ -112,7 +113,7 @@ public class DeliveryModel extends BaseModel {
 
     public void getDeliveryDefaultAddresses(int what, final HttpResponse newHttpResponse) {
         Map<String, Object> params = new HashMap<String, Object>();
-        params.put("communityUuid",SharedPreferencesUtils.getInstance().getStringData(SpConstants.storage.DELIVERYUUID,""));
+        params.put("communityUuid", SharedPreferencesUtils.getInstance().getStringData(SpConstants.storage.DELIVERYUUID, ""));
         params.put("mobile", UserInfo.mobile);
         Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 18, deliveryDefaultAddressesUrl),
                 RequestMethod.GET);
@@ -143,7 +144,7 @@ public class DeliveryModel extends BaseModel {
     public void getDeliverySmsTemplateList(int what, final HttpResponse newHttpResponse) {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("colorToken", SharedPreferencesUtils.getKey(mContext, SpConstants.accessToken.accssToken));
-        params.put("communityUuid",SharedPreferencesUtils.getInstance().getStringData(SpConstants.storage.DELIVERYUUID,""));
+        params.put("communityUuid", SharedPreferencesUtils.getInstance().getStringData(SpConstants.storage.DELIVERYUUID, ""));
         params.put("smsUserPhone", UserInfo.mobile);
         Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 18, deliverySmsTemplateUrl),
                 RequestMethod.GET);
@@ -171,7 +172,7 @@ public class DeliveryModel extends BaseModel {
     }
 
 
-    public void submitDeliveryCourierNumbers(int what, String courierNumbers,String deliveryId, String sendStatus, String loginMobile, String name, String SMSTemplate, String finishType, final HttpResponse newHttpResponse) {
+    public void submitDeliveryCourierNumbers(int what, String courierNumbers, String deliveryId, String sendStatus, String loginMobile, String name, String SMSTemplate, String finishType, final HttpResponse newHttpResponse) {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("courierNumbers", courierNumbers);
         params.put("sendStatus", sendStatus);
@@ -404,7 +405,7 @@ public class DeliveryModel extends BaseModel {
                     int resultCode = showSuccesResultMessage(result);
                     if (resultCode == 0) {
                         newHttpResponse.OnHttpResponse(what, result);
-                    }else{
+                    } else {
                         newHttpResponse.OnHttpResponse(what, "");
                     }
                 } else {
@@ -452,5 +453,33 @@ public class DeliveryModel extends BaseModel {
                 showExceptionMessage(what, response);
             }
         }, true, false);
+    }
+
+    public void getInventoryData(int what, String accessToken, String communityUuid, final HttpResponse newHttpResponse) {
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("accessToken", accessToken);
+        params.put("communityUuid", communityUuid);
+        Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 18, inventoryUrl),
+                RequestMethod.GET);
+        request(what, request, RequestEncryptionUtils.getNewSaftyMap(mContext, params), new HttpListener<String>() {
+            @Override
+            public void onSucceed(int what, Response<String> response) {
+                int responseCode = response.getHeaders().getResponseCode();
+                String result = response.get();
+                if (responseCode == RequestEncryptionUtils.responseSuccess) {
+                    int resultCode = showSuccesResultMessage(result);
+                    if (resultCode == 0) {
+                        newHttpResponse.OnHttpResponse(what, result);
+                    }
+                } else {
+                    showErrorCodeMessage(response);
+                }
+            }
+
+            @Override
+            public void onFailed(int what, Response<String> response) {
+                showExceptionMessage(what, response);
+            }
+        }, true, true);
     }
 }

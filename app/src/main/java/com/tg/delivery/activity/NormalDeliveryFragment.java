@@ -11,12 +11,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.tg.coloursteward.R;
+import com.tg.coloursteward.baseModel.HttpResponse;
+import com.tg.coloursteward.util.DateUtils;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-
-import com.tg.coloursteward.R;
-import com.tg.coloursteward.baseModel.HttpResponse;
 
 /**
  * @name
@@ -31,6 +32,7 @@ import com.tg.coloursteward.baseModel.HttpResponse;
 public class NormalDeliveryFragment extends Fragment implements HttpResponse {
 
     private TextView tv_list_num;
+    private TextView tv_time;
 
     @Nullable
     @Override
@@ -44,6 +46,9 @@ public class NormalDeliveryFragment extends Fragment implements HttpResponse {
 
     private void initView(View view) {
         tv_list_num = view.findViewById(R.id.tv_list_num);
+        tv_time = view.findViewById(R.id.tv_time);
+
+        tv_time.setText(DateUtils.phpToString());
 
     }
 

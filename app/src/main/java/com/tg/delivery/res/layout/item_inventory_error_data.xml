@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="10dp"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/size_40dp"
+        android:background="@drawable/bg_inventory_white">
+
+        <TextView
+            android:id="@+id/tv_order_num"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/size_15dp"
+            android:text="运单号:"
+            android:textColor="@color/color_25282e"
+            android:textSize="@dimen/font_14sp" />
+
+        <TextView
+            android:id="@+id/tv_order_status"
+            android:layout_width="@dimen/size_55dp"
+            android:layout_height="@dimen/size_22dp"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/bg_blue_four"
+            android:layout_marginRight="@dimen/size_12dp"
+            android:text="派送中"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:textSize="@dimen/font_12sp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/size_1px"
+            android:layout_alignParentBottom="true"
+            android:layout_marginLeft="@dimen/size_5dp"
+            android:layout_marginRight="@dimen/size_5dp"
+            android:background="@color/line" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="visible"
+        android:background="@drawable/bg_inventory_white">
+
+        <TextView
+            android:id="@+id/phone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/size_15dp"
+            android:layout_marginTop="@dimen/size_10dp"
+            android:text="手机号:"
+            android:textColor="@color/color_a9afb8"
+            android:textSize="@dimen/font_14sp" />
+
+        <TextView
+            android:id="@+id/tv_phone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@id/phone"
+            android:layout_marginLeft="@dimen/size_8dp"
+            android:layout_toRightOf="@id/phone"
+            android:textColor="@color/color_25282e"
+            android:textSize="@dimen/font_14sp"
+            tools:text="130000000" />
+
+        <TextView
+            android:id="@+id/tv_life"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="@dimen/size_7dp"
+            android:layout_marginRight="@dimen/size_12dp"
+            android:textColor="@color/color_C81B10"
+            android:textSize="@dimen/font_12sp"
+            tools:text="快件丢失" />
+
+        <View
+            android:id="@+id/view_line"
+            android:layout_width="@dimen/size_1dp"
+            android:layout_height="@dimen/size_10dp"
+            android:layout_marginLeft="@dimen/size_10dp"
+            android:layout_marginTop="@dimen/size_15dp"
+            android:layout_toRightOf="@id/tv_phone"
+            android:background="@color/line" />
+
+        <ImageView
+            android:layout_width="@dimen/size_14dp"
+            android:layout_height="@dimen/size_14dp"
+            android:layout_marginLeft="@dimen/size_5dp"
+            android:layout_marginTop="@dimen/size_13dp"
+            android:layout_toRightOf="@id/view_line"
+            android:src="@drawable/phone" />
+
+        <TextView
+            android:id="@+id/company"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/view_line"
+            android:layout_marginLeft="@dimen/size_15dp"
+            android:layout_marginTop="@dimen/size_6dp"
+            android:text="快递公司:"
+            android:textColor="@color/color_a9afb8"
+            android:textSize="@dimen/font_14sp" />
+
+        <TextView
+            android:id="@+id/tv_company"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@id/company"
+            android:layout_marginLeft="@dimen/size_8dp"
+            android:layout_toRightOf="@id/company"
+            android:textColor="@color/color_25282e"
+            android:textSize="@dimen/font_14sp"
+            tools:text="顺丰快递" />
+
+        <TextView
+            android:id="@+id/time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/company"
+            android:layout_marginLeft="@dimen/size_15dp"
+            android:layout_marginTop="@dimen/size_6dp"
+            android:text="创建时间:"
+            android:textColor="@color/color_a9afb8"
+            android:textSize="@dimen/font_14sp" />
+
+        <TextView
+            android:id="@+id/tv_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@id/time"
+            android:layout_marginLeft="@dimen/size_8dp"
+            android:layout_toRightOf="@id/time"
+            android:textColor="@color/color_25282e"
+            android:textSize="@dimen/font_14sp"
+            tools:text="2012-2019" />
+        <TextView
+            android:id="@+id/tv_order_look"
+            android:layout_width="@dimen/size_73dp"
+            android:layout_height="@dimen/size_22dp"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/bg_warehouse_blue"
+            android:layout_marginRight="@dimen/size_8dp"
+            android:text="查看"
+            android:layout_marginTop="@dimen/size_3dp"
+            android:layout_alignTop="@id/time"
+            android:gravity="center"
+            android:textColor="@color/color_597EF7"
+            android:textSize="@dimen/font_12sp" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/size_20dp"
+            android:layout_below="@id/time"/>
+    </RelativeLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/size_47dp"
+        android:visibility="gone"
+        android:background="@drawable/bg_inventory_white">
+
+        <TextView
+            android:id="@+id/inventory_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/size_15dp"
+            android:text="盘点时间:"
+            android:textColor="@color/color_a9afb8"
+            android:textSize="@dimen/font_14sp" />
+
+        <TextView
+            android:id="@+id/tv_inventory_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@id/inventory_time"
+            android:layout_marginLeft="@dimen/size_8dp"
+            android:layout_toRightOf="@id/inventory_time"
+            android:textColor="@color/color_25282e"
+            android:textSize="@dimen/font_14sp"
+            tools:text="2019-2020" />
+
+        <TextView
+            android:id="@+id/tv_inventory_life"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/size_12dp"
+            android:text="未入仓"
+            android:textColor="@color/color_C81B10"
+            android:textSize="@dimen/font_12sp" />
+
+    </RelativeLayout>
+</LinearLayout>
+
+
+

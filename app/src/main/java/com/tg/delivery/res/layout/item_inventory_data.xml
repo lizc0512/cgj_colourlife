@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="10dp"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/size_40dp"
+        android:background="@drawable/bg_inventory_white">
+
+        <ImageView
+            android:id="@+id/iv_select"
+            android:layout_width="@dimen/size_22dp"
+            android:layout_height="@dimen/size_22dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/size_12dp"
+            android:src="@drawable/empthy_round" />
+
+        <TextView
+            android:id="@+id/tv_order_num"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/size_8dp"
+            android:layout_toRightOf="@id/iv_select"
+            android:text="运单号:"
+            android:textColor="@color/color_25282e"
+            android:textSize="@dimen/font_14sp" />
+
+        <TextView
+            android:id="@+id/tv_order_status"
+            android:layout_width="@dimen/size_55dp"
+            android:layout_height="@dimen/size_22dp"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/bg_blue_four"
+            android:layout_marginRight="@dimen/size_12dp"
+            android:text="派送中"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:textSize="@dimen/font_12sp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/size_1px"
+            android:layout_alignParentBottom="true"
+            android:layout_marginLeft="@dimen/size_5dp"
+            android:layout_marginRight="@dimen/size_5dp"
+            android:background="@color/line" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_inventory_white">
+
+        <TextView
+            android:id="@+id/phone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/size_40dp"
+            android:layout_marginTop="@dimen/size_10dp"
+            android:text="手机号:"
+            android:textColor="@color/color_a9afb8"
+            android:textSize="@dimen/font_14sp" />
+
+        <TextView
+            android:id="@+id/tv_phone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@id/phone"
+            android:layout_marginLeft="@dimen/size_8dp"
+            android:layout_toRightOf="@id/phone"
+            android:textColor="@color/color_25282e"
+            android:textSize="@dimen/font_14sp"
+            tools:text="130000000" />
+
+        <View
+            android:id="@+id/view_line"
+            android:layout_width="@dimen/size_1dp"
+            android:layout_height="@dimen/size_10dp"
+            android:layout_marginLeft="@dimen/size_10dp"
+            android:layout_marginTop="@dimen/size_15dp"
+            android:layout_toRightOf="@id/tv_phone"
+            android:background="@color/line" />
+
+        <ImageView
+            android:layout_width="@dimen/size_14dp"
+            android:layout_height="@dimen/size_14dp"
+            android:layout_marginLeft="@dimen/size_5dp"
+            android:layout_marginTop="@dimen/size_13dp"
+            android:layout_toRightOf="@id/view_line"
+            android:src="@drawable/phone" />
+
+        <TextView
+            android:id="@+id/company"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/view_line"
+            android:layout_marginLeft="@dimen/size_40dp"
+            android:layout_marginTop="@dimen/size_6dp"
+            android:text="快递公司:"
+            android:textColor="@color/color_a9afb8"
+            android:textSize="@dimen/font_14sp" />
+
+        <TextView
+            android:id="@+id/tv_company"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@id/company"
+            android:layout_marginLeft="@dimen/size_8dp"
+            android:layout_toRightOf="@id/company"
+            android:textColor="@color/color_25282e"
+            android:textSize="@dimen/font_14sp"
+            tools:text="顺丰快递" />
+
+        <TextView
+            android:id="@+id/time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/company"
+            android:layout_marginLeft="@dimen/size_40dp"
+            android:layout_marginTop="@dimen/size_6dp"
+            android:text="创建时间:"
+            android:textColor="@color/color_a9afb8"
+            android:textSize="@dimen/font_14sp" />
+
+        <TextView
+            android:id="@+id/tv_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@id/time"
+            android:layout_marginLeft="@dimen/size_8dp"
+            android:layout_toRightOf="@id/time"
+            android:textColor="@color/color_25282e"
+            android:textSize="@dimen/font_14sp"
+            tools:text="2012-2019" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/size_20dp"
+            android:layout_below="@id/time"/>
+    </RelativeLayout>
+</LinearLayout>
+
+
+

@@ -62,6 +62,15 @@
     <string name="user_again_getcode">重新获取</string>
     <string name="user_already_send">已发送</string>
     <string name="user_withdraw_title">提示</string>
+    <string name="delivery_direction" translatable="false">
+        操作方式： \n
+1、点击开始盘点，进入扫码页面 \n
+2、依次扫描所有快递的条形码，点击盘点完成 \n
+3、查看盘点结果，点击盘点数据可查看盘点明细 \n
+数据说明：\n
+1、滞留总数：本次盘点扫码的快件总数 \n
+2、今日滞留、滞留1天、滞留超2天：根据运单创建时间判断，分别为创建时间为今日，昨日，昨日之前的快件 \n
+3、异常运单：有两种,未入仓的包裹和状态为未派送，可能丢件的包裹</string>
 
 
 </resources>

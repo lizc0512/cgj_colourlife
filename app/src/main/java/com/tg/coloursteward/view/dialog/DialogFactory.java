@@ -295,4 +295,26 @@ public class DialogFactory {
         tv_dialog_close.setText(ok);
         dialog.show();
     }
+
+    public void showOnlyDirectionDialog(Activity activity, String title) {
+        if (dialog == null || dialogActivity != activity) {
+            dialogActivity = activity;
+            DisplayMetrics metrics = Tools.getDisplayMetrics(activity);
+            dialog = new AlertDialog.Builder(activity).create();
+            dialog.setCanceledOnTouchOutside(true);
+            Window window = dialog.getWindow();
+            dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+            dialog.show();
+            LinearLayout layout = (LinearLayout) LayoutInflater.from(activity)
+                    .inflate(R.layout.dialog_direction, null);
+            tvContent = layout.findViewById(R.id.tv_income_msg);
+            dialog_title = layout.findViewById(R.id.dialog_title);
+            window.setContentView(layout);
+            WindowManager.LayoutParams p = window.getAttributes();
+            p.width = ((int) (metrics.widthPixels - 80 * metrics.density));
+            window.setAttributes(p);
+        }
+        dialog_title.setText(title);
+        dialog.show();
+    }
 }

@@ -57,7 +57,7 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:replace="android:allowBackup,android:theme,android:label">
-        <activity android:name="com.tg.delivery.activity.DeliveryInventoryActivity"></activity>
+        <activity android:name="com.tg.delivery.activity.InventoryDataActivity"></activity>
         <activity android:name="com.tg.setting.activity.SetLoginPwdActivity" />
         <activity android:name="com.tg.delivery.activity.WarehousingActivity" />
         <activity
@@ -417,6 +417,12 @@
             android:name="com.tg.delivery.activity.NewWarehousingActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan|stateAlwaysHidden" />
+        <activity
+            android:name="com.tg.delivery.activity.InventoryDetailActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.tg.delivery.activity.DeliveryInventoryActivity"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

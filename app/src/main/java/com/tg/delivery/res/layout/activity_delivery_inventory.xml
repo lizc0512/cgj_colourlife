@@ -1,326 +1,353 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/bg_color"
-    android:fillViewport="true"
-    android:fitsSystemWindows="true"
-    android:scrollbars="none">
+    android:fitsSystemWindows="true">
+
+    <include
+        android:id="@+id/top"
+        layout="@layout/base_actionbar" />
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/size_44dp"
+        android:fillViewport="true"
+        android:scrollbars="none">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <RelativeLayout
+                android:id="@+id/rl_inventory_time"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/size_44dp"
+                android:layout_marginTop="@dimen/size_12dp"
+                android:background="@color/white">
+
+                <TextView
+                    android:id="@+id/tv_inventory_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="@dimen/size_15dp"
+                    android:textColor="@color/color_525B68"
+                    android:textSize="@dimen/font_14sp"
+                    tools:text="time" />
+
+                <TextView
+                    android:id="@+id/tv_inventory_log"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="@dimen/size_15dp"
+                    android:text="盘点记录"
+                    android:textColor="@color/color_597EF7"
+                    android:textSize="@dimen/font_14sp" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/size_1px"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginLeft="@dimen/size_15dp"
+                    android:layout_marginRight="@dimen/size_15dp"
+                    android:background="@color/selected_bg" />
+            </RelativeLayout>
+
+            <LinearLayout
+                android:id="@+id/rl_inventory_data"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/rl_inventory_time"
+                android:background="@color/white"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/size_100dp"
+                    android:layout_marginTop="@dimen/size_10dp"
+                    android:orientation="horizontal">
+
+                    <RelativeLayout
+                        android:id="@+id/rl_inventroy_allnum"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="@dimen/size_15dp"
+                        android:layout_marginRight="@dimen/size_10dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_item_inventory">
+
+                        <TextView
+                            android:id="@+id/tv_inventroy_allnum"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginTop="@dimen/size_22dp"
+                            android:text="0"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/font_26sp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/tv_inventroy_allnum"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginTop="@dimen/size_8dp"
+                            android:text="滞留总数"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/font_15sp" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/rl_inventroy_error"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="@dimen/size_8dp"
+                        android:layout_marginRight="@dimen/size_15dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_item_inventory">
+
+                        <TextView
+                            android:id="@+id/tv_inventroy_error"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginTop="@dimen/size_22dp"
+                            android:text="0"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/font_26sp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/tv_inventroy_error"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginTop="@dimen/size_8dp"
+                            android:text="异常运单"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/font_15sp" />
+                    </RelativeLayout>
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/size_100dp"
+                    android:layout_marginTop="@dimen/size_15dp"
+                    android:orientation="horizontal">
+
+                    <RelativeLayout
+                        android:id="@+id/rl_inventroy_delaytoday"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="@dimen/size_15dp"
+                        android:layout_marginRight="@dimen/size_10dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_item_inventory">
+
+                        <TextView
+                            android:id="@+id/tv_inventroy_delaytoday"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginTop="@dimen/size_24dp"
+                            android:text="0"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/font_24sp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/tv_inventroy_delaytoday"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginTop="@dimen/size_12dp"
+                            android:text="今日滞留"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/font_14sp" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/rl_inventroy_delayone"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="@dimen/size_10dp"
+                        android:layout_marginRight="@dimen/size_10dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_item_inventory">
+
+                        <TextView
+                            android:id="@+id/tv_inventroy_delayone"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginTop="@dimen/size_24dp"
+                            android:text="0"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/font_24sp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/tv_inventroy_delayone"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginTop="@dimen/size_12dp"
+                            android:text="异常运单"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/font_15sp" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/rl_inventroy_delaytwo"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="@dimen/size_10dp"
+                        android:layout_marginRight="@dimen/size_15dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_item_inventory">
+
+                        <TextView
+                            android:id="@+id/tv_inventroy_delaytwo"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginTop="@dimen/size_24dp"
+                            android:text="0"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/font_24sp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/tv_inventroy_delaytwo"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginTop="@dimen/size_12dp"
+                            android:text="滞留超过2天"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/font_15sp" />
+                    </RelativeLayout>
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/size_20dp" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tv_nohandle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/size_25dp"
+                android:layout_centerHorizontal="true"
+                android:textColor="@color/color_525B68"
+                android:layout_below="@id/rl_inventory_data"
+                android:text="暂未盘点" />
+
+            <RelativeLayout
+                android:id="@+id/rl_round_data"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/size_300dp"
+                android:layout_below="@id/rl_inventory_data"
+                android:layout_marginTop="@dimen/size_12dp"
+                android:background="@color/white"
+                android:visibility="visible">
+
+                <TextView
+                    android:id="@+id/tv_todaydelay"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginTop="@dimen/size_8dp"
+                    android:layout_marginRight="@dimen/size_22dp"
+                    android:text="今日滞留"
+                    android:textColor="@color/color_25282e"
+                    android:textSize="@dimen/font_12sp" />
+
+                <TextView
+                    android:layout_width="@dimen/size_15dp"
+                    android:layout_height="@dimen/size_15dp"
+                    android:layout_marginTop="@dimen/size_8dp"
+                    android:layout_marginRight="@dimen/size_5dp"
+                    android:layout_toLeftOf="@id/tv_todaydelay"
+                    android:background="@drawable/bg_yellow_round" />
+
+                <TextView
+                    android:id="@+id/tv_delayone"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/tv_todaydelay"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginTop="@dimen/size_4dp"
+                    android:layout_marginRight="@dimen/size_15dp"
+                    android:text="滞留超1天"
+                    android:textColor="@color/color_25282e"
+                    android:textSize="@dimen/font_12sp" />
+
+                <TextView
+                    android:layout_width="@dimen/size_15dp"
+                    android:layout_height="@dimen/size_15dp"
+                    android:layout_below="@id/tv_todaydelay"
+                    android:layout_marginTop="@dimen/size_4dp"
+                    android:layout_marginRight="@dimen/size_5dp"
+                    android:layout_toLeftOf="@id/tv_delayone"
+                    android:background="@drawable/bg_red_round" />
+
+                <TextView
+                    android:id="@+id/tv_delaytwo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/tv_delayone"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginTop="@dimen/size_4dp"
+                    android:layout_marginRight="@dimen/size_15dp"
+                    android:text="滞留超2天"
+                    android:textColor="@color/color_25282e"
+                    android:textSize="@dimen/font_12sp" />
+
+                <TextView
+                    android:layout_width="@dimen/size_15dp"
+                    android:layout_height="@dimen/size_15dp"
+                    android:layout_below="@id/tv_delayone"
+                    android:layout_marginTop="@dimen/size_4dp"
+                    android:layout_marginRight="@dimen/size_5dp"
+                    android:layout_toLeftOf="@id/tv_delaytwo"
+                    android:background="@drawable/bg_blue_round" />
+
+                <com.tg.coloursteward.view.PieView
+                    android:id="@+id/pv_inventory"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/tv_delaytwo"
+                    android:layout_centerHorizontal="true"
+                    android:background="@color/white" />
+            </RelativeLayout>
+
+        </RelativeLayout>
+
+    </androidx.core.widget.NestedScrollView>
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="@dimen/size_55dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/white">
 
-        <include
-            android:id="@+id/top"
-            layout="@layout/base_actionbar" />
-
-        <RelativeLayout
-            android:id="@+id/rl_inventory_time"
+        <TextView
+            android:id="@+id/tv_inventory_start"
             android:layout_width="match_parent"
             android:layout_height="@dimen/size_44dp"
-            android:layout_below="@id/top"
-            android:layout_marginTop="@dimen/size_15dp"
-            android:background="@color/white">
-
-            <TextView
-                android:id="@+id/tv_inventory_date"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="@dimen/size_15dp"
-                android:textColor="@color/color_25282e"
-                android:textSize="@dimen/font_14sp"
-                tools:text="time" />
-
-            <TextView
-                android:id="@+id/tv_inventory_log"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginRight="@dimen/size_15dp"
-                android:text="盘点记录"
-                android:textColor="@color/color_329dfa"
-                android:textSize="@dimen/font_14sp" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/size_1px"
-                android:layout_alignParentBottom="true"
-                android:layout_marginLeft="@dimen/size_15dp"
-                android:layout_marginRight="@dimen/size_15dp"
-                android:background="@color/line" />
-        </RelativeLayout>
-
-        <LinearLayout
-            android:id="@+id/rl_inventory_data"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/rl_inventory_time"
-            android:background="@color/white"
-            android:orientation="vertical">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/size_80dp"
-                android:layout_marginTop="@dimen/size_10dp"
-                android:orientation="horizontal">
-
-                <RelativeLayout
-                    android:id="@+id/rl_inventroy_allnum"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginLeft="@dimen/size_15dp"
-                    android:layout_marginRight="@dimen/size_8dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/bg_item_inventory">
-
-                    <TextView
-                        android:id="@+id/tv_inventroy_allnum"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerHorizontal="true"
-                        android:layout_marginTop="@dimen/size_20dp"
-                        android:text="0"
-                        android:textColor="@color/white"
-                        android:textSize="@dimen/font_18sp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@id/tv_inventroy_allnum"
-                        android:layout_centerHorizontal="true"
-                        android:layout_marginTop="@dimen/size_5dp"
-                        android:text="滞留总数"
-                        android:textColor="@color/white"
-                        android:textSize="@dimen/font_14sp" />
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:id="@+id/rl_inventroy_error"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginLeft="@dimen/size_8dp"
-                    android:layout_marginRight="@dimen/size_15dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/bg_item_inventory">
-
-                    <TextView
-                        android:id="@+id/tv_inventroy_error"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerHorizontal="true"
-                        android:layout_marginTop="@dimen/size_20dp"
-                        android:text="0"
-                        android:textColor="@color/white"
-                        android:textSize="@dimen/font_18sp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@id/tv_inventroy_error"
-                        android:layout_centerHorizontal="true"
-                        android:layout_marginTop="@dimen/size_5dp"
-                        android:text="异常运单"
-                        android:textColor="@color/white"
-                        android:textSize="@dimen/font_14sp" />
-                </RelativeLayout>
-
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/size_80dp"
-                android:layout_marginTop="@dimen/size_15dp"
-                android:orientation="horizontal">
-
-                <RelativeLayout
-                    android:id="@+id/rl_inventroy_delaytoday"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginLeft="@dimen/size_15dp"
-                    android:layout_marginRight="@dimen/size_8dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/bg_item_inventory">
-
-                    <TextView
-                        android:id="@+id/tv_inventroy_delaytoday"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerHorizontal="true"
-                        android:layout_marginTop="@dimen/size_20dp"
-                        android:text="0"
-                        android:textColor="@color/white"
-                        android:textSize="@dimen/font_18sp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@id/tv_inventroy_delaytoday"
-                        android:layout_centerHorizontal="true"
-                        android:layout_marginTop="@dimen/size_5dp"
-                        android:text="今日滞留"
-                        android:textColor="@color/white"
-                        android:textSize="@dimen/font_14sp" />
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:id="@+id/rl_inventroy_delayone"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginLeft="@dimen/size_8dp"
-                    android:layout_marginRight="@dimen/size_8dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/bg_item_inventory">
-
-                    <TextView
-                        android:id="@+id/tv_inventroy_delayone"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerHorizontal="true"
-                        android:layout_marginTop="@dimen/size_20dp"
-                        android:text="0"
-                        android:textColor="@color/white"
-                        android:textSize="@dimen/font_18sp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@id/tv_inventroy_delayone"
-                        android:layout_centerHorizontal="true"
-                        android:layout_marginTop="@dimen/size_5dp"
-                        android:text="异常运单"
-                        android:textColor="@color/white"
-                        android:textSize="@dimen/font_14sp" />
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:id="@+id/rl_inventroy_delaytwo"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginLeft="@dimen/size_8dp"
-                    android:layout_marginRight="@dimen/size_15dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/bg_item_inventory">
-
-                    <TextView
-                        android:id="@+id/tv_inventroy_delaytwo"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerHorizontal="true"
-                        android:layout_marginTop="@dimen/size_20dp"
-                        android:text="0"
-                        android:textColor="@color/white"
-                        android:textSize="@dimen/font_18sp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@id/tv_inventroy_delaytwo"
-                        android:layout_centerHorizontal="true"
-                        android:layout_marginTop="@dimen/size_5dp"
-                        android:text="滞留超过2天"
-                        android:textColor="@color/white"
-                        android:textSize="@dimen/font_14sp" />
-                </RelativeLayout>
-            </LinearLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/size_15dp" />
-        </LinearLayout>
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/size_55dp"
-            android:layout_alignParentBottom="true"
-            android:background="@color/white">
-
-            <TextView
-                android:id="@+id/tv_inventory_start"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/size_44dp"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="@dimen/size_15dp"
-                android:layout_marginRight="@dimen/size_15dp"
-                android:background="@drawable/bg_confirm_delivery"
-                android:gravity="center"
-                android:text="开始盘点"
-                android:textColor="@color/white"
-                android:textSize="@dimen/font_14sp" />
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/size_300dp"
-            android:layout_below="@id/rl_inventory_data"
-            android:layout_marginTop="@dimen/size_15dp"
-            android:background="@color/white">
-
-            <TextView
-                android:id="@+id/tv_todaydelay"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_marginTop="@dimen/size_8dp"
-                android:layout_marginRight="@dimen/size_22dp"
-                android:text="今日滞留"
-                android:textColor="@color/color_25282e"
-                android:textSize="@dimen/font_12sp" />
-
-            <TextView
-                android:layout_width="@dimen/size_15dp"
-                android:layout_height="@dimen/size_15dp"
-                android:layout_marginTop="@dimen/size_8dp"
-                android:layout_marginRight="@dimen/size_5dp"
-                android:layout_toLeftOf="@id/tv_todaydelay"
-                android:background="@drawable/bg_red_round" />
-
-            <TextView
-                android:id="@+id/tv_delayone"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/tv_todaydelay"
-                android:layout_alignParentRight="true"
-                android:layout_marginTop="@dimen/size_4dp"
-                android:layout_marginRight="@dimen/size_15dp"
-                android:text="滞留超1天"
-                android:textColor="@color/color_25282e"
-                android:textSize="@dimen/font_12sp" />
-
-            <TextView
-                android:layout_width="@dimen/size_15dp"
-                android:layout_height="@dimen/size_15dp"
-                android:layout_below="@id/tv_todaydelay"
-                android:layout_marginTop="@dimen/size_4dp"
-                android:layout_marginRight="@dimen/size_5dp"
-                android:layout_toLeftOf="@id/tv_delayone"
-                android:background="@drawable/bg_red_round" />
-
-            <TextView
-                android:id="@+id/tv_delaytwo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/tv_delayone"
-                android:layout_alignParentRight="true"
-                android:layout_marginTop="@dimen/size_4dp"
-                android:layout_marginRight="@dimen/size_15dp"
-                android:text="滞留超2天"
-                android:textColor="@color/color_25282e"
-                android:textSize="@dimen/font_12sp" />
-
-            <TextView
-                android:layout_width="@dimen/size_15dp"
-                android:layout_height="@dimen/size_15dp"
-                android:layout_below="@id/tv_delayone"
-                android:layout_marginTop="@dimen/size_4dp"
-                android:layout_marginRight="@dimen/size_5dp"
-                android:layout_toLeftOf="@id/tv_delaytwo"
-                android:background="@drawable/bg_red_round" />
-        </RelativeLayout>
-
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/size_15dp"
+            android:layout_marginRight="@dimen/size_15dp"
+            android:background="@drawable/bg_confirm_delivery"
+            android:gravity="center"
+            android:text="开始盘点"
+            android:textColor="@color/white"
+            android:textSize="@dimen/font_14sp" />
     </RelativeLayout>
-</androidx.core.widget.NestedScrollView>
+
+</RelativeLayout>

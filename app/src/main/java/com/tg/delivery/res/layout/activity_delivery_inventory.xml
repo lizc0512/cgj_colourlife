@@ -196,7 +196,7 @@
                             android:layout_below="@id/tv_inventroy_delayone"
                             android:layout_centerHorizontal="true"
                             android:layout_marginTop="@dimen/size_12dp"
-                            android:text="异常运单"
+                            android:text="滞留1天"
                             android:textColor="@color/white"
                             android:textSize="@dimen/font_15sp" />
                     </RelativeLayout>
@@ -226,7 +226,7 @@
                             android:layout_below="@id/tv_inventroy_delaytwo"
                             android:layout_centerHorizontal="true"
                             android:layout_marginTop="@dimen/size_12dp"
-                            android:text="滞留超过2天"
+                            android:text="滞留超2天"
                             android:textColor="@color/white"
                             android:textSize="@dimen/font_15sp" />
                     </RelativeLayout>
@@ -254,7 +254,7 @@
                 android:layout_below="@id/rl_inventory_data"
                 android:layout_marginTop="@dimen/size_12dp"
                 android:background="@color/white"
-                android:visibility="visible">
+                android:visibility="gone">
 
                 <TextView
                     android:id="@+id/tv_todaydelay"

@@ -36,6 +36,7 @@ public class InventoryDetailActivity extends BaseActivity implements View.OnClic
     private NormalDeliveryFragment normalDeliveryFragment;
     private ErrorDeliveryFragment errorDeliveryFragment;
     private List<Fragment> fragmentList = new ArrayList<>();
+    private String dataType;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +50,7 @@ public class InventoryDetailActivity extends BaseActivity implements View.OnClic
     }
 
     private void initView() {
+        dataType = getIntent().getStringExtra("dataType");
         iv_base_back = findViewById(R.id.iv_base_back);
         tv_base_title = findViewById(R.id.tv_base_title);
         tl_detail_type = findViewById(R.id.tl_detail_type);

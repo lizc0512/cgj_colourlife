@@ -43,6 +43,7 @@ public class DeliveryModel extends BaseModel {
     private String deliveryDefaultAddressesUrl = "/address/defaultAddresses";//获取默认地址的
     private String deliverySearchUrl = "/courierCompany/fuzzyQueryCourierCompany";//模糊搜索
     private String inventoryUrl = "/stock/count";//数据盘点
+    private String inventoryAddUrl = "/stock/add";//盘点完成
 
     public DeliveryModel(Context context) {
         super(context);
@@ -455,12 +456,48 @@ public class DeliveryModel extends BaseModel {
         }, true, false);
     }
 
+    /**
+     * 盘点统计页数据
+     *
+     * @param what
+     * @param accessToken
+     * @param communityUuid
+     * @param newHttpResponse
+     */
     public void getInventoryData(int what, String accessToken, String communityUuid, final HttpResponse newHttpResponse) {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("accessToken", accessToken);
         params.put("communityUuid", communityUuid);
-        Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 18, inventoryUrl),
+        Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 19, inventoryUrl),
                 RequestMethod.GET);
+        request(what, request, RequestEncryptionUtils.getNewSaftyMap(mContext, params), new HttpListener<String>() {
+            @Override
+            public void onSucceed(int what, Response<String> response) {
+                int responseCode = response.getHeaders().getResponseCode();
+                String result = response.get();
+                if (responseCode == RequestEncryptionUtils.responseSuccess) {
+                    int resultCode = showSuccesResultMessage(result);
+                    if (resultCode == 0) {
+                        newHttpResponse.OnHttpResponse(what, result);
+                    }
+                } else {
+                    showErrorCodeMessage(response);
+                }
+            }
+
+            @Override
+            public void onFailed(int what, Response<String> response) {
+                showExceptionMessage(what, response);
+            }
+        }, true, true);
+    }
+
+    public void postInventoryAdd(int what, String accessToken, String courierNumber, final HttpResponse newHttpResponse) {
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("accessToken", accessToken);
+        params.put("courierNumber", courierNumber);
+        Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 19, inventoryAddUrl),
+                RequestMethod.POST);
         request(what, request, RequestEncryptionUtils.getNewSaftyMap(mContext, params), new HttpListener<String>() {
             @Override
             public void onSucceed(int what, Response<String> response) {

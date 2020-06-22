@@ -113,19 +113,9 @@
                         android:layout_marginLeft="@dimen/size_20dp"
                         android:layout_marginTop="@dimen/size_5dp"
                         android:layout_toRightOf="@id/view_employee_head"
-                        android:text="部门"
+                        tools:text="部门"
                         android:textColor="@color/color_6D7278"
                         android:textSize="@dimen/font_14sp" />
-
-                    <View
-                        android:id="@+id/view_employee_mid"
-                        android:layout_width="@dimen/size_1px"
-                        android:layout_height="@dimen/size_14dp"
-                        android:layout_below="@id/tv_employee_name"
-                        android:layout_marginLeft="@dimen/size_8dp"
-                        android:layout_marginTop="@dimen/size_6dp"
-                        android:layout_toRightOf="@id/tv_employee_department"
-                        android:background="@color/color_6D7278" />
 
                     <TextView
                         android:id="@+id/tv_employee_job"
@@ -134,8 +124,8 @@
                         android:layout_below="@id/tv_employee_name"
                         android:layout_marginLeft="@dimen/size_8dp"
                         android:layout_marginTop="@dimen/size_5dp"
-                        android:layout_toRightOf="@id/view_employee_mid"
-                        android:text="职位"
+                        android:layout_toRightOf="@id/tv_employee_department"
+                        tools:text="| 职位"
                         android:textColor="@color/color_6D7278"
                         android:textSize="@dimen/font_14sp" />
 
@@ -265,27 +255,6 @@
                         android:textSize="@dimen/font_14sp"
                         tools:text="13600000000" />
 
-                    <TextView
-                        android:id="@+id/tv_employee_phonecopy"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:layout_alignParentBottom="true"
-                        android:layout_marginRight="@dimen/size_20dp"
-                        android:layout_marginBottom="@dimen/size_8dp"
-                        android:text="复制"
-                        android:textColor="@color/color_3A85E9"
-                        android:textSize="@dimen/font_14sp" />
-
-                    <ImageView
-                        android:layout_width="@dimen/size_18dp"
-                        android:layout_height="@dimen/size_18dp"
-                        android:layout_alignParentBottom="true"
-                        android:layout_marginRight="@dimen/size_5dp"
-                        android:layout_marginBottom="@dimen/size_8dp"
-                        android:layout_toLeftOf="@id/tv_employee_phonecopy"
-                        android:src="@drawable/copy" />
-
                 </RelativeLayout>
 
                 <RelativeLayout
@@ -311,27 +280,6 @@
                         android:textColor="@color/color_25282e"
                         android:textSize="@dimen/font_14sp"
                         tools:text="xx@qq.com" />
-
-                    <TextView
-                        android:id="@+id/tv_employee_emailcopy"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:layout_alignParentBottom="true"
-                        android:layout_marginRight="@dimen/size_20dp"
-                        android:layout_marginBottom="@dimen/size_8dp"
-                        android:text="复制"
-                        android:textColor="@color/color_3A85E9"
-                        android:textSize="@dimen/font_14sp" />
-
-                    <ImageView
-                        android:layout_width="@dimen/size_18dp"
-                        android:layout_height="@dimen/size_18dp"
-                        android:layout_alignParentBottom="true"
-                        android:layout_marginRight="@dimen/size_5dp"
-                        android:layout_marginBottom="@dimen/size_8dp"
-                        android:layout_toLeftOf="@id/tv_employee_emailcopy"
-                        android:src="@drawable/copy" />
 
                 </RelativeLayout>
 

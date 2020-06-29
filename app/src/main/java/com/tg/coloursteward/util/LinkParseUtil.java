@@ -12,9 +12,9 @@ import com.tg.coloursteward.activity.DataShowActivity;
 import com.tg.coloursteward.activity.DownloadManagerActivity;
 import com.tg.coloursteward.activity.MyBrowserActivity;
 import com.tg.coloursteward.activity.PublicAccountActivity;
+import com.tg.delivery.activity.InventoryDataActivity;
 import com.tg.delivery.activity.DeliveryManagerActivity;
 import com.tg.delivery.activity.DeliveryScannerActivity;
-import com.tg.delivery.activity.DeliveryTransferActivity;
 import com.tg.delivery.activity.NewWarehousingActivity;
 import com.tg.money.activity.GroupAccountDetailsActivity;
 import com.tg.money.activity.GroupBounsActivity;
@@ -112,12 +112,16 @@ public class LinkParseUtil {
                         context.overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
                     } else if (name.equals("expressDis")) {//派件
                         it = new Intent(context, DeliveryScannerActivity.class);
-                        it.putExtra(OPERATETYPE,0);
+                        it.putExtra(OPERATETYPE, 0);
                         context.startActivity(it);
                         context.overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
                     } else if (name.equals("expressTransfer")) { //交接
                         it = new Intent(context, DeliveryScannerActivity.class);
-                        it.putExtra(OPERATETYPE,1);
+                        it.putExtra(OPERATETYPE, 1);
+                        context.startActivity(it);
+                        context.overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
+                    } else if (name.equals("inventory")) { //盘点
+                        it = new Intent(context, InventoryDataActivity.class);
                         context.startActivity(it);
                         context.overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
                     } else {

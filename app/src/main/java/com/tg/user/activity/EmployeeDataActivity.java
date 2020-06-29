@@ -65,9 +65,7 @@ public class EmployeeDataActivity extends BaseActivity implements HttpResponse, 
     private TextView tv_employee_phone;
     private TextView tv_employee_depart;
     private TextView tv_employee_jobname;
-    private TextView tv_employee_phonecopy;
     private TextView tv_employee_email;
-    private TextView tv_employee_emailcopy;
     private TextView tv_employee_company;
     private static String personCode;
     private ContactModel contactModel;
@@ -125,7 +123,7 @@ public class EmployeeDataActivity extends BaseActivity implements HttpResponse, 
         GlideUtils.loadImageDefaultDisplay(this, searchContactBean.getIconUrl(), ivHead, R.drawable.default_header, R.drawable.default_header);
         if (searchContactBean.getSex().equals("1")) {
             ivSex.setImageResource(R.drawable.employee_male);
-        } else {
+        } else if (searchContactBean.getSex().equals("0")) {
             ivSex.setImageResource(R.drawable.employee_female);
         }
         String favoriteId = searchContactBean.getFavoriteid();
@@ -185,7 +183,7 @@ public class EmployeeDataActivity extends BaseActivity implements HttpResponse, 
         GlideUtils.loadImageDefaultDisplay(this, info.avatar, ivHead, R.drawable.default_header, R.drawable.default_header);
         if (info.sex.equals("1")) {
             ivSex.setImageResource(R.drawable.employee_male);
-        } else {
+        } else if (info.sex.equals("0")) {
             ivSex.setImageResource(R.drawable.employee_female);
         }
     }
@@ -214,9 +212,7 @@ public class EmployeeDataActivity extends BaseActivity implements HttpResponse, 
         rl_employee_call = findViewById(R.id.rl_employee_call);
         rl_employee_email = findViewById(R.id.rl_employee_email);
         rl_employee_money = findViewById(R.id.rl_employee_money);
-        tv_employee_phonecopy = findViewById(R.id.tv_employee_phonecopy);
         tv_employee_email = findViewById(R.id.tv_employee_email);
-        tv_employee_emailcopy = findViewById(R.id.tv_employee_emailcopy);
         tv_employee_jobname = findViewById(R.id.tv_employee_jobname);
         tv_employee_company = findViewById(R.id.tv_employee_company);
         rl_employee_msg.setOnClickListener(this);
@@ -225,8 +221,6 @@ public class EmployeeDataActivity extends BaseActivity implements HttpResponse, 
         rl_employee_email.setOnClickListener(this);
         rl_employee_money.setOnClickListener(this);
         ivClose.setOnClickListener(this);
-        tv_employee_phonecopy.setOnClickListener(this);
-        tv_employee_emailcopy.setOnClickListener(this);
         String corpName = spUtils.getStringData(SpConstants.storage.CORPNAME, "");
         tv_employee_company.setText(corpName);
         String corpId = spUtils.getStringData(SpConstants.storage.CORPID, "");
@@ -237,6 +231,14 @@ public class EmployeeDataActivity extends BaseActivity implements HttpResponse, 
             cbCollect.setVisibility(View.GONE);
             rl_employee_money.setVisibility(View.GONE);
         }
+        tv_employee_phone.setOnLongClickListener(v -> {
+            copyText("手机号已复制", tv_employee_phone.getText().toString());
+            return false;
+        });
+        tv_employee_email.setOnLongClickListener(v -> {
+            copyText("邮箱已复制", tv_employee_email.getText().toString());
+            return false;
+        });
 
     }
 
@@ -289,20 +291,7 @@ public class EmployeeDataActivity extends BaseActivity implements HttpResponse, 
                         bean = employeeEntity.getContent();
                         String job = bean.getJob_type();
                         String part = bean.getOrg_name();
-                        if (!TextUtils.isEmpty(job)) {
-                            tvJob.setText(job);
-                            tv_employee_jobname.setText(job);
-                        } else {
-                            tvJob.setText("暂无职位");
-                            tv_employee_jobname.setText("暂无职位");
-                        }
-                        if (!TextUtils.isEmpty(part)) {
-                            tvBranch.setText(part);
-                            tv_employee_depart.setText(part);
-                        } else {
-                            tvBranch.setText("暂无部门");
-                            tv_employee_depart.setText("暂无部门");
-                        }
+                        setPartMent(part, job, employeeEntity.getContent().getUsername());
                         tv_employee_phone.setText(bean.getMobile());
                         tv_employee_email.setText(bean.getEmail());
                         tvName.setText(bean.getName());
@@ -310,7 +299,7 @@ public class EmployeeDataActivity extends BaseActivity implements HttpResponse, 
                         GlideUtils.loadImageDefaultDisplay(this, avatar, ivHead, R.drawable.default_header, R.drawable.default_header);
                         if ("1".equals(bean.getGender())) {
                             ivSex.setImageResource(R.drawable.employee_male);
-                        } else {
+                        } else if ("0".equals(bean.getGender())) {
                             ivSex.setImageResource(R.drawable.employee_female);
                         }
                     }
@@ -333,15 +322,23 @@ public class EmployeeDataActivity extends BaseActivity implements HttpResponse, 
         }
     }
 
+    private void setPartMent(String part, String job, String oa) {
+        String corpId = spUtils.getStringData(SpConstants.storage.CORPID, "");
+        if (Contants.APP.CORP_UUID.equals(corpId)) {
+            tvBranch.setText("OA账号: " + oa);
+            tv_employee_depart.setText(part == null ? "暂无部门" : part);
+            tv_employee_jobname.setText(job == null ? "暂无职位" : job);
+        } else {
+            tvBranch.setText(part == null ? "暂无部门" : part);
+            tvJob.setText(job == null ? "暂无职位" : "| " + job);
+            tv_employee_jobname.setText(job == null ? "暂无职位" : job);
+            tv_employee_depart.setText(part == null ? "暂无部门" : part);
+        }
+    }
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.tv_employee_phonecopy:
-                copyText("手机号已复制", tv_employee_phone.getText().toString());
-                break;
-            case R.id.tv_employee_emailcopy:
-                copyText("邮箱已复制", tv_employee_email.getText().toString());
-                break;
             case R.id.rl_employee_email:// 发送邮件
                 MicroAuthTimeUtils microAuthTimeUtils = new MicroAuthTimeUtils();
                 microAuthTimeUtils.IsAuthTime(this, Contants.Html5.YJ, "2", "");

@@ -7,6 +7,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 /**
  * 时间转化工具
@@ -144,26 +145,11 @@ public class DateUtils {
     /**
      * php时间转换成字符串
      *
-     * @param phpDate php时间
-     * @param format  转换格式
      * @return
      */
-    public static String phpToString(String phpDate, String format) {
-
-        if (format == null) {
-            format = DATE_FORMAT_DAY;
-        }
-        String date = phpDate + "000";
-        String dateTime = "";
-        try {
-            Long dateLong = Long.parseLong(date);
-
-            SimpleDateFormat df = new SimpleDateFormat(format);
-            dateTime = df.format(dateLong);
-        } catch (Exception e) {
-        }
-
-        return dateTime;
+    public static String phpToString() {
+        String timeStamp = new SimpleDateFormat(DATE_FORMAT_DAY, Locale.CHINA).format(new Date());
+        return timeStamp;
 
     }
 

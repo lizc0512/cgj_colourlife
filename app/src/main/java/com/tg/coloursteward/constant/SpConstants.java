@@ -55,6 +55,8 @@ public interface SpConstants {
         String DELIVERYNAME = "delivery_name";//彩快递小区名字
         String DELIVERYUUID = "delivery_uuid";//彩快递小区uuid
         String DELIVERYSHOW = "delivery_show";//是否展示快递数据
+        String INVENTORYDATA = "inventory_data";//盘点页面数据
+        String INVENTORYDELIVERY = "inventoryDeliveryList";//扫码盘点数据
         String THRID_CODE = "thrid_code";//彩之云授权登录code
         String CORPID = "corp_id";//租户Id
         String CORPNAME = "corp_name";//租户名称

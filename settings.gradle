@@ -1,1 +1,2 @@
+include ':commonLibrary'
 include ':app', ':huxin_sdk', ':hellocharts-library', ':keeplive'

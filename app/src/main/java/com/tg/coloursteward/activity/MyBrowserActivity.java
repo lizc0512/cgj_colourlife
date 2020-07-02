@@ -1795,7 +1795,7 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
         final boolean isKitKat = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
         final boolean isN = Build.VERSION.SDK_INT >= Build.VERSION_CODES.N;
 
-        if (isN) {
+        if (isN && uri.toString().startsWith("content")) {
             return getFilePathForN(context, uri);
         }
 

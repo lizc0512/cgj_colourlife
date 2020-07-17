@@ -4,9 +4,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.tg.coloursteward.R;
 import com.tg.coloursteward.base.BaseActivity;
+import com.tg.coloursteward.constant.Contants;
+import com.tg.coloursteward.constant.SpConstants;
+import com.tg.coloursteward.util.SharedPreferencesUtils;
 
 /**
  * 乐开-发送钥匙列表
@@ -28,6 +32,7 @@ public class KeySendKeyListActivity extends BaseActivity {
 
     private RelativeLayout rl_phone;
     private RelativeLayout rl_code;
+    private TextView tv_desc;
     private String doorId;
     private String communityUuid;
     private String communityName;
@@ -38,6 +43,7 @@ public class KeySendKeyListActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         rl_phone = findViewById(R.id.rl_phone);
+        tv_desc = findViewById(R.id.tv_desc);
         rl_code = findViewById(R.id.rl_code);
 
         rl_phone.setOnClickListener(singleListener);
@@ -52,6 +58,14 @@ public class KeySendKeyListActivity extends BaseActivity {
             headView.setTitle("发送钥匙");
         }else{
             headView.setTitle("发送钥匙包");
+        }
+        String corpId = SharedPreferencesUtils.getInstance().getStringData(SpConstants.storage.CORPID, "");
+        if(Contants.APP.CORP_UUID.equals(corpId)){
+            rl_code.setVisibility(View.VISIBLE);
+            tv_desc.setText("通过彩之云手机号发送钥匙");
+        }else{
+            rl_code.setVisibility(View.GONE);
+            tv_desc.setText("通过手机号发送钥匙");
         }
     }
 

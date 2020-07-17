@@ -904,6 +904,7 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
         @JavascriptInterface
         public void getResponseType(String json) {
             if (!TextUtils.isEmpty(json)) {
+
                 try {
                     JSONObject jsonObjec = new JSONObject(json);
                     app_id = jsonObjec.getString("app_id");

@@ -72,7 +72,7 @@ public class Utils {
 	}
 	/**
 	 * 根据定位结果返回定位信息的字符串
-	 * @param loc
+	 * @param location
 	 * @return
 	 */
 	public synchronized static String getLocationStr(AMapLocation location){

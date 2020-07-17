@@ -119,7 +119,6 @@ import com.yanzhenjie.nohttp.BasicBinary;
 import com.yanzhenjie.nohttp.FileBinary;
 import com.youmai.hxsdk.group.AddContactsCreateGroupActivity;
 
-import org.greenrobot.eventbus.EventBus;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -144,8 +143,6 @@ import cn.sharesdk.framework.PlatformActionListener;
 import cn.sharesdk.onekeyshare.OnekeyShare;
 import cn.sharesdk.wechat.friends.Wechat;
 import cn.sharesdk.wechat.moments.WechatMoments;
-
-import static com.tg.coloursteward.constant.UserMessageConstant.DELIVERY_SELECT_ADDRESS;
 
 /**
  * 浏览器BaseActivity
@@ -1796,7 +1793,7 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
         final boolean isKitKat = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
         final boolean isN = Build.VERSION.SDK_INT >= Build.VERSION_CODES.N;
 
-        if (isN) {
+        if (isN && uri.toString().startsWith("content")) {
             return getFilePathForN(context, uri);
         }
 
@@ -1964,6 +1961,7 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
         webView.setWebViewClient(null);
         webView.destroy();
         webView = null;
+        mlocationClient.onDestroy();//销毁定位客户端，同时销毁本地定位服务。
     }
 
     @Override
@@ -2053,6 +2051,8 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
         //设置定位间隔,单位毫秒,默认为2000ms
 //		mLocationOption.setInterval(2000);
         mLocationOption.setOnceLocation(true);//可选，设置是否单次定位。默认是false
+        mLocationOption.setOnceLocationLatest(true);
+        mLocationOption.setLocationPurpose(AMapLocationClientOption.AMapLocationPurpose.SignIn);
         //设置定位参数
         mlocationClient.setLocationOption(mLocationOption);
     }
@@ -2065,21 +2065,8 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
      * @since 2.8.0
      */
     private void startLocation() {
-        // 设置定位参数
-        //mlocationClient.setLocationOption(mLocationOption);
         // 启动定位
         mlocationClient.startLocation();
-    }
-
-    /**
-     * 停止定位
-     *
-     * @author hongming.wang
-     * @since 2.8.0
-     */
-    private void stopLocation() {
-        // 停止定位
-        mlocationClient.stopLocation();
     }
 
     @Override
@@ -2097,25 +2084,6 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
             locationPermission();
             Log.d("TAG", "定位失败");
         }
-    }
-
-    /**
-     * 销毁定位
-     *
-     * @author hongming.wang
-     * @since 2.8.0
-     */
-    private void destroyLocation() {
-        if (null != mlocationClient) {
-            /**
-             * 如果AMapLocationClient是在当前Activity实例化的，
-             * 在Activity的onDestroy中一定要执行AMapLocationClient的onDestroy
-             */
-            mlocationClient.onDestroy();
-            mlocationClient = null;
-            mLocationOption = null;
-        }
-
     }
 
     /**

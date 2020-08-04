@@ -599,7 +599,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
 
             @Override
             public void onClosed(int i) {
-
+                Log.e("TAG", "GT3BaseListener-->onDialogReady-->" + i);
             }
 
             /**

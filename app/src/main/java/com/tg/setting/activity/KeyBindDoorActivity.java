@@ -85,7 +85,7 @@ public class KeyBindDoorActivity extends BaseActivity implements View.OnClickLis
                 // 添加设备时扫描监听
                 if (0 != count && !"重新扫描".equals(tv_stop.getText().toString().trim())) {
                     String deviceMac = device.getBluetoothDevice().getAddress();
-                    if (!mDevicesMac.contains(deviceMac)) {
+                    if(!mDevicesMac.contains(deviceMac)) {
                         // 首次扫描到的设备添加到列表中
                         mDevicesMac.add(deviceMac);
                         mDevices.add(device);
@@ -242,6 +242,9 @@ public class KeyBindDoorActivity extends BaseActivity implements View.OnClickLis
             mHandler.removeCallbacksAndMessages(null);
         }
         if (0 == mDevices.size()) {
+            if(null!=mAdapter){
+                mAdapter.notifyDataSetChanged();
+            }
             ll_no_door.setVisibility(View.VISIBLE);
         }
     }
@@ -269,6 +272,9 @@ public class KeyBindDoorActivity extends BaseActivity implements View.OnClickLis
                         if ("开始扫描".equals(tv_stop.getText().toString().trim()) || "重新扫描".equals(tv_stop.getText().toString().trim())) {
                             mDevices.clear();
                             mDevicesMac.clear();
+                            if (null!=mAdapter){
+                                mAdapter.notifyDataSetChanged();
+                            }
                             startScan();
                         } else {
                             stopScan();

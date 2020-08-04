@@ -30,6 +30,7 @@ import android.os.Message;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.provider.OpenableColumns;
+import android.provider.Settings;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.Base64;
@@ -102,6 +103,7 @@ import com.tg.coloursteward.net.HttpTools;
 import com.tg.coloursteward.net.MD5;
 import com.tg.coloursteward.serice.AuthAppService;
 import com.tg.coloursteward.serice.OAuth2ServiceUpdate;
+import com.tg.coloursteward.util.DisplayUtil;
 import com.tg.coloursteward.util.FileSizeUtil;
 import com.tg.coloursteward.util.GlideUtils;
 import com.tg.coloursteward.util.GsonUtils;
@@ -858,6 +860,7 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
 
         @JavascriptInterface
         public void GetLatLngCallBack() {
+            getGpsStatus();
             startLocation();
         }
 
@@ -1286,6 +1289,24 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
             }
             setResult(200, intent);
             finish();
+        }
+    }
+
+    /**
+     * 检测是否打开了通知栏GPS按钮
+     */
+    private void getGpsStatus() {
+        if (!DisplayUtil.isOpenGps(this)) {
+            new AlertDialog.Builder(this)
+                    .setTitle("提示")
+                    .setMessage("手机GPS定位服务尚未开启，可能无法获取到您的准确位置信息，是否前往开启？")
+                    .setNegativeButton("取消", null)
+                    .setPositiveButton("去开启", (dialogInterface, i) -> {
+                        Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                        startActivityForResult(intent, 6000);
+                        dialogInterface.dismiss();
+                    })
+                    .show();
         }
     }
 
@@ -1731,6 +1752,12 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
             if (resultCode == 1001) {
                 String json = data.getStringExtra("address_book");
                 webView.loadUrl("javascript:cgjPostAddressBookInfo('" + json + "')");
+            }
+        } else if (requestCode == 6000) {
+            if (DisplayUtil.isOpenGps(this)) {
+                startLocation();
+            } else {
+                getGpsStatus();
             }
         } else {
             if (uploadFile != null) {    //xie ：直接点击取消时，ValueCallback回调会被挂起，需要手动结束掉回调，否则再次点击选择照片无响应

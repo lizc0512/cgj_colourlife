@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Message;
 import android.provider.Settings;
 import android.text.TextUtils;
 import android.view.View;
@@ -41,8 +40,6 @@ import com.tg.setting.view.UpdateVerSionDialog;
 import com.youmai.hxsdk.HuxinSdkManager;
 import com.youmai.hxsdk.config.AppConfig;
 import com.youmai.hxsdk.utils.AppUtils;
-
-import org.greenrobot.eventbus.EventBus;
 
 import java.net.InetSocketAddress;
 import java.util.ArrayList;

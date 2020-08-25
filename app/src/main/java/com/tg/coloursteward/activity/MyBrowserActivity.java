@@ -1509,7 +1509,7 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
 
     private void initGetInfo(String app_id, String response_type) {
         if (!TextUtils.isEmpty(app_id)) {
-            String domain = Uri.parse(url).getHost();
+            String domain = Uri.parse(webView.getUrl()).getHost();
             String corp_id = spUtils.getStringData(SpConstants.storage.CORPID, "");
             h5OauthModel.getAppInfo(0, app_id, response_type, domain, corp_id, this);
         }

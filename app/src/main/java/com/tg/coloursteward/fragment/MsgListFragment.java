@@ -299,6 +299,11 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, View.OnC
         initDialog();
         initNet();
         initSetLoginPwd();
+//        boolean isClearHomeData = SharedPreferencesUtils.getInstance().getBooleanData(SpConstants.UserModel.HOMEDATACLEAR, false);
+//        if (!isClearHomeData) {
+//            SharedPreferencesUtils.getInstance().saveStringData(SpConstants.UserModel.HOMEDATA, "");
+//            SharedPreferencesUtils.getInstance().saveBooleanData(SpConstants.UserModel.HOMEDATACLEAR, true);
+//        }
         String cacheData = SharedPreferencesUtils.getInstance().getStringData(SpConstants.UserModel.HOMEDATA, "");
         if (!TextUtils.isEmpty(cacheData)) {
             initSetData(cacheData);

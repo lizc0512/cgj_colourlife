@@ -19,6 +19,9 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.net.Uri;
 import android.net.http.SslError;
 import android.os.AsyncTask;
@@ -103,8 +106,10 @@ import com.tg.coloursteward.net.HttpTools;
 import com.tg.coloursteward.net.MD5;
 import com.tg.coloursteward.serice.AuthAppService;
 import com.tg.coloursteward.serice.OAuth2ServiceUpdate;
+import com.tg.coloursteward.util.DateUtils;
 import com.tg.coloursteward.util.DisplayUtil;
 import com.tg.coloursteward.util.FileSizeUtil;
+import com.tg.coloursteward.util.FileUtils;
 import com.tg.coloursteward.util.GlideUtils;
 import com.tg.coloursteward.util.GsonUtils;
 import com.tg.coloursteward.util.Helper;
@@ -119,6 +124,7 @@ import com.tg.coloursteward.view.X5WebView;
 import com.tg.coloursteward.view.dialog.ToastFactory;
 import com.yanzhenjie.nohttp.BasicBinary;
 import com.yanzhenjie.nohttp.FileBinary;
+import com.youmai.hxsdk.config.FileConfig;
 import com.youmai.hxsdk.group.AddContactsCreateGroupActivity;
 
 import org.json.JSONException;
@@ -145,6 +151,8 @@ import cn.sharesdk.framework.PlatformActionListener;
 import cn.sharesdk.onekeyshare.OnekeyShare;
 import cn.sharesdk.wechat.friends.Wechat;
 import cn.sharesdk.wechat.moments.WechatMoments;
+import top.zibin.luban.Luban;
+import top.zibin.luban.OnCompressListener;
 
 /**
  * 浏览器BaseActivity
@@ -225,6 +233,7 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
     private String appName = "cgj";
     private String fileName;
     private String libaryType = "";
+    private Bitmap bitmap = null;
     protected static final FrameLayout.LayoutParams COVER_SCREEN_PARAMS = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
     private BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
@@ -1774,9 +1783,37 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
     private void initUploadFile(Uri uriPath, String token, String cropId, String appName) {
         microModel = new MicroModel(this);
         String urlPath = getPath(this, uriPath);
-        BasicBinary binary = new FileBinary(new File(urlPath));
+        Luban.with(this)
+                .load(urlPath)
+                .ignoreBy(500)
+                .setTargetDir(FileConfig.getThumbImagePaths())
+                .setCompressListener(new OnCompressListener() {
+                    @Override
+                    public void onStart() {
+                    }
+
+                    @Override
+                    public void onSuccess(File file) {
+                        selectPicHandle(file.getPath(), token, cropId, appName);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                    }
+                }).launch();
+    }
+
+    private void selectPicHandle(String urlPath, String token, String cropId, String appName) {
+        bitmap = BitmapFactory.decodeFile(urlPath);
+        String time = DateUtils.getTime();
+        String place = spUtils.getStringData(SpConstants.storage.LOCATION_PLACE, "");
+        String name = webView.getTitle();
+        bitmap = FileUtils.addTextWatermark(bitmap, time + "\n" + place + "\n" + name, 60,
+                Color.parseColor("#ffcd42"), 40, 160, 120, true);
+        String pathWatermark = FileUtils.saveBitmap(bitmap);//添加了水印的照片
+        BasicBinary binary = new FileBinary(new File(pathWatermark));
         fileName = binary.getFileName();
-        microModel.postUploadFile(2, token, cropId, urlPath, appName, true, this);
+        microModel.postUploadFile(2, token, cropId, pathWatermark, appName, true, this);
     }
 
     /**

@@ -269,6 +269,9 @@ public class MainActivity extends BaseActivity implements HttpResponse {
                         String str_longitude = String.valueOf(aMapLocation.getLongitude());
                         Tools.saveStringValue(getApplication(), Contants.storage.LATITUDE, str_latitude);
                         Tools.saveStringValue(getApplication(), Contants.storage.LONGITUDE, str_longitude);
+                        spUtils.saveStringData(SpConstants.storage.LATITUDE, str_latitude);
+                        spUtils.saveStringData(SpConstants.storage.LONGITUDE, str_longitude);
+                        spUtils.saveStringData(SpConstants.storage.LOCATION_PLACE, aMapLocation.getAddress());
                     } else {
                         Log.e("AmapErr", "Location ERR:"
                                 + aMapLocation.getErrorCode());

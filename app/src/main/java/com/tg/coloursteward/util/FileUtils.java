@@ -12,14 +12,16 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.graphics.Rect;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
-import androidx.annotation.RequiresApi;
 import android.text.TextUtils;
+
+import androidx.annotation.RequiresApi;
 
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
@@ -635,5 +637,71 @@ public class FileUtils {
         // 存储新合成的图片
         canvas.restore();
         return newBitmap;
+    }
+
+    /**
+     * 给一张Bitmap添加水印文字。
+     *
+     * @param src      源图片
+     * @param content  水印文本 识别\n的回车形式
+     * @param textSize 水印字体大小 ，单位pix。
+     * @param color    水印字体颜色。
+     * @param x        起始坐标x
+     * @param y        起始坐标y
+     * @param h        换行文本高度
+     * @param recycle  是否回收
+     * @return 已经添加水印后的Bitmap。
+     */
+    public static Bitmap addTextWatermark(Bitmap src, String content, int textSize, int color, float x, float y, float h, boolean recycle) {
+        if (isEmptyBitmap(src) || content == null)
+            return null;
+        Bitmap ret = src.copy(src.getConfig(), true);
+        Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        Canvas canvas = new Canvas(ret);
+        paint.setColor(color);
+        paint.setTextSize(textSize);
+        Rect bounds = new Rect();
+        paint.getTextBounds(content, 0, content.length(), bounds);
+        String[] contents = content.split("\n");
+        for (String text : contents) {
+            canvas.drawText(text, x, y, paint);
+            y += h;
+        }
+        if (recycle && !src.isRecycled())
+            src.recycle();
+        return ret;
+    }
+
+    /**
+     * Bitmap对象是否为空。
+     */
+    private static boolean isEmptyBitmap(Bitmap src) {
+        return src == null || src.getWidth() == 0 || src.getHeight() == 0;
+    }
+
+    public static String saveBitmap( Bitmap b) {
+        String path = initPath();
+        long dataTake = System.currentTimeMillis();
+        String jpegName = path + File.separator + "picture_" + dataTake + ".jpg";
+        try {
+            FileOutputStream fout = new FileOutputStream(jpegName);
+            BufferedOutputStream bos = new BufferedOutputStream(fout);
+            b.compress(Bitmap.CompressFormat.JPEG, 100, bos);
+            bos.flush();
+            bos.close();
+            return jpegName;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return "";
+        }
+    }
+
+    private static String initPath() {
+        String storagePath = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "colourlife";
+        File f = new File(storagePath);
+        if (!f.exists()) {
+            f.mkdir();
+        }
+        return storagePath;
     }
 }

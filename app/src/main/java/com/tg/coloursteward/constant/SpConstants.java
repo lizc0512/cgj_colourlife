@@ -73,6 +73,9 @@ public interface SpConstants {
         String COLOUR_WALLET_KEYWORD_SIGN = "colour_wallet_keyword_sign";//彩钱包显示饭票还是积分的标识
         String COLOUR_WALLET_ACCOUNT_LIST = "colour_wallet_account_list";//彩钱包的账户列表
         String COLOUR_AUTH_REAL_NAME = "colour_auth_real_name";//腾讯实名认证
+        String LATITUDE = "str_latitude";//纬度
+        String LONGITUDE = "str_longitude";//经度
+        String LOCATION_PLACE = "location_place";//位置信息
 
     }
 }

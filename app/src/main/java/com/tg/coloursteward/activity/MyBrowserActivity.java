@@ -234,6 +234,7 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
     private String fileName;
     private String libaryType = "";
     private Bitmap bitmap = null;
+    private H5UploadEntity entity;
     protected static final FrameLayout.LayoutParams COVER_SCREEN_PARAMS = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
     private BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
@@ -1183,7 +1184,6 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
          */
         @JavascriptInterface
         public void cgjUploadHandler(String data) {
-            H5UploadEntity entity = new H5UploadEntity();
             entity = GsonUtils.gsonToBean(data, H5UploadEntity.class);
             appName = entity.getAppName();
             List<String> typeList = new ArrayList<>();
@@ -1804,16 +1804,28 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
     }
 
     private void selectPicHandle(String urlPath, String token, String cropId, String appName) {
-        bitmap = BitmapFactory.decodeFile(urlPath);
-        String time = DateUtils.getTime();
-        String place = spUtils.getStringData(SpConstants.storage.LOCATION_PLACE, "");
-        String name = webView.getTitle();
-        bitmap = FileUtils.addTextWatermark(bitmap, time + "\n" + place + "\n" + name, 60,
-                Color.parseColor("#ffcd42"), 40, 160, 120, true);
-        String pathWatermark = FileUtils.saveBitmap(bitmap);//添加了水印的照片
-        BasicBinary binary = new FileBinary(new File(pathWatermark));
-        fileName = binary.getFileName();
-        microModel.postUploadFile(2, token, cropId, pathWatermark, appName, true, this);
+        String isMark = entity.getIsMark();
+        if ("1".equals(isMark)) {
+            bitmap = BitmapFactory.decodeFile(urlPath);
+            String time = DateUtils.getTime();
+            String place = spUtils.getStringData(SpConstants.storage.LOCATION_PLACE, "");
+            String name = webView.getTitle();
+            String addMark = entity.getAddrMark();
+            if (!TextUtils.isEmpty(addMark)) {
+                place = addMark;
+            }
+            Bitmap reactBit = BitmapFactory.decodeResource(this.getResources(),R.drawable.react_bit);
+            bitmap = FileUtils.addTextWatermark(reactBit,bitmap, name + "\n" + place + "\n" + time, 65,
+                    Color.parseColor("#ffffff"), 30, 130, 20, true);
+            String pathWatermark = FileUtils.saveBitmap(bitmap);//添加了水印的照片
+            BasicBinary binary = new FileBinary(new File(pathWatermark));
+            fileName = binary.getFileName();
+            microModel.postUploadFile(2, token, cropId, pathWatermark, appName, true, this);
+        } else {
+            BasicBinary binary = new FileBinary(new File(urlPath));
+            fileName = binary.getFileName();
+            microModel.postUploadFile(2, token, cropId, urlPath, appName, true, this);
+        }
     }
 
     /**

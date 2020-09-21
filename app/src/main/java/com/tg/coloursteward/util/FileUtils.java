@@ -13,12 +13,16 @@ import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.graphics.RectF;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
+import android.text.Layout;
+import android.text.StaticLayout;
+import android.text.TextPaint;
 import android.text.TextUtils;
 
 import androidx.annotation.RequiresApi;
@@ -652,7 +656,7 @@ public class FileUtils {
      * @param recycle  是否回收
      * @return 已经添加水印后的Bitmap。
      */
-    public static Bitmap addTextWatermark(Bitmap src, String content, int textSize, int color, float x, float y, float h, boolean recycle) {
+    public static Bitmap addTextWatermark(Bitmap reactBit, Bitmap src, String content, int textSize, int color, float x, float y, float h, boolean recycle) {
         if (isEmptyBitmap(src) || content == null)
             return null;
         Bitmap ret = src.copy(src.getConfig(), true);
@@ -663,9 +667,26 @@ public class FileUtils {
         Rect bounds = new Rect();
         paint.getTextBounds(content, 0, content.length(), bounds);
         String[] contents = content.split("\n");
+        y = (float) (canvas.getHeight() * 0.7);
+        TextPaint textPaint = new TextPaint();
+
+//        Rect mSrcRect = new Rect(0, (int) y, canvas.getWidth(),canvas.getHeight()-(int) y);
+//        RectF rectF = new RectF(0, 0, canvas.getWidth(), canvas.getHeight()-(int) y);
+        Rect mSrcRect = new Rect(0,0,reactBit.getWidth(),reactBit.getHeight());
+        RectF rectF = new RectF(0, 0, canvas.getWidth(),reactBit.getHeight());
+        canvas.drawBitmap(reactBit, mSrcRect, rectF, new Paint());
+//        canvas.drawBitmap(reactBit, 0,y, new Paint());
         for (String text : contents) {
-            canvas.drawText(text, x, y, paint);
-            y += h;
+            textPaint.setColor(color);
+            textPaint.setTextSize(textSize);
+            textPaint.setAntiAlias(true);
+            StaticLayout layoutopen = new StaticLayout(text, textPaint, canvas.getWidth() - 30,
+                    Layout.Alignment.ALIGN_NORMAL, 1.0F, 0.0F, true);
+            canvas.save();
+            canvas.translate(x, y);
+            layoutopen.draw(canvas);
+            canvas.restore();
+            y += layoutopen.getHeight() + h;
         }
         if (recycle && !src.isRecycled())
             src.recycle();
@@ -679,7 +700,7 @@ public class FileUtils {
         return src == null || src.getWidth() == 0 || src.getHeight() == 0;
     }
 
-    public static String saveBitmap( Bitmap b) {
+    public static String saveBitmap(Bitmap b) {
         String path = initPath();
         long dataTake = System.currentTimeMillis();
         String jpegName = path + File.separator + "picture_" + dataTake + ".jpg";

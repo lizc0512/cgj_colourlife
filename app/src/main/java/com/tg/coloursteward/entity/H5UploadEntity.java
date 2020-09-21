@@ -21,6 +21,8 @@ public class H5UploadEntity  {
      */
 
     private String appName;
+    private String isMark;
+    private String addrMark;
     private List<String> types;
 
     public String getAppName() {
@@ -37,5 +39,21 @@ public class H5UploadEntity  {
 
     public void setTypes(List<String> types) {
         this.types = types;
+    }
+
+    public String getIsMark() {
+        return isMark;
+    }
+
+    public void setIsMark(String isMark) {
+        this.isMark = isMark;
+    }
+
+    public String getAddrMark() {
+        return addrMark;
+    }
+
+    public void setAddrMark(String addrMark) {
+        this.addrMark = addrMark;
     }
 }

@@ -670,12 +670,9 @@ public class FileUtils {
         y = (float) (canvas.getHeight() * 0.7);
         TextPaint textPaint = new TextPaint();
 
-//        Rect mSrcRect = new Rect(0, (int) y, canvas.getWidth(),canvas.getHeight()-(int) y);
-//        RectF rectF = new RectF(0, 0, canvas.getWidth(), canvas.getHeight()-(int) y);
         Rect mSrcRect = new Rect(0,0,reactBit.getWidth(),reactBit.getHeight());
-        RectF rectF = new RectF(0, 0, canvas.getWidth(),reactBit.getHeight());
+        RectF rectF = new RectF(0, y, canvas.getWidth(),canvas.getHeight());
         canvas.drawBitmap(reactBit, mSrcRect, rectF, new Paint());
-//        canvas.drawBitmap(reactBit, 0,y, new Paint());
         for (String text : contents) {
             textPaint.setColor(color);
             textPaint.setTextSize(textSize);

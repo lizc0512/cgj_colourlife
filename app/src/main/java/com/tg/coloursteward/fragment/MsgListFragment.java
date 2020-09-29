@@ -43,7 +43,6 @@ import com.tg.coloursteward.entity.HomeMsgEntity;
 import com.tg.coloursteward.entity.ScanCodeTimeEntity;
 import com.tg.coloursteward.inter.FragmentMineCallBack;
 import com.tg.coloursteward.model.HomeModel;
-import com.tg.coloursteward.module.MainActivity;
 import com.tg.coloursteward.serice.NetWorkStateReceiver;
 import com.tg.coloursteward.util.AuthTimeUtils;
 import com.tg.coloursteward.util.GsonUtils;
@@ -273,14 +272,14 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, View.OnC
         if (!EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().register(this);
         }
-        HuxinSdkManager.instance().chatMsgFromCache(this,
-                new ProtoCallback.CacheMsgCallBack() {
-                    @Override
-                    public void result(List<ExCacheMsgBean> data) {
-                        mMessageAdapter.changeMessageList(data);
-                        initUnreadList();
-                    }
-                });
+//        HuxinSdkManager.instance().chatMsgFromCache(this,
+//                new ProtoCallback.CacheMsgCallBack() {
+//                    @Override
+//                    public void result(List<ExCacheMsgBean> data) {
+//                        mMessageAdapter.changeMessageList(data);
+//                        initUnreadList();
+//                    }
+//                });
     }
 
     @Override
@@ -504,7 +503,7 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, View.OnC
     @Override
     public void onResume() {
         super.onResume();
-        HuxinSdkManager.instance().setImMsgCallback(this);
+//        HuxinSdkManager.instance().setImMsgCallback(this);
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
         mContext.registerReceiver(netWorkStateReceiver, intentFilter);
@@ -514,7 +513,7 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, View.OnC
     @Override
     public void onPause() {
         super.onPause();
-        HuxinSdkManager.instance().removeImMsgCallback(this);
+//        HuxinSdkManager.instance().removeImMsgCallback(this);
         mContext.unregisterReceiver(netWorkStateReceiver);
     }
 
@@ -628,25 +627,25 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, View.OnC
      */
     @Override
     public void onCallback(CacheMsgBean imComingMsg) {
-        if (imComingMsg != null) {
-            ExCacheMsgBean bean = new ExCacheMsgBean(imComingMsg);
-
-            String targetId = bean.getTargetUuid();
-
-            boolean isTop = HuxinSdkManager.instance().getMsgTop(targetId);
-            if (isTop) {
-                bean.setTop(true);
-            }
-
-            bean.setDisplayName(imComingMsg.getTargetName());
-            mMessageAdapter.addTop(bean);
-
-            if (getActivity() instanceof MainActivity) {
-                MainActivity act = (MainActivity) getActivity();
-                act.refreshUnReadCount();
-            }
-            initUnreadList();
-        }
+//        if (imComingMsg != null) {
+//            ExCacheMsgBean bean = new ExCacheMsgBean(imComingMsg);
+//
+//            String targetId = bean.getTargetUuid();
+//
+//            boolean isTop = HuxinSdkManager.instance().getMsgTop(targetId);
+//            if (isTop) {
+//                bean.setTop(true);
+//            }
+//
+//            bean.setDisplayName(imComingMsg.getTargetName());
+//            mMessageAdapter.addTop(bean);
+//
+//            if (getActivity() instanceof MainActivity) {
+//                MainActivity act = (MainActivity) getActivity();
+//                act.refreshUnReadCount();
+//            }
+//            initUnreadList();
+//        }
     }
 
     private void initUnreadList() {

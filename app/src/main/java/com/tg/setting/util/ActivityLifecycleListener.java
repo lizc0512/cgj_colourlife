@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.app.Application;
 import android.os.Bundle;
 
+import com.tg.coloursteward.module.MainActivity;
+
 /**
  * hxg 2019-06-21.
  */
@@ -26,7 +28,11 @@ public class ActivityLifecycleListener implements Application.ActivityLifecycleC
     public void onActivityStarted(Activity activity) {
         activityCount++;
         if (activityCount == 1) {//回到前台
-            LekaiHelper.startScanDevice();
+            if (activity.getClass().equals(MainActivity.class)) {
+                MainActivity.getSlientLogin();
+            } else {
+                LekaiHelper.startScanDevice();
+            }
         }
     }
 
@@ -44,7 +50,11 @@ public class ActivityLifecycleListener implements Application.ActivityLifecycleC
     public void onActivityStopped(Activity activity) {
         activityCount--;//退到后台
         if (activityCount == 0) {
-            LekaiHelper.stopScanDevice();
+            if (activity.getClass().equals(MainActivity.class)) {
+
+            } else {
+                LekaiHelper.startScanDevice();
+            }
         }
     }
 

@@ -138,7 +138,7 @@ public class MainActivity extends BaseActivity implements HttpResponse {
     private FragmentManager fragmentManager;
 
 
-    private Context mContext;
+    public static Context mContext;
     private NormalHandler mHandler;
     private MicroAuthTimeUtils microAuthTimeUtils;
     private AuthTimeUtils mAuthTimeUtils;
@@ -161,7 +161,7 @@ public class MainActivity extends BaseActivity implements HttpResponse {
     public static String url_ad;
     private SettingModel settingModel;
     private HomeModel homeModel;
-    private UserModel userModel;
+    public static UserModel userModel;
     private List<String> updateList = new ArrayList<>();
     private BroadcastReceiver freshReceiver = new BroadcastReceiver() {
         @Override
@@ -626,8 +626,8 @@ public class MainActivity extends BaseActivity implements HttpResponse {
     /**
      * 重新静默获取用户信息
      */
-    private void getSlientLogin() {
-        OAuth2ServiceUpdate auth2ServiceUpdate = new OAuth2ServiceUpdate(MainActivity.this);
+    public static void getSlientLogin() {
+        OAuth2ServiceUpdate auth2ServiceUpdate = new OAuth2ServiceUpdate(mContext);
         auth2ServiceUpdate.getOAuth2Service(UserInfo.employeeAccount, Tools.getPassWordMD5(mContext), new Oauth2CallBack() {
             @Override
             public void onData(String access_token) {
@@ -636,8 +636,8 @@ public class MainActivity extends BaseActivity implements HttpResponse {
         });
     }
 
-    private void getNetInfo(String access_token) {
-        userModel.getOauthUser(10, access_token, false, this);
+    public static void getNetInfo(String access_token) {
+        userModel.getOauthUser(10, access_token, false, (HttpResponse) mContext);
     }
 
     /**
@@ -909,6 +909,7 @@ public class MainActivity extends BaseActivity implements HttpResponse {
                 if (!TextUtils.isEmpty(result)) {
                     try {
                         int code = HttpTools.getCode(result);
+                        String message = HttpTools.getMessageString(result);
                         if (code == 0) {
                             String response = HttpTools.getContentString(result);
                             ResponseData data = HttpTools.getResponseContentObject(response);
@@ -929,15 +930,24 @@ public class MainActivity extends BaseActivity implements HttpResponse {
                                     sendBroadcast(new Intent(ACTION_TICKET_INFO));
                                 }
                             } else {
-                                ToastFactory.showToast(MainActivity.this, "账号异常，请及时联系管理员");
-                                exitClearAllData(MainActivity.this,false);
+                                errorAccount();
                             }
+                        } else if (code == 8002) {
+                            errorAccount();
+                        } else if (!TextUtils.isEmpty(message) && message.contains("账号已被禁用")) {
+                            errorAccount();
                         }
                     } catch (Exception e) {
+
                     }
                 }
                 break;
         }
+    }
+
+    public void errorAccount() {
+        ToastFactory.showToast(MainActivity.this, "账号异常，请及时联系管理员");
+        exitClearAllData(MainActivity.this, false);
     }
 
     public void deleteFile(File file) {

@@ -278,12 +278,12 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         if (viewType == ADAPTER_TYPE_PUSHMSG) {
             View view = inflater.inflate(R.layout.push_message_item_layout, parent, false);
             return new MsgItemPush(view);
-//        } else if (viewType == ADAPTER_TYPE_SINGLE) {
-//            View view = inflater.inflate(R.layout.single_message_item_layout, parent, false);
-//            return new MsgItemChat(view);
-//        } else if (viewType == ADAPTER_TYPE_GROUP) {
-//            View view = inflater.inflate(R.layout.group_message_item_layout, parent, false);
-//            return new MsgItemGroup(view);
+        } else if (viewType == ADAPTER_TYPE_SINGLE) {
+            View view = inflater.inflate(R.layout.single_message_item_layout, parent, false);
+            return new MsgItemChat(view);
+        } else if (viewType == ADAPTER_TYPE_GROUP) {
+            View view = inflater.inflate(R.layout.group_message_item_layout, parent, false);
+            return new MsgItemGroup(view);
         } else {
             View view = inflater.inflate(R.layout.single_message_item_layout, parent, false);
             return new MsgItemChat(view);
@@ -354,197 +354,196 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             } else {
                 itemView.message_item.setBackgroundColor(mContext.getResources().getColor(R.color.hx_color_white));
             }
+        } else if (holder instanceof MsgItemChat) {
+            final MsgItemChat itemView = (MsgItemChat) holder;
+            itemView.message_item.setTag(position);
+            itemView.message_time.setText(TimeUtils.dateFormat(model.getMsgTime()));
+
+            String displayName = model.getDisplayName();
+            boolean contains = displayName.contains(ColorsConfig.GROUP_DEFAULT_NAME);
+            if (contains) {
+                displayName = displayName.replace(ColorsConfig.GROUP_DEFAULT_NAME, "");
+            }
+            itemView.message_name.setText(displayName);
+
+            switch (model.getMsgType()) {
+                case CacheMsgBean.SINGLE_VIDEO_CALL:
+                    CacheMsgSingleVideo videoMsg = (CacheMsgSingleVideo) model.getJsonBodyObj();
+                    itemView.message_type.setText(videoMsg.getContent());
+                    break;
+                case CacheMsgBean.SEND_EMOTION:
+                case CacheMsgBean.RECEIVE_EMOTION:
+                    itemView.message_type.setText(mContext.getString(R.string.message_type_1));
+                    break;
+                case CacheMsgBean.SEND_TEXT:
+                case CacheMsgBean.RECEIVE_TEXT:
+                    CacheMsgTxt textM = (CacheMsgTxt) model.getJsonBodyObj();
+                    SpannableString msgSpan = new SpannableString(textM.getMsgTxt());
+                    msgSpan = EmoticonHandler.getInstance(mContext.getApplicationContext()).getTextFace(
+                            textM.getMsgTxt(), msgSpan, 0, Utils.getFontSize(itemView.message_type.getTextSize()));
+                    itemView.message_type.setText(msgSpan);
+                    break;
+                case CacheMsgBean.SEND_IMAGE:
+                case CacheMsgBean.RECEIVE_IMAGE:
+                    itemView.message_type.setText(mContext.getString(R.string.message_type_3));
+                    break;
+                case CacheMsgBean.SEND_LOCATION:
+                case CacheMsgBean.RECEIVE_LOCATION:
+                    itemView.message_type.setText(mContext.getString(R.string.message_type_4));
+                    break;
+                case CacheMsgBean.SEND_VIDEO:
+                case CacheMsgBean.RECEIVE_VIDEO:
+                    itemView.message_type.setText(mContext.getString(R.string.message_type_5));
+                    break;
+                case CacheMsgBean.SEND_VOICE:
+                case CacheMsgBean.RECEIVE_VOICE:
+                    itemView.message_type.setText(mContext.getString(R.string.message_type_sounds));
+                    break;
+                case CacheMsgBean.SEND_FILE:
+                case CacheMsgBean.RECEIVE_FILE:
+                    itemView.message_type.setText(mContext.getString(R.string.message_type_file));
+                    break;
+                case CacheMsgBean.SEND_REDPACKAGE:
+                case CacheMsgBean.RECEIVE_REDPACKAGE:
+                case CacheMsgBean.OPEN_REDPACKET:
+                    itemView.message_type.setText(mContext.getString(R.string.message_red_package));
+                    break;
+                case CacheMsgBean.RECEIVE_PACKET_OPENED:
+                    itemView.message_type.setText(mContext.getString(R.string.message_red_package_open));
+                    break;
+                case CacheMsgBean.PACKET_OPENED_SUCCESS:
+                    itemView.message_type.setText(mContext.getString(R.string.message_open_red_packet_success));
+                    break;
+
+                default:
+                    itemView.message_type.setText("");
+            }
+
+            //沟通列表
+            int unreadCount = IMMsgManager.instance().getBadeCount(model.getTargetUuid());
+            itemView.message_status.setBadgeNumber(unreadCount);
+
+
+            int size = mContext.getResources().getDimensionPixelOffset(R.dimen.card_head);
+
+            String avatar = model.getTargetAvatar();
+            if (model.isTop == true) {
+                itemView.message_item.setBackgroundColor(mContext.getResources().getColor(R.color.line_index));
+            } else {
+                itemView.message_item.setBackground(mContext.getResources().getDrawable(R.drawable.hxb_list_item_selector));
+            }
+            Glide.with(mContext).load(avatar)
+                    .apply(new RequestOptions()
+                            .transform(new GlideRoundTransform())
+                            .override(size, size)
+                            .placeholder(R.drawable.color_default_header)
+                            .error(R.drawable.color_default_header)
+                            .diskCacheStrategy(DiskCacheStrategy.RESOURCE))
+                    .into(itemView.message_icon);
+
+        } else if (holder instanceof MsgItemGroup) {//群组
+            final MsgItemGroup itemView = (MsgItemGroup) holder;
+            itemView.message_item.setTag(position);
+            itemView.message_time.setText(TimeUtils.dateFormat(model.getMsgTime()));
+
+            String displayName = model.getDisplayName();
+            if (!TextUtils.isEmpty(displayName)
+                    && displayName.contains(ColorsConfig.GROUP_DEFAULT_NAME)) {
+                displayName = displayName.replace(ColorsConfig.GROUP_DEFAULT_NAME, "");
+            }
+            itemView.message_name.setText(displayName);
+
+            String keyword = "";
+            if (IMMsgManager.instance().isMeInGroup(model.getGroupId())) {
+                keyword = "[有人@我]";
+            }
+
+            VideoCall videoCall = HuxinSdkManager.instance().getVideoCall();
+            if (videoCall != null && videoCall.getGroupId() == model.getGroupId()) {
+                String format = mContext.getString(R.string.video_call_status);
+                itemView.message_type.setText(String.format(format, videoCall.getCount()));
+                itemView.message_callBtn.setImageResource(R.drawable.ic_online);
+                itemView.message_time.setText(TimeUtils.dateFormat(videoCall.getMsgTime()));
+            } else {
+                switch (model.getMsgType()) {
+                    case CacheMsgBean.SEND_EMOTION:
+                    case CacheMsgBean.RECEIVE_EMOTION:
+                        String context = keyword + mContext.getString(R.string.message_type_1);
+                        itemView.message_type.setText(context);
+                        setAtText(keyword, context, itemView.message_type);
+                        break;
+                    case CacheMsgBean.SEND_TEXT:
+                    case CacheMsgBean.RECEIVE_TEXT:
+                        CacheMsgTxt textM = (CacheMsgTxt) model.getJsonBodyObj();
+                        SpannableString msgSpan = new SpannableString(textM.getMsgTxt());
+                        msgSpan = EmoticonHandler.getInstance(mContext.getApplicationContext()).getTextFace(
+                                textM.getMsgTxt(), msgSpan, 0, Utils.getFontSize(itemView.message_type.getTextSize()));
+
+                        String content = keyword + msgSpan;
+                        itemView.message_type.setText(content);
+                        setAtText(keyword, content, itemView.message_type);
+
+                        break;
+                    case CacheMsgBean.SEND_IMAGE:
+                    case CacheMsgBean.RECEIVE_IMAGE:
+                        itemView.message_type.setText(mContext.getString(R.string.message_type_3));
+                        break;
+                    case CacheMsgBean.SEND_LOCATION:
+                    case CacheMsgBean.RECEIVE_LOCATION:
+                        itemView.message_type.setText(mContext.getString(R.string.message_type_4));
+                        break;
+                    case CacheMsgBean.SEND_VIDEO:
+                    case CacheMsgBean.RECEIVE_VIDEO:
+                        itemView.message_type.setText(mContext.getString(R.string.message_type_5));
+                        break;
+                    case CacheMsgBean.SEND_VOICE:
+                    case CacheMsgBean.RECEIVE_VOICE:
+                        itemView.message_type.setText(mContext.getString(R.string.message_type_sounds));
+                        break;
+                    case CacheMsgBean.SEND_FILE:
+                    case CacheMsgBean.RECEIVE_FILE:
+                        itemView.message_type.setText(mContext.getString(R.string.message_type_file));
+                        break;
+                    case CacheMsgBean.GROUP_MEMBER_CHANGED:
+                        //itemView.message_type.setText(mContext.getString(R.string.message_type_member_changed));
+                        itemView.message_type.setText(model.getMemberChanged());
+                        break;
+                    case CacheMsgBean.GROUP_NAME_CHANGED:
+                        //itemView.message_type.setText(mContext.getString(R.string.message_type_name_changed));
+                        itemView.message_type.setText(model.getMemberChanged());
+                        break;
+                    case CacheMsgBean.GROUP_TRANSFER_OWNER:
+                        //itemView.message_type.setText(mContext.getString(R.string.message_type_owner_changed));
+                        itemView.message_type.setText(model.getMemberChanged());
+                        break;
+                    case CacheMsgBean.SEND_REDPACKAGE:
+                    case CacheMsgBean.RECEIVE_REDPACKAGE:
+                    case CacheMsgBean.OPEN_REDPACKET:
+                        itemView.message_type.setText(mContext.getString(R.string.message_red_package));
+                        break;
+                    case CacheMsgBean.RECEIVE_PACKET_OPENED:
+                        itemView.message_type.setText(mContext.getString(R.string.message_red_package_open));
+                        break;
+                    case CacheMsgBean.PACKET_OPENED_SUCCESS:
+                        itemView.message_type.setText(mContext.getString(R.string.message_open_red_packet_success));
+                        break;
+
+                    default:
+                        itemView.message_type.setText("");
+                }
+                itemView.message_callBtn.setImageDrawable(null);
+                itemView.message_time.setText(TimeUtils.dateFormat(model.getMsgTime()));
+            }
+
+            //沟通列表
+            int unreadCount = IMMsgManager.instance().getBadeCount(model.getTargetUuid());
+            itemView.message_status.setBadgeNumber(unreadCount);
+            if (model.isTop == true) {
+                itemView.message_item.setBackgroundColor(mContext.getResources().getColor(R.color.line_index));
+            } else {
+                itemView.message_item.setBackground(mContext.getResources().getDrawable(R.drawable.hxb_list_item_selector));
+            }
         }
-//        } else if (holder instanceof MsgItemChat) {
-//            final MsgItemChat itemView = (MsgItemChat) holder;
-//            itemView.message_item.setTag(position);
-//            itemView.message_time.setText(TimeUtils.dateFormat(model.getMsgTime()));
-//
-//            String displayName = model.getDisplayName();
-//            boolean contains = displayName.contains(ColorsConfig.GROUP_DEFAULT_NAME);
-//            if (contains) {
-//                displayName = displayName.replace(ColorsConfig.GROUP_DEFAULT_NAME, "");
-//            }
-//            itemView.message_name.setText(displayName);
-//
-//            switch (model.getMsgType()) {
-//                case CacheMsgBean.SINGLE_VIDEO_CALL:
-//                    CacheMsgSingleVideo videoMsg = (CacheMsgSingleVideo) model.getJsonBodyObj();
-//                    itemView.message_type.setText(videoMsg.getContent());
-//                    break;
-//                case CacheMsgBean.SEND_EMOTION:
-//                case CacheMsgBean.RECEIVE_EMOTION:
-//                    itemView.message_type.setText(mContext.getString(R.string.message_type_1));
-//                    break;
-//                case CacheMsgBean.SEND_TEXT:
-//                case CacheMsgBean.RECEIVE_TEXT:
-//                    CacheMsgTxt textM = (CacheMsgTxt) model.getJsonBodyObj();
-//                    SpannableString msgSpan = new SpannableString(textM.getMsgTxt());
-//                    msgSpan = EmoticonHandler.getInstance(mContext.getApplicationContext()).getTextFace(
-//                            textM.getMsgTxt(), msgSpan, 0, Utils.getFontSize(itemView.message_type.getTextSize()));
-//                    itemView.message_type.setText(msgSpan);
-//                    break;
-//                case CacheMsgBean.SEND_IMAGE:
-//                case CacheMsgBean.RECEIVE_IMAGE:
-//                    itemView.message_type.setText(mContext.getString(R.string.message_type_3));
-//                    break;
-//                case CacheMsgBean.SEND_LOCATION:
-//                case CacheMsgBean.RECEIVE_LOCATION:
-//                    itemView.message_type.setText(mContext.getString(R.string.message_type_4));
-//                    break;
-//                case CacheMsgBean.SEND_VIDEO:
-//                case CacheMsgBean.RECEIVE_VIDEO:
-//                    itemView.message_type.setText(mContext.getString(R.string.message_type_5));
-//                    break;
-//                case CacheMsgBean.SEND_VOICE:
-//                case CacheMsgBean.RECEIVE_VOICE:
-//                    itemView.message_type.setText(mContext.getString(R.string.message_type_sounds));
-//                    break;
-//                case CacheMsgBean.SEND_FILE:
-//                case CacheMsgBean.RECEIVE_FILE:
-//                    itemView.message_type.setText(mContext.getString(R.string.message_type_file));
-//                    break;
-//                case CacheMsgBean.SEND_REDPACKAGE:
-//                case CacheMsgBean.RECEIVE_REDPACKAGE:
-//                case CacheMsgBean.OPEN_REDPACKET:
-//                    itemView.message_type.setText(mContext.getString(R.string.message_red_package));
-//                    break;
-//                case CacheMsgBean.RECEIVE_PACKET_OPENED:
-//                    itemView.message_type.setText(mContext.getString(R.string.message_red_package_open));
-//                    break;
-//                case CacheMsgBean.PACKET_OPENED_SUCCESS:
-//                    itemView.message_type.setText(mContext.getString(R.string.message_open_red_packet_success));
-//                    break;
-//
-//                default:
-//                    itemView.message_type.setText("");
-//            }
-//
-//            //沟通列表
-//            int unreadCount = IMMsgManager.instance().getBadeCount(model.getTargetUuid());
-//            itemView.message_status.setBadgeNumber(unreadCount);
-//
-//
-//            int size = mContext.getResources().getDimensionPixelOffset(R.dimen.card_head);
-//
-//            String avatar = model.getTargetAvatar();
-//            if (model.isTop == true) {
-//                itemView.message_item.setBackgroundColor(mContext.getResources().getColor(R.color.line_index));
-//            } else {
-//                itemView.message_item.setBackground(mContext.getResources().getDrawable(R.drawable.hxb_list_item_selector));
-//            }
-//            Glide.with(mContext).load(avatar)
-//                    .apply(new RequestOptions()
-//                            .transform(new GlideRoundTransform())
-//                            .override(size, size)
-//                            .placeholder(R.drawable.color_default_header)
-//                            .error(R.drawable.color_default_header)
-//                            .diskCacheStrategy(DiskCacheStrategy.RESOURCE))
-//                    .into(itemView.message_icon);
-//
-//        } else if (holder instanceof MsgItemGroup) {//群组
-//            final MsgItemGroup itemView = (MsgItemGroup) holder;
-//            itemView.message_item.setTag(position);
-//            itemView.message_time.setText(TimeUtils.dateFormat(model.getMsgTime()));
-//
-//            String displayName = model.getDisplayName();
-//            if (!TextUtils.isEmpty(displayName)
-//                    && displayName.contains(ColorsConfig.GROUP_DEFAULT_NAME)) {
-//                displayName = displayName.replace(ColorsConfig.GROUP_DEFAULT_NAME, "");
-//            }
-//            itemView.message_name.setText(displayName);
-//
-//            String keyword = "";
-//            if (IMMsgManager.instance().isMeInGroup(model.getGroupId())) {
-//                keyword = "[有人@我]";
-//            }
-//
-//            VideoCall videoCall = HuxinSdkManager.instance().getVideoCall();
-//            if (videoCall != null && videoCall.getGroupId() == model.getGroupId()) {
-//                String format = mContext.getString(R.string.video_call_status);
-//                itemView.message_type.setText(String.format(format, videoCall.getCount()));
-//                itemView.message_callBtn.setImageResource(R.drawable.ic_online);
-//                itemView.message_time.setText(TimeUtils.dateFormat(videoCall.getMsgTime()));
-//            } else {
-//                switch (model.getMsgType()) {
-//                    case CacheMsgBean.SEND_EMOTION:
-//                    case CacheMsgBean.RECEIVE_EMOTION:
-//                        String context = keyword + mContext.getString(R.string.message_type_1);
-//                        itemView.message_type.setText(context);
-//                        setAtText(keyword, context, itemView.message_type);
-//                        break;
-//                    case CacheMsgBean.SEND_TEXT:
-//                    case CacheMsgBean.RECEIVE_TEXT:
-//                        CacheMsgTxt textM = (CacheMsgTxt) model.getJsonBodyObj();
-//                        SpannableString msgSpan = new SpannableString(textM.getMsgTxt());
-//                        msgSpan = EmoticonHandler.getInstance(mContext.getApplicationContext()).getTextFace(
-//                                textM.getMsgTxt(), msgSpan, 0, Utils.getFontSize(itemView.message_type.getTextSize()));
-//
-//                        String content = keyword + msgSpan;
-//                        itemView.message_type.setText(content);
-//                        setAtText(keyword, content, itemView.message_type);
-//
-//                        break;
-//                    case CacheMsgBean.SEND_IMAGE:
-//                    case CacheMsgBean.RECEIVE_IMAGE:
-//                        itemView.message_type.setText(mContext.getString(R.string.message_type_3));
-//                        break;
-//                    case CacheMsgBean.SEND_LOCATION:
-//                    case CacheMsgBean.RECEIVE_LOCATION:
-//                        itemView.message_type.setText(mContext.getString(R.string.message_type_4));
-//                        break;
-//                    case CacheMsgBean.SEND_VIDEO:
-//                    case CacheMsgBean.RECEIVE_VIDEO:
-//                        itemView.message_type.setText(mContext.getString(R.string.message_type_5));
-//                        break;
-//                    case CacheMsgBean.SEND_VOICE:
-//                    case CacheMsgBean.RECEIVE_VOICE:
-//                        itemView.message_type.setText(mContext.getString(R.string.message_type_sounds));
-//                        break;
-//                    case CacheMsgBean.SEND_FILE:
-//                    case CacheMsgBean.RECEIVE_FILE:
-//                        itemView.message_type.setText(mContext.getString(R.string.message_type_file));
-//                        break;
-//                    case CacheMsgBean.GROUP_MEMBER_CHANGED:
-//                        //itemView.message_type.setText(mContext.getString(R.string.message_type_member_changed));
-//                        itemView.message_type.setText(model.getMemberChanged());
-//                        break;
-//                    case CacheMsgBean.GROUP_NAME_CHANGED:
-//                        //itemView.message_type.setText(mContext.getString(R.string.message_type_name_changed));
-//                        itemView.message_type.setText(model.getMemberChanged());
-//                        break;
-//                    case CacheMsgBean.GROUP_TRANSFER_OWNER:
-//                        //itemView.message_type.setText(mContext.getString(R.string.message_type_owner_changed));
-//                        itemView.message_type.setText(model.getMemberChanged());
-//                        break;
-//                    case CacheMsgBean.SEND_REDPACKAGE:
-//                    case CacheMsgBean.RECEIVE_REDPACKAGE:
-//                    case CacheMsgBean.OPEN_REDPACKET:
-//                        itemView.message_type.setText(mContext.getString(R.string.message_red_package));
-//                        break;
-//                    case CacheMsgBean.RECEIVE_PACKET_OPENED:
-//                        itemView.message_type.setText(mContext.getString(R.string.message_red_package_open));
-//                        break;
-//                    case CacheMsgBean.PACKET_OPENED_SUCCESS:
-//                        itemView.message_type.setText(mContext.getString(R.string.message_open_red_packet_success));
-//                        break;
-//
-//                    default:
-//                        itemView.message_type.setText("");
-//                }
-//                itemView.message_callBtn.setImageDrawable(null);
-//                itemView.message_time.setText(TimeUtils.dateFormat(model.getMsgTime()));
-//            }
-//
-//            //沟通列表
-//            int unreadCount = IMMsgManager.instance().getBadeCount(model.getTargetUuid());
-//            itemView.message_status.setBadgeNumber(unreadCount);
-//            if (model.isTop == true) {
-//                itemView.message_item.setBackgroundColor(mContext.getResources().getColor(R.color.line_index));
-//            } else {
-//                itemView.message_item.setBackground(mContext.getResources().getDrawable(R.drawable.hxb_list_item_selector));
-//            }
-//        }
 
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {

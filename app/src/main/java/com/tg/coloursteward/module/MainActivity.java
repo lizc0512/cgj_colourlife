@@ -72,7 +72,6 @@ import com.tg.coloursteward.util.PopupScUtils;
 import com.tg.coloursteward.util.ToastUtil;
 import com.tg.coloursteward.util.Tools;
 import com.tg.coloursteward.view.ViewPagerSlide;
-import com.tg.coloursteward.view.dialog.ToastFactory;
 import com.tg.setting.adapter.UpdateAdapter;
 import com.tg.setting.entity.VersionEntity;
 import com.tg.setting.model.SettingModel;
@@ -239,7 +238,7 @@ public class MainActivity extends BaseActivity implements HttpResponse {
     }
 
     private void initData() {
-        homeModel.getPopWindow(1, this);
+        homeModel.getPopWindow(12, this);
     }
 
     private void CheckPermission() {
@@ -357,7 +356,7 @@ public class MainActivity extends BaseActivity implements HttpResponse {
         super.onResume();
         initGetToken();
         refreshUnReadCount();
-        initCheckImStatus();
+//        initCheckImStatus();
     }
 
     private void initCheckImStatus() {
@@ -387,8 +386,6 @@ public class MainActivity extends BaseActivity implements HttpResponse {
                             }
                         });
             }
-        } else {
-
         }
     }
 
@@ -820,7 +817,7 @@ public class MainActivity extends BaseActivity implements HttpResponse {
                     }
                 }
                 break;
-            case 1:
+            case 12:
                 if (!TextUtils.isEmpty(result)) {
                     HomePopWindowEntity popWindowEntity = new HomePopWindowEntity();
                     try {
@@ -946,7 +943,7 @@ public class MainActivity extends BaseActivity implements HttpResponse {
     }
 
     public void errorAccount() {
-        ToastFactory.showToast(MainActivity.this, "账号异常，请及时联系管理员");
+        ToastUtil.showShortToast(MainActivity.this, "账号异常，请及时联系管理员");
         exitClearAllData(MainActivity.this, false);
     }
 

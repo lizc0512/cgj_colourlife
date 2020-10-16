@@ -248,7 +248,8 @@ public class TokenUtils {
         if (JPushInterface.isPushStopped(context)) {
             JPushInterface.resumePush(context);
         }
-        if (!shared.contains("UniqueID")) {
+        String deviceID = SharedPreferencesUtils.getInstance().getStringData("deviceJpushID", "");
+        if (TextUtils.isEmpty(deviceID)) {
             m_szUniqueID = JPushInterface.getRegistrationID(context);
             if (TextUtils.isEmpty(m_szUniqueID)) {
                 String androidId = getAndroirdId(context);
@@ -279,10 +280,9 @@ public class TokenUtils {
             if (TextUtils.isEmpty(m_szUniqueID)) {
                 m_szUniqueID = UUID.randomUUID().toString().replace("-", "");
             }
-            editor.putString("UniqueID", m_szUniqueID);
-            editor.commit();
+            SharedPreferencesUtils.getInstance().saveStringData("deviceJpushID", m_szUniqueID);
         } else {
-            m_szUniqueID = shared.getString("UniqueID", UUID.randomUUID().toString().replace("-", ""));
+            m_szUniqueID = deviceID;
         }
         return m_szUniqueID;
     }

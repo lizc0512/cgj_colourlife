@@ -230,7 +230,7 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
     private AuthAppService authAppService;
     private String authms2Token;
     private String webRightJson;
-    private String appName = "cgj";
+    private String appName = "";
     private String fileName;
     private String libaryType = "";
     private Bitmap bitmap = null;
@@ -1809,10 +1809,13 @@ public class MyBrowserActivity extends BaseActivity implements OnClickListener, 
             bitmap = BitmapFactory.decodeFile(urlPath);
             String time = DateUtils.getTime();
             String place = spUtils.getStringData(SpConstants.storage.LOCATION_PLACE, "");
-            String name = webView.getTitle();
             String addMark = entity.getAddrMark();
             if (!TextUtils.isEmpty(addMark)) {
                 place = addMark;
+            }
+            String name = webView.getTitle();
+            if (!TextUtils.isEmpty(appName)) {
+                name = appName;
             }
             Bitmap reactBit = BitmapFactory.decodeResource(this.getResources(),R.drawable.react_bit);
             bitmap = FileUtils.addTextWatermark(reactBit,bitmap, name + "\n" + place + "\n" + time, 65,

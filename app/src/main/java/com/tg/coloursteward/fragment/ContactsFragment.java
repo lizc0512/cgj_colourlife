@@ -50,7 +50,6 @@ import com.youmai.hxsdk.entity.DeleteUserBean;
 import com.youmai.hxsdk.entity.ModifyContactsBean;
 import com.youmai.hxsdk.entity.cn.CNPinyin;
 import com.youmai.hxsdk.entity.cn.CNPinyinFactory;
-import com.youmai.hxsdk.group.GroupListActivity;
 import com.youmai.hxsdk.group.data.ContactBeanData;
 import com.youmai.hxsdk.http.IGetListener;
 import com.youmai.hxsdk.http.OkHttpConnector;
@@ -112,7 +111,6 @@ public class ContactsFragment extends Fragment implements ItemEventListener, Htt
     private RelativeLayout rl_contact_depart;
     private RelativeLayout rl_contact_people;
     private RelativeLayout rl_contact_invite;
-    private RelativeLayout rl_contact_chat;
     private TextView tv_contact_msg_num;
     private TextView tv_contact_corpname;
     private TextView tv_contact_depart;
@@ -186,9 +184,6 @@ public class ContactsFragment extends Fragment implements ItemEventListener, Htt
                 break;
             case R.id.rl_contact_invite:
                 LinkParseUtil.parse((Activity) mContext, permissionJumpUrl, "");
-                break;
-            case R.id.rl_contact_chat:
-                startActivity(new Intent(getContext(), GroupListActivity.class));
                 break;
             case R.id.list_item_header_search_root:
                 intent = new Intent(getActivity(), GlobalSearchActivity.class);
@@ -302,7 +297,6 @@ public class ContactsFragment extends Fragment implements ItemEventListener, Htt
         rl_contact_depart = view.findViewById(R.id.rl_contact_depart);
         rl_contact_people = view.findViewById(R.id.rl_contact_people);
         rl_contact_invite = view.findViewById(R.id.rl_contact_invite);
-        rl_contact_chat = view.findViewById(R.id.rl_contact_chat);
         tv_contact_corpname = view.findViewById(R.id.tv_contact_corpname);
         tv_contact_depart = view.findViewById(R.id.tv_contact_depart);
         tv_contact_msg_num = view.findViewById(R.id.tv_contact_msg_num);
@@ -310,7 +304,6 @@ public class ContactsFragment extends Fragment implements ItemEventListener, Htt
         rl_contact_depart.setOnClickListener(this);
         rl_contact_people.setOnClickListener(this);
         rl_contact_invite.setOnClickListener(this);
-        rl_contact_chat.setOnClickListener(this);
         header_item.setOnClickListener(this);
 
         recyclerView = view.findViewById(R.id.recycler_view);

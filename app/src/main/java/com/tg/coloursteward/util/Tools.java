@@ -192,7 +192,7 @@ public class Tools {
         userInfo.setUserName(employeeAccount);
         userInfo.setOrgId(orgId);
         userInfo.setOrgName(familyName);
-        HuxinSdkManager.instance().setUserInfo(userInfo);
+//        HuxinSdkManager.instance().setUserInfo(userInfo);
 
         Tools.saveUserName(Tools.mContext, UserInfo.employeeAccount);
 

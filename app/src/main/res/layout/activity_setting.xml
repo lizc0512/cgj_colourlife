@@ -11,24 +11,6 @@
         android:layout_height="8dp"
         android:background="@color/app_bg" />
 
-    <RelativeLayout
-        android:id="@+id/rl_setting_imstatus"
-        android:layout_width="match_parent"
-        android:layout_height="44dp"
-        android:visibility="gone">
-
-        <TextView
-            android:id="@+id/tv_setting_imstatus"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="16dp"
-            android:text="IM通信状态："
-            android:textColor="@color/black_mine"
-            android:textSize="16dp" />
-
-    </RelativeLayout>
-
     <View
         android:layout_width="match_parent"
         android:layout_height="1px"

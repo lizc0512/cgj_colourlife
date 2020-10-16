@@ -355,6 +355,7 @@
         <RelativeLayout
             android:id="@+id/rl_employee_msg"
             android:layout_width="@dimen/size_0dp"
+            android:visibility="gone"
             android:layout_height="match_parent"
             android:layout_weight="1">
 

@@ -233,6 +233,11 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         notifyDataSetChanged();
     }
 
+    public void clearAllMessage() {
+        messageList.clear();
+        notifyDataSetChanged();
+    }
+
     public void refreshTopMsg(ExCacheMsgBean bean) {
         List<ExCacheMsgBean> topList = new ArrayList<>(1);
         String targetUuid = bean.getTargetUuid();

@@ -517,7 +517,7 @@ public abstract class BaseActivity extends AppCompatActivity implements HttpResp
         if (!isLoginActivity) {
             CityPropertyApplication.gotoLoginActivity(this);
         }
-        HuxinSdkManager.instance().loginOut();
+//        HuxinSdkManager.instance().loginOut();
     }
 
     private void clearCache() {

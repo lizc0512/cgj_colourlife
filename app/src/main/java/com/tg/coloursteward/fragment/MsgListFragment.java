@@ -43,7 +43,6 @@ import com.tg.coloursteward.entity.HomeMsgEntity;
 import com.tg.coloursteward.entity.ScanCodeTimeEntity;
 import com.tg.coloursteward.inter.FragmentMineCallBack;
 import com.tg.coloursteward.model.HomeModel;
-import com.tg.coloursteward.module.MainActivity;
 import com.tg.coloursteward.serice.NetWorkStateReceiver;
 import com.tg.coloursteward.util.AuthTimeUtils;
 import com.tg.coloursteward.util.GsonUtils;
@@ -53,7 +52,6 @@ import com.tg.coloursteward.view.PopWindowView;
 import com.tg.coloursteward.view.dialog.DialogFactory;
 import com.tg.im.activity.DeskTopActivity;
 import com.youmai.hxsdk.HuxinSdkManager;
-import com.youmai.hxsdk.ProtoCallback;
 import com.youmai.hxsdk.adapter.MessageAdapter;
 import com.youmai.hxsdk.chatgroup.IMGroupActivity;
 import com.youmai.hxsdk.chatsingle.IMConnectionActivity;
@@ -141,7 +139,8 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, View.OnC
                 break;
             case 1:
                 if (!TextUtils.isEmpty(result)) {
-                    SharedPreferencesUtils.getInstance().saveStringData(SpConstants.UserModel.HOMEDATA, result);
+                    String corpId=SharedPreferencesUtils.getInstance().getStringData(SpConstants.storage.CORPID,"");
+                    SharedPreferencesUtils.getInstance().saveStringData(SpConstants.UserModel.HOMEDATA+corpId, result);
                     initSetData(result);
                 }
                 break;
@@ -228,6 +227,8 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, View.OnC
                 mMessageAdapter.addPushMsgItem(bean);
             }
             initUnreadList();
+        }else {
+            mMessageAdapter.clearAllMessage();
         }
     }
 
@@ -247,7 +248,7 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, View.OnC
             }
             switch (msg.what) {
                 case RELOGIN_HUXIN_SERVER:
-                    HuxinSdkManager.instance().imReconnect();
+//                    HuxinSdkManager.instance().imReconnect();
                     break;
                 case LOAD_PROGRESS_DISMISS:
                     break;
@@ -273,14 +274,14 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, View.OnC
         if (!EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().register(this);
         }
-        HuxinSdkManager.instance().chatMsgFromCache(this,
-                new ProtoCallback.CacheMsgCallBack() {
-                    @Override
-                    public void result(List<ExCacheMsgBean> data) {
-                        mMessageAdapter.changeMessageList(data);
-                        initUnreadList();
-                    }
-                });
+//        HuxinSdkManager.instance().chatMsgFromCache(this,
+//                new ProtoCallback.CacheMsgCallBack() {
+//                    @Override
+//                    public void result(List<ExCacheMsgBean> data) {
+//                        mMessageAdapter.changeMessageList(data);
+//                        initUnreadList();
+//                    }
+//                });
     }
 
     @Override
@@ -304,7 +305,8 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, View.OnC
 //            SharedPreferencesUtils.getInstance().saveStringData(SpConstants.UserModel.HOMEDATA, "");
 //            SharedPreferencesUtils.getInstance().saveBooleanData(SpConstants.UserModel.HOMEDATACLEAR, true);
 //        }
-        String cacheData = SharedPreferencesUtils.getInstance().getStringData(SpConstants.UserModel.HOMEDATA, "");
+        String corpId=SharedPreferencesUtils.getInstance().getStringData(SpConstants.storage.CORPID,"");
+        String cacheData = SharedPreferencesUtils.getInstance().getStringData(SpConstants.UserModel.HOMEDATA+corpId, "");
         if (!TextUtils.isEmpty(cacheData)) {
             initSetData(cacheData);
         }
@@ -436,8 +438,9 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, View.OnC
         recyclerView.setLoadingListener(new XRecyclerView.LoadingListener() {
             @Override
             public void onRefresh() {
-                mHandler.removeMessages(RELOGIN_HUXIN_SERVER);
-                mHandler.sendEmptyMessageDelayed(RELOGIN_HUXIN_SERVER, 1000);
+//                mHandler.removeMessages(RELOGIN_HUXIN_SERVER);
+//                mHandler.sendEmptyMessageDelayed(RELOGIN_HUXIN_SERVER, 1000);
+                reqPushMsg();
                 new Handler().postDelayed(() -> recyclerView.refreshComplete(), 1000);
             }
 
@@ -504,7 +507,7 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, View.OnC
     @Override
     public void onResume() {
         super.onResume();
-        HuxinSdkManager.instance().setImMsgCallback(this);
+//        HuxinSdkManager.instance().setImMsgCallback(this);
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
         mContext.registerReceiver(netWorkStateReceiver, intentFilter);
@@ -514,7 +517,7 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, View.OnC
     @Override
     public void onPause() {
         super.onPause();
-        HuxinSdkManager.instance().removeImMsgCallback(this);
+//        HuxinSdkManager.instance().removeImMsgCallback(this);
         mContext.unregisterReceiver(netWorkStateReceiver);
     }
 
@@ -628,25 +631,25 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, View.OnC
      */
     @Override
     public void onCallback(CacheMsgBean imComingMsg) {
-        if (imComingMsg != null) {
-            ExCacheMsgBean bean = new ExCacheMsgBean(imComingMsg);
-
-            String targetId = bean.getTargetUuid();
-
-            boolean isTop = HuxinSdkManager.instance().getMsgTop(targetId);
-            if (isTop) {
-                bean.setTop(true);
-            }
-
-            bean.setDisplayName(imComingMsg.getTargetName());
-            mMessageAdapter.addTop(bean);
-
-            if (getActivity() instanceof MainActivity) {
-                MainActivity act = (MainActivity) getActivity();
-                act.refreshUnReadCount();
-            }
-            initUnreadList();
-        }
+//        if (imComingMsg != null) {
+//            ExCacheMsgBean bean = new ExCacheMsgBean(imComingMsg);
+//
+//            String targetId = bean.getTargetUuid();
+//
+//            boolean isTop = HuxinSdkManager.instance().getMsgTop(targetId);
+//            if (isTop) {
+//                bean.setTop(true);
+//            }
+//
+//            bean.setDisplayName(imComingMsg.getTargetName());
+//            mMessageAdapter.addTop(bean);
+//
+//            if (getActivity() instanceof MainActivity) {
+//                MainActivity act = (MainActivity) getActivity();
+//                act.refreshUnReadCount();
+//            }
+//            initUnreadList();
+//        }
     }
 
     private void initUnreadList() {

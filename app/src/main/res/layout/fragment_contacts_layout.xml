@@ -237,37 +237,11 @@
 
                 </RelativeLayout>
 
-                <RelativeLayout
-                    android:id="@+id/rl_contact_chat"
+                <View
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/size_52dp">
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:layout_marginLeft="10dp"
-                        android:background="@color/black_contact_line" />
-
-                    <ImageView
-                        android:id="@+id/iv_chat"
-                        android:layout_width="32dp"
-                        android:layout_height="32dp"
-                        android:layout_centerVertical="true"
-                        android:layout_marginLeft="13dp"
-                        android:src="@drawable/contacts_icon_organizational" />
-
-                    <TextView
-                        android:id="@+id/tv_chat"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_marginLeft="12dp"
-                        android:layout_toRightOf="@+id/iv_chat"
-                        android:text="群聊"
-                        android:textColor="@color/black_contact_tv"
-                        android:textSize="16dp" />
-
-                </RelativeLayout>
+                    android:layout_height="1dp"
+                    android:layout_marginLeft="10dp"
+                    android:background="@color/black_contact_line" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recycler_view"

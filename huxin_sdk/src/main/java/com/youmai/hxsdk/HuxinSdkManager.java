@@ -190,48 +190,48 @@ public class HuxinSdkManager {
      */
     public void init(final Context context, InitListener listener) {
         mContext = context.getApplicationContext();
-        IMMsgManager.instance().init(mContext);
-        mUserInfo.fromJson(mContext);
-        GreenDBIMManager.instance(mContext);
-
-        String processName = AppUtils.getProcessName(context, android.os.Process.myPid());
-        if (processName != null) {
-            boolean defaultProcess = processName.equals(context.getPackageName());
-            if (!defaultProcess) {
-                return;
-            }
-        }
-
-
-        RespBaseBean.setProtocolCallBack(new ProtocolCallBack() {
-            @Override
-            public void sessionExpire() {
-                reLogin();
-            }
-        });
-
-        initARouter();
-
-        if (listener != null) {
-            mInitListenerList.add(listener);
-        }
-
-        if (binded == BIND_STATUS.IDLE) {
-            binded = BIND_STATUS.BINDING;
-            initHandler();
-
-            mProcessHandler.sendEmptyMessage(HANDLER_THREAD_INIT_CONFIG_START);
-
-        } else if (binded == BIND_STATUS.BINDING) {
-
-            //do nothing
-
-        } else if (binded == BIND_STATUS.BINDED) {
-            for (InitListener item : mInitListenerList) {
-                item.success();
-            }
-            mInitListenerList.clear();
-        }
+//        IMMsgManager.instance().init(mContext);
+//        mUserInfo.fromJson(mContext);
+//        GreenDBIMManager.instance(mContext);
+//
+//        String processName = AppUtils.getProcessName(context, android.os.Process.myPid());
+//        if (processName != null) {
+//            boolean defaultProcess = processName.equals(context.getPackageName());
+//            if (!defaultProcess) {
+//                return;
+//            }
+//        }
+//
+//
+//        RespBaseBean.setProtocolCallBack(new ProtocolCallBack() {
+//            @Override
+//            public void sessionExpire() {
+//                reLogin();
+//            }
+//        });
+//
+//        initARouter();
+//
+//        if (listener != null) {
+//            mInitListenerList.add(listener);
+//        }
+//
+//        if (binded == BIND_STATUS.IDLE) {
+//            binded = BIND_STATUS.BINDING;
+//            initHandler();
+//
+//            mProcessHandler.sendEmptyMessage(HANDLER_THREAD_INIT_CONFIG_START);
+//
+//        } else if (binded == BIND_STATUS.BINDING) {
+//
+//            //do nothing
+//
+//        } else if (binded == BIND_STATUS.BINDED) {
+//            for (InitListener item : mInitListenerList) {
+//                item.success();
+//            }
+//            mInitListenerList.clear();
+//        }
     }
 
 

@@ -153,9 +153,9 @@ dependencies {
     implementation(name: 'geetest_sensebot_android_v4.2.1_20200421', ext: 'aar')
     implementation(name: 'keyboard_sdk_src-release', ext: 'aar')
     implementation 'com.flyco.banner:FlycoBanner_Lib:2.0.2@aar'
-    implementation 'cn.jiguang.sdk:jpush:3.1.3'
+    implementation 'cn.jiguang.sdk:jpush:3.8.5'
     // JPush 3.1.1 版本。
-    implementation 'cn.jiguang.sdk:jcore:1.2.1'
+    implementation 'cn.jiguang.sdk:jcore:2.5.5'
     // JCore 1.1.9
     implementation 'com.loopj.android:android-async-http:1.4.6'
     implementation 'com.github.ittianyu:BottomNavigationViewEx:2.0.4'

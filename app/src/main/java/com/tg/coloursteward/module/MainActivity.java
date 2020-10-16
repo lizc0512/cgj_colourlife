@@ -949,7 +949,7 @@ public class MainActivity extends BaseActivity implements HttpResponse {
                         JSONObject json = new JSONObject(content);
                         String state = json.getString("login_state");
                         if ("1".equals(state)) {//0：未在其他设备登录，1：在其他设备登录，需要该用户重新登录
-                            ToastUtil.showShortToast(MainActivity.this, "您的账号在其他地方有登录，请重新登录账号");
+                            ToastUtil.showShortToast(MainActivity.this, "您的账号已在其它设备上登录");
                             exitClearAllData(this, false);
                         } else {
                             userModel.getOauthUser(10, accessToken, false, (HttpResponse) mContext);

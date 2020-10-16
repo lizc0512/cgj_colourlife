@@ -334,6 +334,7 @@
                 <action android:name="cn.jpush.android.intent.CONNECTION" />
                 <!-- 接收网络变化 连接/断开 since 1.6.3 -->
                 <category android:name="com.tg.coloursteward" />
+                <action android:name="cn.jpush.android.intent.RECEIVE_MESSAGE" />
             </intent-filter>
         </receiver>
 

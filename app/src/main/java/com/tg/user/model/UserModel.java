@@ -76,6 +76,7 @@ public class UserModel extends BaseModel {
     private String getUserTypeUrl = "/user/type";
     private String getUserInfoCorpUrl = "/app/infoByCorp";
     private String getIsBindWechatUrl = "/app/isBindWechat";
+    private String postCheckLoginUrl = "/cgjapp/check/device/login";
 
     public UserModel(Context context) {
         super(context);
@@ -1298,6 +1299,7 @@ public class UserModel extends BaseModel {
 
     /**
      * 查询微信是否绑定
+     *
      * @param what
      * @param openid
      * @param unionid
@@ -1329,6 +1331,38 @@ public class UserModel extends BaseModel {
                 showExceptionMessage(what, response);
             }
         }, true, isLoading);
+    }
+
+    /**
+     * 检查设备是否在别的设备登录（在静默登录前调用）
+     *
+     * @param what
+     * @param account_uuid
+     * @param httpResponse
+     */
+    public void postCheckLogin(int what, String account_uuid, final HttpResponse httpResponse) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("device_code", TokenUtils.getUUID(mContext));
+        params.put("account", account_uuid);
+        final Request<String> request = NoHttp.createStringRequest(RequestEncryptionUtils.getRequestUrl(mContext, 3, postCheckLoginUrl), RequestMethod.POST);
+        request(what, request, RequestEncryptionUtils.getNewSaftyMap(mContext, params), new HttpListener<String>() {
+            @Override
+            public void onSucceed(int what, Response<String> response) {
+                int responseCode = response.getHeaders().getResponseCode();
+                String result = response.get();
+                if (responseCode == RequestEncryptionUtils.responseSuccess) {
+                    int code = showSuccesResultMessageTheme(result);
+                    if (code == 0) {
+                        httpResponse.OnHttpResponse(what, result);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailed(int what, Response<String> response) {
+
+            }
+        }, true, false);
     }
 
 }

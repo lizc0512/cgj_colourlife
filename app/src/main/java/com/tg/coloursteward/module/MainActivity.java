@@ -181,6 +181,7 @@ public class MainActivity extends BaseActivity implements HttpResponse {
     private String getVersion;
     private boolean otherPopShow = false;
     private boolean exit = false;//是否退出
+    private static String accessToken;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -222,7 +223,7 @@ public class MainActivity extends BaseActivity implements HttpResponse {
 
         initProto();
 
-        HuxinSdkManager.instance().getStackAct().addActivity(this);
+//        HuxinSdkManager.instance().getStackAct().addActivity(this);
         initAd();
         CheckPermission();
         initGetLocation();
@@ -355,7 +356,7 @@ public class MainActivity extends BaseActivity implements HttpResponse {
     protected void onResume() {
         super.onResume();
         initGetToken();
-        refreshUnReadCount();
+//        refreshUnReadCount();
 //        initCheckImStatus();
     }
 
@@ -400,7 +401,7 @@ public class MainActivity extends BaseActivity implements HttpResponse {
         super.onDestroy();
         unregisterReceiver(freshReceiver);
 
-        HuxinSdkManager.instance().getStackAct().finishActivity(this);
+//        HuxinSdkManager.instance().getStackAct().finishActivity(this);
     }
 
     public void refreshUnReadCount() {
@@ -634,7 +635,8 @@ public class MainActivity extends BaseActivity implements HttpResponse {
     }
 
     public static void getNetInfo(String access_token) {
-        userModel.getOauthUser(10, access_token, false, (HttpResponse) mContext);
+        accessToken = access_token;
+        userModel.postCheckLogin(13, UserInfo.employeeAccount, (HttpResponse) mContext);
     }
 
     /**
@@ -694,8 +696,8 @@ public class MainActivity extends BaseActivity implements HttpResponse {
                             Tools.saveStringValue(mContext, Contants.storage.APPAUTH_1, accessToken);
                             Tools.saveStringValue(mContext, Contants.storage.APPAUTHTIME_1, expireTime);
 
-                            HuxinSdkManager.instance().setAccessToken(accessToken);
-                            HuxinSdkManager.instance().setExpireTime(Long.parseLong(expireTime));
+//                            HuxinSdkManager.instance().setAccessToken(accessToken);
+//                            HuxinSdkManager.instance().setExpireTime(Long.parseLong(expireTime));
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -936,6 +938,24 @@ public class MainActivity extends BaseActivity implements HttpResponse {
                         }
                     } catch (Exception e) {
 
+                    }
+                }
+                break;
+            case 13:
+                if (!TextUtils.isEmpty(result)) {
+                    try {
+                        JSONObject jsonObject = new JSONObject(result);
+                        String content = jsonObject.getString("content");
+                        JSONObject json = new JSONObject(content);
+                        String state = json.getString("login_state");
+                        if ("1".equals(state)) {//0：未在其他设备登录，1：在其他设备登录，需要该用户重新登录
+                            ToastUtil.showShortToast(MainActivity.this, "您的账号在其他地方有登录，请重新登录账号");
+                            exitClearAllData(this, false);
+                        } else {
+                            userModel.getOauthUser(10, accessToken, false, (HttpResponse) mContext);
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
                 }
                 break;

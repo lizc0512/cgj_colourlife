@@ -77,9 +77,8 @@ public interface Contants {
         String LICENSE_KEY = "5C96AA97189FB29346817D34BCCE17ADC5E5CB755341DEB2DE0F7F105924EE6B9441AAB0E7EFA35ADE2C722F4B2C3904B92E33EFE403AEADDB51CF477ABD6639D4923580A907CEC1D64F04AE245A6C8C22D96E0882E5C49D61E5DD8EAF262FCCE633";
 
         // 重复登录
-        public static final String ACTION_C6 = "com.magicsoft.weitown.notice.ACTION_C6";
-        // 推送通知栏信息的ID
-        public static int pushId = 0;
+        String ACTION_C6 = "com.magicsoft.weitown.notice.ACTION_C6";
+
     }
 
     interface EVENT {

@@ -173,6 +173,9 @@ public class MainActivity extends BaseActivity implements HttpResponse {
                 getReadMessageInfo(client_code);
             } else if (action.equals(ACTION_UPDATE_PUSHINFO)) {//更新推送首页消息列表
                 getUpdatePushInfo();
+            }else if(action.equals(Contants.APP.ACTION_C6)){//单设备挤出登录
+                ToastUtil.showShortToast(MainActivity.this, "您的账号已在其它设备上登录");
+                exitClearAllData(MainActivity.this,false);
             }
         }
     };
@@ -559,7 +562,7 @@ public class MainActivity extends BaseActivity implements HttpResponse {
 
     private void initProto() {
         if (form_login == false) {
-            getSlientLogin();
+//            getSlientLogin();
         }
         getAuthAppInfo();//2.0授权
         getAppAuthInfo();//1.0授权
@@ -573,6 +576,7 @@ public class MainActivity extends BaseActivity implements HttpResponse {
         filter.addAction(ACTION_HOME_DELETEINFO);
         filter.addAction(ACTION_READ_MESSAGEINFO);
         filter.addAction(ACTION_UPDATE_PUSHINFO);
+        filter.addAction(Contants.APP.ACTION_C6);
         registerReceiver(freshReceiver, filter);
         //推送跳转详情
         pushDetail();

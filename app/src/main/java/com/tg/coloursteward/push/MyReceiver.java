@@ -17,12 +17,12 @@ import androidx.core.app.NotificationCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.tg.coloursteward.R;
+import com.tg.coloursteward.constant.Contants;
 import com.tg.coloursteward.module.MainActivity;
 import com.tg.coloursteward.util.SharedPreferencesUtils;
 import com.tg.coloursteward.util.StringUtils;
 import com.tg.coloursteward.util.Tools;
 import com.tg.user.activity.LoginActivity;
-import com.youmai.hxsdk.config.Constant;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -46,6 +46,7 @@ public class MyReceiver extends JPushMessageReceiver {
     private Context aContext;
     private LocalBroadcastManager mLocalBroadcastManager;
     private NotificationManager mNotifMan;
+    private static int pushId = 0;// 推送通知栏信息的ID
 
     @Override
     public void onMessage(Context context, CustomMessage customMessage) {
@@ -54,6 +55,11 @@ public class MyReceiver extends JPushMessageReceiver {
         String message = customMessage.message;
         if (!TextUtils.isEmpty(contentType)) {
             if ("c6".equalsIgnoreCase(contentType) && !TextUtils.isEmpty(message)) { //单设备挤出登录
+                sendNotification(context, message);
+                Intent data6 = new Intent();
+                data6.setAction(Contants.APP.ACTION_C6);
+                context.sendBroadcast(data6);
+            } else {
                 sendNotification(context, message);
             }
         }
@@ -135,10 +141,7 @@ public class MyReceiver extends JPushMessageReceiver {
             builder.setContentIntent(pi);
             Notification notification1 = builder.build();
             mNotifMan.notify(0, notification1);
-            Intent data6 = new Intent();
-            data6.setAction(Constant.ACTION_C6);
-            mLocalBroadcastManager.sendBroadcast(data6);
-            mNotifMan.notify(message, ++Constant.pushId, notification);
+            mNotifMan.notify(message, ++pushId, notification);
         } catch (Exception e) {
 
         }

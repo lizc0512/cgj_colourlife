@@ -323,6 +323,8 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             if (!TextUtils.isEmpty(owner_name)) {
                 String format = mContext.getResources().getString(R.string.group_item_info);
                 itemView.message_info.setText(String.format(format, owner_name));
+            } else {
+                itemView.message_info.setText("");
             }
 
             if (model.getPushMsg().getNotread() > 0) {

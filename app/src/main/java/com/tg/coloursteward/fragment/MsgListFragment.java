@@ -222,6 +222,7 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, View.OnC
             e.printStackTrace();
         }
         if (null != list && list.size() > 0) {
+            mMessageAdapter.clearAllMessage();
             for (MsgConfig.ContentBean.DataBean item : list) {
                 ExCacheMsgBean bean = new ExCacheMsgBean(item);
                 mMessageAdapter.addPushMsgItem(bean);
@@ -602,9 +603,9 @@ public class MsgListFragment extends Fragment implements IMMsgCallback, View.OnC
 
     public void delMsgChat(String targetUuid, String app_uuid) {
         homeModel.postDelAppMsg(2, app_uuid, this);
-        CacheMsgHelper.instance().deleteAllMsg(getActivity(), targetUuid);
+//        CacheMsgHelper.instance().deleteAllMsg(getActivity(), targetUuid);
         //去掉未读消息计数
-        IMMsgManager.instance().removeBadge(targetUuid);
+//        IMMsgManager.instance().removeBadge(targetUuid);
         mMessageAdapter.deleteMessage(targetUuid);
     }
 

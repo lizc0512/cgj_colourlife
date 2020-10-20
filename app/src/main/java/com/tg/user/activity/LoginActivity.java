@@ -3,8 +3,11 @@ package com.tg.user.activity;
 import android.Manifest;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.content.BroadcastReceiver;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
@@ -81,6 +84,8 @@ import cn.sharesdk.framework.PlatformActionListener;
 import cn.sharesdk.framework.ShareSDK;
 import cn.sharesdk.wechat.friends.Wechat;
 
+import static com.tg.coloursteward.application.CityPropertyApplication.finishOtherActivity;
+
 /**
  * 登录页面
  */
@@ -92,6 +97,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
     public static final String USERACCOUNT = "user_account";
     public static final String USEROA = "user_oa";
     public static final String USERNAME = "user_name";
+    public static final String RELOGIN = "relogin";
     private ConstraintLayout constrant_layout;
     private View distance_view;
     private CircleImageView iv_head_pic;
@@ -127,11 +133,21 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
     private String unionid;
     private GT3GeetestUtils gt3GeetestUtils;
     private GT3ConfigBean gt3ConfigBean;
+    private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if (Contants.APP.ACTION_C7.equals(action)) {
+                ToastUtil.showShortToast(LoginActivity.this, "您的账号已在其它设备上登录");
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_login);
+        initBraodCast();
         userModel = new UserModel(this);
         userLoginModel = new UserLoginModel(this);
         microModel = new MicroModel(this);
@@ -141,6 +157,12 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
         initPermission();
         userModel.getTs(5, this);
 
+    }
+
+    private void initBraodCast() {
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(Contants.APP.ACTION_C7);
+        registerReceiver(broadcastReceiver, filter);
     }
 
     private void initPermission() {
@@ -205,12 +227,18 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
             boolean loginOut = intent.getBooleanExtra("login_out", false);
             extras = intent.getStringExtra(MainActivity.KEY_EXTRAS);
             if (loginOut) {
-                exitClearAllData(LoginActivity.this,true);
+                exitClearAllData(LoginActivity.this, true);
             }
 
             String account = intent.getStringExtra(ACCOUNT);
             if (!TextUtils.isEmpty(account)) {
                 setAccount(account);
+            }
+            String relogin = intent.getStringExtra(RELOGIN);
+            if ("relogin".equals(relogin)) {
+                finishOtherActivity(LoginActivity.class);
+                exitClearAllData(this, true);
+                ToastUtil.showShortToast(this, "您的账号已在其它设备上登录");
             }
         }
         String account = SharedPreferencesUtils.getUserKey(this, USERACCOUNT);
@@ -517,6 +545,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
             gt3GeetestUtils.destory();
         }
         cancelTimeCount();
+        unregisterReceiver(broadcastReceiver);
     }
 
     private int countStart = 0;//计时器是否工作
@@ -648,7 +677,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
 
     private void login(String accout, String pwdMD5, String loginType) {
         SoftKeyboardUtils.hideSoftKeyboard(LoginActivity.this, edit_account);
-        exitClearAllData(LoginActivity.this,true);
+        exitClearAllData(LoginActivity.this, true);
         if (null == auth2ServiceUpdate) {
             auth2ServiceUpdate = new OAuth2ServiceUpdate(LoginActivity.this, loginType);
         } else {

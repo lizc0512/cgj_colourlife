@@ -77,6 +77,7 @@ import com.tg.setting.entity.VersionEntity;
 import com.tg.setting.model.SettingModel;
 import com.tg.setting.view.DeleteMsgDialog;
 import com.tg.setting.view.UpdateVerSionDialog;
+import com.tg.user.activity.LoginActivity;
 import com.tg.user.model.UserModel;
 import com.youmai.hxsdk.HuxinSdkManager;
 import com.youmai.hxsdk.config.AppConfig;
@@ -102,6 +103,7 @@ import q.rorbin.badgeview.QBadgeView;
 
 import static com.tg.coloursteward.constant.Contants.URl.cqj_appid;
 import static com.tg.coloursteward.constant.Contants.URl.environment;
+import static com.tg.user.activity.LoginActivity.RELOGIN;
 
 
 /**
@@ -173,9 +175,10 @@ public class MainActivity extends BaseActivity implements HttpResponse {
                 getReadMessageInfo(client_code);
             } else if (action.equals(ACTION_UPDATE_PUSHINFO)) {//更新推送首页消息列表
                 getUpdatePushInfo();
-            }else if(action.equals(Contants.APP.ACTION_C6)){//单设备挤出登录
-                ToastUtil.showShortToast(MainActivity.this, "您的账号已在其它设备上登录");
-                exitClearAllData(MainActivity.this,false);
+            } else if (action.equals(Contants.APP.ACTION_C6)) {//单设备挤出登录
+                Intent it=new Intent(MainActivity.this, LoginActivity.class);
+                it.putExtra(RELOGIN,"relogin");
+                startActivity(it);
             }
         }
     };

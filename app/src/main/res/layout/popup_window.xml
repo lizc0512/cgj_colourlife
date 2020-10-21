@@ -11,49 +11,6 @@
         android:background="@drawable/bg_home_pop"
         android:orientation="vertical">
 
-        <RelativeLayout
-            android:id="@+id/rl_add_group"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/margin_10"
-                android:layout_marginRight="@dimen/margin_10">
-
-                <RelativeLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingBottom="16dp"
-                    android:paddingTop="10dp">
-
-                    <ImageView
-                        android:id="@+id/img_group"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:src="@drawable/home_popup_icon_groupchat" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_marginLeft="@dimen/margin_10"
-                        android:layout_toRightOf="@id/img_group"
-                        android:text="发起群聊"
-                        android:textColor="@color/hx_color_white"
-                        android:textSize="16dp" />
-                </RelativeLayout>
-            </RelativeLayout>
-        </RelativeLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:background="@color/line_popup" />
 
         <RelativeLayout
             android:id="@+id/rl_mail"

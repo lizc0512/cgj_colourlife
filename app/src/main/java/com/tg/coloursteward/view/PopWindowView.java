@@ -75,29 +75,10 @@ public class PopWindowView extends PopupWindow {
             mActivity.getWindow().setAttributes(lp);
         });
         microAuthTimeUtils = new MicroAuthTimeUtils();
-        RelativeLayout rl_add_group = conentView.findViewById(R.id.rl_add_group);
         RelativeLayout rl_mail = conentView.findViewById(R.id.rl_mail);
         RelativeLayout rl_examination = conentView.findViewById(R.id.rl_examination);
         RelativeLayout rl_sign = conentView.findViewById(R.id.rl_sign);
         RelativeLayout rl_saoyisao = conentView.findViewById(R.id.rl_saoyisao);
-        //发起群聊
-        rl_add_group.setOnClickListener(arg0 -> {
-            List<ContactBean> groupList = new ArrayList<>();
-            ContactBean self = new ContactBean();
-            String selfUid = HuxinSdkManager.instance().getUuid();
-            self.setUuid(selfUid);
-            self.setAvatar(HuxinSdkManager.instance().getHeadUrl());
-            self.setRealname(HuxinSdkManager.instance().getRealName());
-            self.setUsername(HuxinSdkManager.instance().getUserName());
-            groupList.add(self);
-
-            Intent intent = new Intent(context, AddContactsCreateGroupActivity.class);
-            intent.putExtra(AddContactsCreateGroupActivity.DETAIL_TYPE, 1);
-            intent.putParcelableArrayListExtra(AddContactsCreateGroupActivity.GROUP_LIST, (ArrayList<? extends Parcelable>) groupList);
-            context.startActivity(intent);
-
-            PopWindowView.this.dismiss();
-        });
         //邮件
         rl_mail.setOnClickListener(arg0 -> {
             microAuthTimeUtils.IsAuthTime(context, Contants.Html5.YJ, "2", "");

@@ -9,6 +9,7 @@ import android.util.Log;
 
 import androidx.multidex.MultiDex;
 
+import com.alibaba.android.arouter.launcher.ARouter;
 import com.facebook.stetho.Stetho;
 import com.fanjun.keeplive.KeepLive;
 import com.fanjun.keeplive.config.ForegroundNotification;
@@ -62,6 +63,7 @@ public class CityPropertyApplication extends Application {
                 .build();
         NoHttp.initialize(config);
         instance = this;
+        ARouter.init(this);
         //Huxin IM SDK初始化
         HuxinSdkManager.instance().init(this);
         HuxinSdkManager.instance().setHomeAct(MainActivity.class);

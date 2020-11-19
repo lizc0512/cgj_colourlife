@@ -77,6 +77,7 @@ public class UserLoginModel extends BaseModel {
 
             @Override
             public void onFailed(int what, Response<String> response) {
+
                 showExceptionMessage(what, response);
             }
         }, true, isLoading);
@@ -87,7 +88,7 @@ public class UserLoginModel extends BaseModel {
      *
      * @param what
      * @param openid
-     * @param unionid
+     * @param unionid**
      * @param mobile
      * @param code
      * @param newHttpResponse

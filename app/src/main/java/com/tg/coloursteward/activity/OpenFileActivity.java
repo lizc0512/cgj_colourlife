@@ -42,7 +42,7 @@ public class OpenFileActivity extends BaseActivity implements TbsReaderView.Read
         Bundle bundle = new Bundle();
         bundle.putString("filePath", file.toString());
         bundle.putString("tempPath", Environment.getExternalStorageDirectory().toString() + "/" + "TbsReaderTemp");
-        //查看文件格式是否支持
+        //查看文件格式是否支持f
         boolean isOpen = mTbsReaderView.preOpen(parseFormat(file.toString()), false);
         if (isOpen) {
             //打开文件
